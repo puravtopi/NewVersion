@@ -19,6 +19,7 @@ namespace PainTrax.Web.Controllers
         private readonly AccidentTypeService _services = new AccidentTypeService();
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
 
+
         public AccidentTypeController(IMapper mapper, ILogger<AccidentTypeController> logger, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
         {
             _mapper = mapper;

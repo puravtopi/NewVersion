@@ -1,0 +1,95 @@
+﻿@model PainTrax.Web.Models.tbl_settings
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage Designation</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Designation">Home</a></li>
+                <li class="breadcrumb-item active">Manage Settings</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <h5 class="card-title">Manage Setting</h5>
+
+                        <!-- General Form Elements -->
+                        <form asp-action="Index" asp-controller="Settings">
+
+                            <input type="hidden" asp-for="id" />
+
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="row mb-3">
+                                        <label for="currentPassword" asp-for="page_size" class="col-md-4 col-lg-3 col-form-label">Page Size</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select asp-for="page_size" class="form-select">
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                            <span asp-validation-for="page_size" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="location" class="col-md-4 col-lg-3 col-form-label">Location</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="location" asp-items="@ViewBag.locList"></select>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="dateformat" class="col-md-4 col-lg-3 col-form-label">Date Format</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            @{
+                                                var cDate = System.DateTime.Now;
+                                            }
+                                            <select asp-for="dateformat" class="form-select">
+                                                <option value="MM/dd/yyyy">@cDate.ToString("MM/dd/yyyy")</option>
+                                                <option value="MM/dd/yyyy HH:mm:ss">@cDate.ToString("MM/dd/yyyy HH:mm:ss")</option>
+                                                <option value="MM/dd/yyyy HH:mm tt">@cDate.ToString("MM/dd/yyyy HH:mm tt")</option>
+                                                <option value="MMMM dd, yyyy">@cDate.ToString("MMMM dd, yyyy")</option>
+                                                <option value="dddd, dd MMMM yyyy">@cDate.ToString("dddd, dd MMMM yyyy")</option>
+                                                <option value="dddd, dd MMMM yyyy HH:mm:ss">@cDate.ToString("dddd, dd MMMM yyyy HH:mm:ss")</option>
+                                                <option value="dddd, dd MMMM yyyy hh:mm tt">@cDate.ToString("dddd, dd MMMM yyyy hh:mm tt")</option>
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+
+                                        <div class="col-sm-10">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

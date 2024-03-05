@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Demo
+/PainTrax.Web/bin
+/PainTrax.Web/.config
+/PainTrax.Web/obj
+/PainTrax.Web/Properties
+/.vs

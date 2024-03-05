@@ -1,0 +1,147 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Platforms>AnyCPU;x86</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\PatientdocumentController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Controllers\kcctpvjn.nct~" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Templete\1\IEReport.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.20.0" />
+    <PackageReference Include="EPPlus" Version="7.0.9" />
+    <PackageReference Include="HtmlTextWriter" Version="2.1.1" />
+    <PackageReference Include="HtmlToOpenXml.dll" Version="2.3.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
+    <PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Data.OleDb" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Logfiles\" />
+    <Folder Include="Report\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\assets\vendor\bootbox\bootbox.all.js" />
+    <None Include="wwwroot\assets\vendor\bootbox\bootbox.all.min.js" />
+    <None Include="wwwroot\assets\vendor\bootbox\bootbox.js" />
+    <None Include="wwwroot\assets\vendor\bootbox\bootbox.locales.js" />
+    <None Include="wwwroot\assets\vendor\bootbox\bootbox.locales.min.js" />
+    <None Include="wwwroot\assets\vendor\bootbox\bootbox.min.js" />
+    <None Include="wwwroot\ckeditor\build\ckeditor.js" />
+    <None Include="wwwroot\ckeditor\build\ckeditor.js.map" />
+    <None Include="wwwroot\ckeditor\build\translations\af.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ar.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ast.js" />
+    <None Include="wwwroot\ckeditor\build\translations\az.js" />
+    <None Include="wwwroot\ckeditor\build\translations\bg.js" />
+    <None Include="wwwroot\ckeditor\build\translations\bn.js" />
+    <None Include="wwwroot\ckeditor\build\translations\bs.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ca.js" />
+    <None Include="wwwroot\ckeditor\build\translations\cs.js" />
+    <None Include="wwwroot\ckeditor\build\translations\da.js" />
+    <None Include="wwwroot\ckeditor\build\translations\de-ch.js" />
+    <None Include="wwwroot\ckeditor\build\translations\de.js" />
+    <None Include="wwwroot\ckeditor\build\translations\el.js" />
+    <None Include="wwwroot\ckeditor\build\translations\en-au.js" />
+    <None Include="wwwroot\ckeditor\build\translations\en-gb.js" />
+    <None Include="wwwroot\ckeditor\build\translations\eo.js" />
+    <None Include="wwwroot\ckeditor\build\translations\es-co.js" />
+    <None Include="wwwroot\ckeditor\build\translations\es.js" />
+    <None Include="wwwroot\ckeditor\build\translations\et.js" />
+    <None Include="wwwroot\ckeditor\build\translations\eu.js" />
+    <None Include="wwwroot\ckeditor\build\translations\fa.js" />
+    <None Include="wwwroot\ckeditor\build\translations\fi.js" />
+    <None Include="wwwroot\ckeditor\build\translations\fr.js" />
+    <None Include="wwwroot\ckeditor\build\translations\gl.js" />
+    <None Include="wwwroot\ckeditor\build\translations\gu.js" />
+    <None Include="wwwroot\ckeditor\build\translations\he.js" />
+    <None Include="wwwroot\ckeditor\build\translations\hi.js" />
+    <None Include="wwwroot\ckeditor\build\translations\hr.js" />
+    <None Include="wwwroot\ckeditor\build\translations\hu.js" />
+    <None Include="wwwroot\ckeditor\build\translations\id.js" />
+    <None Include="wwwroot\ckeditor\build\translations\it.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ja.js" />
+    <None Include="wwwroot\ckeditor\build\translations\jv.js" />
+    <None Include="wwwroot\ckeditor\build\translations\km.js" />
+    <None Include="wwwroot\ckeditor\build\translations\kn.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ko.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ku.js" />
+    <None Include="wwwroot\ckeditor\build\translations\lt.js" />
+    <None Include="wwwroot\ckeditor\build\translations\lv.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ms.js" />
+    <None Include="wwwroot\ckeditor\build\translations\nb.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ne.js" />
+    <None Include="wwwroot\ckeditor\build\translations\nl.js" />
+    <None Include="wwwroot\ckeditor\build\translations\no.js" />
+    <None Include="wwwroot\ckeditor\build\translations\oc.js" />
+    <None Include="wwwroot\ckeditor\build\translations\pl.js" />
+    <None Include="wwwroot\ckeditor\build\translations\pt-br.js" />
+    <None Include="wwwroot\ckeditor\build\translations\pt.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ro.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ru.js" />
+    <None Include="wwwroot\ckeditor\build\translations\si.js" />
+    <None Include="wwwroot\ckeditor\build\translations\sk.js" />
+    <None Include="wwwroot\ckeditor\build\translations\sl.js" />
+    <None Include="wwwroot\ckeditor\build\translations\sq.js" />
+    <None Include="wwwroot\ckeditor\build\translations\sr-latn.js" />
+    <None Include="wwwroot\ckeditor\build\translations\sr.js" />
+    <None Include="wwwroot\ckeditor\build\translations\sv.js" />
+    <None Include="wwwroot\ckeditor\build\translations\th.js" />
+    <None Include="wwwroot\ckeditor\build\translations\tk.js" />
+    <None Include="wwwroot\ckeditor\build\translations\tr.js" />
+    <None Include="wwwroot\ckeditor\build\translations\tt.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ug.js" />
+    <None Include="wwwroot\ckeditor\build\translations\uk.js" />
+    <None Include="wwwroot\ckeditor\build\translations\ur.js" />
+    <None Include="wwwroot\ckeditor\build\translations\uz.js" />
+    <None Include="wwwroot\ckeditor\build\translations\vi.js" />
+    <None Include="wwwroot\ckeditor\build\translations\zh-cn.js" />
+    <None Include="wwwroot\ckeditor\build\translations\zh.js" />
+    <None Include="wwwroot\ckeditor\LICENSE.md" />
+    <None Include="wwwroot\ckeditor\README.md" />
+    <None Include="wwwroot\ckeditor\sample\script.js" />
+    <None Include="wwwroot\ckeditor\webpack.config.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\ckeditor\build\ckeditor.d.ts" />
+    <TypeScriptCompile Include="wwwroot\ckeditor\src\ckeditor.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\WebsiteMacros\Index.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\WebsiteMacros\Create.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\WebsiteMacros\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\WebsiteMacros\Edit.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\WebsiteMacros\Edit.cshtml" />
+  </ItemGroup>
+
+</Project>

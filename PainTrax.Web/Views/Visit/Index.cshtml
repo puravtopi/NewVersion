@@ -1,0 +1,564 @@
+﻿    @{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Visit List</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">List</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mb-3">
+
+                            <div class="col-md-12 col-lg-12">
+                                <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
+                            </div>
+                        </div>
+                        <!-- Table with hoverable rows -->
+                        <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">FName</th>
+                                    <th scope="col">LName</th>
+                                    <th scope="col">DOB</th>
+                                    <th scope="col">DOA</th>
+                                    <th scope="col">DOS</th>
+                                    <th scope="col">Case Type</th>
+                                    <th scope="col">Location</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                        </table>
+                        <!-- End Table with hoverable rows -->
+
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </section>
+
+
+    <div class="modal fade" id="commentModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modeltitle">Add Comments</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <input type="hidden" id="id" />
+                        <input type="hidden" id="ie_id" />
+                        <div class="col-sm-12">
+                            <textarea id="extra_comments" name="extra_comments" rows="5" class="form-control"></textarea>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveComment" onclick="fnSaveComment()">Save changes</button>
+                </div>
+            </div><!-- End Large Modal-->
+        </div>
+    </div>
+
+    <div class="modal fade" id="pocModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modeltitle">POC List</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="pocBody">
+                    <input type="hidden" id="id" />
+                    <input type="hidden" id="ie_id" />
+                    <div class="col-sm-12">
+                        <textarea id="extra_comments" name="extra_comments" rows="5" class="form-control"></textarea>
+                    </div>
+                </div>
+                @*  <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSaveComment" onclick="fnSaveComment()">Save changes</button>
+                </div>*@
+            </div><!-- End Large Modal-->
+        </div>
+    </div>
+
+    <div class="modal fade" id="fuModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modeltitle">Visit Type</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="type_ie_id" />
+                    <input type="hidden" id="type_patient_id" />
+                    <select id="ddlfuType" class="form-select" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.VisitType>()"></select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnSaveComment" onclick="fnCreateFU()">Next</button>
+                </div>
+            </div><!-- End Large Modal-->
+        </div>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+    <script>
+
+        var pageSize = @ViewBag.pageSize;
+
+        $(document).ready(function () {
+            bindList();
+        });
+
+        function bindList() {
+
+            var url = '@Url.Action("List","Visit")';
+            var editurl = '@Url.Action("Create","Visit")';
+            var printurl = '@Url.Action("IEPrint","Visit")';
+
+
+            var tab = $("#tbl").DataTable({
+                "lengthMenu": [[25, 50, 100], [25, 50, 100]],
+                "pageLength": pageSize,
+                "processing": true, // for show progress bar
+                "serverSide": true, // for process server side
+                "filter": true, // this is for disable filter (search box)
+                "orderMulti": false, // for disable multiple column at once
+                "ajax": {
+                    "url": url,
+                    "type": "POST",
+                    "datatype": "json"
+                },
+
+                "columns": [
+
+                    //{
+                    //    "className": 'dt-control',
+
+                    //    "data": null,
+                    //    "defaultContent": '➕',
+                    //    "visible":"isfu"
+                    //},
+                    {
+                        "className": 'dt-control',
+
+
+                        "data": "isFU",
+                        "defaultContent": '',
+                        "render": function (value) {
+                            console.log("+" + value)
+                            if (value == true)
+                                return "➕";
+                            else
+                                return "";
+                        }
+                    },
+                    {
+                        "render": function (data, type, full, meta) {
+                            return '<a  href="' + editurl + '/' + full.id + '">' + full.fname + '</a>';
+                        }
+                    },
+                    //{ "data": "lname", "lname": "lname", "autoWidth": true },
+                    {
+                        "render": function (data, type, full, meta) {
+                            return '<a  href="' + editurl + '/' + full.id + '">' + full.lname + '</a>';
+                        }
+                    },
+                    {
+                        "data": "dob", "autoWidth": true,
+                        "type": "date ",
+                        "render": function (value) {
+
+                            if (value === null) return "";
+
+                            var date = new Date(value);
+                            var month = date.getMonth() + 1;
+                            return (month.toString().length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
+                        }
+                    },
+
+
+                    {
+                        "data": "doa", "autoWidth": true,
+                        "type": "date ",
+                        "render": function (value) {
+
+                            if (value === null) return "";
+
+                            var date = new Date(value);
+                            var month = date.getMonth() + 1;
+                            return (month.toString().length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
+                        }
+                    },
+                    {
+                        "data": "doe", "autoWidth": true,
+                        "type": "date ",
+                        "render": function (value) {
+
+                            if (value === null) return "";
+
+                            var date = new Date(value);
+                            var month = date.getMonth() + 1;
+                            return (month.toString().length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
+                        }
+                    },
+
+                    { "data": "compensation", "autoWidth": true },
+                    { "data": "location", "location": "location", "autoWidth": true },
+                    {
+                        "render": function (data, type, full, meta) {
+                            //var index = '<a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"  href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" title="Edit"></i></a> &nbsp; &nbsp;'
+                            //index += '<a onclick="return confirm("Are you sure you want to delete this record ?")" href="#"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+                            //index += '<a onclick="fnShowComment(' + full.id + ')" href="#" ><i class="bi bi-chat-right-text-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Comments" data-bs-original-title="Add Comments"></i></a> &nbsp; &nbsp;';
+                            //index += '<a onclick="fnShowPOCSummary(' + full.id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i></a> &nbsp; &nbsp;';
+                            //index += '<a onclick="fnShowSurgeryPOCSummary(' + full.id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i></a> &nbsp; &nbsp;';
+                            //return index;
+
+                            var index = '<a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></a>';
+                            index += ' <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"  href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" title="Edit"></i><span>Edit</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnDeletePatient(' + full.id + ')" href="#"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove" data-bs-original-title="Remove"></i><span>Delete</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowComment(' + full.id + ')" href="#" ><i class="bi bi-chat-right-text-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Comments" data-bs-original-title="Add Comments"></i><span>Add Comments</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowPOCSummary(' + full.id + ',0)" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i><span>POC Summary</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + full.id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnFuType(' + full.id + ',' + full.patient_id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Next Visit</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + printurl + '/' + full.id + '" ><i class="bi bi-printer-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print" data-bs-original-title="Print"></i><span>Print</span></a></li></ul>';
+
+                            return index;
+                        }
+                    }
+
+
+                ]
+
+            });
+            tab.on('click', 'td.dt-control', function (e) {
+                let tr = e.target.closest('tr');
+                let row = tab.row(tr);
+
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                }
+                else {
+                    // Open this row
+                    row.child(fnGetFUList(row.data())).show();
+                }
+            });
+        }
+
+        function fnShowComment(ieId) {
+
+
+            var url = '@Url.Action("GetComment","Visit")?ieId=' + ieId
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+                    if (data != null) {
+                        $("#extra_comments").val(data.comment_details);
+                        $("#id").val(data.id);
+
+                    }
+                    else {
+                        $("#extra_comments").val("");
+                        $("#id").val("0");
+                    }
+
+                    $("#ie_id").val(ieId);
+
+                    $("#commentModal").modal('show');
+                },
+                error: function (xhr, status, error) {
+                    alert("Error!" + xhr.status);
+                },
+            });
+
+        }
+
+        function fnSaveComment() {
+
+
+            var url = '@Url.Action("SaveComment","Visit")'
+            var model = {
+                "id": $("#id").val(),
+                "comment_details": $("#extra_comments").val(),
+                "ie_id": $("#ie_id").val()
+            }
+
+
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                data: model,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+                    $("#extra_comments").val('');
+                    $("#commentModal").modal('hide');
+                },
+                error: function (xhr, status, error) {
+                    alert("Error!" + xhr.status);
+                },
+            });
+
+        }
+
+        function fnDeletePatient(Id) {
+            if (confirm("Are you sure you want to delete ...?")) {
+
+                var url = '@Url.Action("DeleteIE","Visit")?ieId=' + Id
+                var redirecturl = '@Url.Action("Index","Visit")';
+
+                $.ajax({
+                    type: "Post",
+                    url: url,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data, status, xhr) {
+                        if (data != null) {
+                            window.location = redirecturl;
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error!" + xhr.status);
+                    },
+                });
+
+            }
+            else {
+                return false;
+            }
+        }
+
+        function fnDeleteFU(Id) {
+            if (confirm("Are you sure you want to delete ...?")) {
+
+                var url = '@Url.Action("DeleteFU","FUVisit")?fuId=' + Id
+                var redirecturl = '@Url.Action("Index","Visit")';
+
+                $.ajax({
+                    type: "Post",
+                    url: url,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data, status, xhr) {
+                        if (data != null) {
+                            window.location = redirecturl;
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error!" + xhr.status);
+                    },
+                });
+
+            }
+            else {
+                return false;
+            }
+        }
+
+
+        function DeleteData(CustomerID) {
+            if (confirm("Are you sure you want to delete ...?")) {
+                Delete(CustomerID);
+            }
+            else {
+                return false;
+            }
+        }
+
+
+        function Delete(CustomerID) {
+            var url = '@Url.Content("~/")' + "DemoGrid/Delete";
+
+            $.post(url, { ID: CustomerID }, function (data) {
+                if (data) {
+                    oTable = $('#example').DataTable();
+                    oTable.draw();
+                }
+                else {
+                    alert("Something Went Wrong!");
+                }
+            });
+        }
+
+        function fnShowPOCSummary(ieId,fuId) {
+            var url = '';
+            if(fuId==0)
+                 url = '@Url.Action("POCSummary","Visit")?patientIEId=' + ieId;
+            else
+                url = '@Url.Action("POCSummary", "FUVisit")?patientFUId=' + fuId;
+
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+
+                    $("#pocBody").html(data);
+                    $("#pocModal").modal('show');
+                }
+            })
+        }
+
+
+        function fnFuType(id, patientid) {
+            $("#type_ie_id").val(id);
+            $("#type_patient_id").val(id);
+            $("#fuModal").modal('show');
+        }
+
+
+        function fnShowSurgeryPOCSummary(ieId) {
+            var url = '@Url.Action("SurgeryPOCSummary","Visit")?patientIEId=' + ieId;
+
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+
+                    $("#pocBody").html(data);
+                    $("#pocModal").modal('show');
+                },
+                error: function (xhr, status, error) {
+
+                    alert("Error!" + xhr.status);
+                },
+            })
+        }
+
+        function fnCreateFU() {
+
+            var url = '@Url.Action("CreateFU","Visit")?patientIEId=' + $("#type_ie_id").val() + "&patientId=" + $("#type_patient_id").val() + "&type=" + $("#ddlfuType option:selected").text();
+            window.location.href = url;
+        }
+
+        function fnGetFUList(d) {
+            // `d` is the original data object for the row
+            debugger
+            var id = d.id;
+            var url = '@Url.Action("FuList","Visit")?ieId=' + id;
+            var editurl = '@Url.Action("Create","FUVisit")?patientIEId=' + id;
+            var printurl = '@Url.Action("IEPrint","Visit")';
+
+
+            let childtab = document.createElement("table");
+            childtab.className = "table table-striped table-bordered dt-responsive nowrap dataTable no-footer";
+            let head = "  <thead><tr>";
+            head += "<th>  FName </th>";
+            head += "<th>  LName </th>";
+            head += "<th>  DOB </th>";
+            head += "<th>  DOA </th>";
+            head += "<th>  DOS </th>";
+            head += "<th>  Case Type </th>";
+            head += "<th>  Location </th>";
+            head += "<th>  Type </th>";
+            head += "<th>  Action </th>";
+            head += "</tr>  <thead>";
+            childtab.innerHTML += head;
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: "",
+                success: function (response) {
+                    if (response.length) {
+                        $.each(response, function (key, value) {
+
+
+                            var index = '<a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots-vertical"></i></a>';
+                            index += ' <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"  href="' + editurl + '&patientFUId=' + value.patientFU + '"><i class="ri-edit-line" title="Edit"></i><span>Edit</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnDeleteFU(' + value.patientFU + ')" href="#"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove" data-bs-original-title="Remove"></i><span>Delete</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowComment(' + value.patientFU + ')" href="#" ><i class="bi bi-chat-right-text-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Comments" data-bs-original-title="Add Comments"></i><span>Add Comments</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowPOCSummary(0,' + value.patientFU + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i><span>POC Summary</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + value.patientFU + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li>';
+
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + printurl + '/' + value.patientFU + '" ><i class="bi bi-printer-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print" data-bs-original-title="Print"></i><span>Print</span></a></li></ul>';
+
+
+                            let row = "  <tr>";
+                            row += "<td><a href='" + editurl + "&patientFUId=" + value.patientFU + "'>" + value.fname + "</a></td>";
+                            row += "<td><a href='" + editurl + "&patientFUId=" + value.patientFU + "'>" + value.lname + "</a></td>";
+                            row += "<td>" + formatDate(value.dob) + "</td>";
+                            row += "<td>" + formatDate(value.doa) + "</td>";
+                            row += "<td>" + formatDate(value.doe) + "</td>";
+                            row += "<td>" + value.compensation + "</td>";
+                            row += "<td>" + value.location + "</td>";
+                            row += "<td>" + value.type + "</td>";
+                            row += "<td>" + index + "</td>";
+                            childtab.innerHTML += row;
+
+                        });
+                    }
+                    else {
+                        let row = "  <tr><td colspan='8'> <p>No Data Found</p></td></tr>";
+
+                        childtab.innerHTML += row;
+                    }
+
+                    //  alert("Hello");
+                }
+            });
+
+
+            return (
+
+                childtab
+            );
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function formatDate(strdate) {
+            if (strdate !== '' && strdate !== undefined && strdate != null) {
+                const date = new Date(strdate); // {object Date}
+
+                const dateFormatted = new Intl.DateTimeFormat("en-US", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit"
+                }).format(date);
+
+                return dateFormatted;
+            }
+            return '';
+        }
+    </script>
+</main>

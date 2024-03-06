@@ -59,6 +59,26 @@
 
         </div>
         <div class="row mb-3">
+            <label for="note-1" class="col-sm-2 col-form-label">
+                Note1:
+            </label>
+            <div class="col-sm-10" style="height: fit-content;">
+                <input type="text" asp-for="note1" class="form-control" />
+            </div>
+            <label for="note-1" class="col-sm-2 col-form-label">
+                Note2:
+            </label>
+            <div class="col-sm-10" style="height: fit-content;">
+                <input type="text" asp-for="note2" class="form-control" />
+            </div>
+            <label for="note-3" class="col-sm-2 col-form-label">
+                Note3:
+            </label>
+            <div class="col-sm-10" style="height: fit-content;">
+                <input type="text" asp-for="note3" class="form-control" />
+            </div>
+        </div>
+        <div class="row mb-3">
             <label for="inputNumber" class="col-sm-2 col-form-label">
                 FOLLOW UP
             </label>
@@ -73,6 +93,7 @@
                 </section>
 
             </div>
+
             <label for="inputNumber" class="col-sm-2 col-form-label">
                 FOLLOW Date
             </label>
@@ -116,6 +137,9 @@
         var model = {
             "id": $("#txtId_Other").val(),
             "treatment_details": quillTreatment.root.innerHTML,
+            "note1": $("#note1").val(),
+            "note2": $("#note2").val(),
+            "note3": $("#note3").val(),
             "ie_id": $("#id").val(),
             "patient_id": $("#patientid").val(),
             "treatment_delimit": $("#hidTreatmentIds").val(),

@@ -2,7 +2,6 @@ namespace MS.Models;
 
 public class tbl_ie_other
 {
-
     public int? id { get; set; }
     public int? ie_id { get; set; }
     public int? patient_id { get; set; }

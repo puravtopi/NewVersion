@@ -86,7 +86,7 @@ namespace PainTrax.Web.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                string cnd = " and patient_id in (select id from tbl_patient where cmp_id=" + cmpid + ")";
+                string cnd = " ";
 
                 if (!string.IsNullOrEmpty(searchValue))
                     cnd = cnd + " and (fname like '%" + searchValue + "%' or lname  like '%" + searchValue + "%' or location  like '%" + searchValue + "%' or DATE_FORMAT(dob,\"%m/%d/%Y\") = '" + searchValue + "' or DATE_FORMAT(doe,\"%m/%d/%Y\") = '" + searchValue + "') ";

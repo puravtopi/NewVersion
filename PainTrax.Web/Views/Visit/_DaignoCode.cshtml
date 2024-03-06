@@ -74,8 +74,12 @@
 
             if (myContentDaignosis.indexOf(row.cells[1].innerHTML) < 0) {
 
-                daignoCodeDetails += "<li>" + row.cells[1].innerHTML;
-                daignoCodeDetails += " - " + row.cells[2].firstChild.value;
+                // daignoCodeDetails += "<li>" + row.cells[1].innerHTML;
+                // daignoCodeDetails += " - " + row.cells[2].firstChild.value;
+                // daignoCodeDetails += "</li>";
+
+                daignoCodeDetails += "<li>" + row.cells[2].firstChild.value;
+                daignoCodeDetails += " - " + row.cells[1].innerHTML;
                 daignoCodeDetails += "</li>";
             }
         });

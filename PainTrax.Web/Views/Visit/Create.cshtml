@@ -1245,10 +1245,12 @@
                                     debugger
                                     var age = calcAge($("#dob").val());
                                     var gender = $("#gender option:selected").text().toLowerCase();
+                                    var accidenttype = $("#accidentType option:selected").text().toLowerCase();
 
                                     var content = (ckHistory.getData());
                                     content = content.replace("#age", age);
                                     content = content.replace("#gender", gender);
+                                    content = content.replace("#accidenttype", accidenttype);
                                     ckHistory.data.set(content);
 
                                     content = (ckAssessment.getData());

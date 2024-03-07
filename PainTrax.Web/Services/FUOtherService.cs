@@ -21,7 +21,7 @@ public class FUOtherService: ParentService {
 
 	public void Insert(tbl_fu_other data) {
 		 MySqlCommand cm = new  MySqlCommand(@"INSERT INTO tbl_fu_other
-		(ie_id,patient_id,treatment_details,treatment_delimit,followup_duration,followup_date,fu_id,treatment_delimit_desc)Values
+		(ie_id,patient_id,treatment_details,note1,note2,note3,treatment_delimit,followup_duration,followup_date,fu_id,treatment_delimit_desc)Values
 				(@ie_id,@patient_id,@treatment_details,@note1,@note2,@note3,@treatment_delimit,@followup_duration,@followup_date,@fu_id,@treatment_delimit_desc)", conn);
 		cm.Parameters.AddWithValue("@ie_id", data.ie_id);
 		cm.Parameters.AddWithValue("@patient_id", data.patient_id);

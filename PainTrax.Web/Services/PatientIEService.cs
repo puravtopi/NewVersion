@@ -616,7 +616,7 @@ public class PatientIEService : ParentService
     public int InsertOtherPage(tbl_ie_other data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_ie_other
-		(ie_id,patient_id,treatment_details,treatment_delimit,followup_duration,followup_date,treatment_delimit_desc)Values
+		(ie_id,patient_id,treatment_details,note1,note2,note3,treatment_delimit,followup_duration,followup_date,treatment_delimit_desc)Values
 				(@ie_id,@patient_id,@treatment_details,@note1,@note2,@note3,@treatment_delimit,@followup_duration,@followup_date,@treatment_delimit_desc);select @@identity", conn);
         cm.Parameters.AddWithValue("@ie_id", data.ie_id);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
@@ -653,7 +653,7 @@ public class PatientIEService : ParentService
     public tbl_ie_other? GetOneOtherPage(int id)
     {
         DataTable dt = new DataTable();
-        MySqlCommand cm = new MySqlCommand("select * from tbl_ie_other where ie_id=@id ", conn);
+        MySqlCommand cm = new MySqlCommand("select * from tbl_ie_other where ie_id=@id  ", conn);
         cm.Parameters.AddWithValue("@id", id);
         var datalist = ConvertDataTable<tbl_ie_other>(GetData(cm)).FirstOrDefault();
         return datalist;

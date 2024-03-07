@@ -12,8 +12,7 @@ public class TreatmentMasterService : ParentService
     {
 
         string query = "select * from tbl_treatment_master where 1=1 ";
-
-        query += cnd;
+        query += cnd + " Order BY display_order ASC";
         List<tbl_treatment_master> dataList = ConvertDataTable<tbl_treatment_master>(GetData(query));
         return dataList;
     }
@@ -30,13 +29,11 @@ public class TreatmentMasterService : ParentService
     public int Insert(tbl_treatment_master data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_treatment_master
-		(treatment_details,note1,note2,note3,pre_select,cmp_id)Values
-	    (@treatment_details,@pre_select,@cmp_id);select @@identity", conn);
-        cm.Parameters.AddWithValue("@treatment_details", data.treatment_details);
-        cm.Parameters.AddWithValue("@note1", data.note1);
-        cm.Parameters.AddWithValue("@note2", data.note2);
-        cm.Parameters.AddWithValue("@note3", data.note3);
+		(treatment_details,pre_select,display_order,cmp_id)Values
+	    (@treatment_details,@pre_select,@display_order,@cmp_id);select @@identity", conn);
+        cm.Parameters.AddWithValue("@treatment_details", data.treatment_details);        
         cm.Parameters.AddWithValue("@pre_select", data.pre_select);
+        cm.Parameters.AddWithValue("@display_order", data.display_order);
         cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
         var result = ExecuteScalar(cm);
         return result;
@@ -44,14 +41,12 @@ public class TreatmentMasterService : ParentService
     public void Update(tbl_treatment_master data)
     {
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_treatment_master SET
-		treatment_details=@treatment_details,@note1,@note2,@note3,pre_select=@pre_select
+		treatment_details=@treatment_details,pre_select=@pre_select,display_order=@display_order,
 		where id=@id", conn);
         cm.Parameters.AddWithValue("@id", data.id);
         cm.Parameters.AddWithValue("@pre_select", data.pre_select);
         cm.Parameters.AddWithValue("@treatment_details", data.treatment_details);
-        cm.Parameters.AddWithValue("@note1", data.note1);
-        cm.Parameters.AddWithValue("@note2", data.note2);
-        cm.Parameters.AddWithValue("@note3", data.note3);
+        cm.Parameters.AddWithValue("@display_order", data.display_order);
 
         Execute(cm);
     }

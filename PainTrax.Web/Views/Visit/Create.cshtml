@@ -965,17 +965,7 @@
     $(document).ready(function () {
 
 
-        init();
-
-        $('#printButton').hide();
-        function checkPartialView() {
-            var currentView = $('.partial-view.active'); // Assuming you have a class 'active' for the currently active partial view
-            if (currentView.attr('id') === 'secondPartialView') {
-                $('#printButton').show();
-            } else {
-                $('#printButton').hide();
-            }
-        }
+        init();       
 
         checkPartialView();
 

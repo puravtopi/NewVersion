@@ -105,12 +105,7 @@
                                 </ul>
                             </div>
                             <div class="col-md-2 col-sm-2">
-                                @{
-                                    if (Model.id > 0)
-                                    {
-                                        <a href="@Url.Action("IEPrint","Visit")?id=@Model.id" name="printButton" target="_new" class="btn btn-success bi bi-printer" style="float:right;"></a>
-                                    }
-                                } &nbsp; &nbsp;
+                                <a id="printButton" name="printButton" target="_new" onclick="fnPrint()" class="btn btn-success bi bi-printer" style="float:right;display:none"></a> &nbsp; &nbsp;
                                 <button type="button" id="btnSaveAll" class="btn btn-secondary bi bi-floppy" onclick="fnSave()" style="margin-right:5px;; float:right;">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
                                         <path d="M11 2H9v3h2z"></path>
@@ -173,7 +168,7 @@
                                                         <div class="col-sm-4">
                                                             @* <select asp-for="compensation" class="form-select" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.CaseType>()"></select>*@
                                                             <select asp-for="accidentType" class="form-select" asp-items="@ViewBag.asList"></select>
-                                                           
+
                                                         </div>
                                                     </div>
 
@@ -842,7 +837,7 @@
 
 <script>
 
-   
+
 
     var _ccitems = ('@ViewBag.ccmacroList').replace(/&quot;/ig, '"');
     const ccitems = JSON.parse(_ccitems.replace(/[\n\r]/g, '\\n'));
@@ -879,6 +874,15 @@
     }
 
     function init() {
+
+        var _flag = '@ViewBag.showPrint';
+
+        debugger
+
+        if (_flag == 'True')
+            $("#printButton").show();
+        else
+            $("#printButton").hide();
         fnAccidentType();
     }
 
@@ -958,6 +962,15 @@
 
     }
 
+
+    function fnPrint() {
+        var url = "@Url.Action("IEPrint", "Visit")?id=" + $("#hdIEId").val();
+
+        window.open(
+            url,
+            '_blank' // <- This is what makes it open in a new window.
+        );
+    }
 </script>
 
 <script>
@@ -967,22 +980,22 @@
 
         init();
 
-        $('#printButton').hide();
-        function checkPartialView() {
-            var currentView = $('.partial-view.active'); // Assuming you have a class 'active' for the currently active partial view
-            if (currentView.attr('id') === 'secondPartialView') {
-                $('#printButton').show();
-            } else {
-                $('#printButton').hide();
-            }
-        }
 
-        checkPartialView();
+        // function checkPartialView() {
+        //     var currentView = $('.partial-view.active'); // Assuming you have a class 'active' for the currently active partial view
+        //     if (currentView.attr('id') === 'secondPartialView') {
+        //         $('#printButton').show();
+        //     } else {
+        //         $('#printButton').hide();
+        //     }
+        // }
 
-        // Call the function whenever the partial view changes
-        $('.partial-view').on('click', function () {
-            checkPartialView();
-        });
+        // checkPartialView();
+
+        // // Call the function whenever the partial view changes
+        // $('.partial-view').on('click', function () {
+        //     checkPartialView();
+        // });
 
         $(".msktxt").inputmask("999-999-9999");
         $("#ssn").inputmask("999-99-9999");
@@ -1006,6 +1019,7 @@
 
 
             if (id === "bordered-home") {
+                debugger
                 if (isDetaildValid()) {
 
                     if ($("#id").val() === "0") {
@@ -1075,6 +1089,7 @@
         $("#hd-active-tab").val(id);
 
         if (id === "bordered-home") {
+            debugger
             if (isDetaildValid()) {
 
                 if ($("#id").val() === "0") {
@@ -1229,7 +1244,7 @@
                                 autoclosepopup();
                                 fnShowPOCSummary();
                                 fnShowPOC();
-
+                                $('#printButton').show();
 
                                 if ($("#alert_note").val() !== '') {
 
@@ -1283,13 +1298,12 @@
     }
 
     function isDetaildValid() {
-        var result = true;
-        result = requirValidation("lname");
-        result = requirValidation("fname");
-        result = requirValidation("dob");
-        result = requirValidation("locationid");
 
-        return result;
+        if (requirValidation("lname") && requirValidation("fname") && requirValidation("dob") && requirValidation("locationid"))
+            return true;
+        else
+            return false;
+
     }
 
     function requirValidation(id) {
@@ -1301,7 +1315,7 @@
         }
         else {
             $("#error-" + id).hide();
-            result = true;
+
         }
         return result;
     }
@@ -1372,8 +1386,7 @@
 
         if ($("#compensation option:selected").text() == "NF")
             $("#accidentDropdown").show();
-        else
-        {
+        else {
             $('#accidentDropdown').hide();
             $('#accidentType').val('');
         }

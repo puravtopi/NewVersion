@@ -458,7 +458,7 @@ namespace PainTrax.Web.Controllers
 
                 }
 
-
+                ViewBag.showPrint = id > 0 ? true : false;
 
             }
             catch (Exception ex)

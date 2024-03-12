@@ -869,7 +869,7 @@
 <script>
 
 
-    var _items = JSON.parse(('@ViewBag.macroList').replace(/&quot;/ig, '"'));
+    var _items = ('@ViewBag.macroList').replace(/&quot;/ig, '"');
     const items = JSON.parse(_items.replace(/[\n\r]/g, '\\n'));
 
     function getFeedItems(queryText) {

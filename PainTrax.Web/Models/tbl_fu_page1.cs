@@ -4,6 +4,7 @@ public class tbl_fu_page1{
 
 	public int? id {get;set;}
 	
+	public string? history {get;set;}
 	public string? bodypart {get;set;}
 	public string? cc {get;set;}
 	public string? pe {get;set;}

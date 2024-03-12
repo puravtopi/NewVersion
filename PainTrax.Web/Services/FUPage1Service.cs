@@ -25,8 +25,8 @@ public class FUPage1Service : ParentService
     public void Insert(tbl_fu_page1 data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_fu_page1
-		(bodypart,cc,pe,rom,note,plan,assessment,dd,work_status,ie_id,daignosis_desc,daignosis_delimit,cmp_id,patient_id,occupation,fu_id)Values
-				(@bodypart,@cc,@pe,@rom,@note,@plan,@assessment,@dd,@work_status,@ie_id,@daignosis_desc,@daignosis_delimit,@cmp_id,@patient_id,@occupation,@fu_id)", conn);
+		(history,bodypart,cc,pe,rom,note,plan,assessment,dd,work_status,ie_id,daignosis_desc,daignosis_delimit,cmp_id,patient_id,occupation,fu_id)Values
+				(@history,@bodypart,@cc,@pe,@rom,@note,@plan,@assessment,@dd,@work_status,@ie_id,@daignosis_desc,@daignosis_delimit,@cmp_id,@patient_id,@occupation,@fu_id)", conn);
 
         cm.Parameters.AddWithValue("@bodypart", data.bodypart);
         cm.Parameters.AddWithValue("@cc", data.cc);
@@ -44,6 +44,7 @@ public class FUPage1Service : ParentService
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
         cm.Parameters.AddWithValue("@occupation", data.occupation);
         cm.Parameters.AddWithValue("@fu_id", data.fu_id);
+        cm.Parameters.AddWithValue("@history", data.history);
         Execute(cm);
     }
     public void Update(tbl_fu_page1 data)
@@ -52,6 +53,7 @@ public class FUPage1Service : ParentService
 		
 		bodypart=@bodypart,
 		cc=@cc,
+        history=@history,
 		pe=@pe,
 		rom=@rom,
 		note=@note,
@@ -82,6 +84,7 @@ public class FUPage1Service : ParentService
         cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
         cm.Parameters.AddWithValue("@occupation", data.occupation);
+        cm.Parameters.AddWithValue("@history", data.history);
         Execute(cm);
     }
     public void Delete(tbl_fu_page1 data)

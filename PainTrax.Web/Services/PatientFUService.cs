@@ -40,6 +40,7 @@ public class PatientFUService : ParentService
 				(@patient_id,@patientIE_ID,@doe,@created_date,@created_by,@updated_date,@updated_by,@is_active,@cmp_id,@extra_comments,@type);select @@identity;", conn);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
 
+      
         cm.Parameters.AddWithValue("@patientIE_ID", data.patientIE_ID);
         cm.Parameters.AddWithValue("@doe", data.doe);
         cm.Parameters.AddWithValue("@created_date", data.created_date);
@@ -58,7 +59,7 @@ public class PatientFUService : ParentService
     {
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient_fu SET
 		patient_id=@patient_id,
-	
+
 		patientIE_ID=@patientIE_ID,
 		doe=@doe,
 		
@@ -72,6 +73,7 @@ public class PatientFUService : ParentService
 			where id=@id", conn);
         cm.Parameters.AddWithValue("@id", data.id);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
+    
 
         cm.Parameters.AddWithValue("@patientIE_ID", data.patientIE_ID);
         cm.Parameters.AddWithValue("@doe", data.doe);

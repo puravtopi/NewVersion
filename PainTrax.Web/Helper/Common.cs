@@ -446,10 +446,11 @@ namespace PainTrax.Web.Helper
             {
 
 
+                new SelectListItem{ Text="History", Value = "history",Selected=false },
                 new SelectListItem{ Text="Body Parts", Value = "bodypart",Selected=false },
                 new SelectListItem{ Text="CE", Value = "cc",Selected=false },
                 new SelectListItem{ Text="PE", Value = "pe",Selected=false },
-                 new SelectListItem{ Text="Assessment", Value = "assessment",Selected=false },
+                new SelectListItem{ Text="Assessment", Value = "assessment",Selected=false },
                 new SelectListItem{ Text="Plan", Value = "plan",Selected=false },
                 new SelectListItem{ Text="Occupation", Value = "occupation",Selected=false },
                 new SelectListItem{ Text="Degree of Disability", Value = "dd",Selected=false },

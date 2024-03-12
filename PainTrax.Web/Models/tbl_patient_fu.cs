@@ -16,6 +16,7 @@ public class tbl_patient_fu{
 	public int? cmp_id {get;set;}
 	public string? extra_comments {get;set;}
 	public string? type { get;set;}
+	public string? history { get;set;}
 	
 
 }

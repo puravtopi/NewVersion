@@ -50,8 +50,6 @@ namespace PainTrax.Web.Controllers
         private readonly ILogger<VisitController> _logger;
         private IMapper _mapper;
 
-
-
         public FUVisitController(ILogger<VisitController> logger, IMapper mapper)
         {
             _mapper = mapper;
@@ -492,9 +490,6 @@ namespace PainTrax.Web.Controllers
                         obj.Other.followup_duration = "2 weeks.";
                         obj.Other.listTreatmentMaster = _data;
                     }
-
-
-
                     var patientData = _patientservices.GetOne(ieData.patient_id.Value);
 
                     if (patientData != null)
@@ -791,7 +786,7 @@ namespace PainTrax.Web.Controllers
 
                 tbl_patient_fu objFU = new tbl_patient_fu()
                 {
-
+                   
                     created_by = userid,
                     doe = model.dov,
                     patientIE_ID = ie,

@@ -10,7 +10,17 @@
 
 <div class="col-lg-12">
     <input type="hidden" id="txtId_P1" value="@Model.id" />
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            History
+        </label>
+        <div class="col-sm-10">
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtHistory"">@Model.history</textarea>
+            </div>
+        </div>
 
+    </div>
     <div class="row mb-3">
         <label for="inputNumber" class="col-sm-2 col-form-label">
             Degree of Disability
@@ -159,6 +169,25 @@
     var body = '@Model.bodypart';
 
     $(document).ready(function () {
+
+
+        ClassicEditor.create(document.querySelector('#txtHistory'), {
+
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckHistory = editor;
+        })
 
 
         ClassicEditor.create(document.querySelector('#txtDaignosis'), {
@@ -397,6 +426,7 @@
             "dd": $("#dd").val(),
             "work_status": $("#work_status").val(),
             "occupation": $("#occupation").val(),
+            "history": ckHistory.getData(),
         }
 
 

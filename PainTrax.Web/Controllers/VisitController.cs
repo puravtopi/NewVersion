@@ -641,7 +641,6 @@ namespace PainTrax.Web.Controllers
                     }
                 }
 
-
                 if (!string.IsNullOrEmpty(model.emp_name))
                 {
                     query = " and name='" + model.emp_name + "' and patient_id=" + model.patientid + "";

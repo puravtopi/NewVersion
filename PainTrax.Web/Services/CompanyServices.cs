@@ -47,12 +47,17 @@ namespace PainTrax.Web.Services
                 int result = ExecuteScalar(cm);
 
                 cm = new MySqlCommand(@"INSERT INTO tbl_users
-		        (fname,lname,uname,password,cmp_id)Values
-				(@fname,@lname,@uname,@password,@cmp_id);select @@identity;", conn);
+		        (fname,lname,emailid,address,fullname,uname,password,groupid,desigid,cmp_id)Values
+				(@fname,@lname,@emailid,@address,@fullname,@uname,@password,@groupid,@desigid,@cmp_id);select @@identity;", conn);
                 cm.Parameters.AddWithValue("@fname", "admin");
                 cm.Parameters.AddWithValue("@lname", "admin");
+                cm.Parameters.AddWithValue("@emailid", data.email);
+                cm.Parameters.AddWithValue("@address", data.address);
+                cm.Parameters.AddWithValue("@fullname", data.name);
                 cm.Parameters.AddWithValue("@uname", data.username);
-                cm.Parameters.AddWithValue("@password", data.password);             
+                cm.Parameters.AddWithValue("@password", data.password);
+                cm.Parameters.AddWithValue("@groupid", 11);
+                cm.Parameters.AddWithValue("@desigid", 23);
                 cm.Parameters.AddWithValue("@cmp_id", result);
 
                 int result1 = ExecuteScalar(cm);

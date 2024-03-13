@@ -37,7 +37,7 @@ namespace PainTrax.Web.Services
 
         public void Insert(tbl_users data)
         {
-            data.password = EncryptionHelper.Encrypt(data.password);
+            //data.password = EncryptionHelper.Encrypt(data.password);
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_users
 		(fname,lname,emailid,address,fullname,uname,password,groupid,desigid,cmp_id,createdby,createddate,phoneno)Values
 				(@fname,@lname,@emailid,@address,@fullname,@uname,@password,@groupid,@desigid,@cmpid,@createdby,@createddate,@phoneno)", conn);

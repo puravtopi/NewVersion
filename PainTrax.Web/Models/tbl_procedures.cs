@@ -46,7 +46,6 @@ namespace PainTrax.Web.Models
 		public int? cmp_id { get; set; }
 		public int? createdby { get; set; }
 		public DateTime? createddate { get; set; }
-
-
-	}
+		public string? upload_template { get; set; }
+    }
 }

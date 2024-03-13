@@ -157,11 +157,11 @@
                                                         </label>
                                                         <div class="col-sm-4">
                                                             @* <select asp-for="compensation" class="form-select" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.CaseType>()"></select>*@
-                                                            <select asp-for="compensation" class="form-select" onchange="fnAccidentType()" asp-items="@ViewBag.csList"></select>
+                                                            <select asp-for="compensation" class="form-select" asp-items="@ViewBag.csList"></select>
                                                             <span id="error-casetype" style="display:none" class="errorSpan">Please Select CaseType.</span>
                                                         </div>
                                                     </div>
-                                                    <div class="row mb-3" id="accidentDropdown" style="display:none;">
+                                                    <div class="row mb-3" id="accidentDropdown" >
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
                                                             Accident Type
                                                         </label>
@@ -872,19 +872,7 @@
             );
         }
     }
-
-    function init() {
-
-        var _flag = '@ViewBag.showPrint';
-
-        debugger
-
-        if (_flag == 'True')
-            $("#printButton").show();
-        else
-            $("#printButton").hide();
-        fnAccidentType();
-    }
+      
 
     function getCCFeedItems(queryText) {
 
@@ -975,28 +963,10 @@
 
 <script>
 
-    $(document).ready(function () {
+    $(document).ready(function () {      
 
 
-        init();
-
-
-        // function checkPartialView() {
-        //     var currentView = $('.partial-view.active'); // Assuming you have a class 'active' for the currently active partial view
-        //     if (currentView.attr('id') === 'secondPartialView') {
-        //         $('#printButton').show();
-        //     } else {
-        //         $('#printButton').hide();
-        //     }
-        // }
-
-        // checkPartialView();
-
-        // // Call the function whenever the partial view changes
-        // $('.partial-view').on('click', function () {
-        //     checkPartialView();
-        // });
-
+       
         $(".msktxt").inputmask("999-999-9999");
         $("#ssn").inputmask("999-99-9999");
 
@@ -1379,19 +1349,7 @@
             },
         });
     }
-
-    function fnAccidentType() {
-
-        debugger
-
-        if ($("#compensation option:selected").text() == "NF")
-            $("#accidentDropdown").show();
-        else {
-            $('#accidentDropdown').hide();
-            $('#accidentType').val('');
-        }
-
-    }
+    
 </script>
 
 

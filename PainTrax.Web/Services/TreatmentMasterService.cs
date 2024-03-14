@@ -41,7 +41,7 @@ public class TreatmentMasterService : ParentService
     public void Update(tbl_treatment_master data)
     {
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_treatment_master SET
-		treatment_details=@treatment_details,pre_select=@pre_select,display_order=@display_order,
+		treatment_details=@treatment_details,pre_select=@pre_select,display_order=@display_order
 		where id=@id", conn);
         cm.Parameters.AddWithValue("@id", data.id);
         cm.Parameters.AddWithValue("@pre_select", data.pre_select);

@@ -36,8 +36,8 @@ public class PatientFUService : ParentService
     public int Insert(tbl_patient_fu data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_patient_fu
-		(patient_id,patientIE_ID,doe,created_date,created_by,updated_date,updated_by,is_active,cmp_id,extra_comments,type)Values
-				(@patient_id,@patientIE_ID,@doe,@created_date,@created_by,@updated_date,@updated_by,@is_active,@cmp_id,@extra_comments,@type);select @@identity;", conn);
+		(patient_id,patientIE_ID,doe,created_date,created_by,updated_date,updated_by,is_active,cmp_id,extra_comments,type,accident_type)Values
+				(@patient_id,@patientIE_ID,@doe,@created_date,@created_by,@updated_date,@updated_by,@is_active,@cmp_id,@extra_comments,@type,@accident_type);select @@identity;", conn);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
 
       
@@ -51,6 +51,8 @@ public class PatientFUService : ParentService
         cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
         cm.Parameters.AddWithValue("@extra_comments", data.extra_comments);
         cm.Parameters.AddWithValue("@type", data.type);
+        cm.Parameters.AddWithValue("@accident_type", data.accident_type);
+
 
         var result = ExecuteScalar(cm);
         return result;
@@ -69,7 +71,9 @@ public class PatientFUService : ParentService
 		updated_by=@updated_by,
 		is_active=@is_active,
 		cmp_id=@cmp_id,
-		extra_comments=@extra_comments
+		extra_comments=@extra_comments,
+        accident_type=@accident_type
+
 			where id=@id", conn);
         cm.Parameters.AddWithValue("@id", data.id);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
@@ -85,6 +89,7 @@ public class PatientFUService : ParentService
         cm.Parameters.AddWithValue("@is_active", data.is_active);
         cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
         cm.Parameters.AddWithValue("@extra_comments", data.extra_comments);
+        cm.Parameters.AddWithValue("@accident_type", data.accident_type);
 
         Execute(cm);
     }

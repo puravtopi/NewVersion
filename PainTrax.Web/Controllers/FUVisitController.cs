@@ -106,6 +106,7 @@ namespace PainTrax.Web.Controllers
                         obj.referring_physician = ieData.referring_physician;
                         obj.casetype = ieData.casetype;
                         obj.compensation = ieData.compensation;
+                        obj.accidentType = ieData.accidentType;
                     }
 
                     var fuData = _patientFuservices.GetOne(patientFUId);

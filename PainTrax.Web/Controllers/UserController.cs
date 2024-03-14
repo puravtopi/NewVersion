@@ -164,12 +164,12 @@ namespace PainTrax.Web.Controllers
 
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 string cnd = " and (fname like '%" + searchValue + "%')";
-               
-                //if (!String.IsNullOrEmpty(searchValue))
-                //{
-                //    cnd = " and (fname like '%" + searchValue + "%' or lname like '%" + searchValue + "%' or emailid like '%" + searchValue + "%' or fullname like '%" + searchValue + "%' Or ";
-                //    cnd += " uname like '%" + searchValue + "%' or address like '%" + searchValue + "%'  )";
-                //}
+
+                if (!String.IsNullOrEmpty(searchValue))
+                {
+                    cnd = " and (fname like '%" + searchValue + "%' or lname like '%" + searchValue + "%' or emailid like '%" + searchValue + "%' or fullname like '%" + searchValue + "%' Or ";
+                    cnd += " uname like '%" + searchValue + "%' or address like '%" + searchValue + "%'  )";
+                }
                 var Data = _services.GetAll(cnd);
 
            

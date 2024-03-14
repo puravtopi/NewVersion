@@ -149,7 +149,7 @@ namespace PainTrax.Web.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                string cnd = " and (bodypart like '%" + searchValue + "%' or  DiagCode like '%" + searchValue + "%')";
+                string cnd = " and (bodypart like '%" + searchValue + "%' or Description like '%" + searchValue + "%' or  DiagCode like '%" + searchValue + "%')";
                 var Data = _services.GetAll(cnd);
                 //Sorting
                 if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))

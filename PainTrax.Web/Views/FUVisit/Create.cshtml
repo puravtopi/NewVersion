@@ -749,6 +749,22 @@
                                 </div>
 
                             </div>
+
+                             <div class="row mb-3">
+                                <label class="col-sm-4 ">
+                                    <b> Body Part</b>
+                                </label>
+                                <div class="col-sm-8">
+                                    @{
+                                        var bodypart = Model.Page1 != null ? Model.Page1.bodypart : "";
+
+                                        bodypart = string.IsNullOrEmpty(bodypart) ? "" : bodypart;
+                                        bodypart = PainTrax.Web.Helper.Common.ReplceCommowithAnd(bodypart);
+                                    }
+                                    @bodypart
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -16,10 +16,9 @@
         </label>
         <div class="col-sm-10">
             <div class="col-sm-10" style="height: fit-content;">
-                <textarea id="txtHistory"">@Model.history</textarea>
+                <textarea id="txtHistory">@Model.history</textarea>
             </div>
         </div>
-
     </div>
     <div class="row mb-3">
         <label for="inputNumber" class="col-sm-2 col-form-label">
@@ -362,6 +361,7 @@
         myArray.forEach(function (item) {
             if (item != '') {
                 var linkbody = item.replace(" ", "_");
+
                 daig = daig + "<a href=# onclick=openDaignoModel('" + linkbody + "')>" + item + "</a>&nbsp;";
             }
         });
@@ -376,7 +376,7 @@
 
         $('#modeltitle').text("Add Daignosis");
 
-        var url = '@Url.Action("GetDaignoCodeList","FUVisit")?bodyparts=' + body;
+        var url = '@Url.Action("GetDaignoCodeList", "FUVisit")?bodyparts=' + body;
 
         $.ajax({
             type: "Post",
@@ -440,9 +440,10 @@
                 if (data > 0) {
                     $('#myModalMessage').modal('show');
                     $('#messBody').html('<p>Saved.</p>');
+                    $("#txtId_P1").val(data);
                     autoclosepopup();
                     fnShowPOC();
-                    $("#txtId_P1").val(data);
+                   
                     if (t != null)
                         $(t).tab('show');
                 }
@@ -459,7 +460,7 @@
     function fndefaultDiagnoses() {
 
 
-        var url = '@Url.Action("GetDefultDaignoCodeList","Visit")?bodyparts=' + $("#txtbodypart").val() + '';
+        var url = '@Url.Action("GetDefultDaignoCodeList", "Visit")?bodyparts=' + $("#txtbodypart").val() + '';
 
         $.ajax({
             type: "Post",
@@ -467,8 +468,6 @@
 
             contentType: "application/x-www-form-urlencoded",
             success: function (data, status, xhr) {
-
-
 
                 var daignoCodeDetails = "<ul>";
 

@@ -1979,8 +1979,15 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(page1Data.bodypart))
                         bodypart = Common.ReplceCommowithAnd(page1Data.bodypart);
 
-                    body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart) + " Pain.");
+                    body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart) + " pain.");
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(page1Data.bodypart) ? "" : page1Data.bodypart.ToLower());
+
+                    string assessment = "";
+                    if (!string.IsNullOrEmpty(page1Data.assessment))
+                    {
+                        assessment = page1Data.assessment.Replace("#PC", Common.FirstCharToUpper(bodypart) + " pain.");
+                        assessment = assessment.Replace("#accidenttype", patientData.accidentType);
+                    }
 
                     body = body.Replace("#PastMedicalHistory", this.removePtag(page1Data.pmh));
                     body = body.Replace("#PastSurgicalHistory", this.removePtag(page1Data.psh));
@@ -1988,7 +1995,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#Allergies", this.removePtag(page1Data.allergies));
                     body = body.Replace("#FamilyHistory", this.removePtag(page1Data.family_history));
                     body = body.Replace("#Vital", this.removePtag(page1Data.vital));
-                    body = body.Replace("#Diagnoses", this.removePtag(page1Data.assessment));
+                    body = body.Replace("#Diagnoses", this.removePtag(assessment));
                     body = body.Replace("#Occupation", this.removePtag(page1Data.occupation));
                     body = body.Replace("#PastMedications", this.removePtag(page1Data.medication));
                     body = body.Replace("#DD", this.removePtag(page1Data.dd));

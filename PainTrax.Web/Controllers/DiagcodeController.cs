@@ -36,7 +36,7 @@ namespace PainTrax.Web.Controllers
         {
             var data = new List<tbl_diagcodes>();
             try
-            {                
+            {
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 string cnd = " and cmp_id=" + cmpid;
                 //if (!string.IsNullOrEmpty(searchtxt))
@@ -44,9 +44,9 @@ namespace PainTrax.Web.Controllers
                 var result = _services.GetAll();
                 data = result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                SaveLog(ex,"Index");
+                SaveLog(ex, "Index");
             }
             return View(data);
         }
@@ -76,7 +76,7 @@ namespace PainTrax.Web.Controllers
                     _services.Insert(model);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Create");
             }
@@ -92,7 +92,7 @@ namespace PainTrax.Web.Controllers
                 obj.Id = id;
                 data = _services.GetOne(obj);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Edit");
             }
@@ -107,7 +107,7 @@ namespace PainTrax.Web.Controllers
             {
                 _services.Update(model);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Edit");
             }
@@ -121,7 +121,7 @@ namespace PainTrax.Web.Controllers
                 obj.Id = id;
                 _services.Delete(obj);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Delete");
             }
@@ -149,7 +149,7 @@ namespace PainTrax.Web.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                string cnd = " and (bodypart like '%" + searchValue + "%' or Description like '%" + searchValue + "%' or  DiagCode like '%" + searchValue + "%')";
+                string cnd = " and (bodypart like '%" + searchValue + "%' or Description like '%" + searchValue + "%' or  DiagCode like '%" + searchValue + "%') and cmp_id=" + cmpid;
                 var Data = _services.GetAll(cnd);
                 //Sorting
                 if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
@@ -210,7 +210,7 @@ namespace PainTrax.Web.Controllers
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "ImportData");
             }

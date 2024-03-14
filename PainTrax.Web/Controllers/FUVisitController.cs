@@ -113,6 +113,7 @@ namespace PainTrax.Web.Controllers
 
                     obj.dos = fuData.doe;
                     obj.dov = fuData.doe;
+                    obj.accidentType = fuData.accident_type;
 
                     if (ieData.primary_ins_cmp_id != null)
                     {
@@ -796,7 +797,8 @@ namespace PainTrax.Web.Controllers
                     is_active = true,
                     patient_id = patientId,
                     extra_comments = model.alert_note,
-                    type = model.type
+                    type = model.type,
+                    accident_type= model.accidentType
                 };
                 int fu_id = 0;
                 if (model.fu_id.Value > 0)
@@ -1899,7 +1901,7 @@ namespace PainTrax.Web.Controllers
                 {
                     body = body.Replace("#CC", string.IsNullOrEmpty(page1Data.cc) ? "" : this.removePtag(page1Data.cc));
                     body = body.Replace("#PE", string.IsNullOrEmpty(page1Data.pe) ? "" : page1Data.pe);
-                    body = body.Replace("#history", string.IsNullOrEmpty(page1DataIE.history) ? "" : page1DataIE.history);
+                    body = body.Replace("#history", string.IsNullOrEmpty(fuData.history) ? "" : fuData.history);
 
 
 
@@ -1910,7 +1912,14 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(page1Data.bodypart))
                         bodypart = Common.ReplceCommowithAnd(page1Data.bodypart);
 
-                    body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart) + " Pain.");
+                    body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart) + " pain.");
+
+                    string assessment = "";
+                    if (!string.IsNullOrEmpty(page1Data.assessment))
+                    {
+                        assessment = page1Data.assessment.Replace("#PC", Common.FirstCharToUpper(bodypart) + " pain.");
+                        assessment = assessment.Replace("#accidenttype", fuData.accident_type);
+                    }
 
 
                     body = body.Replace("#PastMedicalHistory", this.removePtag(page1DataIE.pmh));
@@ -1919,7 +1928,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#Allergies", this.removePtag(page1DataIE.allergies));
                     body = body.Replace("#FamilyHistory", this.removePtag(page1DataIE.family_history));
                     body = body.Replace("#Vital", this.removePtag(page1DataIE.vital));
-                    body = body.Replace("#Diagnoses", this.removePtag(page1Data.assessment));
+                    body = body.Replace("#Diagnoses", this.removePtag(assessment));
                     body = body.Replace("#Occupation", this.removePtag(page1Data.occupation));
                     body = body.Replace("#PastMedications", this.removePtag(page1DataIE.medication));
                     body = body.Replace("#DD", this.removePtag(page1Data.dd));

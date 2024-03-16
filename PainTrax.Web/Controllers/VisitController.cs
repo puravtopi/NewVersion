@@ -147,7 +147,7 @@ namespace PainTrax.Web.Controllers
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
 
-                
+
                 ViewBag.csList = _commonservices.GetCaseType(cmpid.Value);
                 ViewBag.asList = _commonservices.GetAccidenttype(cmpid.Value);
 
@@ -692,7 +692,7 @@ namespace PainTrax.Web.Controllers
                     secondary_policy_no = model.sec_policy_no,
                     secondary_wcb_group = model.sec_WCB_group,
                     compensation = model.compensation,
-                    accident_type= model.accidentType,
+                    accident_type = model.accidentType,
                     alert_note = model.alert_note,
                     referring_physician = model.referring_physician
 
@@ -1029,7 +1029,7 @@ namespace PainTrax.Web.Controllers
                 ViewBag.BodyPart = bodyparts.ToUpper();
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
-                string cnd = " and (cmp_id=" + cmpid + " and BodyPart='" + bodyparts + "') or Description like '%" + bodyparts + "%'";
+                string cnd = " and cmp_id=" + cmpid + " and (BodyPart='" + bodyparts + "' or Description like '%" + bodyparts + "%') order by Description desc";
 
                 var data = _diagcodesService.GetAll(cnd);
 
@@ -1044,7 +1044,7 @@ namespace PainTrax.Web.Controllers
                                   IsSelect = c.PreSelect,
                                   Display_Order = c.display_order
 
-                              }).ToList().OrderBy(x => x.Display_Order);
+                              }).ToList();
                 return PartialView("_DaignoCode", datavm);
 
 
@@ -2828,13 +2828,17 @@ namespace PainTrax.Web.Controllers
             try
             {
                 var iepage3 = _ieService.GetOnePage3(patientIEId);
-                var fupage3 = _mapper.Map<tbl_fu_page3>(iepage3);
 
-                if (fupage3 != null)
-                {
-                    fupage3.fu_id = fu_id;
-                    fupage3.cmp_id = cmpid.Value;
-                }
+                var fupage3 = new tbl_fu_page3();
+
+                if (iepage3 != null)
+                    fupage3 = _mapper.Map<tbl_fu_page3>(iepage3);
+
+
+                fupage3.fu_id = fu_id;
+                fupage3.cmp_id = cmpid.Value;
+
+
                 _fuPage3services.Insert(fupage3);
             }
             catch (Exception ex)

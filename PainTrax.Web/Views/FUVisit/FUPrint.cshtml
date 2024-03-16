@@ -26,7 +26,7 @@
 
                         </div>
 
-                       
+
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
     }
 
     function fnDownaloadPDF() {
-        var markup = $("#fuReport").html();        
+        var markup = $("#fuReport").html();
     }
 
     function fnDownaloadWord() {
@@ -56,11 +56,12 @@
         var url = '@Url.Action("DownloadWord", "FUVisit")';
 
         var ieId = '@ViewBag.ieId';
+        var fuId = '@ViewBag.fuId';
 
         $.ajax({
             type: "Post",
             url: url,
-            data: { "htmlContent": markup, "ieId": ieId },
+            data: { "htmlContent": markup, "ieId": ieId, "fuId": fuId },
             beforeSend: function () { $("#overlay").fadeIn(300); },
             complete: function () {
                 setTimeout(function () {

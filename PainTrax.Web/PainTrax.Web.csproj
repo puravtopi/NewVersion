@@ -26,6 +26,8 @@
     <PackageReference Include="EPPlus" Version="7.0.9" />
     <PackageReference Include="HtmlTextWriter" Version="2.1.1" />
     <PackageReference Include="HtmlToOpenXml.dll" Version="2.3.0" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.3" />
+    <PackageReference Include="itextsharp.xmlworker" Version="5.5.13.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
@@ -38,6 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Forms\Index.cshtml" />
     <None Include="wwwroot\assets\vendor\bootbox\bootbox.all.js" />
     <None Include="wwwroot\assets\vendor\bootbox\bootbox.all.min.js" />
     <None Include="wwwroot\assets\vendor\bootbox\bootbox.js" />

@@ -146,7 +146,7 @@
             var url = '@Url.Action("List","Visit")';
             var editurl = '@Url.Action("Create","Visit")';
             var printurl = '@Url.Action("IEPrint","Visit")';
-
+            var appurl = '@Url.Action("Appointments", "Appointment")';
 
             var tab = $("#tbl").DataTable({
                 "lengthMenu": [[25, 50, 100], [25, 50, 100]],
@@ -253,6 +253,7 @@
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowPOCSummary(' + full.id + ',0)" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i><span>POC Summary</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + full.id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnFuType(' + full.id + ',' + full.patient_id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Next Visit</span></a></li>';
+                            index += ' <li><a href="' + appurl + '/' + full.id + '"><i class="bi bi-calendar-week" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Appointments"></i> </a> </li>'
                             index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + printurl + '/' + full.id + '" ><i class="bi bi-printer-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print" data-bs-original-title="Print"></i><span>Print</span></a></li></ul>';
 
                             return index;

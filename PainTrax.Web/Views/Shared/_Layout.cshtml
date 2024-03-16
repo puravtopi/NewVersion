@@ -450,13 +450,17 @@
                             <i class="bi bi-circle"></i><span>State</span>
                         </a>
                     </li>
-                   
+                    <li>
+                        <a asp-action="Index" asp-controller="MapPdf">
+                            <i class="bi bi-circle"></i><span>Map Pdf</span>
+                        </a>
+                    </li>
                 </ul>
             </li><!-- End Components Nav -->
 
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#">
+                <a class="nav-link collapsed" asp-action="Index" asp-controller="Forms">
                     <i class="bi bi-person"></i>
                     <span>Forms</span>
                 </a>
@@ -525,7 +529,12 @@
                     </li>
                 </ul>
             </li>
-
+            <li class="nav-item">
+                <a class="nav-link" asp-action="Index" asp-controller="Appointment">
+                    <i class="bi bi-person"></i>
+                    <span>Appointments</span>
+                </a>
+            </li>
         </ul>
 
     </aside><!-- End Sidebar-->

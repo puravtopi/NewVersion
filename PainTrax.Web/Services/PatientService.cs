@@ -125,4 +125,18 @@ public class PatientService : ParentService
         Execute(cm);
     }
 
+    public List<string> GetPatientSearchList(int cmp_id, string prefix)
+    {
+        string cnd = " and cmp_id=" + cmp_id + " and (fname like  '" + prefix + "%' or lname like '" + prefix + "%')";
+        var data = GetAll(cnd);
+        List<string> _patients = new List<string>();
+
+        foreach (var item in data)
+        {
+            _patients.Add(item.fname + " " + item.lname + "_" + item.id.ToString());
+        }
+
+        return _patients;
+    }
+
 }

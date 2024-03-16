@@ -1774,10 +1774,12 @@ namespace PainTrax.Web.Controllers
                 ViewBag.BodyPart = bodyparts.ToUpper();
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
-                string cnd = " and (cmp_id=" + cmpid + " and BodyPart='" + bodyparts + "') or Description like '%" + bodyparts + "%'";
+            string cnd = " and cmp_id=" + cmpid + " and (BodyPart='" + bodyparts + "' or Description like '%" + bodyparts + "%') order by Description desc";
 
-                var data = _diagcodesService.GetAll(cnd);
-                var datavm = (from c in data
+            var data = _diagcodesService.GetAll(cnd);
+
+
+            var datavm = (from c in data
                               select new DaignoCodeVM
                               {
                                   DaignoCodeId = c.Id.Value,
@@ -1786,7 +1788,7 @@ namespace PainTrax.Web.Controllers
                                   IsSelect = c.PreSelect,
                                   Display_Order = c.display_order
 
-                              }).ToList().OrderBy(x => x.Display_Order);           
+                              }).ToList();           
             return PartialView("_DaignoCode", datavm);
         }
 
@@ -2062,6 +2064,7 @@ namespace PainTrax.Web.Controllers
                 body = body.Replace("#LastNote", "");
 
                 ViewBag.ieId = patientData.id;
+                ViewBag.fuId = fuid;
                 ViewBag.content = body;
 
             }
@@ -2092,7 +2095,7 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult DownloadWord(string htmlContent, int ieId)
+        public IActionResult DownloadWord(string htmlContent, int ieId,int fuId)
         {
             //  string htmlContent = "<p>This is a <strong>sample</strong> HTML content.</p>";
             string filePath = "", docName = "";
@@ -2129,8 +2132,9 @@ namespace PainTrax.Web.Controllers
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
                 var patientData = _ieService.GetOnebyPatientId(ieId);
+                var fuData = _patientFuservices.GetOne(fuId);
 
-                docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(patientData.doe).Replace("/", "") + ".docx";
+                docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
 
                 string subPath = "Report/" + cmpid; // Your code goes here
 

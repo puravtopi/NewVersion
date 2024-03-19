@@ -61,7 +61,7 @@
 <script>
     $("#btnDaignoCode").click(function () {
 
-        var daignoCodeDetails = "<ul>";
+        var daignoCodeDetails = "<ol>";
 
 
         var myContentDaignosis = ckAssessment.getData();
@@ -83,7 +83,7 @@
                 daignoCodeDetails += "</li>";
             }
         });
-        var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ul>";
+        var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ol>";
 
         ckAssessment.data.set(htmlDaignosis);
 

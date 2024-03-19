@@ -1843,7 +1843,7 @@ namespace PainTrax.Web.Controllers
                 //using streamreader for reading my htmltemplate   
 
                 var fuData = _patientFuservices.GetOne(fuid);
-
+           
                 var templateData = _printService.GetTemplate(cmpid, fuData.type);
                 var gender = "";
 
@@ -1902,10 +1902,8 @@ namespace PainTrax.Web.Controllers
                 if (page1Data != null)
                 {
                     body = body.Replace("#CC", string.IsNullOrEmpty(page1Data.cc) ? "" : this.removePtag(page1Data.cc));
-                    body = body.Replace("#PE", string.IsNullOrEmpty(page1Data.pe) ? "" : page1Data.pe);
-                    body = body.Replace("#history", string.IsNullOrEmpty(fuData.history) ? "" : fuData.history);
-
-
+                    body = body.Replace("#PE", string.IsNullOrEmpty(page1Data.pe) ? "" : this.removePtag(page1Data.pe));
+                    body = body.Replace("#history", string.IsNullOrEmpty(page1Data.history) ? "" : this.removePtag(page1Data.history));
 
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(page1Data.bodypart) ? "" : page1Data.bodypart.ToLower());
 

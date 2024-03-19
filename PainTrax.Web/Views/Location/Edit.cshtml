@@ -32,7 +32,7 @@
 
 
                         <!-- General Form Elements -->
-                        <form asp-action="Edit" asp-controller="Location">
+                        <form asp-action="Edit" asp-controller="Location" enctype="multipart/form-data">
                             <input type="hidden" asp-for="id" />
                             <input type="hidden" asp-for="createdby" />
                             <input type="hidden" asp-for="createddate" />
@@ -75,6 +75,25 @@
                                                     Active
                                                 </label>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Header Template</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <input type="file" class="form-control" asp-for="header_template" accept=".docx,.doc">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label"></label>
+                                        <div class="col-md-8 col-lg-7">
+                                            @if (!string.IsNullOrEmpty(Model.header_template))
+                                            {
+                                                <a href="@Url.Content("~/Uploads/HeaderTemplate/" + Model.header_template)" target="_blank">@Model.header_template</a>
+                                            }
+                                            else
+                                            {
+                                                <span>No file uploaded</span>
+                                            }
                                         </div>
                                     </div>
                                     <div class="row mb-3">

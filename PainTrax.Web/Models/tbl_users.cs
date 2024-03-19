@@ -20,6 +20,7 @@ namespace PainTrax.Web.Models
 		public DateTime? createddate { get; set; }
 		public DateTime? updateddate { get; set; }
 		public int? updatedby { get; set; }
+        public string? signature { get; set; }
 
-	}
+    }
 }

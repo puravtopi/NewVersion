@@ -32,7 +32,7 @@
                         </div>
 
                         <!-- General Form Elements -->
-                        <form asp-action="Create" asp-controller="Location">
+                        <form asp-action="Create" asp-controller="Location" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="row mb-3">
@@ -59,6 +59,12 @@
                                         <label class="col-md-4 col-lg-3 col-form-label">Dr Lastname</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" class="form-control" asp-for="drlname" tabindex="8">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Header Template</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <input type="file" class="form-control" asp-for="header_template" accept=".docx,.doc">
                                         </div>
                                     </div>
                                     <div class="row mb-3">

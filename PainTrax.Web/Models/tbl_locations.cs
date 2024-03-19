@@ -29,5 +29,6 @@ namespace PainTrax.Web.Models
 		public int? updatedby { get; set; }
 		public int? old_id { get; set; }
 
+		public string? header_template { get; set; }
 	}
 }

@@ -32,7 +32,7 @@
 
 
                         <!-- General Form Elements -->
-                        <form asp-action="Edit" asp-controller="User">
+                        <form asp-action="Edit" asp-controller="User" enctype="multipart/form-data">
                             <input type="hidden" asp-for="Id" />
                             <input type="hidden" asp-for="createdby" />
                             <input type="hidden" asp-for="createddate" />
@@ -113,7 +113,25 @@
                                         </select>*@
                                     </div>
                                 </div>
-
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Upload Signature</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <input type="file" class="form-control" asp-for="signature" accept=".jpg,.jpeg,.pjpeg,.png,.svg">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label"></label>
+                                        <div class="col-md-8 col-lg-7">
+                                            @if (!string.IsNullOrEmpty(Model.signature))
+                                            {
+                                                <a href="@Url.Content("~/Uploads/Sign/"  + Model.cmp_id + "/"  + Model.signature)" target="_blank">@Model.signature</a>
+                                            }
+                                            else
+                                            {
+                                                <span>No file uploaded</span>
+                                            }
+                                        </div>
+                                    </div>
                             </div>
                         </div>
                         </form>

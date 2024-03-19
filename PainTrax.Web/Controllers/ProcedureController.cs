@@ -81,12 +81,7 @@ namespace PainTrax.Web.Controllers
                 model.position = model.position == null ? "" : model.position;
                 model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 if (upload_template != null)
-                {
-                    //string folderPath = Path.Combine(Environment.WebRootPath, "UploadedFiles");
-                    //if (!Directory.Exists(folderPath))
-                    //{
-                    //    Directory.CreateDirectory(folderPath);
-                    //}
+                {                   
                     string folderPath = Path.Combine(Environment.WebRootPath, "InjectionReports",model.cmp_id.ToString());
                     if (!Directory.Exists(folderPath))
                     {
@@ -133,11 +128,31 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(tbl_procedures model)
+        public IActionResult Edit(tbl_procedures model, IFormFile upload_template)
         {
             try
             {
                 model.position = model.position == null ? "" : model.position;
+                if (upload_template != null && upload_template.Length > 0)
+                {
+                    string folderPath = Path.Combine(Environment.WebRootPath, "InjectionReports", model.cmp_id.ToString());
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+
+                    string originalFileName = Path.GetFileName(upload_template.FileName);
+                    string extension = Path.GetExtension(originalFileName);
+                    string fileNameasmcode = model.mcode;
+                    string fileName = fileNameasmcode + extension;
+                    string filePath = Path.Combine(folderPath, fileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        upload_template.CopyTo(fileStream);
+                    }
+                    model.upload_template = fileName;
+                }
                 _services.Update(model);
             }
             catch (Exception ex)

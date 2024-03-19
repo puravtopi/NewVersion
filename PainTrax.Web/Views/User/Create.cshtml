@@ -32,7 +32,7 @@
                         </div>
 
                         <!-- General Form Elements -->
-                        <form asp-action="Create" asp-controller="User">
+                        <form asp-action="Create" asp-controller="User" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="row mb-3">
@@ -106,7 +106,12 @@
 
                                         </div>
                                     </div>
-
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Upload Signature</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <input type="file" class="form-control" asp-for="signature" accept=".jpg,.jpeg,.pjpeg,.png,.svg">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

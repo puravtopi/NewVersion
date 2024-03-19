@@ -69,7 +69,7 @@ namespace PainTrax.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(tbl_users model)
+        public IActionResult Create(tbl_users model,IFormFile signature)
         {
             try
             {                
@@ -78,7 +78,24 @@ namespace PainTrax.Web.Controllers
                     model.createdby = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
                     model.createddate = System.DateTime.Now;
                     model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-                    model.password = EncryptionHelper.Encrypt(model.password);
+                   // model.password = EncryptionHelper.Encrypt(model.password);
+                    if (signature != null)
+                    {                        
+                        string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/Sign", model.cmp_id.ToString());
+                        if (!Directory.Exists(folderPath))
+                        {
+                            Directory.CreateDirectory(folderPath);
+                        }
+                        // Generate a unique filename 
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(signature.FileName);                        
+                        string filePath = Path.Combine(folderPath, fileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            signature.CopyTo(fileStream);
+                        }
+                        model.signature = fileName;
+                    }
                     _services.Insert(model);
                 }
             }
@@ -109,13 +126,29 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(tbl_users model)
+        public IActionResult Edit(tbl_users model,IFormFile signature)
         {
             try
             {
                 model.updatedby = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
                 model.updateddate = System.DateTime.Now;
+                if (signature != null)
+                {
+                    string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/Sign", model.cmp_id.ToString());
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    // Generate a unique filename 
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(signature.FileName);
+                    string filePath = Path.Combine(folderPath, fileName);
 
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        signature.CopyTo(fileStream);
+                    }
+                    model.signature = fileName;
+                }
                 _services.Update(model);
             }
             catch (Exception ex)

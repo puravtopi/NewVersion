@@ -56,7 +56,7 @@ namespace PainTrax.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(tbl_locations model)
+        public IActionResult Create(tbl_locations model, IFormFile header_template)
         {
             try
             {
@@ -65,6 +65,23 @@ namespace PainTrax.Web.Controllers
                     model.createdby = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
                     model.createddate = System.DateTime.Now;
                     model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                    if (header_template != null)
+                    {
+                        string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/HeaderTemplate");
+                        if (!Directory.Exists(folderPath))
+                        {
+                            Directory.CreateDirectory(folderPath);
+                        }
+                        // Generate a unique filename 
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(header_template.FileName);
+                        string filePath = Path.Combine(folderPath, fileName);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            header_template.CopyTo(fileStream);
+                        }
+                        model.header_template = fileName;
+                    }
                     _services.Insert(model);
                 }
             }
@@ -92,10 +109,27 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(tbl_locations model)
+        public IActionResult Edit(tbl_locations model , IFormFile header_template)
         {
             try
             {
+                if (header_template != null)
+                {
+                    string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/HeaderTemplate");
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    // Generate a unique filename 
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(header_template.FileName);
+                    string filePath = Path.Combine(folderPath, fileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        header_template.CopyTo(fileStream);
+                    }
+                    model.header_template = fileName;
+                }
                 _services.Update(model);
             }
             catch (Exception ex)

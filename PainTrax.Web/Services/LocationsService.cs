@@ -32,8 +32,8 @@ namespace PainTrax.Web.Services
 		public void Insert(tbl_locations data)
 		{
 			MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_locations
-		(location,setasdefault,address,city,state,zipcode,emailid,telephone,contactpersonname,nameofpractice,fax,drfname,drlname,isactive,cmp_id,createddate,createdby)Values
-				(@location,@setasdefault,@address,@city,@state,@zipcode,@emailid,@telephone,@contactpersonname,@nameofpractice,@fax,@drfname,@drlname,@isactive,@cmp_id,@createddate,@createdby)", conn);
+		(location,setasdefault,address,city,state,zipcode,emailid,telephone,contactpersonname,nameofpractice,fax,drfname,drlname,isactive,cmp_id,createddate,createdby,header_template)Values
+				(@location,@setasdefault,@address,@city,@state,@zipcode,@emailid,@telephone,@contactpersonname,@nameofpractice,@fax,@drfname,@drlname,@isactive,@cmp_id,@createddate,@createdby,@header_template)", conn);
 			cm.Parameters.AddWithValue("@location", data.location);
 			cm.Parameters.AddWithValue("@setasdefault", data.setasdefault);
 			cm.Parameters.AddWithValue("@address", data.address);
@@ -51,8 +51,9 @@ namespace PainTrax.Web.Services
 			cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
 			cm.Parameters.AddWithValue("@createddate", data.createddate);
 			cm.Parameters.AddWithValue("@createdby", data.createdby);
-			
-			Execute(cm);
+            cm.Parameters.AddWithValue("@header_template", data.header_template);
+
+            Execute(cm);
 		}
 		public void Update(tbl_locations data)
 		{
@@ -73,7 +74,8 @@ namespace PainTrax.Web.Services
 		isactive=@isactive,
 		
 		updatedate=@updatedate,
-		updatedby=@updatedby
+		updatedby=@updatedby,
+		header_template=@header_template
 	 	where id=@id", conn);
 			cm.Parameters.AddWithValue("@id", data.id);
 			cm.Parameters.AddWithValue("@location", data.location);
@@ -92,8 +94,8 @@ namespace PainTrax.Web.Services
 			cm.Parameters.AddWithValue("@isactive", data.isactive);		
 			cm.Parameters.AddWithValue("@updatedate", data.updatedate);
 			cm.Parameters.AddWithValue("@updatedby", data.updatedby);
-			
-			Execute(cm);
+            cm.Parameters.AddWithValue("@header_template", data.header_template);
+            Execute(cm);
 		}
 		public void Delete(tbl_locations data)
 		{

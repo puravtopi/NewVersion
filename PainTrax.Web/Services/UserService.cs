@@ -39,8 +39,8 @@ namespace PainTrax.Web.Services
         {
             //data.password = EncryptionHelper.Encrypt(data.password);
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_users
-		(fname,lname,emailid,address,fullname,uname,password,groupid,desigid,cmp_id,createdby,createddate,phoneno)Values
-				(@fname,@lname,@emailid,@address,@fullname,@uname,@password,@groupid,@desigid,@cmpid,@createdby,@createddate,@phoneno)", conn);
+		(fname,lname,emailid,address,fullname,uname,password,groupid,desigid,cmp_id,createdby,createddate,phoneno,signature)Values
+				(@fname,@lname,@emailid,@address,@fullname,@uname,@password,@groupid,@desigid,@cmpid,@createdby,@createddate,@phoneno,@signature)", conn);
             cm.Parameters.AddWithValue("@fname", data.fname);
             cm.Parameters.AddWithValue("@lname", data.lname);
             cm.Parameters.AddWithValue("@emailid", data.emailid);
@@ -54,6 +54,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@createdby", data.createdby);
             cm.Parameters.AddWithValue("@createddate", data.createddate);
             cm.Parameters.AddWithValue("@phoneno", data.phoneno);
+            cm.Parameters.AddWithValue("@signature", data.signature);
 
             Execute(cm);
         }
@@ -71,7 +72,8 @@ namespace PainTrax.Web.Services
 		desigid=@desigid,
 		phoneno=@phoneno,
 	    updateddate=@updateddate,
-		updatedby=@updatedby		
+		updatedby=@updatedby,
+        signature=@signature
         where Id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.Id);
             cm.Parameters.AddWithValue("@fname", data.fname);
@@ -86,6 +88,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@updateddate", data.updateddate);
             cm.Parameters.AddWithValue("@updatedby", data.updatedby);
             cm.Parameters.AddWithValue("@phoneno", data.phoneno);
+            cm.Parameters.AddWithValue("@signature", data.signature);
             Execute(cm);
         }
         public void Delete(tbl_users data)

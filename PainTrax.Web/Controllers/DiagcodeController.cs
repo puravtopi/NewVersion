@@ -64,9 +64,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Create(tbl_diagcodes model)
         {
             try
-            {
-                string s = "";
-                int t = int.Parse(s);
+            {                
                 if (ModelState.IsValid)
                 {
                     model.CreatedBy = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);

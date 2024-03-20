@@ -6,8 +6,8 @@
         <h1>Manage Location</h1>
         <nav>
             <ol class="breadcrumb">
-               <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Location">Home</a></li>
-                <li class="breadcrumb-item active" >Edit</li>
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Location">Home</a></li>
+                <li class="breadcrumb-item active">Edit</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
@@ -19,7 +19,7 @@
                 <div class="card">
                     <div class="card-body">
 
-                         <div class="row">
+                        <div class="row">
                             <div class="col-sm-12 col-md-6">
                                 <h5 class="card-title">Edit Location</h5>
                             </div>
@@ -94,6 +94,7 @@
                                             {
                                                 <span>No file uploaded</span>
                                             }
+                                            <input type="hidden" id="header_template_hidden" name="header_template_hidden" value="@Model.header_template" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -139,7 +140,7 @@
                                         </div>
                                     </div>
 
-                                    
+
 
                                 </div>
 
@@ -158,4 +159,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    }
+}

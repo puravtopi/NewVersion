@@ -37,6 +37,8 @@
   <ItemGroup>
     <Folder Include="Logfiles\" />
     <Folder Include="Report\" />
+    <Folder Include="Uploads\HeaderTemplate\" />
+    <Folder Include="Uploads\Sign\" />
   </ItemGroup>
 
   <ItemGroup>

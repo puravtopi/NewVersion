@@ -130,6 +130,10 @@ namespace PainTrax.Web.Controllers
                     }
                     model.header_template = fileName;
                 }
+                else
+                {
+                    model.header_template = model.header_template_hidden;
+                }
                 _services.Update(model);
             }
             catch (Exception ex)

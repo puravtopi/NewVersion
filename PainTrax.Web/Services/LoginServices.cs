@@ -11,6 +11,7 @@ namespace PainTrax.Web.Services
     {
 
         public ServiceResponse<vm_cm_user> CompanyLogin(LoginVM data)
+        
         {
             // var PassWord = EncryptionHelper.Decrypt(data.PassWord);
             ServiceResponse<vm_cm_user> respones = new ServiceResponse<vm_cm_user>();

@@ -30,5 +30,6 @@ namespace PainTrax.Web.Models
 		public int? old_id { get; set; }
 
 		public string? header_template { get; set; }
+		public string? header_template_hidden { get; set; }
 	}
 }

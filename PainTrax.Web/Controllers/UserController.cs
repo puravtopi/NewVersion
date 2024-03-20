@@ -26,9 +26,9 @@ namespace PainTrax.Web.Controllers
         private readonly Common _common = new Common();
         private readonly ILoggingService _log;
         private IConfiguration _configuration;
-       
 
-        public UserController(IMapper mapper,ILogger<UserController> logger, ILoggingService log, IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
+
+        public UserController(IMapper mapper, ILogger<UserController> logger, ILoggingService log, IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
         {
             _mapper = mapper;
             _logger = logger;
@@ -41,12 +41,12 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
-               // string s = "";
-               // int a = int.Parse(s);
+                // string s = "";
+                // int a = int.Parse(s);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                SaveLog(ex,"Index");
+                SaveLog(ex, "Index");
             }
             return View();
         }
@@ -69,25 +69,25 @@ namespace PainTrax.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(tbl_users model,IFormFile signature)
+        public IActionResult Create(tbl_users model, IFormFile signature)
         {
             try
-            {                
+            {
                 if (ModelState.IsValid)
                 {
                     model.createdby = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
                     model.createddate = System.DateTime.Now;
                     model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-                   // model.password = EncryptionHelper.Encrypt(model.password);
+                    // model.password = EncryptionHelper.Encrypt(model.password);
                     if (signature != null)
-                    {                        
+                    {
                         string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/Sign", model.cmp_id.ToString());
                         if (!Directory.Exists(folderPath))
                         {
                             Directory.CreateDirectory(folderPath);
                         }
                         // Generate a unique filename 
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(signature.FileName);                        
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(signature.FileName);
                         string filePath = Path.Combine(folderPath, fileName);
 
                         using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -126,7 +126,7 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(tbl_users model,IFormFile signature)
+        public IActionResult Edit(tbl_users model, IFormFile signature)
         {
             try
             {
@@ -148,6 +148,10 @@ namespace PainTrax.Web.Controllers
                         signature.CopyTo(fileStream);
                     }
                     model.signature = fileName;
+                }
+                else
+                {
+                    model.signature = model.signature_hidden;
                 }
                 _services.Update(model);
             }
@@ -198,6 +202,8 @@ namespace PainTrax.Web.Controllers
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 string cnd = " and (fname like '%" + searchValue + "%')";
 
+                cnd = " and cmp_id=" + cmpid;
+
                 if (!String.IsNullOrEmpty(searchValue))
                 {
                     cnd = " and (fname like '%" + searchValue + "%' or lname like '%" + searchValue + "%' or emailid like '%" + searchValue + "%' or fullname like '%" + searchValue + "%' Or ";
@@ -205,7 +211,7 @@ namespace PainTrax.Web.Controllers
                 }
                 var Data = _services.GetAll(cnd);
 
-           
+
 
                 //sorting
                 if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
@@ -251,25 +257,25 @@ namespace PainTrax.Web.Controllers
                 {
                     DataTable dt = this.Read2007Xlsx(postedFile);
                     int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-                    int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);                    
-                   
+                    int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
+
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         if (!string.IsNullOrEmpty(dt.Rows[i]["FName"].ToString()))
                         {
                             tbl_users obj = new tbl_users()
                             {
-                                cmp_id = cmpid,                               
+                                cmp_id = cmpid,
                                 fname = dt.Rows[i]["FName"].ToString(),
                                 lname = dt.Rows[i]["LName"].ToString(),
                                 emailid = dt.Rows[i]["Email"].ToString(),
                                 address = dt.Rows[i]["Address"].ToString(),
                                 fullname = dt.Rows[i]["FullName"].ToString(),
                                 uname = dt.Rows[i]["UserName"].ToString(),
-                                password = dt.Rows[i]["Password"].ToString(),                               
+                                password = dt.Rows[i]["Password"].ToString(),
                                 groupid = string.IsNullOrEmpty(dt.Rows[i]["GroupId"].ToString()) ? 0 : Convert.ToInt16(dt.Rows[i]["GroupId"].ToString()),
                                 desigid = string.IsNullOrEmpty(dt.Rows[i]["DesigId"].ToString()) ? 0 : Convert.ToInt16(dt.Rows[i]["DesigId"].ToString()),
-                                phoneno = dt.Rows[i]["PhoneNo"].ToString(),                               
+                                phoneno = dt.Rows[i]["PhoneNo"].ToString(),
                                 createdby = userid,
                                 createddate = System.DateTime.Now
                             };
@@ -422,7 +428,7 @@ namespace PainTrax.Web.Controllers
                     new DataColumn("Emailaddress", typeof(string)),
                     new DataColumn("Address", typeof(string)),
                     new DataColumn("FullName", typeof(string)),
-                    new DataColumn("UserName", typeof(string)),                  
+                    new DataColumn("UserName", typeof(string)),
                     new DataColumn("GroupName", typeof(string)),
                     new DataColumn("DesignationName", typeof(string)),                   
                    // new DataColumn("PhoneNo", typeof(string)),                                   
@@ -431,7 +437,7 @@ namespace PainTrax.Web.Controllers
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var user in data)
                 {
-                    dt.Rows.Add(user.fname, user.lname, user.emailid, user.address, user.fullname, user.uname, user.group_name,user.desig_name);
+                    dt.Rows.Add(user.fname, user.lname, user.emailid, user.address, user.fullname, user.uname, user.group_name, user.desig_name);
                 }
 
                 // Create a new Excel file

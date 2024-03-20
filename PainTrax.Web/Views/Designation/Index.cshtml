@@ -25,6 +25,7 @@
                             <div class="col-md-12 col-lg-12">
                                 <button class="btn btn-primary" style="float:right;margin-left:10px" data-bs-toggle="modal" data-bs-target="#importModal">Import</button>
                                 <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcel" asp-controller="Designation">Export</a>
+                                 <button class="btn btn-secondary" style="float:right;margin-left:10px" onclick="fndownalodSample()">DownLoad Sample</button>&nbsp
                                 <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Designation">Add New</a>
 
                             </div>
@@ -157,6 +158,34 @@
             });
         }
 
+        function fndownalodSample() {
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "DownloadDocument", true);
+            xhr.responseType = "blob";
+            xhr.onload = function (e) {
+                if (this.status == 200) {
+                    var blob = this.response;
+
+                    /* Get filename from Content-Disposition header */
+                    var filename = "";
+                    var disposition = xhr.getResponseHeader('Content-Disposition');
+                    if (disposition && disposition.indexOf('attachment') !== -1) {
+                        var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                        var matches = filenameRegex.exec(disposition);
+                        if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                    }
+
+                    // This does the trick
+                    var a = document.createElement('a');
+                    a.href = window.URL.createObjectURL(blob);
+                    a.download = filename;
+                    a.dispatchEvent(new MouseEvent('click'));
+                }
+            }
+            xhr.send();
+
+        }
     </script>
 
 </main><!-- End #main -->

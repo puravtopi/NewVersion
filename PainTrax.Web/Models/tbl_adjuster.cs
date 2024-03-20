@@ -25,8 +25,8 @@ namespace PainTrax.Web.Models
        
 		public bool? set_as_default { get; set; }
 		public string? fax { get; set; }
-		public string label { get; set; }
-		public string val { get; set; }
+		//public string? label { get; set; }
+		//public string? val { get; set; }
 		public int? cmp_id { get; set; }
 		public int? created_by { get; set; }
 		public int? updated_by { get; set; }

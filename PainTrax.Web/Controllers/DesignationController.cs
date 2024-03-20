@@ -5,12 +5,14 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MySqlX.XDevAPI.Common;
+using Org.BouncyCastle.Asn1.Ocsp;
 using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using System.Data;
 using System.Data.OleDb;
+using System.Text.RegularExpressions;
 
 namespace PainTrax.Web.Controllers
 {
@@ -208,62 +210,82 @@ namespace PainTrax.Web.Controllers
                     Directory.CreateDirectory(path);
                 }
 
-                //Save the uploaded Excel file.
-                string fileName = Path.GetFileName(postedFile.FileName);
-                string filePath = Path.Combine(path, fileName);
+                // Save the uploaded Excel file.
+                string filePath = Path.Combine(postedFile.FileName);
                 using (FileStream stream = new FileStream(filePath, FileMode.Create))
                 {
                     postedFile.CopyTo(stream);
                 }
 
-                //Read the connection string for the Excel file.
-                string conString = this.Configuration.GetConnectionString("ExcelConString");
-                DataTable dt = new DataTable();
-                conString = string.Format(conString, filePath);
+                // Read the connection string for the Excel file.
+                string connectionString = Configuration.GetConnectionString("ExcelConString");
 
-                using (OleDbConnection connExcel = new OleDbConnection(conString))
+                // Modify the connection string with the file path.
+                connectionString = string.Format(connectionString, filePath);
+
+                using (OleDbConnection connExcel = new OleDbConnection(connectionString))
                 {
-                    using (OleDbCommand cmdExcel = new OleDbCommand())
+                    connExcel.Open();
+                    DataTable dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                    string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                    connExcel.Close();
+
+                    using (OleDbCommand cmdExcel = new OleDbCommand($"SELECT * FROM [{sheetName}]", connExcel))
                     {
-                        using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                        using (OleDbDataAdapter odaExcel = new OleDbDataAdapter(cmdExcel))
                         {
-                            cmdExcel.Connection = connExcel;
-
-                            //Get the name of First Sheet.
-                            connExcel.Open();
-                            DataTable dtExcelSchema;
-                            dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                            string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
-                            connExcel.Close();
-
-                            //Read Data from First Sheet.
-                            connExcel.Open();
-                            cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
-                            odaExcel.SelectCommand = cmdExcel;
+                            DataTable dt = new DataTable();
                             odaExcel.Fill(dt);
-                            connExcel.Close();
+
+                            int? cmpId = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                            int? userId = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
+
+                            //foreach (DataRow row in dt.Rows)
+                            //{
+                            //    tbl_designation obj = new tbl_designation()
+                            //    {
+                            //        cmp_id = cmpId,
+                            //        title = row[0].ToString(),
+                            //        code = row[1].ToString(),
+                            //        createdby = userId,
+                            //        createddate = DateTime.Now
+                            //    };
+
+                            //    _services.Insert(obj);
+                            //}
+                            for (int i = 0; i < dt.Rows.Count; i++)
+                            {
+                                if (!string.IsNullOrEmpty(dt.Rows[i]["DesignationTitle"].ToString()))
+                                {
+                                    tbl_designation obj = new tbl_designation()
+                                    {
+                                        cmp_id = cmpId,
+                                        title = dt.Rows[i]["DesignationTitle"].ToString(),
+                                        code = dt.Rows[i]["Code"].ToString(),
+                                        createddate = DateTime.Now,
+                                        createdby = userId,
+
+                                    };
+                                    _services.Insert(obj);
+                                }
+                            }
                         }
                     }
-                }
-
-                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-                int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
-
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    tbl_designation obj = new tbl_designation()
-                    {
-                        cmp_id = cmpid,
-                        title = dt.Rows[i][0].ToString(),
-                        createdby = userid,
-                        createddate = System.DateTime.Now
-                    };
-
-                    _services.Insert(obj);
                 }
             }
             return RedirectToAction("Index");
         }
+      
+        [HttpGet]
+        public ActionResult DownloadDocument()
+        {
+            var path = Path.Combine(Environment.WebRootPath + "/Uploads/Sample", "Designations.xlsx");
+            var fs = new FileStream(path, FileMode.Open);
+
+            // Return the file. A byte array can also be used instead of a stream
+            return File(fs, "application/octet-stream", "Designations.xlsx");
+        }
+
 
         [HttpGet]
         public IActionResult ExportToExcel()

@@ -4,12 +4,11 @@ namespace PainTrax.Web.Models
 {
 	public class tbl_designation
 	{
-		public string code { get; set; }
+        [Required(ErrorMessage = "Please enter Designation code")]
+        public string? code { get; set; }
 
 		[Required(ErrorMessage = "Please enter Designation Name")]
-		public string title { get; set; }
-		
-		[Required(ErrorMessage = "Please enter Designation Name")]		
+		public string? title { get; set; }
 		public int? id { get; set; }
 		public int? cmp_id { get; set; }
 		public DateTime? createddate { get; set; }

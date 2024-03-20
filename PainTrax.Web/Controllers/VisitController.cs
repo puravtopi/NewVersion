@@ -2101,12 +2101,13 @@ namespace PainTrax.Web.Controllers
 
                 var strDiagnostic = this.getDiagnostic(id);
 
-
-                if (string.IsNullOrEmpty(strDiagnostic))
-                    strDiagnostic = "None Reviewed";
-                else
-                    strDiagnostic = strDiagnostic + "<br/><br/>The above diagnostic studies were reviewed.";
-
+                if (cmpid != "4")
+                {
+                    if (string.IsNullOrEmpty(strDiagnostic))
+                        strDiagnostic = "None Reviewed";
+                    else
+                        strDiagnostic = strDiagnostic + "<br/><br/>The above diagnostic studies were reviewed.";
+                }
 
                 body = body.Replace("#Diagnostic", this.removePtag(strDiagnostic));
 

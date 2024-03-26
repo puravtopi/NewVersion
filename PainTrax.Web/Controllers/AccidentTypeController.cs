@@ -26,6 +26,7 @@ namespace PainTrax.Web.Controllers
             _logger = logger;
             Environment = environment;
         }
+
         public IActionResult Index(string searchtxt = "")
         {
             List<tbl_accidenttype> result = new List<tbl_accidenttype>();

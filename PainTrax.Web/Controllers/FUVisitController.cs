@@ -49,11 +49,13 @@ namespace PainTrax.Web.Controllers
         private EnumHelper enumHelper = new EnumHelper();
         private readonly ILogger<VisitController> _logger;
         private IMapper _mapper;
+        private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
 
-        public FUVisitController(ILogger<VisitController> logger, IMapper mapper)
+        public FUVisitController(ILogger<VisitController> logger, IMapper mapper, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
         {
             _mapper = mapper;
             _logger = logger;
+            Environment = environment;
         }
 
         public IActionResult Index()
@@ -2063,6 +2065,7 @@ namespace PainTrax.Web.Controllers
 
                 ViewBag.ieId = patientData.id;
                 ViewBag.fuId = fuid;
+                ViewBag.locId = patientData.location_id;
                 ViewBag.content = body;
 
             }
@@ -2155,11 +2158,23 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpGet]
-        public virtual ActionResult DownloadFile(string filePath, string fileName)
+        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0)
         {
-            string filepathFrom = @"HeaderTemplate/1/IE_Template.dotx";
-            string filepathTo = filePath;
-            AddHeaderFromTo(filepathFrom, filepathTo);
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+
+            var dt = _locService.GetAll(" and cmp_id=" + cmpid + " and id=" + locId);
+
+            if (dt.Count > 0)
+            {
+                if (!string.IsNullOrEmpty(dt[0].header_template))
+                {
+                    string filepathFrom = Path.Combine(Environment.WebRootPath, "Uploads/HeaderTemplate") + "//" + dt[0].header_template;
+
+
+                    string filepathTo = filePath;
+                    AddHeaderFromTo(filepathFrom, filepathTo);
+                }
+            }
             byte[] data = System.IO.File.ReadAllBytes(filePath);
             return File(data, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
 

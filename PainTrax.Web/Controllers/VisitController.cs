@@ -47,13 +47,15 @@ namespace PainTrax.Web.Controllers
         private readonly FUOtherService _fuOtherservices = new FUOtherService();
         private readonly ILogger<VisitController> _logger;
         private readonly SettingsService _settingservices = new SettingsService();
+        private readonly ProcedureService _procedureservices = new ProcedureService();
+        private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
         private IMapper _mapper;
 
 
-        public VisitController(ILogger<VisitController> logger, IMapper mapper)
+        public VisitController(ILogger<VisitController> logger, IMapper mapper, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
         {
             _logger = logger;
-            _mapper = mapper;
+            _mapper = mapper; Environment = environment;
         }
 
         #region IE method
@@ -2127,6 +2129,7 @@ namespace PainTrax.Web.Controllers
                 body = body.Replace("#LastNote", "");
 
                 ViewBag.ieId = patientData.id;
+                ViewBag.locId = patientData.location_id;
                 ViewBag.content = body;
             }
             catch (Exception ex)
@@ -2221,14 +2224,24 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpGet]
-        public virtual ActionResult DownloadFile(string filePath, string fileName)
+        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0)
         {
 
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
-            string filepathFrom = @"HeaderTemplate//" + cmpid + "//IE_Template.dotx";
-            string filepathTo = filePath;
-            AddHeaderFromTo(filepathFrom, filepathTo);
+            var dt = _locService.GetAll(" and cmp_id=" + cmpid + " and id=" + locId);
+
+            if (dt.Count > 0)
+            {
+                if (!string.IsNullOrEmpty(dt[0].header_template))
+                {
+                    string filepathFrom = Path.Combine(Environment.WebRootPath, "Uploads/HeaderTemplate") + "//" + dt[0].header_template;
+
+
+                    string filepathTo = filePath;
+                    AddHeaderFromTo(filepathFrom, filepathTo);
+                }
+            }
             byte[] data = System.IO.File.ReadAllBytes(filePath);
             return File(data, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
 
@@ -2277,7 +2290,7 @@ namespace PainTrax.Web.Controllers
         {
             DataTable dsPOC = _pocService.GetPOCIE(PatientIE_ID);
 
-            var data = _pocService.GetPOCSummary(PatientIE_ID);
+
 
             string strPoc = "<ol>";
             if (dsPOC != null && dsPOC.Rows.Count > 0)
@@ -2287,6 +2300,12 @@ namespace PainTrax.Web.Controllers
                 {
                     if (!string.IsNullOrEmpty(dsPOC.Rows[i]["Heading"].ToString()))
                     {
+
+
+
+
+
+
                         //if (i != dsPOC.Tables[0].Rows.Count - 1)
                         //    strPoc = strPoc + "<b style='text-transform:uppercase'>" + dsPOC.Tables[0].Rows[i]["Heading"].ToString().TrimEnd(':') + ": </b>" + dsPOC.Tables[0].Rows[i]["PDesc"].ToString() + "<br/><br/>";
                         //else
@@ -2876,6 +2895,20 @@ namespace PainTrax.Web.Controllers
             return RedirectToAction("Create", "FuVisit", new { patientIEId = patientIEId, patientFUId = fu_id, type = type });
 
             #endregion
+        }
+
+
+        public string getInjectionReport(int id)
+        {
+            tbl_procedures obj = new tbl_procedures();
+            obj.id = id;
+            var data = _procedureservices.GetOne(obj);
+
+            if (data.pn)
+            {
+                return "";
+            }
+            return "";
         }
     }
 }

@@ -57,6 +57,7 @@
 
         var ieId = '@ViewBag.ieId';
         var fuId = '@ViewBag.fuId';
+        var locId = '@ViewBag.locId';
 
         $.ajax({
             type: "Post",
@@ -70,7 +71,7 @@
             },
             contentType: "application/x-www-form-urlencoded",
             success: function (data, status, xhr) {
-                var downloadUrl = '@Url.Action("DownloadFile", "FUVisit")?filePath=' + data.filePath + "&fileName=" + data.fileName;
+                var downloadUrl = '@Url.Action("DownloadFile", "FUVisit")?filePath=' + data.filePath + "&fileName=" + data.fileName + "&locId=" + locId;
                 window.location = downloadUrl
             },
             error: function (xhr, status, error) {

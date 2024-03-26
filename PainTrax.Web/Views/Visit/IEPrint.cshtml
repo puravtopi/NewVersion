@@ -17,7 +17,7 @@
                             <br />
                             <div class="col-md-12 col-lg-12" style="margin-top:10px">
                                 <button class="btn btn-warning" style="float:right;margin:10px" onclick="fnRefresh()"> Refresh</button>
-                                <button class="btn btn-info" style="float:right;margin:10px" onclick="fnDownaloadPDF()">Download PDF</button>
+                                <button class="btn btn-info" style="float:right;margin:10px;display:none;" onclick="fnDownaloadPDF()">Download PDF</button>
                                 <button class="btn btn-success  " style="float:right;margin:10px" onclick="fnDownaloadWord()">Download Word</button>
                             </div>
                         </div>
@@ -70,6 +70,7 @@
         var url = '@Url.Action("DownloadWord", "Visit")';
 
         var ieId = '@ViewBag.ieId';
+        var locId = '@ViewBag.locId';
 
         $.ajax({
             type: "Post",
@@ -83,7 +84,8 @@
             },
             contentType: "application/x-www-form-urlencoded",
             success: function (data, status, xhr) {
-                var downloadUrl = '@Url.Action("DownloadFile", "Visit")?filePath=' + data.filePath + "&fileName=" + data.fileName;
+                debugger
+                var downloadUrl = '@Url.Action("DownloadFile", "Visit")?filePath=' + data.filePath + "&fileName=" + data.fileName + "&locId=" + locId;
                 window.location = downloadUrl
             },
             error: function (xhr, status, error) {

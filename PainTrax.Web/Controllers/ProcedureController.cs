@@ -82,7 +82,7 @@ namespace PainTrax.Web.Controllers
                 model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 if (upload_template != null)
                 {                   
-                    string folderPath = Path.Combine(Environment.WebRootPath, "InjectionReports",model.cmp_id.ToString());
+                    string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/InjectionReports",model.cmp_id.ToString());
                     if (!Directory.Exists(folderPath))
                     {
                         Directory.CreateDirectory(folderPath);
@@ -135,7 +135,7 @@ namespace PainTrax.Web.Controllers
                 model.position = model.position == null ? "" : model.position;
                 if (upload_template != null && upload_template.Length > 0)
                 {
-                    string folderPath = Path.Combine(Environment.WebRootPath, "InjectionReports", model.cmp_id.ToString());
+                    string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/InjectionReports", model.cmp_id.ToString());
                     if (!Directory.Exists(folderPath))
                     {
                         Directory.CreateDirectory(folderPath);

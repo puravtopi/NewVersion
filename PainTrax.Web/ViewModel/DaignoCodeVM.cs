@@ -8,5 +8,6 @@
         public string? Description { get; set; }
 
         public int? Display_Order { get; set; }
+        public int? cmp_id { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
@@ -70,13 +71,19 @@ namespace PainTrax.Web.Controllers
         {
             var encrypt = EncryptionHelper.Encrypt("ram");
             var dcrypt = EncryptionHelper.Decrypt("u8cMaogbLx2JzhgJ0/kjugaNkaaYjvUT83FMJwS0VTs=");
+            if (Request.Cookies["LoginCookie"] != null)
+            {
+                var savedLogin = JsonConvert.DeserializeObject<LoginVM>(Request.Cookies["LoginCookie"]);
 
+                // Pre-populate login fields with saved credentials
+                return View(savedLogin);
+            }
             ViewBag.Success = true;
             return View();
         }
 
         [HttpPost]
-        public IActionResult Login(LoginVM login)
+        public IActionResult Login(LoginVM login, bool remember)
         {
             try
             {
@@ -85,6 +92,7 @@ namespace PainTrax.Web.Controllers
 
                 if (response.Success)
                 {
+
                     HttpContext.Session.SetInt32(SessionKeys.SessionCmpId, response.Model.cmp_id.Value);
                     HttpContext.Session.SetInt32(SessionKeys.SessionCmpUserId, response.Model.Id.Value);
                     HttpContext.Session.SetString(SessionKeys.SessionCmpEmail, response.Model.emailid);
@@ -103,6 +111,16 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, 0);
                         HttpContext.Session.SetInt32(SessionKeys.SessionPageSize, 25);
                         HttpContext.Session.SetString(SessionKeys.SessionDateFormat, "MM/dd/yyyy");
+                    }
+                    // Check if "Remember Me" checkbox is checked
+                    if (remember)
+                    {
+                        // Set a cookie with user's login information
+                        var options = new CookieOptions
+                        {
+                            Expires = DateTime.Now.AddDays(7) // Cookie expires in 7 days
+                        };
+                        Response.Cookies.Append("LoginCookie", JsonConvert.SerializeObject(login), options);
                     }
 
                     return RedirectToAction("GetProvider");
@@ -203,10 +221,10 @@ namespace PainTrax.Web.Controllers
         public IActionResult Logout()
         {
             _session.Clear();
-            foreach (var item in _httpContextAccessor.HttpContext.Request.Cookies.Keys)
+           /* foreach (var item in _httpContextAccessor.HttpContext.Request.Cookies.Keys)
             {
                 _httpContextAccessor.HttpContext.Response.Cookies.Delete(item);
-            }
+            }*/
             return RedirectToAction("Login", "Home");
         }
 

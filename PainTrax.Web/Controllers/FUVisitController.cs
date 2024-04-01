@@ -1780,7 +1780,7 @@ namespace PainTrax.Web.Controllers
 
             var data = _diagcodesService.GetAll(cnd);
 
-
+            var cmpIdInt = Convert.ToInt32(cmpid);
             var datavm = (from c in data
                               select new DaignoCodeVM
                               {
@@ -1788,9 +1788,10 @@ namespace PainTrax.Web.Controllers
                                   Description = c.Description,
                                   DiagCode = c.DiagCode,
                                   IsSelect = c.PreSelect,
-                                  Display_Order = c.display_order
+                                  Display_Order = c.display_order,
+                                  cmp_id = c.cmp_id
 
-                              }).ToList();           
+                              }).ToList().Where(x => x.cmp_id == cmpIdInt).OrderBy(x => x.Display_Order);            
             return PartialView("_DaignoCode", datavm);
         }
 

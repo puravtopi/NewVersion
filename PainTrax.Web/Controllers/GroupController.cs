@@ -248,7 +248,14 @@ namespace PainTrax.Web.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                string cnd = cnd = " and cmp_id=" + cmpid + " and title like '%" + searchValue + "%'  OR Location_ids like '%" + searchValue + "%' ";
+              
+                string cnd = " and cmp_id=" + cmpid;
+
+                // Add search value condition
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    cnd += " and (title like '%" + searchValue + "%' OR Location_ids like '%" + searchValue + "%')";
+                }
                 var Data = _services.GetAll(cnd);
                 //Sorting
                 if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))

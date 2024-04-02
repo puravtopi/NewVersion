@@ -18,20 +18,14 @@ namespace PainTrax.Web.Controllers
             _logger = logger;
         }
         public IActionResult Index(string searchtxt = "")
-        {
-            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-            string str = "and cmp_id= " + cmpid;
-
-            if (!string.IsNullOrEmpty(searchtxt))
-                str = " and title like '%" + searchtxt + " %'";
-            var result = _service.GetAll("");
-            var data = result;
-            return View(data);
+        {            
+            return View();
         }
         public IActionResult List()
         {
             try
             {
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
                 // Skiping number of Rows count
                 var start = Request.Form["start"].FirstOrDefault();
@@ -47,7 +41,7 @@ namespace PainTrax.Web.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                string cnd  = " and log like '%" + searchValue + "%' "; 
+                string cnd  = "and cmp_id=" + cmpid +" and log like '%" + searchValue + "%' "; 
                 var Data = _service.GetAll("");
                 //Sorting
                 if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))

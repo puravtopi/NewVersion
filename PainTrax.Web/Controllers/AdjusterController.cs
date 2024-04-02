@@ -4,6 +4,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
@@ -33,28 +34,9 @@ namespace PainTrax.Web.Controllers
             Environment = environment;            
         }
 
-        public IActionResult Index(string searchtxt = "")
-        {
-            var data = new List<tbl_adjuster>();            
-            try
-            {
-                //testing for error
-               /* string str = "a";
-                int temp = int.Parse(str);*/
-
-                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-                string cnd = " and cmp_id=" + cmpid;
-                if (!string.IsNullOrEmpty(searchtxt))
-                    cnd = " and title like '%" + searchtxt + "%' ";
-                var result = _services.GetAll("");
-                data = result;
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "Index");
-            }
-
-            return View(data);
+        public IActionResult Index()
+        {            
+            return View();
         }
 
         public IActionResult Create()
@@ -138,6 +120,8 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
                 // Skiping number of Rows count
                 var start = Request.Form["start"].FirstOrDefault();
@@ -155,7 +139,7 @@ namespace PainTrax.Web.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                string cnd = " and Adjuster like '%" + searchValue + "%' ";
+                string cnd = " and cmp_id=" + cmpid + " and Adjuster like '%" + searchValue + "%' ";
                 var Data = _services.GetAll(cnd);
 
                 //Sorting

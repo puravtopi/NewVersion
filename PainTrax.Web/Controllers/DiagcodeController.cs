@@ -32,23 +32,9 @@ namespace PainTrax.Web.Controllers
             Configuration = configuration;
         }
 
-        public IActionResult Index(string searchtxt = "")
-        {
-            var data = new List<tbl_diagcodes>();
-            try
-            {
-                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-                string cnd = " and cmp_id=" + cmpid;
-                //if (!string.IsNullOrEmpty(searchtxt))
-                //    cnd = " and title like '%" + searchtxt + "%' ";
-                var result = _services.GetAll();
-                data = result;
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "Index");
-            }
-            return View(data);
+        public IActionResult Index()
+        {            
+            return View();
         }
 
         public IActionResult Create()

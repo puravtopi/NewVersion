@@ -28,23 +28,8 @@ namespace PainTrax.Web.Controllers
             Environment = environment;
         }
         public IActionResult Index(string searchtxt = "")
-        {
-            //var data = new List<tbl_attorneys>();
-            List<tbl_attorneys> data = new List<tbl_attorneys>();
-            try
-            {                
-                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-                string cnd = " and cmp_id=" + cmpid;
-                
-
-                var result = _services.GetAll("");
-                data = result;
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "Index");
-            }
-            return View(data);
+        {            
+            return View();
         }
 
         public IActionResult Create()
@@ -141,7 +126,7 @@ namespace PainTrax.Web.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                string cnd = " and attorney like '%" + searchValue + "%' ";
+                string cnd ="and cmp_id=" + cmpid + " and attorney like '%" + searchValue + "%' ";
 
                 var Data = _services.GetAll(cnd);
 

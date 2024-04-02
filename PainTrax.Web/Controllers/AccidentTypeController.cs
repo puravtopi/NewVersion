@@ -27,23 +27,10 @@ namespace PainTrax.Web.Controllers
             Environment = environment;
         }
 
-        public IActionResult Index(string searchtxt = "")
+        public IActionResult Index()
         {
-            List<tbl_accidenttype> result = new List<tbl_accidenttype>();
-            try
-            {
-                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-                string cnd = "and cmp_id=" + cmpid;
-                if (!string.IsNullOrEmpty(searchtxt))
-                    cnd = " and accidenttype like '%" + searchtxt + "%' ";
-                result = _services.GetAll();
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "Index");
-            }
-            //var data = result;
-            return View(result);
+            
+            return View();
         }
 
         public IActionResult Create()
@@ -117,6 +104,7 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
                 // Skiping number of Rows count
                 var start = Request.Form["start"].FirstOrDefault();
@@ -134,7 +122,7 @@ namespace PainTrax.Web.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                string cnd = " and accidenttype like '%" + searchValue + "%' ";
+                string cnd ="and cmp_id=" + cmpid + " and accidenttype like '%" + searchValue + "%' ";
                 var Data = _services.GetAll(cnd);
 
                 //Sorting

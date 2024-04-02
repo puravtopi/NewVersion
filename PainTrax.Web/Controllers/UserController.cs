@@ -37,17 +37,8 @@ namespace PainTrax.Web.Controllers
             Environment = environment;
         }
 
-        public IActionResult Index(string searchtxt = "")
-        {
-            try
-            {
-                // string s = "";
-                // int a = int.Parse(s);
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "Index");
-            }
+        public IActionResult Index()
+        {           
             return View();
         }
 

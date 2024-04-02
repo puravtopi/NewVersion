@@ -12,6 +12,7 @@
         public static string SessionDateFormat = "dateformat";
         public static string SessionSelectedFolder = "SessionSelectedFolder";
         public static string SessionPatientId = "patient_id";
+        public static string SessionDesignation = "designation";
 
     }
 }

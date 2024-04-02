@@ -69,7 +69,7 @@ namespace PainTrax.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(tbl_users model, IFormFile signature)
+        public IActionResult Create(tbl_users model, IFormFile? signature)
         {
             try
             {
@@ -97,6 +97,12 @@ namespace PainTrax.Web.Controllers
                         model.signature = fileName;
                     }
                     _services.Insert(model);
+                }
+                else
+                {
+                    var errors = ModelState.Select(x => x.Value.Errors)
+                                           .Where(y => y.Count > 0)
+                                           .ToList();
                 }
             }
             catch (Exception ex)

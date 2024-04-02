@@ -24,7 +24,7 @@ namespace PainTrax.Web.Controllers
         private readonly ProcedureService _services = new ProcedureService();
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
 
-        public ProcedureController(IMapper mapper, ILogger<ProcedureController> logger,Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
+        public ProcedureController(IMapper mapper, ILogger<ProcedureController> logger, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
         {
             _mapper = mapper;
             _logger = logger;
@@ -35,7 +35,7 @@ namespace PainTrax.Web.Controllers
         {
             var data = new List<tbl_procedures>();
             try
-            {               
+            {
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId).ToString();
                 string cnd = "and cmp_id= " + cmpid;
                 if (!string.IsNullOrEmpty(searchtxt))
@@ -53,10 +53,10 @@ namespace PainTrax.Web.Controllers
         }
 
         public IActionResult Create()
-        {            
+        {
             tbl_procedures obj = new tbl_procedures();
             try
-            {               
+            {
                 obj.inhouseprocbit = false;
                 obj.sides = false;
                 obj.haslevel = false;
@@ -81,8 +81,8 @@ namespace PainTrax.Web.Controllers
                 model.position = model.position == null ? "" : model.position;
                 model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 if (upload_template != null)
-                {                   
-                    string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/InjectionReports",model.cmp_id.ToString());
+                {
+                    string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/InjectionReports", model.cmp_id.ToString());
                     if (!Directory.Exists(folderPath))
                     {
                         Directory.CreateDirectory(folderPath);
@@ -242,45 +242,43 @@ namespace PainTrax.Web.Controllers
 
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                        if (!string.IsNullOrEmpty(dt.Rows[i]["Position"].ToString()))
+                        tbl_procedures obj = new tbl_procedures()
                         {
-                            tbl_procedures obj = new tbl_procedures()
-                            {
-                                cmp_id = cmpid,
-                                position = dt.Rows[i]["Position"].ToString(),
-                                display_order = string.IsNullOrEmpty(dt.Rows[i]["Display Order"].ToString()) ? 0 : Convert.ToInt16(dt.Rows[i]["Display Order"].ToString()),
-                                hasmuscle = dt.Rows[i]["Muscle"].ToString(),
-                                hassubprocedure = dt.Rows[i]["Sub Procedure"].ToString(),
-                                pedesc = dt.Rows[i]["R_PEDesc"].ToString(),
-                                pdesc = dt.Rows[i]["R_PDesc"].ToString(),
-                                s_ccdesc = dt.Rows[i]["S_CCDesc"].ToString(),
-                                s_adesc = dt.Rows[i]["S_ADesc"].ToString(),
-                                e_heading = dt.Rows[i]["E-Heading"].ToString(),
-                                e_pedesc = dt.Rows[i]["E_PEDesc"].ToString(),
-                                e_pdesc = dt.Rows[i]["E_PDesc"].ToString(),
-                                sidesdefault = dt.Rows[i]["Default Value for Sides"].ToString(),
-                                inhouseprocbit =false,
-                                sides = false,
-                                haslevel = true,
-                                cf = false,
-                                pn = false,
-                                inout = false,                           
-                                bodypart = dt.Rows[i]["Body Part"].ToString(),
-                                heading = dt.Rows[i]["R - Heading"].ToString(),
-                                hasmedication = dt.Rows[i]["Medication"].ToString(),
-                                ccdesc = dt.Rows[i]["R_CCDesc"].ToString(),
-                                adesc = dt.Rows[i]["R_ADesc"].ToString(),
-                                s_heading = dt.Rows[i]["S - Heading"].ToString(),
-                                s_pedesc = dt.Rows[i]["S_PEDesc"].ToString(),
-                                e_ccdesc = dt.Rows[i]["E_CCDesc"].ToString(),
-                                e_adesc = dt.Rows[i]["E_ADesc"].ToString(),
-                                levelsdefault = dt.Rows[i]["E_ADesc"].ToString(),
-                                mcode = dt.Rows[i]["MCODE"].ToString(),
-                                mcode_desc = dt.Rows[i]["Desc"].ToString(),                              
-                            };
+                            cmp_id = cmpid,
+                            position = dt.Rows[i]["Position"].ToString(),
+                            display_order = string.IsNullOrEmpty(dt.Rows[i]["DisplayOrder"].ToString()) ? 0 : Convert.ToInt16(dt.Rows[i]["DisplayOrder"].ToString()),
+                            hasmuscle = dt.Rows[i]["Muscle"].ToString(),
+                            hassubprocedure = dt.Rows[i]["Sub Procedure"].ToString(),
+                            pedesc = dt.Rows[i]["R_PEDesc"].ToString(),
+                            pdesc = dt.Rows[i]["R_PDesc"].ToString(),
+                            s_ccdesc = dt.Rows[i]["S_CCDesc"].ToString(),
+                            s_adesc = dt.Rows[i]["S_ADesc"].ToString(),
+                            e_heading = dt.Rows[i]["E-Heading"].ToString(),
+                            e_pedesc = dt.Rows[i]["E_PEDesc"].ToString(),
+                            e_pdesc = dt.Rows[i]["E_PDesc"].ToString(),
+                            sidesdefault = dt.Rows[i]["SidesDefault"].ToString(),
+                            inhouseprocbit = string.IsNullOrEmpty(dt.Rows[i]["InHouseProcbit"].ToString()) ? false : Convert.ToBoolean(dt.Rows[i]["InHouseProcbit"].ToString()),
+                            sides = string.IsNullOrEmpty(dt.Rows[i]["sides"].ToString()) ? false : Convert.ToBoolean(dt.Rows[i]["sides"].ToString()),
+                            haslevel = string.IsNullOrEmpty(dt.Rows[i]["haslevel"].ToString()) ? false : Convert.ToBoolean(dt.Rows[i]["haslevel"].ToString()),
+                            cf = string.IsNullOrEmpty(dt.Rows[i]["cf"].ToString()) ? false : Convert.ToBoolean(dt.Rows[i]["cf"].ToString()),
+                            pn = string.IsNullOrEmpty(dt.Rows[i]["pn"].ToString()) ? false : Convert.ToBoolean(dt.Rows[i]["pn"].ToString()),
+                            inout = string.IsNullOrEmpty(dt.Rows[i]["InOut"].ToString()) ? false : Convert.ToBoolean(dt.Rows[i]["InOut"].ToString()),
+                            bodypart = dt.Rows[i]["BodyPart"].ToString(),
+                            heading = dt.Rows[i]["Heading"].ToString(),
+                            hasmedication = dt.Rows[i]["HasMedication"].ToString(),
+                            ccdesc = dt.Rows[i]["CCDesc"].ToString(),
+                            adesc = dt.Rows[i]["ADesc"].ToString(),
+                            s_heading = dt.Rows[i]["S_Heading"].ToString(),
+                            s_pedesc = dt.Rows[i]["S_PEDesc"].ToString(),
+                            e_ccdesc = dt.Rows[i]["E_CCDesc"].ToString(),
+                            e_adesc = dt.Rows[i]["E_ADesc"].ToString(),
+                            levelsdefault = dt.Rows[i]["LevelsDefault"].ToString(),
+                            mcode = dt.Rows[i]["MCode"].ToString(),
+                            mcode_desc = dt.Rows[i]["MCode Desc"].ToString(),
+                        };
 
-                            _services.Insert(obj);
-                        }
+                        _services.Insert(obj);
+
                     }
                 }
             }
@@ -518,7 +516,7 @@ namespace PainTrax.Web.Controllers
                 CreatedBy = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId),
                 Message = msg
             };
-            new LogService().Insert(logdata);            
+            new LogService().Insert(logdata);
         }
         #endregion
     }

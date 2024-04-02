@@ -1035,9 +1035,9 @@ namespace PainTrax.Web.Controllers
 
                 var data = _diagcodesService.GetAll(cnd);
 
-               var cmpIdInt = Convert.ToInt32(cmpid);
+                var cmpIdInt = Convert.ToInt32(cmpid);
 
-                var datavm = (from c in data                              
+                var datavm = (from c in data
                               select new DaignoCodeVM
                               {
                                   DaignoCodeId = c.Id.Value,
@@ -1047,7 +1047,7 @@ namespace PainTrax.Web.Controllers
                                   Display_Order = c.display_order,
                                   cmp_id = c.cmp_id
 
-                              }).ToList().Where(x =>x.cmp_id == cmpIdInt).OrderBy(x => x.Display_Order);
+                              }).ToList().Where(x => x.cmp_id == cmpIdInt).OrderBy(x => x.Display_Order);
                 return PartialView("_DaignoCode", datavm);
 
 
@@ -2787,7 +2787,6 @@ namespace PainTrax.Web.Controllers
         }
         #endregion
 
-
         #region FU
         public IActionResult CreateFU(int patientIEId, int patientId, string type = "")
         {
@@ -2895,9 +2894,9 @@ namespace PainTrax.Web.Controllers
 
             return RedirectToAction("Create", "FuVisit", new { patientIEId = patientIEId, patientFUId = fu_id, type = type });
 
-            #endregion
-        }
 
+        }
+        #endregion
 
         public string getInjectionReport(int id)
         {

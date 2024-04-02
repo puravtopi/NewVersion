@@ -68,7 +68,7 @@ namespace PainTrax.Web.Controllers
             VisitVM obj = new VisitVM();
 
             try
-            {              
+            {
                 int id = patientIEId;
                 obj.vaccinated = false;
 
@@ -80,6 +80,14 @@ namespace PainTrax.Web.Controllers
                 ViewBag.asList = _commonservices.GetAccidenttype(cmpid.Value);
 
                 ViewBag.macroList = JsonConvert.SerializeObject(macroList);
+
+
+
+                macroList = _websiteMacrosService.GetAutoComplete(cmpid.Value, "CC");
+                ViewBag.ccmacroList = JsonConvert.SerializeObject(macroList);
+
+                macroList = _websiteMacrosService.GetAutoComplete(cmpid.Value, "PE");
+                ViewBag.pemacroList = JsonConvert.SerializeObject(macroList);
 
                 ViewBag.type = type;
 
@@ -537,7 +545,7 @@ namespace PainTrax.Web.Controllers
                 }
 
                 obj.listWebsiteMacros = macroList;
-             
+
                 obj.fu_id = patientFUId;
             }
             catch (Exception ex)
@@ -790,7 +798,7 @@ namespace PainTrax.Web.Controllers
 
                 tbl_patient_fu objFU = new tbl_patient_fu()
                 {
-                   
+
                     created_by = userid,
                     doe = model.dov,
                     patientIE_ID = ie,
@@ -800,7 +808,7 @@ namespace PainTrax.Web.Controllers
                     patient_id = patientId,
                     extra_comments = model.alert_note,
                     type = model.type,
-                    accident_type= model.accidentType
+                    accident_type = model.accidentType
                 };
                 int fu_id = 0;
                 if (model.fu_id.Value > 0)
@@ -816,20 +824,20 @@ namespace PainTrax.Web.Controllers
                 HttpContext.Session.SetInt32(SessionKeys.SessionIEId, ie);
                 return Json(new { status = 1, patintid = patientId, ieid = ie, fuid = fu_id });
             }
-    
-            catch(Exception ex)
+
+            catch (Exception ex)
             {
                 SaveLog(ex, "SaveDetails");
-              
+
             }
-            return Json(new { status =0 });
+            return Json(new { status = 0 });
         }
 
         [HttpPost]
         public IActionResult SavePage1(tbl_fu_page1 model)
         {
             try
-            {               
+            {
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 model.cmp_id = cmpid;
 
@@ -842,11 +850,11 @@ namespace PainTrax.Web.Controllers
                 }
                 else
                     _fuPage1services.Insert(model);
-               
+
             }
             catch (Exception ex)
             {
-                SaveLog(ex, "SavePage1");              
+                SaveLog(ex, "SavePage1");
             }
             return Json(1);
         }
@@ -867,12 +875,12 @@ namespace PainTrax.Web.Controllers
                     _fuPage2services.Update(model);
                 }
                 else
-                    _fuPage2services.Insert(model);             
+                    _fuPage2services.Insert(model);
             }
             catch (Exception ex)
             {
                 SaveLog(ex, "SavePage2");
-             
+
             }
             return Json(1);
         }
@@ -969,7 +977,7 @@ namespace PainTrax.Web.Controllers
                     _fuPage3services.Update(model);
                 }
                 else
-                    _fuPage3services.Insert(model);              
+                    _fuPage3services.Insert(model);
             }
             catch (Exception ex)
             {
@@ -998,7 +1006,7 @@ namespace PainTrax.Web.Controllers
                 else
                     _fuNEservices.Insert(model);
 
-               
+
             }
             catch (Exception ex)
             {
@@ -1022,12 +1030,12 @@ namespace PainTrax.Web.Controllers
                 else
                     _fuOtherService.Insert(model);
 
-               
+
             }
             catch (Exception ex)
             {
                 SaveLog(ex, "SaveOther");
-             
+
             }
             return Json(1);
         }
@@ -1047,7 +1055,7 @@ namespace PainTrax.Web.Controllers
             {
                 _fuCommentService.Insert(model);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "SaveComment");
             }
@@ -1370,7 +1378,7 @@ namespace PainTrax.Web.Controllers
                 }
 
                 ViewBag.content = html.ToString();
-                
+
             }
             catch (Exception ex)
             {
@@ -1401,7 +1409,7 @@ namespace PainTrax.Web.Controllers
             DataTable dt = new DataTable();
             try
             {
-                string test = _pocService.GetSubCode(patientIEId);               
+                string test = _pocService.GetSubCode(patientIEId);
                 string[] lines = test.Split('\n');
                 dt.Columns.Add("SubCode");
                 for (int i = 0; i < lines.Length; i++)
@@ -1435,7 +1443,7 @@ namespace PainTrax.Web.Controllers
                     dt.Rows.Add(row);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "GetMedicationFromDB");
             }
@@ -1761,7 +1769,7 @@ namespace PainTrax.Web.Controllers
             {
                 _patientFuservices.Delete(fuId);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "DeleteFU");
             }
@@ -1772,9 +1780,9 @@ namespace PainTrax.Web.Controllers
         [HttpPost]
         public IActionResult GetDaignoCodeList(string bodyparts)
         {
-               bodyparts = bodyparts.Replace("_", " ");
-                ViewBag.BodyPart = bodyparts.ToUpper();
-                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            bodyparts = bodyparts.Replace("_", " ");
+            ViewBag.BodyPart = bodyparts.ToUpper();
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
             string cnd = " and cmp_id=" + cmpid + " and (BodyPart='" + bodyparts + "' or Description like '%" + bodyparts + "%') order by Description desc";
 
@@ -1782,15 +1790,15 @@ namespace PainTrax.Web.Controllers
 
 
             var datavm = (from c in data
-                              select new DaignoCodeVM
-                              {
-                                  DaignoCodeId = c.Id.Value,
-                                  Description = c.Description,
-                                  DiagCode = c.DiagCode,
-                                  IsSelect = c.PreSelect,
-                                  Display_Order = c.display_order
+                          select new DaignoCodeVM
+                          {
+                              DaignoCodeId = c.Id.Value,
+                              Description = c.Description,
+                              DiagCode = c.DiagCode,
+                              IsSelect = c.PreSelect,
+                              Display_Order = c.display_order
 
-                              }).ToList();           
+                          }).ToList().Where(x => x.cmp_id.Value.ToString() == cmpid).OrderBy(x => x.Display_Order);
             return PartialView("_DaignoCode", datavm);
         }
 
@@ -1811,7 +1819,7 @@ namespace PainTrax.Web.Controllers
                 SaveLog(ex, "POCSummary");
                 return View();
             }
-            
+
         }
 
         [HttpPost]
@@ -1825,7 +1833,7 @@ namespace PainTrax.Web.Controllers
             catch (Exception ex)
             {
                 SaveLog(ex, "SurgeryPOCSummary");
-             
+
             }
             return PartialView("_POCSummary", Data);
         }
@@ -1845,7 +1853,7 @@ namespace PainTrax.Web.Controllers
                 //using streamreader for reading my htmltemplate   
 
                 var fuData = _patientFuservices.GetOne(fuid);
-           
+
                 var templateData = _printService.GetTemplate(cmpid, fuData.type);
                 var gender = "";
 
@@ -2096,7 +2104,7 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult DownloadWord(string htmlContent, int ieId,int fuId)
+        public IActionResult DownloadWord(string htmlContent, int ieId, int fuId)
         {
             //  string htmlContent = "<p>This is a <strong>sample</strong> HTML content.</p>";
             string filePath = "", docName = "";
@@ -2244,7 +2252,7 @@ namespace PainTrax.Web.Controllers
             }
 
             return age;
-        }     
+        }
 
         private void SaveLog(Exception ex, string actionname)
         {
@@ -2267,7 +2275,7 @@ namespace PainTrax.Web.Controllers
             };
             new LogService().Insert(logdata);
         }
-        
+
         private string removePtag(string content)
         {
             if (!string.IsNullOrEmpty(content))

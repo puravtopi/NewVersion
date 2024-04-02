@@ -25,7 +25,7 @@
     <link href="~/assets/vendor/remixicon/remixicon.css" rel="stylesheet" asp-append-version="true">
     <link href="~/assets/vendor/simple-datatables/style.css" rel="stylesheet" asp-append-version="true">
 
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"  asp-append-version="true">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" asp-append-version="true">
 
     <!-- Template Main CSS File -->
     <link href="~/assets/css/style.css" rel="stylesheet" asp-append-version="true">
@@ -48,10 +48,10 @@
             margin-bottom: 0.2rem !important;
         }
 
-         .modal-footer button {
-        float: right !important;
-        margin-left: 10px;
-    }
+        .modal-footer button {
+            float: right !important;
+            margin-left: 10px;
+        }
     </style>
 
 
@@ -131,13 +131,13 @@
         <nav class="header-nav ms-auto">
             <ul class="d-flex align-items-center">
 
-                <li class="nav-item d-block d-lg-none"  style="display:none">
+                <li class="nav-item d-block d-lg-none" style="display:none">
                     <a class="nav-link nav-icon search-bar-toggle " href="#">
                         <i class="bi bi-search"></i>
                     </a>
                 </li><!-- End Search Icon-->
 
-                <li class="nav-item dropdown"  style="display:none">
+                <li class="nav-item dropdown" style="display:none">
 
                     <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                         <i class="bi bi-bell"></i>
@@ -212,7 +212,7 @@
 
                 </li><!-- End Notification Nav -->
 
-                <li class="nav-item dropdown"  style="display:none">
+                <li class="nav-item dropdown" style="display:none">
 
                     <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
                         <i class="bi bi-chat-left-text"></i>
@@ -279,22 +279,23 @@
                 </li><!-- End Messages Nav -->
 
                 <li class="nav-item dropdown pe-3">
-                     <div class="d-flex justify-content-end">
+                    <div class="d-flex justify-content-end">
                         <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown" style="margin-right: 0px;">
-                            <img src="~/assets/img/profile-img1.png" alt="Profile" class="rounded-circle"  style="width: 40px; height: 40px;">
+                            <img src="~/assets/img/profile-img1.png" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
                             <span class="d-none d-md-block dropdown-toggle ps-2">@HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionUserName)</span>
                         </a><!-- End Profile Iamge Icon -->
 
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                             <li class="dropdown-header">
-                               <h4>@HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionUserName)</h4>
+                                <h4>@HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionUserName)</h4>
                                 <span>Web Designer</span>
                             </li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
 
-                            <li><a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                            <li>
+                                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
                                     <i class="bi bi-person"></i>
                                     <span>My Profile</span>
                                 </a>
@@ -364,12 +365,20 @@
                     <i class="bi bi-menu-button-wide"></i><span>Master</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
                 <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-                    <li>
-                        <a asp-action="Index" asp-controller="User">
-                            <i class="bi bi-circle"></i><span>Manage Users</span>
-                        </a>
 
-                    </li>
+                    @{
+                        if (HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionDesignation).ToLower() == "superadmin")
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="User">
+                                    <i class="bi bi-circle"></i><span>Manage Users</span>
+                                </a>
+
+                            </li>
+
+                        }
+                    }
+
                     <li>
                         <a asp-action="Index" asp-controller="CaseType">
                             <i class="bi bi-circle"></i><span>Case Type</span>
@@ -507,12 +516,12 @@
                             <i class="bi bi-circle"></i><span>Settings</span>
                         </a>
                     </li>
-                   @* <li>
-                        <a asp-action="Index" asp-controller="PrintSetting">
-                            <i class="bi bi-circle"></i><span>Print Settings</span>
-                        </a>
+                    @* <li>
+                    <a asp-action="Index" asp-controller="PrintSetting">
+                    <i class="bi bi-circle"></i><span>Print Settings</span>
+                    </a>
                     </li>*@
-                     <li>
+                    <li>
                         <a asp-action="Templates" asp-controller="PrintSetting">
                             <i class="bi bi-circle"></i><span>Manage Template</span>
                         </a>
@@ -522,7 +531,7 @@
                             <i class="bi bi-circle"></i><span>Default Settings</span>
                         </a>
                     </li>
-                     <li>
+                    <li>
                         <a asp-action="IETOFU" asp-controller="ForwardSetting">
                             <i class="bi bi-circle"></i><span>Forward Settings</span>
                         </a>
@@ -578,8 +587,8 @@
 
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-    
-  
+
+
 
     <script src="~/assets/vendor/apexcharts/apexcharts.min.js" asp-append-version="true"></script>
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
@@ -592,10 +601,10 @@
     <script src="~/assets/vendor/bootbox/bootbox.js" asp-append-version="true"></script>
     <script src="~/assets/js/main.js" asp-append-version="true"></script>
 
-  
+
     @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"  asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)

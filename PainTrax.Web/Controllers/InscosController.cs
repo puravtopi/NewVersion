@@ -32,24 +32,8 @@ namespace PainTrax.Web.Controllers
             Configuration = configuration;
         }
 
-        public IActionResult Index(string searchtxt = "")
-        {
-            var data = new List<tbl_inscos>();
-            try
-            {               
-                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId).ToString();
-                string cnd = "and cmp_id= " + cmpid;
-                if (!string.IsNullOrEmpty(searchtxt))
-                {
-                    cnd = " and title like '%" + searchtxt + "%' ";
-                    var result = _services.GetAll();
-                    data = result;
-                }
-            }
-            catch(Exception ex)
-            {
-                SaveLog(ex, "Index");
-            }
+        public IActionResult Index()
+        {           
             return View();
         }
 
@@ -146,7 +130,7 @@ namespace PainTrax.Web.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                string cnd = " and cmpname like '%" + searchValue + "%' ";
+                string cnd ="and cmp_id=" + cmpid + " and cmpname like '%" + searchValue + "%' ";
                 var Data = _services.GetAll(cnd);
                 //Sorting
                 if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))

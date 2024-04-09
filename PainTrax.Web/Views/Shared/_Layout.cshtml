@@ -288,7 +288,7 @@
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                             <li class="dropdown-header">
                                 <h4>@HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionUserName)</h4>
-                                <span>Web Designer</span>
+                                <span>@HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionDesignation)</span>
                             </li>
                             <li>
                                 <hr class="dropdown-divider">

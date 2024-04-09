@@ -208,7 +208,7 @@
                         row += "<td>" + value.dob + "</td>";
                         row += "<td>" + value.doa + "</td>";
                         row += "<td>" + value.doe + "</td>";
-                        row += "<td>" + value.casetype + "</td>";
+                        row += "<td>" + value.compensation + "</td>";
                         row += "<td>" + value.location + "</td>";
                         row += "<td><a onclick='callPage1()' href='#' >Test</a></td>";
                         childtab.innerHTML += row;
@@ -294,24 +294,14 @@
                         }
                     },
                     {
-                        "data": "compensation", "autoWidth": true, "render": function (value) {
-                            if (value === null || value === "0")
-                                return "";
-                            else if (value === "1")
-                                return "NF";
-                            else if (value === "2")
-                                return "MM";
-                            else if (value === "3")
-                                return "Lien";
-                            else if (value === "4")
-                                return "WC";
+                        "data": "compensation", "autoWidth": true 
 
-                        }
+                        
                     },
                     { "data": "location", "location": "location", "autoWidth": true },
                     {
                         "render": function (data, type, full, meta) {
-                            console.log(full);
+                        //    console.log(full);
                             var fname=full.fname;
                             var lname = full.lname;
                             var index = '<a onclick="DownloadPdf(' + full.id + ',' + '\'' + fname + '\','+ '\'' + lname + '\')" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Download"></i></a> &nbsp; &nbsp;'

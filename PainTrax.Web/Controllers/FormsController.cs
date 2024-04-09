@@ -1,19 +1,28 @@
-﻿using iTextSharp.text.pdf;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MS.Services;
 using PainTrax.Web.Helper;
+using PainTrax.Web.Models;
+using PainTrax.Web.Services;
+//using iText.Forms.Fields;
+//using iText.Kernel.Pdf;
+//using iText.Forms;
 
 namespace PainTrax.Web.Controllers
 {
     public class FormsController : Controller
     {
+        private readonly IMapper _mapper;
+        private readonly ILogger<FormsController> _logger;
+
         private readonly IWebHostEnvironment _environment;
         private readonly PatientIEService _ieService = new PatientIEService();
         private readonly PatientService _patientservices = new PatientService();
 
-        public FormsController(IWebHostEnvironment environment)
+        public FormsController(ILogger<FormsController> logger,IWebHostEnvironment environment)
         {
             _environment = environment;
+            _logger = logger;
         }
         public IActionResult Index(string searchtxt = "")
         {
@@ -136,25 +145,125 @@ namespace PainTrax.Web.Controllers
         public IActionResult GeneratePdf(string pdffile,string id,string txt_date = "",string txt_surgery = "",string txt_docName="",string txt_MCode_Proc="", string txtProcedureCode="")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-             
             Dictionary<string, string> controls = new Dictionary<string, string>();
-            if (txt_date!=null && txt_date.Trim() != "")    controls.Add("txt_date", txt_date);
-            if (txt_surgery != null && txt_surgery.Trim() != "") controls.Add("txt_surgery", txt_surgery);
-            if (txt_docName !=null && txt_docName.Trim() != "") controls.Add("txt_docName", txt_docName);
-            if (txt_MCode_Proc != null && txt_MCode_Proc.Trim() != "") controls.Add("txt_MCode_Proc", txt_MCode_Proc);
-            if (txtProcedureCode!=null && txtProcedureCode.Trim() != "") controls.Add("txtProcedureCode", txtProcedureCode);
+
+            try
+            {
+                if (txt_date != null && txt_date.Trim() != "") controls.Add("txt_date", txt_date);
+                if (txt_surgery != null && txt_surgery.Trim() != "") controls.Add("txt_surgery", txt_surgery);
+                if (txt_docName != null && txt_docName.Trim() != "") controls.Add("txt_docName", txt_docName);
+                if (txt_MCode_Proc != null && txt_MCode_Proc.Trim() != "") controls.Add("txt_MCode_Proc", txt_MCode_Proc);
+                if (txtProcedureCode != null && txtProcedureCode.Trim() != "") controls.Add("txtProcedureCode", txtProcedureCode);
+
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "Read Textboxes");
+            }
 
             PdfHelper _pdfhelper = new PdfHelper();
             string outputfilename = "";
-            
-            var uploadsFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
-            var filePath = Path.Combine(uploadsFolder, pdffile);
+            var uploadsFolder = "";
+            var filePath = "";
+
+            try
+            {
+                 uploadsFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+                 filePath = Path.Combine(uploadsFolder, pdffile);
+
+            }
+            catch (Exception ex) {
+                SaveLog(ex, "set Paths");
+            }
+
+            byte[] pdfBytes=null;
+            //try
+            //{
+            //    // Create a memory stream to hold the modified PDF
+            //    using (MemoryStream outputStream = new MemoryStream())
+            //    {
+            //        // Create a PdfReader object to read the input PDF
+            //        using (PdfReader reader = new PdfReader(filePath))
+            //        {
+            //            // Create a PdfWriter object to write to the output PDF
+            //            using (PdfWriter writer = new PdfWriter(outputStream))
+            //            {
+            //                // Create a PdfDocument object
+            //                using (PdfDocument pdfDoc = new PdfDocument(reader, writer))
+            //                {
+            //                    // Get the form fields
+            //                    PdfAcroForm form = PdfAcroForm.GetAcroForm(pdfDoc, true);
+
+            //                    // Get a specific text field by its name
+            //                    PdfFormField field = form.GetField("#fname");
+
+            //                    if (field != null)
+            //                    {
+            //                        // Set the field value
+            //                        field.SetValue("Test Value");
+            //                    }
+            //                    else
+            //                    {
+            //                        Console.WriteLine("Field not found.");
+            //                    }
+            //                }
+            //            }
+            //        }
+
+            //        // Get the byte array of the modified PDF from the memory stream
+            //        pdfBytes = outputStream.ToArray();
+
+            //        // At this point, you can do whatever you want with the modified PDF bytes.
+            //        // For example, you can save them to a file, send them over the network, etc.
+            //        // In this example, we're just printing out the length of the modified PDF bytes.
+            //       // Console.WriteLine("Modified PDF size: " + pdfBytes.Length + " bytes");
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine("Error: " + ex.Message);
+            //}
+
+
+
+
+            try
+            {
+                pdfBytes= _pdfhelper.Stamping(filePath, "Id", id, controls, cmpid);
+            }
+            catch (Exception ex) {
+                SaveLog(ex, "Pdf Stamping");
+            }
            
             //string htmlContent = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "demo.html"));
-            byte[] pdfBytes = _pdfhelper.Stamping(filePath,"Id",id,controls,cmpid);
+            
             return File(pdfBytes, "application/pdf");
         }
 
+
+        #region Private Method
+        private void SaveLog(Exception ex, string actionname)
+        {
+            var msg = "";
+            if (ex.InnerException == null)
+            {
+                _logger.LogError(ex.Message);
+                msg = ex.Message;
+            }
+            else
+            {
+                _logger.LogError(ex.InnerException.Message);
+                msg = ex.InnerException.Message;
+            }
+            var logdata = new tbl_log
+            {
+                CreatedDate = DateTime.Now,
+                CreatedBy = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId),
+                Message = msg
+            };
+            new LogService().Insert(logdata);
+        }
+        #endregion
 
     }
 }

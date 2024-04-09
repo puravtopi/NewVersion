@@ -1,7 +1,12 @@
 ﻿using DocumentFormat.OpenXml.Vml;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using iTextSharp.tool.xml;
+//using iText.Kernel.Pdf;
+//using iText.Layout;
+//using iText.Layout.Element;
+//using iText.Layout.Properties;
+//using iText.IO.Font.Constants;
+//using iText.Kernel.Font;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing.Constraints;
 using PainTrax.Services;
@@ -25,7 +30,7 @@ namespace PainTrax.Web.Helper
                 document.Open();
                 using (var htmlStream = new MemoryStream(Encoding.UTF8.GetBytes(html)))
                 {
-                    XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, htmlStream, null, Encoding.UTF8);
+                    //  XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, htmlStream, null, Encoding.UTF8);
                 }
                 document.Close();
 
@@ -34,7 +39,7 @@ namespace PainTrax.Web.Helper
 
             return pdfBytes;
         }
-        public byte[] Stamping(string SourceFile, string ColumnName, string ID, Dictionary<string, string>  controls, string cmpid="0")
+        public byte[] Stamping(string SourceFile, string ColumnName, string ID, Dictionary<string, string> controls, string cmpid = "0")
         {
             WebHostBuilderContext webHost = new WebHostBuilderContext();
             ParentService _parentService = new ParentService();
@@ -44,8 +49,8 @@ namespace PainTrax.Web.Helper
             //filename = readPdfFields.GetField("txtFile");
             if (tabname == null || tabname == "")
                 tabname = "ViewPdf";
-           // if (filename == null || filename == "")
-             //  filename = "FileName";
+            // if (filename == null || filename == "")
+            //  filename = "FileName";
 
 
             DataTable dt = _parentService.GetData("select * from " + tabname + " where " + ColumnName + "=" + ID);
@@ -66,7 +71,7 @@ namespace PainTrax.Web.Helper
             //    }
             //}
             //catch { }
-         
+
             MemoryStream pdfOutput = new MemoryStream();
             PdfStamper pdfStamper = new PdfStamper(pdfReader, pdfOutput);
             AcroFields pdfFormFields = pdfStamper.AcroFields;
@@ -105,7 +110,7 @@ namespace PainTrax.Web.Helper
                 {
                     if (!de.Key.ToLower().StartsWith("txtfix"))
                     {
-                        if (controls!=null && controls.Count!=0)
+                        if (controls != null && controls.Count != 0)
                         {
                             if (de.Key.StartsWith("@"))
                             {
@@ -135,7 +140,7 @@ namespace PainTrax.Web.Helper
                             try
                             {
                                 string[] headpair = de.Key.Substring(1).Split('|');
-                                if(headpair.Length==1)
+                                if (headpair.Length == 1)
                                 {
                                     try
                                     {
@@ -151,7 +156,7 @@ namespace PainTrax.Web.Helper
                                 }
                                 else if (headpair.Length == 4)
                                 {
-                                    
+
                                     // TextBox txt = (TextBox)ctrl.FindControl(headpair[1]);
 
                                     //                                HttpContext.Current.Response.Write(txt.Text);
@@ -159,7 +164,7 @@ namespace PainTrax.Web.Helper
                                     //                            HttpContext.Current.Response.Write(headpair[3]);
                                     //                          HttpContext.Current.Response.Write("select * from " + headpair[0] + " where " + headpair[2] + "='" + txt.Text + "'");
                                     //DataTable dtCode = GetData("select * from " + headpair[0] + " where " + headpair[2] + "='" + txt.Text + "'");
-                                    DataTable dtCode = _parentService.GetData("select * from " + headpair[0] + " where " + headpair[2] + "='" + controls[de.Key.Substring(1)] + "' and cmpid=" + cmpid );
+                                    DataTable dtCode = _parentService.GetData("select * from " + headpair[0] + " where " + headpair[2] + "='" + controls[de.Key.Substring(1)] + "' and cmpid=" + cmpid);
                                     if (dtCode.Rows.Count > 0)
                                     {
                                         pdfFormFields.SetField(de.Key.ToString(), dtCode.Rows[0][headpair[3]].ToString());
@@ -195,7 +200,7 @@ namespace PainTrax.Web.Helper
                 }
                 if (de.Key.ToLower().StartsWith("imgsign"))
                 {
-                    
+
                     try
                     {
                         string webRootPath = webHost.HostingEnvironment.WebRootPath;
@@ -205,14 +210,18 @@ namespace PainTrax.Web.Helper
                         string[] files = System.IO.Directory.GetFiles(path, ID + "_*.jp*g", System.IO.SearchOption.TopDirectoryOnly);
                         if (files.Length > 0)
                         {
-                            Stream inputImageStream = new FileStream(files[0], FileMode.Open, FileAccess.Read, FileShare.Read);
-                            AcroFields.FieldPosition f = ae.GetFieldPositions(de.Key.ToString())[0];
-                            var pdfContentByte = pdfStamper.GetOverContent(f.page);
-                            iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(inputImageStream);
-                            image.ScaleToFit(f.position.Width, f.position.Height + 10);
 
-                            image.SetAbsolutePosition(f.position.Left, f.position.Bottom);
-                            pdfContentByte.AddImage(image);
+                            Stream inputImageStream = new FileStream(files[0], FileMode.Open, FileAccess.Read, FileShare.Read);
+                            float[] fieldPosition = null;
+                            fieldPosition = ae.GetFieldPositions(de.Key.ToString());
+
+                            //// AcroFields.FieldPosition f = ae.GetFieldPositions(de.Key.ToString())[0];
+                            // var pdfContentByte = pdfStamper.GetOverContent(f.page);
+                            // iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(inputImageStream);
+                            // image.ScaleToFit(f.position.Width, f.position.Height + 10);
+
+                            // image.SetAbsolutePosition(f.position.Left, f.position.Bottom);
+                            // pdfContentByte.AddImage(image);
                         }
                         //    pdfFormFields.SetFieldProperty(de.Key.ToString(), "flags", PdfFormField.FLAGS_NOVIEW, null);
                     }

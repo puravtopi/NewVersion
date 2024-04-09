@@ -11,7 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Text.Json;
 using System.Xml.Linq;
-using static iTextSharp.awt.geom.Point2D;
+//using static iTextSharp.awt.geom.Point2D;
 
 namespace PainTrax.Web.Controllers
 {

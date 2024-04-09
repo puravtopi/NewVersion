@@ -1796,7 +1796,8 @@ namespace PainTrax.Web.Controllers
                               Description = c.Description,
                               DiagCode = c.DiagCode,
                               IsSelect = c.PreSelect,
-                              Display_Order = c.display_order
+                              Display_Order = c.display_order,
+                              cmp_id = c.cmp_id
 
                           }).ToList().Where(x => x.cmp_id.Value.ToString() == cmpid).OrderBy(x => x.Display_Order);
             return PartialView("_DaignoCode", datavm);

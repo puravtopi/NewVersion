@@ -1,19 +1,26 @@
-﻿using iTextSharp.text.pdf;
+﻿using AutoMapper;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Mvc;
 using MS.Services;
 using PainTrax.Web.Helper;
+using PainTrax.Web.Models;
+using PainTrax.Web.Services;
 
 namespace PainTrax.Web.Controllers
 {
     public class FormsController : Controller
     {
+        private readonly IMapper _mapper;
+        private readonly ILogger<FormsController> _logger;
+
         private readonly IWebHostEnvironment _environment;
         private readonly PatientIEService _ieService = new PatientIEService();
         private readonly PatientService _patientservices = new PatientService();
 
-        public FormsController(IWebHostEnvironment environment)
+        public FormsController(ILogger<FormsController> logger, IWebHostEnvironment environment)
         {
             _environment = environment;
+            _logger = logger;
         }
         public IActionResult Index(string searchtxt = "")
         {
@@ -27,7 +34,7 @@ namespace PainTrax.Web.Controllers
             var result = _patientservices.GetAll(cnd);
             var data = result;
 
-            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/"+cmpid);
+            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
             if (!Directory.Exists(downloadFolder))
             {
                 Directory.CreateDirectory(downloadFolder);
@@ -133,28 +140,80 @@ namespace PainTrax.Web.Controllers
             }
 
         }
-        public IActionResult GeneratePdf(string pdffile,string id,string txt_date = "",string txt_surgery = "",string txt_docName="",string txt_MCode_Proc="", string txtProcedureCode="")
+        public IActionResult GeneratePdf(string pdffile, string id, string txt_date = "", string txt_surgery = "", string txt_docName = "", string txt_MCode_Proc = "", string txtProcedureCode = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-             
             Dictionary<string, string> controls = new Dictionary<string, string>();
-            if (txt_date!=null && txt_date.Trim() != "")    controls.Add("txt_date", txt_date);
-            if (txt_surgery != null && txt_surgery.Trim() != "") controls.Add("txt_surgery", txt_surgery);
-            if (txt_docName !=null && txt_docName.Trim() != "") controls.Add("txt_docName", txt_docName);
-            if (txt_MCode_Proc != null && txt_MCode_Proc.Trim() != "") controls.Add("txt_MCode_Proc", txt_MCode_Proc);
-            if (txtProcedureCode!=null && txtProcedureCode.Trim() != "") controls.Add("txtProcedureCode", txtProcedureCode);
+
+            try
+            {
+                if (txt_date != null && txt_date.Trim() != "") controls.Add("txt_date", txt_date);
+                if (txt_surgery != null && txt_surgery.Trim() != "") controls.Add("txt_surgery", txt_surgery);
+                if (txt_docName != null && txt_docName.Trim() != "") controls.Add("txt_docName", txt_docName);
+                if (txt_MCode_Proc != null && txt_MCode_Proc.Trim() != "") controls.Add("txt_MCode_Proc", txt_MCode_Proc);
+                if (txtProcedureCode != null && txtProcedureCode.Trim() != "") controls.Add("txtProcedureCode", txtProcedureCode);
+
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "Read Textboxes");
+            }
 
             PdfHelper _pdfhelper = new PdfHelper();
             string outputfilename = "";
-            
-            var uploadsFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
-            var filePath = Path.Combine(uploadsFolder, pdffile);
-           
+            var uploadsFolder = "";
+            var filePath = "";
+
+            try
+            {
+                uploadsFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+                filePath = Path.Combine(uploadsFolder, pdffile);
+
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "set Paths");
+            }
+
+            byte[] pdfBytes = null;
+            try
+            {
+                pdfBytes = _pdfhelper.Stamping(filePath, "Id", id, controls, cmpid);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "Pdf Stamping");
+            }
+
             //string htmlContent = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "demo.html"));
-            byte[] pdfBytes = _pdfhelper.Stamping(filePath,"Id",id,controls,cmpid);
+
             return File(pdfBytes, "application/pdf");
         }
 
+
+        #region Private Method
+        private void SaveLog(Exception ex, string actionname)
+        {
+            var msg = "";
+            if (ex.InnerException == null)
+            {
+                _logger.LogError(ex.Message);
+                msg = ex.Message;
+            }
+            else
+            {
+                _logger.LogError(ex.InnerException.Message);
+                msg = ex.InnerException.Message;
+            }
+            var logdata = new tbl_log
+            {
+                CreatedDate = DateTime.Now,
+                CreatedBy = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId),
+                Message = msg
+            };
+            new LogService().Insert(logdata);
+        }
+        #endregion
 
     }
 }

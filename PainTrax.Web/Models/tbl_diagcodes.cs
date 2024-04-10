@@ -4,10 +4,7 @@ namespace PainTrax.Web.Models
 {
 	public class tbl_diagcodes
 	{
-			
-		[Required(ErrorMessage = "Please enter BodyPart Name ")]
-		public string BodyPart { get; set; }
-		
+		public string? BodyPart { get; set; }		
 		public string DiagCode { get; set; }
 		public string? Description { get; set; }
 		public int? display_order { get; set; }

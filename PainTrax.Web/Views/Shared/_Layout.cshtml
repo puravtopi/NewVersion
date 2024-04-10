@@ -366,24 +366,6 @@
                 </a>
                 <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
 
-                    @{
-                        if (HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionDesignation).ToLower() == "superadmin")
-                        {
-                            <li>
-                                <a asp-action="Index" asp-controller="User">
-                                    <i class="bi bi-circle"></i><span>Manage Users</span>
-                                </a>
-
-                            </li>
-
-                        }
-                    }
-
-                    <li>
-                        <a asp-action="Index" asp-controller="CaseType">
-                            <i class="bi bi-circle"></i><span>Case Type</span>
-                        </a>
-                    </li>
                     <li>
                         <a asp-action="Index" asp-controller="AccidentType">
                             <i class="bi bi-circle"></i><span>AccidentType</span>
@@ -400,38 +382,8 @@
                         </a>
                     </li>
                     <li>
-                        <a asp-action="Index" asp-controller="Diagcode">
-                            <i class="bi bi-circle"></i><span>Diag Codes</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-action="Index" asp-controller="Inscos">
-                            <i class="bi bi-circle"></i><span>Ins Co.</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-action="Index" asp-controller="Macros">
-                            <i class="bi bi-circle"></i><span>Macros</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-action="Index" asp-controller="WebsiteMacros">
-                            <i class="bi bi-circle"></i><span>Website Macros</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-action="Index" asp-controller="Location">
-                            <i class="bi bi-circle"></i><span>Locations</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-action="Index" asp-controller="Provider">
-                            <i class="bi bi-circle"></i><span>Provider</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-action="Index" asp-controller="Group">
-                            <i class="bi bi-circle"></i><span>Groups</span>
+                        <a asp-action="Index" asp-controller="CaseType">
+                            <i class="bi bi-circle"></i><span>Case Type</span>
                         </a>
                     </li>
                     <li>
@@ -440,13 +392,25 @@
                         </a>
                     </li>
                     <li>
-                        <a asp-action="Index" asp-controller="Procedure">
-                            <i class="bi bi-circle"></i><span>Procedure</span>
+                        <a asp-action="Index" asp-controller="Diagcode">
+                            <i class="bi bi-circle"></i><span>Diag Codes</span>
                         </a>
                     </li>
                     <li>
-                        <a asp-action="Index" asp-controller="Treatment">
-                            <i class="bi bi-circle"></i><span>Treatment Master</span>
+                        <a asp-action="Index" asp-controller="Group">
+                            <i class="bi bi-circle"></i><span>Groups</span>
+                        </a>
+                    </li>
+
+                    
+                    <li>
+                        <a asp-action="Index" asp-controller="Inscos">
+                            <i class="bi bi-circle"></i><span>Ins Co.</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Location">
+                            <i class="bi bi-circle"></i><span>Locations</span>
                         </a>
                     </li>
                     <li>
@@ -455,15 +419,52 @@
                         </a>
                     </li>
                     <li>
-                        <a asp-action="Index" asp-controller="State">
-                            <i class="bi bi-circle"></i><span>State</span>
+                        <a asp-action="Index" asp-controller="Macros">
+                            <i class="bi bi-circle"></i><span>Macros</span>
                         </a>
                     </li>
+                    @{
+                        if (HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionDesignation).ToLower() == "superadmin")
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="User">
+                                    <i class="bi bi-circle"></i><span>Manage Users</span>
+                                </a>
+
+                            </li>
+
+                        }
+                    }
                     <li>
                         <a asp-action="Index" asp-controller="MapPdf">
                             <i class="bi bi-circle"></i><span>Map Pdf</span>
                         </a>
                     </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Procedure">
+                            <i class="bi bi-circle"></i><span>Procedure</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Provider">
+                            <i class="bi bi-circle"></i><span>Provider</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="State">
+                            <i class="bi bi-circle"></i><span>State</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Treatment">
+                            <i class="bi bi-circle"></i><span>Treatment Master</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="WebsiteMacros">
+                            <i class="bi bi-circle"></i><span>Website Macros</span>
+                        </a>
+                    </li>                    
                 </ul>
             </li><!-- End Components Nav -->
 

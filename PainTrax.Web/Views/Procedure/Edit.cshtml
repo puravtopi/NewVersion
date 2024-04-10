@@ -124,39 +124,39 @@
                                     </div>
                                     <div class="row mb-3">
                                         <legend class="col-form-label col-sm-3 pt-0"></legend>
-                                        <div class="col-sm-9">
+                                        <div class="row">
 
-                                            <div class="form-check">
+                                            <div class="col-sm-3 form-check">
                                                 <input class="form-check-input" asp-for="inhouseprocbit" type="checkbox" />
                                                 <label class="form-check-label" for="inhouseprocbit">
                                                     In-House
                                                 </label>
                                             </div>
-                                            <div class="form-check">
+                                            <div class="col-sm-2 form-check">
                                                 <input class="form-check-input" asp-for="sides" type="checkbox" />
                                                 <label class="form-check-label" for="sides">
                                                     Sides
                                                 </label>
                                             </div>
-                                            <div class="form-check">
+                                            <div class="col-sm-2 form-check">
                                                 <input class="form-check-input" asp-for="haslevel" type="checkbox" />
                                                 <label class="form-check-label" for="haslevel">
                                                     Level
                                                 </label>
                                             </div>
-                                            <div class="form-check">
+                                            <div class="col-sm-2 form-check">
                                                 <input class="form-check-input" asp-for="cf" type="checkbox" />
                                                 <label class="form-check-label" for="cf">
                                                     CF
                                                 </label>
                                             </div>
-                                            <div class="form-check">
+                                            <div class="col-sm-2 form-check">
                                                 <input class="form-check-input" asp-for="pn" type="checkbox" />
                                                 <label class="form-check-label" for="pn">
                                                     PN
                                                 </label>
                                             </div>
-                                            <div class="form-check">
+                                            <div class="col-sm-2 form-check">
                                                 <input class="form-check-input" asp-for="inout" type="checkbox" />
                                                 <label class="form-check-label" for="inout">
                                                     Sx Ctr
@@ -247,13 +247,13 @@
                                             <input type="text" class="form-control" asp-for="mcode_desc">
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
+                                    <div class="row mb-3" style="display:none">
                                         <label class="col-md-4 col-lg-5 col-form-label">Upload Template</label>
                                         <div class="col-md-8 col-lg-7">
                                             <input type="file" class="form-control" asp-for="upload_template"></input>
                                         </div>
-                                                                            </div>
-                                    <div class="row mb-3">
+                                    </div>
+                                    <div class="row mb-3" style="display:none">
                                         <label class="col-md-4 col-lg-5 col-form-label"></label>
                                         <div class="col-md-8 col-lg-7">
                                             @if (!string.IsNullOrEmpty(Model.upload_template))

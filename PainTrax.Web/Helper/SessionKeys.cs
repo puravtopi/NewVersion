@@ -13,6 +13,7 @@
         public static string SessionSelectedFolder = "SessionSelectedFolder";
         public static string SessionPatientId = "patient_id";
         public static string SessionDesignation = "designation";
+        public static string SessionGroupPages = "groupName";
 
     }
 }

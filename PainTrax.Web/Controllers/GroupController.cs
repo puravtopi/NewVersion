@@ -86,6 +86,7 @@ namespace PainTrax.Web.Controllers
                 model.pages_ids = page_ids.TrimStart(',');
                 model.pages_name = page_name.TrimStart(',');
                 string report_ids = "", report_name = "";
+                
                 foreach (var i in model.ReportsList)
                 {
                     if (i.IsChecked)

@@ -34,8 +34,8 @@ namespace PainTrax.Web.Services
             try
             {
                 MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_procedures
-		(mcode,bodypart,heading,ccdesc,pedesc,adesc,pdesc,cf,pn,preselect,display_order,position,inhouseproc,inhouseprocbit,haslevel,hasmuscle,hasmedication,bid,tbl_procedures.inout,sides,tbl_procedures.status,hassubprocedure,s_ccdesc,s_pedesc,s_adesc,s_pdesc,e_ccdesc,e_pedesc,e_adesc,e_pdesc,s_heading,e_heading,levelsdefault,sidesdefault,cmp_id,mcode_desc,upload_template)Values
-				(@mcode,@bodypart,@heading,@ccdesc,@pedesc,@adesc,@pdesc,@cf,@pn,@preselect,@display_order,@position,@inhouseproc,@inhouseprocbit,@haslevel,@hasmuscle,@hasmedication,@bid,@inout,@sides,@status,@hassubprocedure,@s_ccdesc,@s_pedesc,@s_adesc,@s_pdesc,@e_ccdesc,@e_pedesc,@e_adesc,@e_pdesc,@s_heading,@e_heading,@levelsdefault,@sidesdefault,@cmp_id,@mcode_desc,@upload_template)", conn);
+		(mcode,bodypart,heading,ccdesc,pedesc,adesc,pdesc,cf,pn,preselect,display_order,position,inhouseproc,inhouseprocbit,haslevel,hasmuscle,hasmedication,bid,tbl_procedures.inout,sides,tbl_procedures.status,hassubprocedure,s_ccdesc,s_pedesc,s_adesc,s_pdesc,e_ccdesc,e_pedesc,e_adesc,e_pdesc,s_heading,e_heading,levelsdefault,sidesdefault,cmp_id,mcode_desc,upload_template,injection_description)Values
+				(@mcode,@bodypart,@heading,@ccdesc,@pedesc,@adesc,@pdesc,@cf,@pn,@preselect,@display_order,@position,@inhouseproc,@inhouseprocbit,@haslevel,@hasmuscle,@hasmedication,@bid,@inout,@sides,@status,@hassubprocedure,@s_ccdesc,@s_pedesc,@s_adesc,@s_pdesc,@e_ccdesc,@e_pedesc,@e_adesc,@e_pdesc,@s_heading,@e_heading,@levelsdefault,@sidesdefault,@cmp_id,@mcode_desc,@upload_template,@injection_description)", conn);
                 cm.Parameters.AddWithValue("@mcode", data.mcode);
                 cm.Parameters.AddWithValue("@bodypart", data.bodypart);
                 cm.Parameters.AddWithValue("@heading", data.heading);
@@ -73,6 +73,7 @@ namespace PainTrax.Web.Services
                 cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
                 cm.Parameters.AddWithValue("@mcode_desc", data.mcode_desc);
                 cm.Parameters.AddWithValue("@upload_template", data.upload_template);
+                cm.Parameters.AddWithValue("@injection_description", data.injection_description);
                 Execute(cm);
             }
             catch (Exception ex)
@@ -119,7 +120,8 @@ namespace PainTrax.Web.Services
         mcode_desc=@mcode_desc,
 		levelsdefault=@levelsdefault,
 		sidesdefault=@sidesdefault,
-        upload_template=@upload_template
+        upload_template=@upload_template,
+        injection_description=@injection_description
 
 				where id=@id", conn);
             cm.Parameters.AddWithValue("@id", data.id);
@@ -160,6 +162,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@cmpid", data.cmp_id);
             cm.Parameters.AddWithValue("@mcode_desc", data.mcode_desc);
             cm.Parameters.AddWithValue("@upload_template", data.upload_template);
+            cm.Parameters.AddWithValue("@injection_description", data.injection_description);
             Execute(cm);
         }
         public void Delete(tbl_procedures data)

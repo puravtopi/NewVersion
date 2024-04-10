@@ -16,6 +16,7 @@ namespace PainTrax.Web.Models
 		public DateTime? updateddate { get; set; }
 		public int? updatedby { get; set; }
 		public int? old_id { get; set; }
+		public int? injection_description { get; set; }
 
 	}
 }

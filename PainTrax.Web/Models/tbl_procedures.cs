@@ -47,7 +47,7 @@ namespace PainTrax.Web.Models
 		public int? createdby { get; set; }
 		public DateTime? createddate { get; set; }
 		public string? upload_template { get; set; }
-        public int? injection_description { get; set; }
+        public string? injection_description { get; set; }
 
     }
 }

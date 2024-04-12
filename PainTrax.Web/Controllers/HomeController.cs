@@ -16,6 +16,7 @@ namespace PainTrax.Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private IMapper _mapper;
         private readonly LoginServices _services = new LoginServices();
+        private readonly GroupsService _groupservices = new GroupsService();
         private readonly DashboardService _dashboardservices = new DashboardService();
         private readonly ISession _session = null;
         private readonly IHttpContextAccessor _httpContextAccessor = null;
@@ -114,6 +115,19 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetInt32(SessionKeys.SessionPageSize, 25);
                         HttpContext.Session.SetString(SessionKeys.SessionDateFormat, "MM/dd/yyyy");
                     }
+
+
+                    //get menu access from assign group
+
+                    tbl_groups objgroup = new tbl_groups() { Id= response.Model.groupid}; 
+                    var groupDetails = _groupservices.GetOne(objgroup);
+
+                    if (groupDetails != null)
+                    {
+                        HttpContext.Session.SetString(SessionKeys.SessionPagesAccess,  groupDetails.pages_name);
+                    }
+
+
                     // Check if "Remember Me" checkbox is checked
                     if (remember)
                     {

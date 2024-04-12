@@ -23,7 +23,7 @@ namespace PainTrax.Services
             // conn = new MySqlConnection("Data Source=10.10.93.18;port=2109;Database=dbpaintrax_Live;User ID=purav;Password=G0d$peed@123");
 
 
-            conn = new MySqlConnection("Data Source=localhost;Database=dbpaintrax;User ID=root;Password=");
+            conn = new MySqlConnection("Data Source=localhost;Database=dbpaintrax_kdvortho;User ID=root;Password=");
         }
 
         protected static List<T> ConvertDataTable<T>(DataTable dt)

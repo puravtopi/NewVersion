@@ -20,8 +20,7 @@ namespace PainTrax.Web.Controllers
             var data = new tbl_settings();
             try
             {
-                string str = "a";
-                int temp = int.Parse(str);
+              
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
                 ViewBag.locList = _commonservices.GetLocations(cmpid.Value);

@@ -14,6 +14,7 @@
         public static string SessionPatientId = "patient_id";
         public static string SessionDesignation = "designation";
         public static string SessionGroupPages = "groupName";
+        public static string SessionPagesAccess = "pageAccess";
 
     }
 }

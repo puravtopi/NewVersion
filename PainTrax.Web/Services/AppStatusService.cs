@@ -4,12 +4,16 @@ using System.Data;
 using MS.Models;
 using PainTrax.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PainTrax.Web.Models;
 
 namespace MS.Services;
 public class AppStatusService: ParentService {
-	public List<tbl_app_status> GetAll() {
-		List<tbl_app_status> dataList = ConvertDataTable<tbl_app_status>(GetData("select * from tbl_app_status")); 
-	return dataList;
+	public List<tbl_app_status> GetAll(string cnd="") {
+        string query = "select * from tbl_app_status where 1=1";
+        if (!string.IsNullOrEmpty(query))
+            query += cnd;
+        List<tbl_app_status> dataList = ConvertDataTable<tbl_app_status>(GetData(query));
+        return dataList;
 	}
 
 	public List<SelectListItem> GetAllDropDown(bool select=true, int selected=0)

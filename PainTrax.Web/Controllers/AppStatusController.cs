@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MS.Models;
 using MS.Services;
@@ -84,6 +85,75 @@ namespace PainTrax.Web.Controllers
                 SaveLog(ex, "List");
             }
             return Json("");
+        }
+
+        public IActionResult Create()
+        {
+            tbl_app_status obj = new tbl_app_status();
+            return View(obj);
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        public IActionResult Create(tbl_app_status model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                    _services.Insert(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "Create");
+            }
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Edit(int id)
+        {
+            tbl_app_status data = new tbl_app_status();
+            try
+            {
+                tbl_app_status obj = new tbl_app_status();
+                obj.status_id = id;
+                data = _services.GetOne(id);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "Edit");
+            }
+            return View(data);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(tbl_app_status model)
+        {
+            try
+            {
+                _services.Update(model);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "Create");
+            }
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                tbl_app_status obj = new tbl_app_status();
+                obj.status_id = id;
+                _services.Delete(obj);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "Delete");
+            }
+            return RedirectToAction("Index");
         }
         #region Private Method
         private void SaveLog(Exception ex, string actionname)

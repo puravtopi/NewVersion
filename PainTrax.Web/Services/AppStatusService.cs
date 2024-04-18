@@ -6,6 +6,7 @@ using PainTrax.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PainTrax.Web.Models;
 
+
 namespace MS.Services;
 public class AppStatusService: ParentService {
 	public List<tbl_app_status> GetAll(string cnd="") {
@@ -44,17 +45,25 @@ public class AppStatusService: ParentService {
 	public tbl_app_status? GetOne(tbl_app_status data) {
 		DataTable dt = new DataTable();
 		 MySqlCommand cm = new MySqlCommand("select * from tbl_app_status where status_id=@id " , conn);
-		cm.Parameters.AddWithValue("@status_id", data.status_id);
+		cm.Parameters.AddWithValue("@id", data.status_id);
 		var datalist = ConvertDataTable<tbl_app_status>(GetData(cm)).FirstOrDefault(); 
 		return datalist;
 	}
-
-	public void Insert(tbl_app_status data) {
+    public tbl_app_status? GetOne(int id)
+    {
+        DataTable dt = new DataTable();
+        MySqlCommand cm = new MySqlCommand("select * from tbl_app_status where status_id=@id ", conn);
+        cm.Parameters.AddWithValue("@id", id);
+        var datalist = ConvertDataTable<tbl_app_status>(GetData(cm)).FirstOrDefault();
+        return datalist;
+    }
+    public void Insert(tbl_app_status data) {
 		 MySqlCommand cm = new  MySqlCommand(@"INSERT INTO tbl_app_status
-		(status)Values
-				(@status)",conn);
+		(status,cmp_id)Values
+				(@status,@cmp_id)",conn);
 		cm.Parameters.AddWithValue("@status", data.status);
-	Execute(cm);
+        cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+        Execute(cm);
 }
 	public void Update(tbl_app_status data) {
 		 MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_app_status SET

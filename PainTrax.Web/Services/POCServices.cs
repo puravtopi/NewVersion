@@ -60,10 +60,6 @@ namespace PainTrax.Web.Services
         {
             try
             {
-
-
-
-
                 DataTable dt = new DataTable();
                 MySqlCommand cm = new MySqlCommand("CALL sp_GetAllProceduress('" + bodyParts + "'," + patientIEID + ",'" + potion + "'," + cmp_id + ")", conn);
 
@@ -104,7 +100,7 @@ namespace PainTrax.Web.Services
         {
             string strresult = "";
             DataTable dt = new DataTable();
-            MySqlCommand cm = new MySqlCommand("select HasMuscle from tblProcedures where Procedure_ID=@Procedure_ID ", conn);
+            MySqlCommand cm = new MySqlCommand("select  HasMuscle from tbl_Procedures where id =@Procedure_ID ", conn);
             cm.Parameters.AddWithValue("@Procedure_ID", patientIEID);
             var result = GetData(cm);
 
@@ -335,7 +331,7 @@ namespace PainTrax.Web.Services
             }
         }
 
-        public int ForwardPOCIETOFU(int PatientIEID,int PatientFUID)
+        public int ForwardPOCIETOFU(int PatientIEID, int PatientFUID)
         {
             try
             {

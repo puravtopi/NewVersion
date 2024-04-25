@@ -1446,9 +1446,9 @@ namespace PainTrax.Web.Controllers
 
         }
 
-        public string GetMuscleFromDB(int patientIEId)
+        public string GetMuscleFromDB(int ProcedureId)
         {
-            string test = _pocService.GetMuscle(patientIEId);
+            string test = _pocService.GetMuscle(ProcedureId);
 
             DataTable dt = new DataTable();
             string[] lines = test.Split('\n');
@@ -1932,12 +1932,12 @@ namespace PainTrax.Web.Controllers
                 {
                     gender = Common.GetMrMrsFromSex(patientData.gender);
                     body = body.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
-                    body = body.Replace("#dob", Common.commonDate(patientData.dob));
+
                     body = body.Replace("#doi", Common.commonDate(patientData.doa));
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
                     body = body.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
                     body = body.Replace("#dos", Common.commonDate(patientData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
-                    body = body.Replace("#location", patientData.location);
+
 
 
                     // body = body.Replace("#CT", System.Enum.GetName(typeof(CaseType), Convert.ToInt32(patientData.compensation)));
@@ -2096,11 +2096,18 @@ namespace PainTrax.Web.Controllers
 
                 //POC printing
 
-                var strPOC = this.getPOC(id);
+                var dataPOC = this.getPOC(id);
 
 
-                body = body.Replace("#Plan", this.removePtag(strPOC));
+                body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
                 body = body.Replace("#ReflexExam", "");
+
+                body = body.Replace("#injection", "<br style=\"page-break-before:always; clear:both\" />" + dataPOC.strInjectionDesc);
+
+                body = body.Replace("#location", patientData.location);
+                body = body.Replace("#dob", Common.commonDate(patientData.dob));
+                body = body.Replace("#name", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
+
 
                 var strDiagnostic = this.getDiagnostic(id);
 
@@ -2287,13 +2294,14 @@ namespace PainTrax.Web.Controllers
 
         }
 
-        private string getPOC(int PatientIE_ID)
+        private pocDetails getPOC(int PatientIE_ID)
         {
             DataTable dsPOC = _pocService.GetPOCIE(PatientIE_ID);
 
 
 
             string strPoc = "<ol>";
+            string inject_desc = "";
             if (dsPOC != null && dsPOC.Rows.Count > 0)
             {
 
@@ -2301,11 +2309,6 @@ namespace PainTrax.Web.Controllers
                 {
                     if (!string.IsNullOrEmpty(dsPOC.Rows[i]["Heading"].ToString()))
                     {
-
-
-
-
-
 
                         //if (i != dsPOC.Tables[0].Rows.Count - 1)
                         //    strPoc = strPoc + "<b style='text-transform:uppercase'>" + dsPOC.Tables[0].Rows[i]["Heading"].ToString().TrimEnd(':') + ": </b>" + dsPOC.Tables[0].Rows[i]["PDesc"].ToString() + "<br/><br/>";
@@ -2334,11 +2337,23 @@ namespace PainTrax.Web.Controllers
                             heading = heading.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
                         }
 
+                        if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
+                        {
+                            inject_desc = "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
+                        }
+
                         strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + dsPOC.Rows[i]["PDesc"].ToString() + "</li>";
                     }
                 }
             }
-            return strPoc + "</ol>";
+
+            pocDetails pocDetails = new pocDetails()
+            {
+                strInjectionDesc = inject_desc,
+                strPoc = strPoc
+            };
+
+            return pocDetails;
         }
 
         public static void AddHeaderFromTo(string filepathFrom, string filepathTo)
@@ -2910,5 +2925,11 @@ namespace PainTrax.Web.Controllers
             }
             return "";
         }
+    }
+
+    public class pocDetails
+    {
+        public string strPoc { get; set; }
+        public string strInjectionDesc { get; set; }
     }
 }

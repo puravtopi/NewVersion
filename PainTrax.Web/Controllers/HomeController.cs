@@ -125,6 +125,7 @@ namespace PainTrax.Web.Controllers
                     if (groupDetails != null)
                     {
                         HttpContext.Session.SetString(SessionKeys.SessionPagesAccess,  groupDetails.pages_name);
+                        HttpContext.Session.SetString(SessionKeys.SessionRoleAccess,  groupDetails.role_name);
                     }
 
 

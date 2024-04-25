@@ -1,4 +1,7 @@
-﻿    @{
+﻿@using PainTrax.Web.Helper
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -24,10 +27,14 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row mb-3">
-
-                            <div class="col-md-12 col-lg-12">
-                                <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
-                            </div>
+                            @{
+                                if (HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionRoleAccess).Contains("Add Patient"))
+                                {
+                                    <div class="col-md-12 col-lg-12">
+                                        <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
+                                    </div>
+                                }
+                            }
                         </div>
                         <!-- Table with hoverable rows -->
                         <div class="table-responsive">
@@ -145,9 +152,9 @@
 
         function bindList() {
 
-            var url = '@Url.Action("List","Visit")';
-            var editurl = '@Url.Action("Create","Visit")';
-            var printurl = '@Url.Action("IEPrint","Visit")';
+            var url = '@Url.Action("List", "Visit")';
+            var editurl = '@Url.Action("Create", "Visit")';
+            var printurl = '@Url.Action("IEPrint", "Visit")';
             var appurl = '@Url.Action("Appointments", "Appointment")';
 
             var tab = $("#tbl").DataTable({
@@ -284,7 +291,7 @@
         function fnShowComment(ieId) {
 
 
-            var url = '@Url.Action("GetComment","Visit")?ieId=' + ieId
+            var url = '@Url.Action("GetComment", "Visit")?ieId=' + ieId
 
             $.ajax({
                 type: "Post",
@@ -315,7 +322,7 @@
         function fnSaveComment() {
 
 
-            var url = '@Url.Action("SaveComment","Visit")'
+            var url = '@Url.Action("SaveComment", "Visit")'
             var model = {
                 "id": $("#id").val(),
                 "comment_details": $("#extra_comments").val(),
@@ -343,8 +350,8 @@
         function fnDeletePatient(Id) {
             if (confirm("Are you sure you want to delete ...?")) {
 
-                var url = '@Url.Action("DeleteIE","Visit")?ieId=' + Id
-                var redirecturl = '@Url.Action("Index","Visit")';
+                var url = '@Url.Action("DeleteIE", "Visit")?ieId=' + Id
+                var redirecturl = '@Url.Action("Index", "Visit")';
 
                 $.ajax({
                     type: "Post",
@@ -369,8 +376,8 @@
         function fnDeleteFU(Id) {
             if (confirm("Are you sure you want to delete ...?")) {
 
-                var url = '@Url.Action("DeleteFU","FUVisit")?fuId=' + Id
-                var redirecturl = '@Url.Action("Index","Visit")';
+                var url = '@Url.Action("DeleteFU", "FUVisit")?fuId=' + Id
+                var redirecturl = '@Url.Action("Index", "Visit")';
 
                 $.ajax({
                     type: "Post",
@@ -417,10 +424,10 @@
             });
         }
 
-        function fnShowPOCSummary(ieId,fuId) {
+        function fnShowPOCSummary(ieId, fuId) {
             var url = '';
-            if(fuId==0)
-                 url = '@Url.Action("POCSummary","Visit")?patientIEId=' + ieId;
+            if (fuId == 0)
+                url = '@Url.Action("POCSummary", "Visit")?patientIEId=' + ieId;
             else
                 url = '@Url.Action("POCSummary", "FUVisit")?patientFUId=' + fuId;
 
@@ -446,7 +453,7 @@
 
 
         function fnShowSurgeryPOCSummary(ieId) {
-            var url = '@Url.Action("SurgeryPOCSummary","Visit")?patientIEId=' + ieId;
+            var url = '@Url.Action("SurgeryPOCSummary", "Visit")?patientIEId=' + ieId;
 
 
             $.ajax({
@@ -467,7 +474,7 @@
 
         function fnCreateFU() {
 
-            var url = '@Url.Action("CreateFU","Visit")?patientIEId=' + $("#type_ie_id").val() + "&patientId=" + $("#type_patient_id").val() + "&type=" + $("#ddlfuType option:selected").text();
+            var url = '@Url.Action("CreateFU", "Visit")?patientIEId=' + $("#type_ie_id").val() + "&patientId=" + $("#type_patient_id").val() + "&type=" + $("#ddlfuType option:selected").text();
             window.location.href = url;
         }
 
@@ -475,9 +482,9 @@
             // `d` is the original data object for the row
             debugger
             var id = d.id;
-            var url = '@Url.Action("FuList","Visit")?ieId=' + id;
-            var editurl = '@Url.Action("Create","FUVisit")?patientIEId=' + id;
-            var printurl = '@Url.Action("IEPrint","Visit")';
+            var url = '@Url.Action("FuList", "Visit")?ieId=' + id;
+            var editurl = '@Url.Action("Create", "FUVisit")?patientIEId=' + id;
+            var printurl = '@Url.Action("IEPrint", "Visit")';
 
 
             let childtab = document.createElement("table");

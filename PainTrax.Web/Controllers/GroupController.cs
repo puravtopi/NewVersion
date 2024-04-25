@@ -129,7 +129,7 @@ namespace PainTrax.Web.Controllers
                 data.LocationList = _commonservices.GetLocationsCheckBoxList(cmpid.Value, data.Location_ids);
                 data.PagesList = _commonservices.GetPagesCheckBoxList(data.pages_ids);
                 data.ReportsList = _commonservices.GetReportsCheckBoxList(data.reports_ids);
-                data.RoleList = _commonservices.GetRolsCheckBoxList(data.reports_ids);
+                data.RoleList = _commonservices.GetRolsCheckBoxList(data.role_ids);
             } 
             catch(Exception ex)
             {

@@ -15,6 +15,7 @@
         public static string SessionDesignation = "designation";
         public static string SessionGroupPages = "groupName";
         public static string SessionPagesAccess = "pageAccess";
+        public static string SessionRoleAccess = "roleAccess";
 
     }
 }

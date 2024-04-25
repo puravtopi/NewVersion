@@ -2,9 +2,7 @@
 
     input:read-only {
         background-color: #d4d4d4;
-}
-
-    
+    }
 
 </style>
 
@@ -282,32 +280,7 @@
 
 
 
-                    <div class="col-lg-3" id="canvDiv" style="display: none">
-                        <label id="lblSign" class="align boldertext">Sign</label>
 
-                        <div id="signature-pad" class="signature-pad" style="display: none">
-                            <canvas id="canvSign"></canvas>
-                            <div class="signature-pad--actions">
-                                <div>
-                                    <button type="button" class="button clear" data-action="clear">Clear</button>
-
-                                </div>
-                                <div>
-                                    <input type="hidden" id="hidBlob" />
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-3" id="signEdit" style="display: none">
-                        <label id="lblSignEdit" class="align boldertext">Sign</label>
-
-                        <img id="imgSignEdit" />
-                        <input type="hidden" id="hidSign" />
-                        <br />
-                        <button id="btnClear" class="btn btn-danger" onclick="return clearSign()">Change Sign</button>
-                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -478,7 +451,7 @@
             $('#Positionlbl').show();
 
 
-            $('#signEdit').hide();
+
 
             if (t[0].dataset.subcode == "1") {
                 $.ajax({
@@ -500,7 +473,12 @@
                 $('#SubProcedurelbl').show();
             }
 
+
+
             if (t[0].dataset.muscle == "1") {
+
+
+
 
                 $.ajax({
                     type: "POST",
@@ -605,7 +583,7 @@
 
     function PopupNE(t) {
 
-
+        debugger
         if (t[0].dataset.position == "Execute") {
             $("#McCaseIns").css("visibility", "collapse");
         } else {
@@ -621,8 +599,8 @@
             $("#CTReDate").val('')
 
         }
-        
-        
+
+
 
         if (t[0].dataset.haslevel != "1") {
             $('#Level').hide();
@@ -662,6 +640,24 @@
             $('#divMuscle').hide();
         }
         else {
+
+            $.ajax({
+                type: "POST",
+                url: "GetMuscleFromDB",
+                data: "{'patientIEID':'" + t[0].dataset.pid + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "JSON",
+                success: function (output) {
+                    ////;
+                    $('#Muscle').html('');
+                    var json = JSON.parse(output.d);
+                    $.each(json, function (index, value) {
+                        $('#Muscle').append($('<option>').text(value.Muscle).attr('value', value.Muscle));
+                    });
+                }
+            });
+            $('#Muscle').show();
+            $('#Musclelbl').show();
 
             $('#Muscle').show();
             $('#Musclelbl').show();
@@ -719,10 +715,6 @@
     }
 
     function CreateProc() {
-
-
-
-
 
         $('#NewProc').val('1');
         $('#SubCode').html('');
@@ -951,21 +943,29 @@
                 $('#Medication').show();
                 $('#Medicationlbl').show();
             }
+
+            debugger
+
             if ($('#Hasmuscle').val() != "1") {
                 $('#Muscle').hide();
                 $('#Musclelbl').hide();
             }
             else {
+
+                var url = '@Url.Action("GetMuscleFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
+
+
                 $.ajax({
                     type: "POST",
-                    url: "GetMuscleFromDB",
-                    data: "{'Muscle':'" + $('#ProcedureId').val() + "'}",
+                    url: url,
                     contentType: "application/json; charset=utf-8",
                     dataType: "JSON",
                     success: function (output) {
-                        //;
+                       debugger
                         $('#Muscle').html('');
-                        var json = JSON.parse(output.d);
+                        // var json = JSON.parse(output.d);
+                        var json = output;
                         $.each(json, function (index, value) {
                             $('#Muscle').append($('<option>').text(value.Muscle).attr('value', value.Muscle));
                         });
@@ -994,7 +994,7 @@
         }
         else {
 
-            var url = '@Url.Action("GetProcDetail","visit")?ProcedureDetailID=' + $('#ProcedureDetailId').val();
+            var url = '@Url.Action("GetProcDetail", "visit")?ProcedureDetailID=' + $('#ProcedureDetailId').val();
 
             $("#McCaseIns").css("visibility", "visible");
             $.ajax({
@@ -1060,22 +1060,21 @@
 
     function RemoveProc() {
 
-         var ProcedureDetailIDfordelete = $('#ProcedureDetailId').val();
-         var url = '@Url.Action("Delete","Visit")?ProcedureDetailID='+ProcedureDetailIDfordelete;
+        var ProcedureDetailIDfordelete = $('#ProcedureDetailId').val();
+        var url = '@Url.Action("Delete", "Visit")?ProcedureDetailID=' + ProcedureDetailIDfordelete;
 
         if (confirm('Do u want to delete?')) {
             ;
-           
+
             if (ProcedureDetailIDfordelete == undefined) { ProcedureDetailIDfordelete = 0 }
-            
+
             $.ajax({
                 type: "POST",
                 url: url,
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    if(data)
-                    {
+                    if (data) {
                         $('#SelectPopup').modal('hide');
                         fnReLoadPOC();
                     }
@@ -1089,7 +1088,7 @@
 
     function fnSave() {
 
-        var url = '@Url.Action("SavePOC","Visit")';
+        var url = '@Url.Action("SavePOC", "Visit")';
         var PositionValue = $('#PositionValue').val();
 
         var blobstr = "";
@@ -1232,7 +1231,7 @@
     }
 
     function fnReLoadPOC() {
-        var url = '@Url.Action("GetPOC","Visit")?patientIEId=' + $("#hdIEId").val();
+        var url = '@Url.Action("GetPOC", "Visit")?patientIEId=' + $("#hdIEId").val();
 
         $.ajax({
             type: "Post",
@@ -1248,10 +1247,10 @@
     }
 
     function CountPopup(t) {
-     
+
         $('#ProcedureId').val(t[0].dataset.pid);
 
-        var url = '@Url.Action("GetProcedureCountDetail","Visit")?ProcedureID=' + t[0].dataset.pid + '&PatientIEID=' + $("#hdIEId").val();
+        var url = '@Url.Action("GetProcedureCountDetail", "Visit")?ProcedureID=' + t[0].dataset.pid + '&PatientIEID=' + $("#hdIEId").val();
 
         //$('#PPID').val(t[0].dataset.PatientIEID);
         $.ajax({

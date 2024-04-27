@@ -1022,6 +1022,99 @@ namespace PainTrax.Web.Controllers
             return Json(data);
         }
 
+        //[HttpPost]
+        //public IActionResult SaveSignature([FromBody] tbl_ie_sign model)
+        //{
+        //    try
+        //    {
+        //        if (string.IsNullOrEmpty(model.signatureData))
+        //            return BadRequest("Invalid signature data.");
+
+        //        var base64Data = model.signatureData.Split(',')[1]; // Extract base64 part
+        //        var imageData = Convert.FromBase64String(base64Data); // Convert to byte array
+
+        //        var filename = $"{Guid.NewGuid()}.jpg";
+        //        var savePath = Path.Combine(Environment.WebRootPath, "signatures", filename);
+
+        //        if (!Directory.Exists(Path.GetDirectoryName(savePath)))
+        //        {
+        //            Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+        //        }
+
+        //        System.IO.File.WriteAllBytes(savePath, imageData); // Save the file
+
+        //        return Ok(new { FileName = filename });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, "Error saving signature: " + ex.Message);
+        //    }
+        //}
+        //[HttpPost]
+        //public IActionResult GetSignature(int ieId)
+        //{
+        //    try
+        //    {
+        //        var record = _ieService.GetOnesign(ieId);
+        //        if (record != null && !string.IsNullOrEmpty(record.signatureData))
+        //        {
+        //            return Ok(new { SignatureFile = record.signatureData });
+        //        }
+        //        return NotFound("Signature not found.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, "Error retrieving signature: " + ex.Message);
+        //    }
+        //}
+
+
+        [HttpPost]
+        public IActionResult SaveSign([FromBody] tbl_ie_sign model)
+        {
+            if (string.IsNullOrEmpty(model.signatureData))
+                return BadRequest("Invalid signature data.");
+
+            
+            var base64Data = model.signatureData.Split(',')[1];
+            var imageData = Convert.FromBase64String(base64Data);
+            
+            string ieIdString = Request.Query["ie_id"]; 
+
+            if (string.IsNullOrEmpty(ieIdString))
+            {
+                return BadRequest("ie_id is required.");
+            }
+                        
+            var filename = $"{ieIdString}.jpg"; 
+            var savePath = Path.Combine(Environment.WebRootPath, "signatures", filename);
+                       
+            if (!Directory.Exists(Path.GetDirectoryName(savePath)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+            }
+
+            System.IO.File.WriteAllBytes(savePath, imageData);
+
+            return Ok(new { FileName = filename }); 
+
+        }
+
+        [HttpPost]
+        public IActionResult GetSign(int ieId)
+        {
+            var data = new tbl_ie_sign();
+            try
+            {
+                data = _ieService.GetOnesign(ieId);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "GetSign");
+            }
+            return Json(data);
+        }
+
         [HttpPost]
         public IActionResult GetDaignoCodeList(string bodyparts)
         {

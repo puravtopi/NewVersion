@@ -81,7 +81,6 @@
                         <div class="col-sm-12">
                             <textarea id="extra_comments" name="extra_comments" rows="5" class="form-control"></textarea>
                         </div>
-
                     </div>
 
                 </div>
@@ -92,6 +91,30 @@
             </div><!-- End Large Modal-->
         </div>
     </div>
+   
+    <div class="modal fade" id="signModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Signature</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="id" />
+                    <input type="hidden" id="ie_id" />
+                    <div class="col-sm-10">
+                        <canvas id="signature-pad" style="border: 1px solid #000;"></canvas>
+                    </div>
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-danger" id="clear-signature">Clear</button>
+                        <button type="button" class="btn btn-warning" id="undo-signature">Undo</button>
+                        <button type="button" class="btn btn-primary" id="save-signature" onclick="fnSaveSign()">Save Signature</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="modal fade" id="pocModal" tabindex="-1">
         <div class="modal-dialog modal-xl">
@@ -134,10 +157,9 @@
             </div><!-- End Large Modal-->
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@latest/dist/signature_pad.umd.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
-
     <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
@@ -148,7 +170,48 @@
 
         $(document).ready(function () {
             bindList();
+
+            var canvas = document.getElementById("signature-pad");
+            var signaturePad = new SignaturePad(canvas);
+            // Verify SignaturePad is initialized
+            if (signaturePad) {
+                console.log("SignaturePad initialized");
+            } else {
+                console.log("SignaturePad initialization failed");
+            }
+
+            // Clear and undo functionality
+            $("#clear-signature").click(function () {
+                signaturePad.clear();
+            });
+
+            $("#undo-signature").click(function () {
+                var data = signaturePad.toData();
+                if (data && data.length) {
+                    data.pop(); // Remove the last stroke
+                    signaturePad.fromData(data);
+                }
+            });
+            $("#save-signature").click(function () {
+                if (signaturePad.isEmpty()) {
+                    alert("Please draw your signature before saving.");
+                } else {
+                    var signatureData = signaturePad.toDataURL("image/jpeg");
+                    fnSaveSignature(signatureData); // Function to save the signature
+                }
+            });
         });
+
+        function resizeCanvas() {
+            var ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
+
+            signaturePad.clear(); 
+        }        
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
 
         function bindList() {
 
@@ -265,9 +328,9 @@
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowPOCSummary(' + full.id + ',0)" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i><span>POC Summary</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + full.id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnFuType(' + full.id + ',' + full.patient_id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Next Visit</span></a></li>';
-                            index += ' <li><a href="' + appurl + '/' + full.id + '"><i class="bi bi-calendar-week" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Appointments"></i> </a> </li>'
-                            index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + printurl + '/' + full.id + '" ><i class="bi bi-printer-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print" data-bs-original-title="Print"></i><span>Print</span></a></li></ul>';
-
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + appurl + '/' + full.id + '"><i class="bi bi-calendar-week" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Appointments" data-bs-original-title="Print"></i><span>Appointments</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + printurl + '/' + full.id + '" ><i class="bi bi-printer-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print" data-bs-original-title="Print"></i><span>Print</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSign(' + full.id + ')" href="#" ><i class="bi bi-pencil-square" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Sign" data-bs-original-title="Add Sign"></i><span>Add Sign</span></a></li></ul>';
                             return index;
                         }
                     }
@@ -321,7 +384,7 @@
             });
 
         }
-
+        
         function fnSaveComment() {
 
 
@@ -349,6 +412,64 @@
             });
 
         }
+
+       
+        function fnShowSign(ieId) {
+
+
+            var url = '@Url.Action("GetSign", "Visit")?ieId=' + ieId
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+                    if (data != null) {
+                        $("#signature-pad").val(data.signatureData);
+                        $("#id").val(data.id);
+
+                    }
+                    else {
+                        $("#signature-pad").val("");
+                        $("#id").val("0");
+                    }
+
+                    $("#ie_id").val(ieId);
+
+                    $("#signModal").modal('show');
+                },
+                error: function (xhr, status, error) {
+                    alert("Error!" + xhr.status);
+                },
+            });
+
+        }
+        function fnSaveSign(signatureData) {
+
+            var url = '@Url.Action("SaveSign", "Visit")';
+            var ieId = $("#ie_id").val(); // Extract ie_id as needed
+            var model = {
+                "id": $("#id").val(),
+                "signature-pad": $("#signature-pad").val(),
+                "ie_id": $("#ie_id").val()
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(model),
+                contentType: "application/json",
+                success: function (response) {
+                    console.log("Signature saved successfully:", response);
+                    $("#signModal").modal("hide"); // This line will close the modal
+                },
+                error: function (xhr, status, error) {
+                    alert("Error saving signature: " + xhr.status);
+                },
+            });
+        }
+
 
         function fnDeletePatient(Id) {
             if (confirm("Are you sure you want to delete ...?")) {

@@ -142,15 +142,15 @@
                                                             DOS.
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            <input type="text" asp-for="dos" class="form-control"/>
+                                                            <input type="date" asp-for="dos" class="form-control" />
                                                         </div>
                                                     </div>
                                                     <div class="row mb-3">
-                                                        <label for="inputNumber" class="col-sm-2 col-form-label" >
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
                                                             DOA.
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            <input type="text" asp-for="doa" class="form-control" />
+                                                            <input type="date" asp-for="doa" class="form-control" />
                                                         </div>
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
                                                             Case Type
@@ -161,7 +161,7 @@
                                                             <span id="error-casetype" style="display:none" class="errorSpan">Please Select CaseType.</span>
                                                         </div>
                                                     </div>
-                                                    <div class="row mb-3" id="accidentDropdown" >
+                                                    <div class="row mb-3" id="accidentDropdown">
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
                                                             Accident Type
                                                         </label>
@@ -213,7 +213,7 @@
                                                     <div class="row mb-3">
                                                         <label for="inputText" class="col-sm-2 col-form-label">DOB</label>
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control" asp-for="dob" >
+                                                            <input type="date" class="form-control" asp-for="dob">
                                                             <span id="error-dob" style="display:none" class="errorSpan">Please Enter DOB.</span>
                                                         </div>
                                                         <label for="inputText" class="col-sm-2 col-form-label">Email</label>
@@ -872,7 +872,7 @@
             );
         }
     }
-      
+
 
     function getCCFeedItems(queryText) {
 
@@ -963,10 +963,10 @@
 
 <script>
 
-    $(document).ready(function () {      
+    $(document).ready(function () {
 
 
-       
+
         $(".msktxt").inputmask("999-999-9999");
         $("#ssn").inputmask("999-99-9999");
 
@@ -1230,6 +1230,11 @@
                                     debugger
                                     var age = calcAge($("#dob").val());
                                     var doi = $("#doa").val();
+                                                                       
+                                    if (doi != '') {
+                                        doi=formatDate(doi);
+                                    }
+                                   
                                     var gender = $("#gender option:selected").text().toLowerCase();
                                     var accidenttype = $("#accidentType option:selected").text().toLowerCase();
 
@@ -1264,30 +1269,54 @@
             }
         });
     }
-   
-    $(function () {
-        $("#dob").datepicker({
-            dateFormat: "mm/dd/yy" , // Setting the format to MM/DD/YYYY
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "1900:2100"
-        });
-        // Initialize date picker for DOS
-        $("#dos").datepicker({
-            dateFormat: "mm/dd/yy", // Set the desired date format
-            changeMonth: true,      
-            changeYear: true,      
-            yearRange: "1900:2100"  
-        });
+    function formatDate(inputDate) {
+        var date = new Date(inputDate);
 
-        // Initialize date picker for DOA
-        $("#doa").datepicker({
-            dateFormat: "mm/dd/yy",
-            changeMonth: true,      
-            changeYear: true,       
-            yearRange: "1900:2100"  
-        });
-    });
+        // Check if the date is valid
+        if (isNaN(date.getTime())) {
+            return "Invalid Date";
+        }
+
+        // Extract date components
+        var month = date.getMonth() + 1; // Months are zero based
+        var day = date.getDate();
+        var year = date.getFullYear();
+
+        // Pad single digit month and day with leading zeros
+        if (month < 10) {
+            month = "0" + month;
+        }
+        if (day < 10) {
+            day = "0" + day;
+        }
+
+        // Return formatted date
+        return month + "/" + day + "/" + year;
+    }
+
+    // $(function () {
+    //     $("#dob").datepicker({
+    //         dateFormat: "mm/dd/yy" , // Setting the format to MM/DD/YYYY
+    //         changeMonth: true,
+    //         changeYear: true,
+    //         yearRange: "1900:2100"
+    //     });
+    //     // Initialize date picker for DOS
+    //     $("#dos").datepicker({
+    //         dateFormat: "mm/dd/yy", // Set the desired date format
+    //         changeMonth: true,
+    //         changeYear: true,
+    //         yearRange: "1900:2100"
+    //     });
+
+    //     // Initialize date picker for DOA
+    //     $("#doa").datepicker({
+    //         dateFormat: "mm/dd/yy",
+    //         changeMonth: true,
+    //         changeYear: true,
+    //         yearRange: "1900:2100"
+    //     });
+    // });
     function calcAge(dateString) {
         var birthday = +new Date(dateString);
         return ~~((Date.now() - birthday) / (31557600000));
@@ -1375,7 +1404,7 @@
             },
         });
     }
-    
+
 </script>
 
 

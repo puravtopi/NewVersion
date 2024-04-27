@@ -116,7 +116,7 @@ namespace PainTrax.Web.Services
         {
             string strresult = "";
             DataTable dt = new DataTable();
-            MySqlCommand cm = new MySqlCommand("select HasSubProcedure from tblProcedures where Procedure_ID=@Procedure_ID ", conn);
+            MySqlCommand cm = new MySqlCommand("select HasSubProcedure from tbl_Procedures where id=@Procedure_ID ", conn);
             cm.Parameters.AddWithValue("@Procedure_ID", patientIEID);
             var result = GetData(cm);
 
@@ -132,7 +132,7 @@ namespace PainTrax.Web.Services
         {
             string strresult = "";
             DataTable dt = new DataTable();
-            MySqlCommand cm = new MySqlCommand("select HasMedication from tblProcedures where Procedure_ID=@Procedure_ID ", conn);
+            MySqlCommand cm = new MySqlCommand("select HasMedication from tbl_Procedures where id=@Procedure_ID ", conn);
             cm.Parameters.AddWithValue("@Procedure_ID", patientIEID);
             var result = GetData(cm);
 

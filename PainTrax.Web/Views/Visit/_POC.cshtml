@@ -98,7 +98,7 @@
                     <div class="row mb-3" id="divMuscle">
                         <label id="Musclelbl" class="col-sm-2 col-form-label">Muscle</label>
                         <div class="col-sm-4">
-                            <select id="Muscle" class="multiselect form-control ddlpackage" multiple="multiple">
+                            <select id="Muscle" name="Muscle" class="multiselect form-control ddlpackage" multiple="multiple">
                                 <option value="">--Select--</option>
                             </select>
                         </div>
@@ -451,19 +451,18 @@
             $('#Positionlbl').show();
 
 
-
+            var url = '@Url.Action("GetSubCodeFromDB", "Visit")?ProcedureId=' + t[0].dataset.pid;
 
             if (t[0].dataset.subcode == "1") {
                 $.ajax({
                     type: "POST",
-                    url: "GetSubCodeFromDB",
-                    data: "{'SubCode':'" + t[0].dataset.pid + "'}",
+                    url: url,
                     contentType: "application/json; charset=utf-8",
                     dataType: "JSON",
                     success: function (output) {
                         //;
                         $('#patientIEId').html('');
-                        var json = JSON.parse(output.d);
+                        var json = output;
                         $.each(json, function (index, value) {
                             $('#SubProcedure').append($('<option>').text(value.SubCode).attr('value', value.SubCode));
                         });
@@ -478,18 +477,18 @@
             if (t[0].dataset.muscle == "1") {
 
 
-
+                var url = '@Url.Action("GetMuscleFromDB", "Visit")?ProcedureId=' + t[0].dataset.pid;
 
                 $.ajax({
                     type: "POST",
-                    url: "GetMuscleFromDB",
-                    data: "{'patientIEID':'" + t[0].dataset.pid + "'}",
+                    url: url,
+                    // data: "{'patientIEID':'" + t[0].dataset.pid + "'}",
                     contentType: "application/json; charset=utf-8",
                     dataType: "JSON",
                     success: function (output) {
                         ////;
                         $('#Muscle').html('');
-                        var json = JSON.parse(output.d);
+                        var json = output;
                         $.each(json, function (index, value) {
                             $('#Muscle').append($('<option>').text(value.Muscle).attr('value', value.Muscle));
                         });
@@ -501,16 +500,16 @@
 
             if (t[0].dataset.medication == "1") {
 
+                var url = '@Url.Action("GetMedicationFromDB", "Visit")?ProcedureId=' + t[0].dataset.pid;
                 $.ajax({
                     type: "POST",
-                    url: "GetMedicationFromDB",
-                    data: "{'patientIEID':'" + t[0].dataset.pid + "'}",
+                    url: url,
                     contentType: "application/json; charset=utf-8",
                     dataType: "JSON",
                     success: function (output) {
                         ////;
                         $('#Medication').html('');
-                        var json = JSON.parse(output.d);
+                        var json = output;
                         $.each(json, function (index, value) {
                             $('#Medication').append($('<option>').text(value.Medicaton).attr('value', value.Medicaton));
                         });
@@ -583,7 +582,10 @@
 
     function PopupNE(t) {
 
-        debugger
+        $('#MuscleVal').val(t[0].dataset.musc);
+
+
+
         if (t[0].dataset.position == "Execute") {
             $("#McCaseIns").css("visibility", "collapse");
         } else {
@@ -641,19 +643,36 @@
         }
         else {
 
+            var url = '@Url.Action("GetMuscleFromDB", "Visit")?patientIEID=' + t[0].dataset.pid;
+
+
             $.ajax({
                 type: "POST",
-                url: "GetMuscleFromDB",
-                data: "{'patientIEID':'" + t[0].dataset.pid + "'}",
+                url: url,
+                // data: "{'patientIEID':'" + t[0].dataset.pid + "'}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "JSON",
                 success: function (output) {
                     ////;
                     $('#Muscle').html('');
-                    var json = JSON.parse(output.d);
+                    var json = output;
                     $.each(json, function (index, value) {
-                        $('#Muscle').append($('<option>').text(value.Muscle).attr('value', value.Muscle));
+                        $('#Muscle').append($('<option>').text(value.Muscle.trim()).attr('value', value.Muscle.trim()));
                     });
+
+                    var str = $('#MuscleVal').val();
+
+                    debugger
+
+                    if (str != "")
+                        if (str.indexOf('~') != -1) {
+                            var selectedOptions = str.split("~");
+
+                            for (var i in selectedOptions) {
+                                $('#Muscle option[value="' + selectedOptions[i].trim() + '"]').prop('selected', true);
+
+                            }
+                        }
                 }
             });
             $('#Muscle').show();
@@ -676,7 +695,7 @@
         }
 
 
-        ;
+
         $('#ProcedureDetailId').val(t[0].dataset.procedure_detail_id);
         $('#hidSign').val(t[0].dataset.signpath);
         $('#ProcedureId').val(t[0].dataset.pid);
@@ -697,7 +716,7 @@
         $('#Haslevel').val(t[0].dataset.haslevel);
         $('#HasSides').val(t[0].dataset.hassides);
         $('#MedicationVal').val(t[0].dataset.medi);
-        $('#MuscleVal').val(t[0].dataset.musc);
+
         $('#DateVal').val(t[0].dataset.date);
         $('#LevelVal').val(t[0].dataset.level);
         $('#SideVal').val(t[0].dataset.sides);
@@ -762,15 +781,18 @@
             $('#SubProcedurelbl').hide();
         }
         else {
+
+            var url = '@Url.Action("GetSubCodeFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
             $.ajax({
                 type: "POST",
-                url: "GetSubCodeFromDB",
-                data: "{'SubCode':'" + $('#ProcedureId').val() + "'}",
+                url: url,
+
                 contentType: "application/json; charset=utf-8",
                 dataType: "JSON",
                 success: function (output) {
                     $('#SubProcedure').html('');
-                    var json = JSON.parse(output.d);
+                    var json = output;
                     $.each(json, function (index, value) {
                         $('#SubProcedure').append($('<option>').text(value.SubCode).attr('value', value.SubCode));
                     });
@@ -790,16 +812,18 @@
         }
         else {
 
+            var url = '@Url.Action("GetMedicationFromDB", "Visit")?ProcedureId=' + t[0].dataset.pid;
+
             $.ajax({
                 type: "POST",
-                url: "GetMedicationFromDB",
-                data: "{'patientIEID':'" + t[0].dataset.pid + "'}",
+                url: url,
+
                 contentType: "application/json; charset=utf-8",
                 dataType: "JSON",
                 success: function (output) {
 
                     $('#Medication').html('');
-                    var json = JSON.parse(output.d);
+                    var json = output;
                     $.each(json, function (index, value) {
                         $('#Medication').append($('<option>').text(value.Medicaton).attr('value', value.Medicaton));
                     });
@@ -816,16 +840,20 @@
             $('#Musclelbl').hide();
         }
         else {
+
+            var url = '@Url.Action("GetMuscleFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
+
             $.ajax({
                 type: "POST",
-                url: "GetMuscleFromDB",
-                data: "{'patientIEID':'" + $('#ProcedureId').val() + "'}",
+                url: url,
+                // data: "{'patientIEID':'" + $('#ProcedureId').val() + "'}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "JSON",
                 success: function (output) {
 
                     $('#Muscle').html('');
-                    var json = JSON.parse(output.d);
+                    var json = output;
                     $.each(json, function (index, value) {
                         $('#Muscle').append($('<option>').text(value.Muscle).attr('value', value.Muscle));
                     });
@@ -883,19 +911,22 @@
                 $('#SubProcedurelbl').hide();
             }
             else {
+
+                var url = '@Url.Action("GetSubCodeFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
                 $.ajax({
                     type: "POST",
                     //url: "POC.aspx/GetSubCodeFromDB",
                     //data: "{'SubCode':'" + t[0].dataset.pid + "'}",
-                    url: "GetSubCodeFromDB",
-                    data: "{'SubCode':'" + $('#ProcedureId').val() + "'}",
+                    url: url,
+
                     contentType: "application/json; charset=utf-8",
                     dataType: "JSON",
 
                     success: function (output) {
                         ////;
                         $('#SubProcedure').html('');
-                        var json = JSON.parse(output.d);
+                        var json = output;
                         $.each(json, function (index, value) {
                             ////;
                             $('#SubProcedure').append($('<option>').text(value.SubCode).attr('value', value.SubCode));
@@ -915,16 +946,18 @@
                 $('#Medicationlbl').hide();
             }
             else {
+
+                var url = '@Url.Action("GetMedicationFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
                 $.ajax({
                     type: "POST",
-                    url: "GetMedicationFromDB",
-                    data: "{'Medication':'" + $('#ProcedureId').val() + "'}",
+                    url: url,
                     contentType: "application/json; charset=utf-8",
                     dataType: "JSON",
                     success: function (output) {
                         ////;
                         $('#Medication').html('');
-                        var json = JSON.parse(output.d);
+                        var json = output;
                         $.each(json, function (index, value) {
                             ////;
                             $('#Medication').append($('<option>').text(value.Medicaton).attr('value', value.Medicaton));
@@ -954,27 +987,25 @@
 
                 var url = '@Url.Action("GetMuscleFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
 
-
-
                 $.ajax({
                     type: "POST",
                     url: url,
                     contentType: "application/json; charset=utf-8",
                     dataType: "JSON",
                     success: function (output) {
-                       debugger
+                        debugger
                         $('#Muscle').html('');
                         // var json = JSON.parse(output.d);
                         var json = output;
                         $.each(json, function (index, value) {
-                            $('#Muscle').append($('<option>').text(value.Muscle).attr('value', value.Muscle));
+                            $('#Muscle').append($('<option>').text(value.Muscle.trim()).attr('value', value.Muscle.trim()));
                         });
                         var str = $('#MuscleVal').val();
                         if (str != "")
                             if (str.indexOf('~') != -1) {
                                 var selectedOptions = str.split("~");
                                 for (var i in selectedOptions) {
-                                    $("#Muscle option").filter('[value="' + selectedOptions[i] + '"]').prop('selected', true);
+                                    $('#Muscle option[value="' + selectedOptions[i].trim() + '"]').prop('selected', true);
                                 }
                             }
                     }

@@ -1463,9 +1463,9 @@ namespace PainTrax.Web.Controllers
             return json;
         }
 
-        public string GetSubCodeFromDB(int patientIEId)
+        public string GetSubCodeFromDB(int ProcedureId)
         {
-            string test = _pocService.GetSubCode(patientIEId);
+            string test = _pocService.GetSubCode(ProcedureId);
 
             DataTable dt = new DataTable();
             string[] lines = test.Split('\n');
@@ -1480,9 +1480,9 @@ namespace PainTrax.Web.Controllers
             return json;
         }
 
-        public string GetMedicationFromDB(int patientIEId)
+        public string GetMedicationFromDB(int ProcedureId)
         {
-            string test = _pocService.GetMedication(patientIEId);
+            string test = _pocService.GetMedication(ProcedureId);
 
             DataTable dt = new DataTable();
             string[] lines = test.Split('\n');
@@ -2337,11 +2337,15 @@ namespace PainTrax.Web.Controllers
                             heading = heading.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
                         }
 
-                        if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
+                        if (dsPOC.Rows[i]["pn"].ToString() == "1")
                         {
-                            inject_desc = "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
+                            if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
+                            {
+                                inject_desc = "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
+                                inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
+                                inject_desc = inject_desc.Replace("#Muscles", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~",", "));
+                            }
                         }
-
                         strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + dsPOC.Rows[i]["PDesc"].ToString() + "</li>";
                     }
                 }

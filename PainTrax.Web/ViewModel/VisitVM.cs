@@ -1,5 +1,6 @@
 ﻿using MS.Models;
 using PainTrax.Web.Models;
+using System.ComponentModel.DataAnnotations;
 using static PainTrax.Web.Helper.EnumHelper;
 
 namespace PainTrax.Web.ViewModel
@@ -10,8 +11,14 @@ namespace PainTrax.Web.ViewModel
         public int? fu_id { get; set; }
         public int? patientid { get; set; }
         public int? locationid { get; set; }
+
+        //[DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? dos { get; set; }
+
+        //[DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? dov { get; set; }
+
+        //[DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? doa { get; set; }
         public string? compensation { get; set; }
         public string? accidentType { get; set; }
@@ -20,6 +27,8 @@ namespace PainTrax.Web.ViewModel
         public string? mname { get; set; }
         public string? gender { get; set; }
         public Gender gendername { get; set; }
+
+        //[DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? dob { get; set; }
         public int? age { get; set; }
         public string? email { get; set; }

@@ -690,32 +690,32 @@ public class PatientIEService : ParentService
     }
     #endregion
 
-    #region Sign
+    #region Signature
     public tbl_ie_sign? GetOnesign(int id)
     {
         DataTable dt = new DataTable();
-        MySqlCommand cm = new MySqlCommand("select * from tbl_ie_sign where ie_id=@id ", conn);
+        MySqlCommand cm = new MySqlCommand("select * from tbl_ie_signature where ie_id=@id ", conn);
         cm.Parameters.AddWithValue("@id", id);
         var datalist = ConvertDataTable<tbl_ie_sign>(GetData(cm)).FirstOrDefault();
         return datalist;
     }
     public int InsertSign(tbl_ie_sign data)
     {
-        MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_ie_sign
-		(ie_id,patient_id,sign)Values
-				(@ie_id,@patient_id,sign);select @@identity", conn);
+        MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_ie_signature
+        (ie_id, patient_id, signatureData) VALUES
+            (@ie_id, @patient_id, @signatureData); select @@identity", conn);
         cm.Parameters.AddWithValue("@ie_id", data.ie_id);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
-        cm.Parameters.AddWithValue("@sign", data.signatureData);
-        var result = ExecuteScalar(cm);
-        return result;
+        cm.Parameters.AddWithValue("@signatureData", data.signatureData);       
+        var result = ExecuteScalar(cm); // Get the new record ID
+        return Convert.ToInt32(result);
     }
     public void UpdateSign(tbl_ie_sign data)
     {
-        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_ie_sign SET
-				sign=@sign where id=@id", conn);
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_ie_signature SET
+				signatureData=@signatureData where id=@id", conn);
         cm.Parameters.AddWithValue("@id", data.id);
-        cm.Parameters.AddWithValue("@sign", data.signatureData);
+        cm.Parameters.AddWithValue("@signatureData", data.signatureData);
         Execute(cm);
     }
     #endregion

@@ -1068,37 +1068,40 @@ namespace PainTrax.Web.Controllers
         //    }
         //}
 
-
         [HttpPost]
         public IActionResult SaveSign([FromBody] tbl_ie_sign model)
         {
             if (string.IsNullOrEmpty(model.signatureData))
                 return BadRequest("Invalid signature data.");
-
-            
-            var base64Data = model.signatureData.Split(',')[1];
-            var imageData = Convert.FromBase64String(base64Data);
-            
-            string ieIdString = Request.Query["ie_id"]; 
-
-            if (string.IsNullOrEmpty(ieIdString))
+           
+            try
             {
-                return BadRequest("ie_id is required.");
+                // Remove the 'data:image/jpeg;base64,' prefix if needed
+                var base64Data = model.signatureData.Contains(",")
+                                ? model.signatureData.Split(',')[1]
+                                : model.signatureData;
+               
+                var imageData = Convert.FromBase64String(base64Data);
+                
+                var signaturesDir = Path.Combine(Environment.WebRootPath, "signatures");
+                if (!Directory.Exists(signaturesDir))
+                {
+                    Directory.CreateDirectory(signaturesDir); 
+                }
+                var filename = $"{model.ie_id}.jpeg";
+                var savePath = Path.Combine(signaturesDir, filename);
+
+                System.IO.File.WriteAllBytes(savePath, imageData);
+                model.signatureData = savePath;
+                _ieService.InsertSign(model);
+                return Ok(new { FileName = filename }); 
             }
-                        
-            var filename = $"{ieIdString}.jpg"; 
-            var savePath = Path.Combine(Environment.WebRootPath, "signatures", filename);
-                       
-            if (!Directory.Exists(Path.GetDirectoryName(savePath)))
+            catch (Exception ex)
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+                return StatusCode(500, "Error saving signature: " + ex.Message); 
             }
-
-            System.IO.File.WriteAllBytes(savePath, imageData);
-
-            return Ok(new { FileName = filename }); 
-
         }
+
 
         [HttpPost]
         public IActionResult GetSign(int ieId)
@@ -1153,7 +1156,6 @@ namespace PainTrax.Web.Controllers
             return View();
         }
 
-
         [HttpPost]
         public IActionResult GetDefultDaignoCodeList(string bodyparts)
         {
@@ -1183,7 +1185,6 @@ namespace PainTrax.Web.Controllers
 
                               }).ToList().OrderBy(x => x.Display_Order);
                 return Json(datavm);
-
 
             }
             catch (Exception ex)

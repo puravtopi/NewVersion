@@ -30,9 +30,9 @@
                             @{
                                 if (HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionRoleAccess).Contains("Add Patient"))
                                 {
-                                    <div class="col-md-12 col-lg-12">
-                                        <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
-                                    </div>
+                                        <div class="col-md-12 col-lg-12">
+                                            <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
+                                        </div>
                                 }
                             }
                         </div>
@@ -108,6 +108,7 @@
                     <div class="mt-3">
                         <button type="button" class="btn btn-danger" id="clear-signature">Clear</button>
                         <button type="button" class="btn btn-warning" id="undo-signature">Undo</button>
+                        <button type="button" class="btn btn-secondary" id="redo-signature">Redo</button>
                         <button type="button" class="btn btn-primary" id="save-signature" onclick="fnSaveSign()">Save Signature</button>
                     </div>
                 </div>
@@ -167,47 +168,77 @@
     <script>
 
         var pageSize = @ViewBag.pageSize;
-
         $(document).ready(function () {
             bindList();
-
             var canvas = document.getElementById("signature-pad");
-            var signaturePad = new SignaturePad(canvas);
-            // Verify SignaturePad is initialized
-            if (signaturePad) {
-                console.log("SignaturePad initialized");
-            } else {
-                console.log("SignaturePad initialization failed");
-            }
+            var signaturePad = new SignaturePad(canvas, {
+                penColor: 'black', 
+                backgroundColor: 'white',
+            });
 
-            // Clear and undo functionality
+            var undoStack = []; 
+
             $("#clear-signature").click(function () {
-                signaturePad.clear();
+                signaturePad.clear(); 
+                undoStack = []; 
             });
 
             $("#undo-signature").click(function () {
-                var data = signaturePad.toData();
-                if (data && data.length) {
-                    data.pop(); // Remove the last stroke
+                var data = signaturePad.toData(); 
+                if (data.length > 0) {
+                    var removedStroke = data.pop(); 
+                    undoStack.push(removedStroke);
+                    signaturePad.fromData(data); 
+                }
+            });
+
+            $("#redo-signature").click(function () {
+                if (undoStack.length > 0) {
+                    var redoStroke = undoStack.pop();
+                    var data = signaturePad.toData(); 
+                    data.push(redoStroke); 
                     signaturePad.fromData(data);
                 }
             });
+
             $("#save-signature").click(function () {
                 if (signaturePad.isEmpty()) {
                     alert("Please draw your signature before saving.");
                 } else {
-                    var signatureData = signaturePad.toDataURL("image/jpeg");
-                    fnSaveSignature(signatureData); // Function to save the signature
+                    var signatureData = signaturePad.toDataURL("image/jpeg"); 
+                    fnSaveSign(signatureData); 
                 }
             });
+
+            function fnSaveSign(signatureData) {
+                var ieId = $("#ie_id").val(); 
+                var data = {
+                    ie_id: ieId,
+                    signatureData: signatureData, 
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Visit/SaveSign", 
+                    data: JSON.stringify(data), 
+                    contentType: "application/json",
+                    success: function (response) {
+                        console.log("Signature saved successfully:", response);
+                        $("#signModal").modal("hide"); 
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error saving signature:", xhr.status, error);
+                    },
+                });
+            }
         });
+
 
         function resizeCanvas() {
             var ratio = Math.max(window.devicePixelRatio || 1, 1);
             canvas.width = canvas.offsetWidth * ratio;
             canvas.height = canvas.offsetHeight * ratio;
             canvas.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
-
             signaturePad.clear(); 
         }        
         window.addEventListener("resize", resizeCanvas);

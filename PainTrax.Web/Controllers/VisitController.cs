@@ -1070,33 +1070,33 @@ namespace PainTrax.Web.Controllers
 
 
         [HttpPost]
-        public IActionResult SaveSign([FromBody] tbl_ie_sign model)
+        public IActionResult SaveSign(string blobData)
         {
-            if (string.IsNullOrEmpty(model.signatureData))
-                return BadRequest("Invalid signature data.");
+            //if (string.IsNullOrEmpty(model.signatureData))
+            //    return BadRequest("Invalid signature data.");
 
             
-            var base64Data = model.signatureData.Split(',')[1];
-            var imageData = Convert.FromBase64String(base64Data);
+            //var base64Data = model.signatureData.Split(',')[1];
+            //var imageData = Convert.FromBase64String(base64Data);
             
-            string ieIdString = Request.Query["ie_id"]; 
+            //string ieIdString = Request.Query["ie_id"]; 
 
-            if (string.IsNullOrEmpty(ieIdString))
-            {
-                return BadRequest("ie_id is required.");
-            }
+            //if (string.IsNullOrEmpty(ieIdString))
+            //{
+            //    return BadRequest("ie_id is required.");
+            //}
                         
-            var filename = $"{ieIdString}.jpg"; 
-            var savePath = Path.Combine(Environment.WebRootPath, "signatures", filename);
+            //var filename = $"{ieIdString}.jpg"; 
+            //var savePath = Path.Combine(Environment.WebRootPath, "signatures", filename);
                        
-            if (!Directory.Exists(Path.GetDirectoryName(savePath)))
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-            }
+            //if (!Directory.Exists(Path.GetDirectoryName(savePath)))
+            //{
+            //    Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+            //}
 
-            System.IO.File.WriteAllBytes(savePath, imageData);
+            //System.IO.File.WriteAllBytes(savePath, imageData);
 
-            return Ok(new { FileName = filename }); 
+            return Ok(new { FileName = "" }); 
 
         }
 
@@ -2290,6 +2290,9 @@ namespace PainTrax.Web.Controllers
 
                     var header = new Header(new Paragraph(new Run(new Text("Header Test"))));
                     HeaderReference headerReference = new HeaderReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(headerPart) };
+
+                    var restheader = new Header(new Paragraph(new Run(new Text("Other Page Header "))));
+                    HeaderReference restheaderReference = new HeaderReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(restheaderPart) };
                     var footer = new Footer(new Paragraph(new Run(new Text("Page"), new SimpleField() { Instruction = "PAGE" })));
                     FooterReference footerReference = new FooterReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(footerPart) };
 

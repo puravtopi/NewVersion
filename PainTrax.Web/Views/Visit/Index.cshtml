@@ -30,9 +30,9 @@
                             @{
                                 if (HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionRoleAccess).Contains("Add Patient"))
                                 {
-                                    <div class="col-md-12 col-lg-12">
-                                        <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
-                                    </div>
+                                        <div class="col-md-12 col-lg-12">
+                                            <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
+                                        </div>
                                 }
                             }
                         </div>
@@ -91,7 +91,7 @@
             </div><!-- End Large Modal-->
         </div>
     </div>
-
+   
     <div class="modal fade" id="signModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -108,6 +108,7 @@
                     <div class="mt-3">
                         <button type="button" class="btn btn-danger" id="clear-signature">Clear</button>
                         <button type="button" class="btn btn-warning" id="undo-signature">Undo</button>
+                        <button type="button" class="btn btn-secondary" id="redo-signature">Redo</button>
                         <button type="button" class="btn btn-primary" id="save-signature" onclick="fnSaveSign()">Save Signature</button>
                     </div>
                 </div>
@@ -167,101 +168,79 @@
     <script>
 
         var pageSize = @ViewBag.pageSize;
-
         $(document).ready(function () {
             bindList();
-
             var canvas = document.getElementById("signature-pad");
             var signaturePad = new SignaturePad(canvas, {
-                // It's Necessary to use an opaque color when saving image as JPEG;
-                // this option can be omitted if only saving as PNG or SVG
-                backgroundColor: 'rgb(255, 255, 255)'
+                penColor: 'black', 
+                backgroundColor: 'white',
             });
-            // Verify SignaturePad is initialized
-            if (signaturePad) {
-                console.log("SignaturePad initialized");
-            } else {
-                console.log("SignaturePad initialization failed");
-            }
 
-            // Clear and undo functionality
+            var undoStack = []; 
+
             $("#clear-signature").click(function () {
-                signaturePad.clear();
+                signaturePad.clear(); 
+                undoStack = []; 
             });
 
             $("#undo-signature").click(function () {
-                var data = signaturePad.toData();
-                if (data && data.length) {
-                    data.pop(); // Remove the last stroke
+                var data = signaturePad.toData(); 
+                if (data.length > 0) {
+                    var removedStroke = data.pop(); 
+                    undoStack.push(removedStroke);
+                    signaturePad.fromData(data); 
+                }
+            });
+
+            $("#redo-signature").click(function () {
+                if (undoStack.length > 0) {
+                    var redoStroke = undoStack.pop();
+                    var data = signaturePad.toData(); 
+                    data.push(redoStroke); 
                     signaturePad.fromData(data);
                 }
             });
+
             $("#save-signature").click(function () {
                 if (signaturePad.isEmpty()) {
                     alert("Please draw your signature before saving.");
                 } else {
-                    var signatureData = signaturePad.toDataURL("image/png");
-                    fnSaveSignature(signatureData, "signature.png"); // Function to save the signature
-                }
-            });
-        });
-            
-        function fnSaveSignature(dataURL, filename) {
-
-            debugger
-
-            const blob = dataURLToBlob(dataURL);
-            const blobUrl = window.URL.createObjectURL(blob);
-
-            $.ajax({
-                url: '/Visit/SaveSign',
-                type: 'POST',
-                data: { blobData: blobUrl }, // Send the Blob data URL as a parameter
-                success: function (response) {
-                    // Handle success response
-                },
-                error: function (xhr, status, error) {
-                    // Handle error
+                    var signatureData = signaturePad.toDataURL("image/jpeg"); 
+                    fnSaveSign(signatureData); 
                 }
             });
 
-            // const url = window.URL.createObjectURL(blob);
+            function fnSaveSign(signatureData) {
+                var ieId = $("#ie_id").val(); 
+                var data = {
+                    ie_id: ieId,
+                    signatureData: signatureData, 
+                };
 
-            // const a = document.createElement("a");
-            // a.style = "display: none";
-            // a.href = url;
-            // a.download = filename;
-
-            // document.body.appendChild(a);
-            // a.click();
-
-            // window.URL.revokeObjectURL(url);
-        }
-
-        function dataURLToBlob(dataURL) {
-            // Code taken from https://github.com/ebidel/filer.js
-            const parts = dataURL.split(';base64,');
-            const contentType = parts[0].split(":")[1];
-            const raw = window.atob(parts[1]);
-            const rawLength = raw.length;
-            const uInt8Array = new Uint8Array(rawLength);
-
-            for (let i = 0; i < rawLength; ++i) {
-                uInt8Array[i] = raw.charCodeAt(i);
+                $.ajax({
+                    type: "POST",
+                    url: "/Visit/SaveSign", 
+                    data: JSON.stringify(data), 
+                    contentType: "application/json",
+                    success: function (response) {
+                        console.log("Signature saved successfully:", response);
+                        $("#signModal").modal("hide"); 
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error saving signature:", xhr.status, error);
+                    },
+                });
             }
+        });
 
-            //return new Blob([uInt8Array], { type: contentType });
-            return uInt8Array;
-        }
 
         function resizeCanvas() {
             var ratio = Math.max(window.devicePixelRatio || 1, 1);
             canvas.width = canvas.offsetWidth * ratio;
             canvas.height = canvas.offsetHeight * ratio;
             canvas.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
-
-            signaturePad.clear();
-        }
+            signaturePad.clear(); 
+        }        
         window.addEventListener("resize", resizeCanvas);
         resizeCanvas();
 
@@ -436,7 +415,7 @@
             });
 
         }
-
+        
         function fnSaveComment() {
 
 
@@ -465,7 +444,7 @@
 
         }
 
-
+       
         function fnShowSign(ieId) {
 
 

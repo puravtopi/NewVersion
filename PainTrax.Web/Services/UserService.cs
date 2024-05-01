@@ -98,6 +98,21 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@Id", data.Id);
             Execute(cm);
         }
+        public List<string> GetProvidersFullNames()
+        {           
+            string query = "SELECT fullname FROM vm_cm_user WHERE desig_name = 'provider'";
+
+            DataTable dataTable = GetData(query);
+            List<string> fullNames = new List<string>();
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                fullNames.Add(row["fullname"].ToString());
+            }
+
+            return fullNames;
+        }
+
 
     }
 }

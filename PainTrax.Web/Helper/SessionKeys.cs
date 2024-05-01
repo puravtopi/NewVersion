@@ -16,6 +16,7 @@
         public static string SessionGroupPages = "groupName";
         public static string SessionPagesAccess = "pageAccess";
         public static string SessionRoleAccess = "roleAccess";
+        public static string SessionSelectedProviderName = "providerFullNames";
 
     }
 }

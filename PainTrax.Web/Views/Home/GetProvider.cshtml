@@ -34,7 +34,14 @@
                                     <div class="row mb-3">
                                         <label class="col-sm-2 col-form-label">Providers/MA</label>
                                         <div class="col-sm-10">
-                                            <select class="form-select" multiple aria-label="multiple select example">
+                                            <select class="form-select" name="selectedProviders" multiple aria-label="multiple select example" asp-items="@ViewBag.ProviderList">
+                                                @if (ViewBag.ProviderFullNames != null)
+                                                {
+                                                    foreach (var fullName in ViewBag.ProviderFullNames)
+                                                    {
+                                                        <option value="@fullName">@fullName</option>
+                                                    }
+                                                }
                                             </select>
                                         </div>
                                     </div>
@@ -75,3 +82,21 @@
     </section>
 
 </main><!-- End #main -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        
+        $("form").on("submit", function(event) {
+            
+            var providerSelect = $("select[aria-label='multiple select example']");
+            var selectedOptions = providerSelect.find("option:selected");
+          
+            if (selectedOptions.length === 0) {
+                event.preventDefault(); 
+                alert("Please select at least one provider/MA before proceeding."); 
+            }
+        });
+    });
+</script>

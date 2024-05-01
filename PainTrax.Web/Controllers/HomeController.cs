@@ -21,6 +21,7 @@ namespace PainTrax.Web.Controllers
         private readonly ISession _session = null;
         private readonly IHttpContextAccessor _httpContextAccessor = null;
         private readonly Common _commonservices = new Common();
+        private readonly UserService _userService = new UserService();
         private readonly SettingsService _setting = new SettingsService();
 
 
@@ -213,13 +214,24 @@ namespace PainTrax.Web.Controllers
 
             }
             ViewBag.locList = lst;
+
+            List<string> providerFullNames = _userService.GetProvidersFullNames();
+            ViewBag.ProviderFullNames = providerFullNames;
             return View();
         }
 
         [HttpPost]
-        public IActionResult GetProvider(GetProviderVM model)
+        public IActionResult GetProvider(GetProviderVM model, [FromForm] string[] selectedProviders)
         {
+           
             HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, model.locationid);
+            if (selectedProviders != null && selectedProviders.Length > 0)
+            {
+                string selectedProvidersString = string.Join(",", selectedProviders);
+
+                // Store in session
+                HttpContext.Session.SetString(SessionKeys.SessionSelectedProviderName, selectedProvidersString);
+            }
             return RedirectToAction("Index", "Home");
         }
 

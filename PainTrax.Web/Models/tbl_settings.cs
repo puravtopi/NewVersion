@@ -7,5 +7,6 @@
         public int location { get; set; }        
         public int cmp_id { get; set; }
         public string dateformat { get; set; }
+        public bool pageBreakForInjection { get; set; }
     }
 }

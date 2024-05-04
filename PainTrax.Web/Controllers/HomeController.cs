@@ -215,7 +215,7 @@ namespace PainTrax.Web.Controllers
             }
             ViewBag.locList = lst;
 
-            List<string> providerFullNames = _userService.GetProvidersFullNames();
+            List<string> providerFullNames = _userService.GetProvidersFullNames(cmpid.Value);
             ViewBag.ProviderFullNames = providerFullNames;
             return View();
         }

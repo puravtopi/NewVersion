@@ -13,7 +13,7 @@ namespace PainTrax.Web.Services
 
         public List<vm_cm_user> GetAll(string cnd = "")
         {
-           // List<vm_cm_user> dataList = null;
+            // List<vm_cm_user> dataList = null;
 
 
             string query = "select * from vm_cm_user where 1=1 ";
@@ -21,7 +21,7 @@ namespace PainTrax.Web.Services
             if (!string.IsNullOrEmpty(query))
                 query = query + cnd;
 
-             List<vm_cm_user>dataList = ConvertDataTable<vm_cm_user>(GetData(query));
+            List<vm_cm_user> dataList = ConvertDataTable<vm_cm_user>(GetData(query));
 
             return dataList;
         }
@@ -98,9 +98,9 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@Id", data.Id);
             Execute(cm);
         }
-        public List<string> GetProvidersFullNames()
-        {           
-            string query = "SELECT fullname FROM vm_cm_user WHERE desig_name = 'provider'";
+        public List<string> GetProvidersFullNames(int cmpid)
+        {
+            string query = "SELECT fullname FROM vm_cm_user WHERE desig_name = 'provider' and cmp_id=" + cmpid;
 
             DataTable dataTable = GetData(query);
             List<string> fullNames = new List<string>();

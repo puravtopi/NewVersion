@@ -2195,8 +2195,16 @@ namespace PainTrax.Web.Controllers
 
                 body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
                 body = body.Replace("#ReflexExam", "");
+                string injectionHtml = dataPOC.strInjectionDesc;
 
-                body = body.Replace("#injection", "<br style=\"page-break-before:always; clear:both\" />" + dataPOC.strInjectionDesc);
+                // Create HTML with a page break before the injection section
+                string pageBreakHtml = "<div style='page-break-before: always;'>";
+                pageBreakHtml += injectionHtml;
+                pageBreakHtml += "</div>";
+
+                // Replace the #injection placeholder with the structured HTML content
+                body = body.Replace("#injection", pageBreakHtml);
+                //body = body.Replace("#injection", "<br style=\"page-break-before:always; clear:both\" />" + dataPOC.strInjectionDesc);
 
                 body = body.Replace("#location", patientData.location);
                 body = body.Replace("#dob", Common.commonDate(patientData.dob));

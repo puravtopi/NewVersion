@@ -29,12 +29,13 @@ namespace PainTrax.Web.Services
         public void Insert(tbl_settings data)
         {
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_settings
-		(page_size,location,dateformat,cmp_id)Values
-				(@page_size,@location,@dateformat,@cmp_id)", conn);
+		(page_size,location,dateformat,cmp_id,pageBreakForInjection)Values
+				(@page_size,@location,@dateformat,@cmp_id,@pageBreakForInjection)", conn);
             cm.Parameters.AddWithValue("@page_size", data.page_size);
             cm.Parameters.AddWithValue("@location", data.location);
             cm.Parameters.AddWithValue("@dateformat",data.dateformat);
             cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+            cm.Parameters.AddWithValue("@pageBreakForInjection", data.pageBreakForInjection);
             Execute(cm);
 
         }
@@ -43,13 +44,15 @@ namespace PainTrax.Web.Services
             MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_settings SET
 		page_size=@page_size,
         dateformat=@dateformat,
-		location=@location
+		location=@location,
+        pageBreakForInjection=@pageBreakForInjection
       
 			where cmp_id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.cmp_id);
             cm.Parameters.AddWithValue("@page_size", data.page_size);
             cm.Parameters.AddWithValue("@location", data.location);
             cm.Parameters.AddWithValue("@dateformat", data.dateformat);
+            cm.Parameters.AddWithValue("@pageBreakForInjection", data.pageBreakForInjection);
 
             Execute(cm);
         }

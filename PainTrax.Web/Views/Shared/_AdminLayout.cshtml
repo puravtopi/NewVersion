@@ -337,7 +337,28 @@
         </nav><!-- End Icons Navigation -->
 
     </header><!-- End Header -->
-    <!-- ======= Sidebar ======= -->
+      @if (ViewBag.ShowSidebar == true)
+        {
+            <aside id="sidebar" class="sidebar">
+
+                <ul class="sidebar-nav" id="sidebar-nav">
+
+                    <li class="nav-item">
+                        <a class="nav-link " asp-action="AdminLogin" asp-controller="Home">
+                            <i class="bi bi-grid"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-action="Index" asp-controller="Company">
+                            <i class="bi bi-person"></i>
+                            <span>Company</span>
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+        }
+        <!-- ======= Sidebar ======= -->
     @RenderBody()
 
 

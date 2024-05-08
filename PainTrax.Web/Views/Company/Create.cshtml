@@ -1,7 +1,7 @@
 ﻿@{
-    ViewData["Title"] = "Company Page";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    Layout = null;  // Use the admin layout
 }
+
 
 @model PainTrax.Web.Models.tbl_company
 
@@ -112,6 +112,17 @@
                                                 </label>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <lable class="col-md-4 col-lg-3 col-form-label">Type</lable>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select asp-for="type" class="form-control">
+                                                <option value="Ortho">Ortho</option>
+                                                <option value="Pain">Pain</option>
+                                            </select>
+                                            <span asp-validation-for="type" class="text-danger"></span>
+                                        </div>
+
                                     </div>
                                 </div>
 

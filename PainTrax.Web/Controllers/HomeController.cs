@@ -259,6 +259,15 @@ namespace PainTrax.Web.Controllers
             }*/
             return RedirectToAction("Login", "Home");
         }
+        public IActionResult AdminLogout()
+        {
+            _session.Clear();
+            /* foreach (var item in _httpContextAccessor.HttpContext.Request.Cookies.Keys)
+             {
+                 _httpContextAccessor.HttpContext.Response.Cookies.Delete(item);
+             }*/
+            return RedirectToAction("AdminLogin", "Home");
+        }
 
         [HttpPost]
         public IActionResult TotalPatient(int type)

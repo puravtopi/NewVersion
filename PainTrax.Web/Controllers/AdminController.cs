@@ -6,6 +6,7 @@ namespace PainTrax.Web.Controllers
     {
         public IActionResult Index()
         {
+            ViewBag.ShowSidebar = HttpContext.Session.GetString("IsAdmin") == "true";
             return View();
         }
     }

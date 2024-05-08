@@ -33,8 +33,8 @@ namespace PainTrax.Web.Services
 
 
                 MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_company
-		        (name,address,phone,email,is_active,client_code,created_date,created_by)Values
-				(@name,@address,@phone,@email,@is_active,@client_code,@createddate,@createdby);select @@identity", conn);
+		        (name,address,phone,email,is_active,client_code,created_date,created_by,type)Values
+				(@name,@address,@phone,@email,@is_active,@client_code,@createddate,@createdby,@type);select @@identity", conn);
                 cm.Parameters.AddWithValue("@name", data.name);
                 cm.Parameters.AddWithValue("@address", data.address);
                 cm.Parameters.AddWithValue("@phone", data.phone);
@@ -43,6 +43,7 @@ namespace PainTrax.Web.Services
                 cm.Parameters.AddWithValue("@client_code", data.client_code);
                 cm.Parameters.AddWithValue("@createddate", System.DateTime.Now);
                 cm.Parameters.AddWithValue("@createdby", 1);
+                cm.Parameters.AddWithValue("@type", data.type);
 
                 int result = ExecuteScalar(cm);
 
@@ -89,7 +90,8 @@ namespace PainTrax.Web.Services
 		phone=@phone,
 		email=@email,
 		is_active=@is_active,
-		client_code=@client_code	
+		client_code=@client_code,
+        type=@type
 	 	where id=@id", conn);
             cm.Parameters.AddWithValue("@id", data.id);
             cm.Parameters.AddWithValue("@name", data.name);
@@ -98,6 +100,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@email", data.email);
             cm.Parameters.AddWithValue("@is_active", data.is_active);
             cm.Parameters.AddWithValue("@client_code", data.client_code);
+            cm.Parameters.AddWithValue("@type", data.type);
 
             Execute(cm);
         }

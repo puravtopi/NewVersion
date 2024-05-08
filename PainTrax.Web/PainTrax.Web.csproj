@@ -17,10 +17,12 @@
 
   <ItemGroup>
     <None Remove="Controllers\kcctpvjn.nct~" />
+    <None Remove="Views\Shared\_AdminLayout.cshtml.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Templete\1\IEReport.html" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml.css" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +33,7 @@
     <PackageReference Include="HtmlToOpenXml.dll" Version="2.3.0" />
     <PackageReference Include="itext" Version="8.0.3" />
     <PackageReference Include="itext.bouncy-castle-adapter" Version="8.0.3" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

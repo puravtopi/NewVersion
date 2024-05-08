@@ -85,7 +85,7 @@
             contentType: "application/x-www-form-urlencoded",
             success: function (data, status, xhr) {
                 debugger
-                var downloadUrl = '@Url.Action("DownloadFile", "Visit")?filePath=' + data.filePath + "&fileName=" + data.fileName + "&locId=" + locId;
+                var downloadUrl = '@Url.Action("DownloadFile", "Visit")?filePath=' + data.filePath + "&fileName=" + data.fileName + "&locId=" + locId + "&patientName=" + data.patientName;
                 window.location = downloadUrl
             },
             error: function (xhr, status, error) {

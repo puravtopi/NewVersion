@@ -31,7 +31,6 @@ namespace PainTrax.Web.Controllers
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _session = _httpContextAccessor.HttpContext.Session;
-
         }
 
         public IActionResult Index()
@@ -109,12 +108,16 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, setting.location);
                         HttpContext.Session.SetInt32(SessionKeys.SessionPageSize, setting.page_size);
                         HttpContext.Session.SetString(SessionKeys.SessionDateFormat, setting.dateformat);
+                        HttpContext.Session.SetString(SessionKeys.SessionPageBreak, setting.pageBreakForInjection.ToString().ToLower());
+
+                      
                     }
                     else
                     {
                         HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, 0);
                         HttpContext.Session.SetInt32(SessionKeys.SessionPageSize, 25);
                         HttpContext.Session.SetString(SessionKeys.SessionDateFormat, "MM/dd/yyyy");
+                        HttpContext.Session.SetString(SessionKeys.SessionPageBreak, "false");
                     }
 
 

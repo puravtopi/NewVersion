@@ -41,7 +41,7 @@ namespace PainTrax.Web.Controllers
                 var result = _services.GetAll("");
                 var data = result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Index");
             }
@@ -60,32 +60,39 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                //if (ModelState.IsValid)
+                //{
+                //    model.createdby = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
+                model.createddate = System.DateTime.Now;
+                model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                if (header_template != null)
                 {
-                    model.createdby = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
-                    model.createddate = System.DateTime.Now;
-                    model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-                    if (header_template != null)
+                    string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/HeaderTemplate");
+                    if (!Directory.Exists(folderPath))
                     {
-                        string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/HeaderTemplate");
-                        if (!Directory.Exists(folderPath))
-                        {
-                            Directory.CreateDirectory(folderPath);
-                        }
-                        // Generate a unique filename 
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(header_template.FileName);
-                        string filePath = Path.Combine(folderPath, fileName);
-
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            header_template.CopyTo(fileStream);
-                        }
-                        model.header_template = fileName;
+                        Directory.CreateDirectory(folderPath);
                     }
-                    _services.Insert(model);
+                    // Generate a unique filename 
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(header_template.FileName);
+                    string filePath = Path.Combine(folderPath, fileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        header_template.CopyTo(fileStream);
+                    }
+                    model.header_template = fileName;
                 }
+                _services.Insert(model);
+                //}
+                //else
+                //{
+                //    var errors = ModelState.Select(x => x.Value.Errors)
+                //                           .Where(y => y.Count > 0)
+                //                           .ToList();
+                //}
             }
-            catch(Exception ex)
+
+            catch (Exception ex)
             {
                 SaveLog(ex, "Create");
             }
@@ -101,7 +108,7 @@ namespace PainTrax.Web.Controllers
                 obj.id = id;
                 data = _services.GetOne(obj);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Edit");
             }
@@ -109,7 +116,7 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(tbl_locations model , IFormFile header_template)
+        public IActionResult Edit(tbl_locations model, IFormFile header_template)
         {
             try
             {
@@ -151,7 +158,7 @@ namespace PainTrax.Web.Controllers
                 obj.id = id;
                 _services.Delete(obj);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Delete");
             }
@@ -254,7 +261,7 @@ namespace PainTrax.Web.Controllers
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "ImportData");
             }
@@ -466,10 +473,10 @@ namespace PainTrax.Web.Controllers
         }
 
         #region private method
-        private void SaveLog(Exception ex,string actionname)
+        private void SaveLog(Exception ex, string actionname)
         {
             var msg = "";
-            if(ex.InnerException == null)
+            if (ex.InnerException == null)
             {
                 _logger.LogError(ex.Message);
                 msg = ex.Message;

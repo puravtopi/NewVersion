@@ -2330,14 +2330,17 @@ namespace PainTrax.Web.Controllers
 
                 // Delete the existing header part.
                 mainPart.DeleteParts(mainPart.HeaderParts);
+                var headerPart = mainPart.AddNewPart<HeaderPart>("First");
+                var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
+                    var footerPart = mainPart.AddNewPart<FooterPart>();
 
                 // Create a new header part.
-                DocumentFormat.OpenXml.Packaging.HeaderPart headerPart =
-            mainPart.AddNewPart<HeaderPart>();
+       //         DocumentFormat.OpenXml.Packaging.HeaderPart headerPart =
+          //  mainPart.AddNewPart<HeaderPart>();
 
                 // Get Id of the headerPart.
-                string rId = mainPart.GetIdOfPart(headerPart);
-
+                //string rId = mainPart.GetIdOfPart(headerPart);
+                var header = new Header();
                 // Feed target headerPart with source headerPart.
                 using (WordprocessingDocument wdDocSource =
                     WordprocessingDocument.Open(filepathFrom, true))
@@ -2349,21 +2352,42 @@ namespace PainTrax.Web.Controllers
 
                     if (firstHeader != null)
                     {
+                        
                         headerPart.FeedData(firstHeader.GetStream());
                     }
                 }
 
-                // Get SectionProperties and Replace HeaderReference with new Id.
-                IEnumerable<DocumentFormat.OpenXml.Wordprocessing.SectionProperties> sectPrs =
-            mainPart.Document.Body.Elements<SectionProperties>();
-                foreach (var sectPr in sectPrs)
-                {
-                    // Delete existing references to headers.
-                    sectPr.RemoveAllChildren<HeaderReference>();
+                HeaderReference headerReference = new HeaderReference() { Type = HeaderFooterValues.First, Id = mainPart.GetIdOfPart(headerPart) };
+                var restheader = new Header(new Paragraph(new Run(new Text("Other Page Header "))));
+                HeaderReference restheaderReference = new HeaderReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(restheaderPart) };
+                var footer = new Footer(new Paragraph(new Run(new Text("Page"), new SimpleField() { Instruction = "PAGE" })));
+                FooterReference footerReference = new FooterReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(footerPart) };
 
-                    // Create the new header reference node.
-                    sectPr.PrependChild<HeaderReference>(new HeaderReference() { Id = rId });
-                }
+                
+                restheaderPart.Header = restheader;
+                footerPart.Footer = footer;
+
+
+                //mainPart.Document.Body.Append(new SectionProperties(headerReference,restheaderReference, footerReference));
+                SectionProperties sectionProps = new DocumentFormat.OpenXml.Wordprocessing.SectionProperties();
+                sectionProps.Append(restheaderReference);
+
+                sectionProps.Append(headerReference);
+                sectionProps.Append(footerReference);
+                sectionProps.Append(new TitlePage());
+                // Get SectionProperties and Replace HeaderReference with new Id.
+                //  IEnumerable<DocumentFormat.OpenXml.Wordprocessing.SectionProperties> sectPrs =
+                /* mainPart.Document.Body.Elements<SectionProperties>();
+                     foreach (var sectPr in sectPrs)
+                     {
+                         // Delete existing references to headers.
+                         sectPr.RemoveAllChildren<HeaderReference>();
+
+                         // Create the new header reference node.
+                         sectPr.PrependChild<HeaderReference>(new HeaderReference() { Id = rId });
+                     }*/
+
+                mainPart.Document.Body.Append(sectionProps);
             }
         }
 

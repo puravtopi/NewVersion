@@ -22,7 +22,7 @@
 
                             <div class="col-md-12 col-lg-12">
                                 <button class="btn btn-primary" style="float:right;margin-left:10px" data-bs-toggle="modal" data-bs-target="#importModal">Import</button>
-                                <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcel" asp-controller="AccidentType">Export</a>
+                                <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcel" asp-controller="AppStatus">Export</a>
                                 <button class="btn btn-secondary" style="float:right;margin-left:10px" onclick="fndownalodSample()">Download Sample</button>
                                 <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="AppStatus">Add New</a>
                             </div>
@@ -45,7 +45,7 @@
     <div class="modal fade" id="importModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form asp-action="ImportData" asp-controller="AccidentType" enctype="multipart/form-data">
+                <form asp-action="ImportData" asp-controller="AppStatus" enctype="multipart/form-data">
                     <div class="modal-header">
                         <h5 class="modal-title">Import Excel</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -106,7 +106,8 @@
                     {
                         "render": function (data, type, full, meta) {
                             var index = '<a href="' + editurl + '/' + full.status_id + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'
-                            index += '<a href="' + deleteurl + '/' + full.status_id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+                            index += '<a href="#" onclick="DeleteData(' + full.status_id + ')"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+                          //  index += '<a href="' + deleteurl + '/' + full.status_id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
                             return index;
                         }
                     },
@@ -125,11 +126,11 @@
 
 
         function Delete(CustomerID) {
-            var url = '@Url.Content("~/")' + "AccidentType/Delete";
+            var url = '@Url.Content("~/")' + "AppStatus/Delete";
 
             $.post(url, { ID: CustomerID }, function (data) {
                 if (data) {
-                    oTable = $('#example').DataTable();
+                    oTable = $('#tbl').DataTable();
                     oTable.draw();
                 }
                 else {

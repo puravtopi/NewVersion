@@ -30,29 +30,6 @@
     <!-- Template Main CSS File -->
     <link href="~/assets/css/style.css" rel="stylesheet" asp-append-version="true">
 
-    <style>
-
-        .errorSpan {
-            color: red;
-        }
-
-        .ck-editor__editable_inline {
-            min-height: 400px;
-        }
-
-        .nav-item:hover {
-            cursor: pointer !important;
-        }
-
-        .mb-3 {
-            margin-bottom: 0.2rem !important;
-        }
-
-        .modal-footer button {
-            float: right !important;
-            margin-left: 10px;
-        }
-    </style>
 
 
     <style>
@@ -337,28 +314,7 @@
         </nav><!-- End Icons Navigation -->
 
     </header><!-- End Header -->
-    <!-- ======= Sidebar ======= -->
-    <aside id="sidebar" class="sidebar">
-        @{
-            var pageAccess = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionPagesAccess);
-        }
-        <ul class="sidebar-nav" id="sidebar-nav">
 
-            <li class="nav-item">
-                <a class="nav-link " asp-action="Index" asp-controller="Home">
-                    <i class="bi bi-grid"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li><!-- End Dashboard Nav -->
-            <li class="nav-item">
-                <a class="nav-link " asp-action="Index" asp-controller="Company">
-                    <i class="bi bi-grid"></i>
-                    <span>Company</span>
-                </a>
-            </li><!-- End Dashboard Nav -->
-        </ul>
-
-    </aside><!-- End Sidebar-->
     @RenderBody()
 
 

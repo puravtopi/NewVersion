@@ -1,4 +1,8 @@
-﻿@model PainTrax.Web.Models.tbl_company
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";  // Use the admin layout
+}
+
+@model PainTrax.Web.Models.tbl_company
 
 <main id="main" class="main">
 
@@ -113,11 +117,11 @@
                                     <div class="row mb-3">
                                         <lable class="col-md-4 col-lg-3 col-form-label">Type</lable>
                                         <div class="col-md-8 col-lg-9">
-                                            <select asp-for="type" class="form-control">
+                                            <select asp-for="cmp_type" class="form-control">
                                                 <option value="Ortho">Ortho</option>
                                                 <option value="Pain">Pain</option>
                                             </select>
-                                            <span asp-validation-for="type" class="text-danger"></span>
+                                            <span asp-validation-for="cmp_type" class="text-danger"></span>
                                         </div>
 
                                     </div>

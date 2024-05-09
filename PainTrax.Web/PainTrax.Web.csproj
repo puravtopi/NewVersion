@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Content Include="Templete\1\IEReport.html" />
-    <Content Include="Views\Shared\_AdminLayout.cshtml.css" />
   </ItemGroup>
 
   <ItemGroup>

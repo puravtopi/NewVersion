@@ -37,6 +37,7 @@ builder.Services.AddControllersWithViews();
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddApplicationInsightsTelemetry();
 
 
 var app = builder.Build();

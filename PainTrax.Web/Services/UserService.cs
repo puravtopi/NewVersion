@@ -4,6 +4,7 @@ using System.Data;
 using PainTrax.Services;
 using PainTrax.Web.Models;
 using PainTrax.Web.Helper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PainTrax.Web.Services
 {
@@ -37,6 +38,8 @@ namespace PainTrax.Web.Services
 
         public void Insert(tbl_users data)
         {
+            string fullName = data.fname + " " + data.lname;
+            data.fullname = fullName;
             //data.password = EncryptionHelper.Encrypt(data.password);
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_users
 		(fname,lname,emailid,address,fullname,uname,password,groupid,desigid,cmp_id,createdby,createddate,phoneno,signature)Values
@@ -45,7 +48,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@lname", data.lname);
             cm.Parameters.AddWithValue("@emailid", data.emailid);
             cm.Parameters.AddWithValue("@address", data.address);
-            cm.Parameters.AddWithValue("@fullname", data.lname + ' ' + data.fname);
+            cm.Parameters.AddWithValue("@fullname", fullName);
             cm.Parameters.AddWithValue("@uname", data.uname);
             cm.Parameters.AddWithValue("@password", data.password);
             cm.Parameters.AddWithValue("@groupid", data.groupid);
@@ -98,20 +101,29 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@Id", data.Id);
             Execute(cm);
         }
-        public List<string> GetProvidersFullNames(int cmpid)
+        
+        public List<SelectListItem> GetProviders(int cmpid)
         {
             string query = "SELECT fullname FROM vm_cm_user WHERE desig_name = 'provider' and cmp_id=" + cmpid;
-
             DataTable dataTable = GetData(query);
-            List<string> fullNames = new List<string>();
+
+            List<SelectListItem> providers = new List<SelectListItem>();
+
+            // Add default option for dropdown
+            providers.Add(new SelectListItem { Text = "--Select Provider--", Value = "" });
 
             foreach (DataRow row in dataTable.Rows)
             {
-                fullNames.Add(row["fullname"].ToString());
+                providers.Add(new SelectListItem
+                {
+                    Text = row["fullname"].ToString(),
+                    Value = row["fullname"].ToString()  // Assuming fullname is unique
+                });
             }
 
-            return fullNames;
+            return providers;
         }
+
 
 
     }

@@ -39,7 +39,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="clear-fix"></div>
+                                @* <div class="clear-fix"></div>
                                 <div class="col-lg-6">
                                     <div class="row mb-3">
                                         <label class="col-sm-2 col-form-label">Providers/MA</label>
@@ -65,7 +65,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="clear-fix"></div>
+                            <div class="clear-fix"></div> *@
                             <div class="row mb-3">
                                 <div class="col-lg-5">
                                     <label class="col-sm-2 col-form-label">&nbsp;</label>
@@ -88,20 +88,19 @@
 </main><!-- End #main -->
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-@* 
+ 
 <script>
-    $(document).ready(function() {
-        
-        $("form").on("submit", function(event) {
-            
-            var providerSelect = $("select[aria-label='multiple select example']");
-            var selectedOptions = providerSelect.find("option:selected");
-          
-            if (selectedOptions.length === 0) {
-                event.preventDefault(); 
-                alert("Please select at least one provider/MA before proceeding."); 
+    $(document).ready(function () {
+        // Attach click event handler to the "Next" button
+        $("button[type='submit']").on("click", function (event) {
+            // Get the selected provider value
+            var selectedProvider = $("#provider").val();
+            // Check if a provider is selected
+            if (!selectedProvider) {
+                // If no provider selected, prevent form submission and show alert
+                event.preventDefault();
+                alert("Please select a provider before proceeding.");
             }
         });
     });
 </script>
- *@

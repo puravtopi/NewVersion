@@ -17,6 +17,7 @@ using static PainTrax.Web.Helper.EnumHelper;
 using System.Text.RegularExpressions;
 using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using iText.Signatures;
 
 namespace PainTrax.Web.Controllers
 {
@@ -2249,7 +2250,14 @@ namespace PainTrax.Web.Controllers
 
                 ViewBag.ieId = patientData.id;
                 ViewBag.locId = patientData.location_id;
+                ViewBag.content = body;               
+
+                string signatureUrl = $"/signatures/{id}.jpeg";     
+                
+                body = body.Replace("#Sign", $"<img src='{signatureUrl}' alt='Patient Signature' />");
+
                 ViewBag.content = body;
+
             }
             catch (Exception ex)
             {
@@ -2282,9 +2290,9 @@ namespace PainTrax.Web.Controllers
         #region private method
 
         [HttpPost]
-        public IActionResult DownloadWord(string htmlContent, int ieId)
+        public IActionResult DownloadWord(string htmlContent, int ieId, int id)
         {
-            //  string htmlContent = "<p>This is a <strong>sample</strong> HTML content.</p>";
+            
             string filePath = "", docName = "", patientName = "";
             // Create a new DOCX package
             using (MemoryStream memStream = new MemoryStream())
@@ -2342,10 +2350,11 @@ namespace PainTrax.Web.Controllers
             }
 
             return Json(new { filePath = filePath, fileName = docName, patientName = patientName });
+           
         }
 
         [HttpGet]
-        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "")
+        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "")
         {
 
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
@@ -2523,80 +2532,6 @@ namespace PainTrax.Web.Controllers
                 }
             }
         }
-
-
-        //public static void AddHeaderFromTo(string filepathFrom, string filepathTo)
-        //{
-        //    // Replace header in target document with header of source document.
-        //    using (WordprocessingDocument
-        //        wdDoc = WordprocessingDocument.Open(filepathTo, true))
-        //    {
-        //        MainDocumentPart mainPart = wdDoc.MainDocumentPart;
-
-        //        // Delete the existing header part.
-        //        mainPart.DeleteParts(mainPart.HeaderParts);
-        //        var headerPart = mainPart.AddNewPart<HeaderPart>("First");
-        //        var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
-        //    //    var footerPart = mainPart.AddNewPart<FooterPart>();
-
-        //        // Create a new header part.
-        //        //         DocumentFormat.OpenXml.Packaging.HeaderPart headerPart =
-        //        //  mainPart.AddNewPart<HeaderPart>();
-
-        //        // Get Id of the headerPart.
-        //        string rId = mainPart.GetIdOfPart(headerPart);
-        //        var header = new Header();
-        //        // Feed target headerPart with source headerPart.
-        //        using (WordprocessingDocument wdDocSource =
-        //            WordprocessingDocument.Open(filepathFrom, true))
-        //        {
-        //            DocumentFormat.OpenXml.Packaging.HeaderPart firstHeader =
-        //    wdDocSource.MainDocumentPart.HeaderParts.FirstOrDefault();
-
-        //            wdDocSource.MainDocumentPart.HeaderParts.FirstOrDefault();
-
-        //            if (firstHeader != null)
-        //            {
-
-        //                headerPart.FeedData(firstHeader.GetStream());
-        //            }
-        //        }
-
-        //        HeaderReference headerReference = new HeaderReference() { Type = HeaderFooterValues.First, Id = mainPart.GetIdOfPart(headerPart) };
-        //        var restheader = new Header(new Paragraph(new Run(new Text("Other Page Header "))));
-        //        HeaderReference restheaderReference = new HeaderReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(restheaderPart) };
-        //   //     var footer = new Footer(new Paragraph(new Run(new Text("Page"), new SimpleField() { Instruction = "PAGE" })));
-        //    //    FooterReference footerReference = new FooterReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(footerPart) };
-
-
-        //        restheaderPart.Header = restheader;
-        //    //    footerPart.Footer = footer;
-
-
-        //        //mainPart.Document.Body.Append(new SectionProperties(headerReference,restheaderReference, footerReference));
-        //        SectionProperties sectionProps = new DocumentFormat.OpenXml.Wordprocessing.SectionProperties();
-        //        //sectionProps.Append(restheaderReference);
-
-        //      //  sectionProps.Append(headerReference);
-        //        sectionProps.PrependChild<HeaderReference>(new HeaderReference() { Type = HeaderFooterValues.First, Id = rId });
-        //        //  sectionProps.Append(footerReference);
-        //        // sectionProps.Append(new TitlePage());
-        //        // Get SectionProperties and Replace HeaderReference with new Id.
-        //        //  IEnumerable<DocumentFormat.OpenXml.Wordprocessing.SectionProperties> sectPrs =
-        //        /* mainPart.Document.Body.Elements<SectionProperties>();
-        //             foreach (var sectPr in sectPrs)
-        //             {
-        //                 // Delete existing references to headers.
-        //                 sectPr.RemoveAllChildren<HeaderReference>();
-
-        //                 // Create the new header reference node.
-        //                 sectPr.PrependChild<HeaderReference>(new HeaderReference() { Id = rId });
-        //             }*/
-
-        //        mainPart.Document.Body.Append(sectionProps);
-        //    }
-        //}
-
 
 
         private void SaveLog(Exception ex, string actionname)

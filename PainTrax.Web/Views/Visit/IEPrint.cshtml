@@ -84,10 +84,9 @@
             },
             contentType: "application/x-www-form-urlencoded",
             success: function (data, status, xhr) {
-                debugger
-                var downloadUrl = '@Url.Action("DownloadFile", "Visit")?filePath=' + data.filePath + "&fileName=" + data.fileName + "&locId=" + locId + "&patientName=" + data.patientName;
-                window.location = downloadUrl
-            },
+                var downloadUrl = '@Url.Action("DownloadFile", "Visit")?filePath=' + data.filePath + "&fileName=" + data.fileName + "&locId=" + locId + "&patientName=" + data.patientName + "&signatureUrl=" + data.signatureUrl;
+                window.location = downloadUrl;
+            },  
             error: function (xhr, status, error) {
                 alert("Error!" + xhr.status);
             },

@@ -10,7 +10,8 @@ public class tbl_patient_ie{
 	public int? secondary_ins_cmp_id {get;set;}
 	public int? emp_id {get;set;}
 	public int? adjuster_id {get;set;}
-	public DateTime? doe {get;set;}
+    public int? provider_id { get; set; }
+    public DateTime? doe {get;set;}
 	public DateTime? doa {get;set;}
 	public string? primary_claim_no {get;set;}
 	public string? secondary_claim_no {get;set;}

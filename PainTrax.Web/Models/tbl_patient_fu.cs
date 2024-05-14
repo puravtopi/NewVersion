@@ -2,9 +2,9 @@ namespace MS.Models;
 
 public class tbl_patient_fu{
 
-	public int? id {get;set;}
+	public int? id {get;set;} 
 	public int? patient_id {get;set;}
-	
+	public int? provider_id { get; set; }
 	public int? patientIE_ID {get;set;}
 	public DateTime? doe {get;set;}
 

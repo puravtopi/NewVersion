@@ -50,8 +50,8 @@ public class PatientIEService : ParentService
     public int Insert(tbl_patient_ie data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_patient_ie
-		(patient_id,location_id,attorney_id,primary_ins_cmp_id,secondary_ins_cmp_id,emp_id,adjuster_id,doe,doa,primary_claim_no,secondary_claim_no,primary_policy_no,secondary_policy_no,compensation,note,ins_note,alert_note,created_date,created_by,is_active,secondary_wcb_group,primary_wcb_group,referring_physician,accident_type)Values
-				(@patient_id,@location_id,@attorney_id,@primary_ins_cmp_id,@secondary_ins_cmp_id,@emp_id,@adjuster_id,@doe,@doa,@primary_claim_no,@secondary_claim_no,@primary_policy_no,@secondary_policy_no,@compensation,@note,@ins_note,@alert_note,@created_date,@created_by,@is_active,@secondary_wcb_group,@primary_wcb_group,@referring_physician,@accident_type);select @@identity;", conn);
+		(patient_id,location_id,attorney_id,primary_ins_cmp_id,secondary_ins_cmp_id,emp_id,adjuster_id,provider_id,doe,doa,primary_claim_no,secondary_claim_no,primary_policy_no,secondary_policy_no,compensation,note,ins_note,alert_note,created_date,created_by,is_active,secondary_wcb_group,primary_wcb_group,referring_physician,accident_type)Values
+				(@patient_id,@location_id,@attorney_id,@primary_ins_cmp_id,@secondary_ins_cmp_id,@emp_id,@adjuster_id,@provider_id,@doe,@doa,@primary_claim_no,@secondary_claim_no,@primary_policy_no,@secondary_policy_no,@compensation,@note,@ins_note,@alert_note,@created_date,@created_by,@is_active,@secondary_wcb_group,@primary_wcb_group,@referring_physician,@accident_type);select @@identity;", conn);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
         cm.Parameters.AddWithValue("@location_id", data.location_id);
         cm.Parameters.AddWithValue("@attorney_id", data.attorney_id);
@@ -59,6 +59,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@secondary_ins_cmp_id", data.secondary_ins_cmp_id);
         cm.Parameters.AddWithValue("@emp_id", data.emp_id);
         cm.Parameters.AddWithValue("@adjuster_id", data.adjuster_id);
+        cm.Parameters.AddWithValue("@provider_id", data.provider_id);
         cm.Parameters.AddWithValue("@doe", data.doe);
         cm.Parameters.AddWithValue("@doa", data.doa);
         cm.Parameters.AddWithValue("@primary_claim_no", data.primary_claim_no);
@@ -73,7 +74,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@alert_note", data.alert_note);
         cm.Parameters.AddWithValue("@created_date", System.DateTime.Now);
         cm.Parameters.AddWithValue("@created_by", data.created_by);
-         cm.Parameters.AddWithValue("@is_active", data.is_active);
+        cm.Parameters.AddWithValue("@is_active", data.is_active);
          cm.Parameters.AddWithValue("@referring_physician", data.referring_physician);
          cm.Parameters.AddWithValue("@accident_type", data.accident_type);
         var result = ExecuteScalar(cm);
@@ -89,6 +90,7 @@ public class PatientIEService : ParentService
 		secondary_ins_cmp_id=@secondary_ins_cmp_id,
 		emp_id=@emp_id,
 		adjuster_id=@adjuster_id,
+        provider_id=@provider_id,
 		doe=@doe,
 		doa=@doa,
 		primary_claim_no=@primary_claim_no,
@@ -114,6 +116,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@secondary_ins_cmp_id", data.secondary_ins_cmp_id);
         cm.Parameters.AddWithValue("@emp_id", data.emp_id);
         cm.Parameters.AddWithValue("@adjuster_id", data.adjuster_id);
+        cm.Parameters.AddWithValue("@provider_id", data.provider_id);
         cm.Parameters.AddWithValue("@doe", data.doe);
         cm.Parameters.AddWithValue("@doa", data.doa);
         cm.Parameters.AddWithValue("@primary_claim_no", data.primary_claim_no);
@@ -145,6 +148,7 @@ public class PatientIEService : ParentService
 		secondary_ins_cmp_id=@secondary_ins_cmp_id,
 		emp_id=@emp_id,
 		adjuster_id=@adjuster_id,
+        provider_id=@provider_id,
 		doa=@doa,
 		primary_claim_no=@primary_claim_no,
 		secondary_claim_no=@secondary_claim_no,
@@ -168,7 +172,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@secondary_ins_cmp_id", data.secondary_ins_cmp_id);
         cm.Parameters.AddWithValue("@emp_id", data.emp_id);
         cm.Parameters.AddWithValue("@adjuster_id", data.adjuster_id);
-       
+        cm.Parameters.AddWithValue("@provider_id", data.provider_id);
         cm.Parameters.AddWithValue("@doa", data.doa);
         cm.Parameters.AddWithValue("@primary_claim_no", data.primary_claim_no);
         cm.Parameters.AddWithValue("@secondary_claim_no", data.secondary_claim_no);

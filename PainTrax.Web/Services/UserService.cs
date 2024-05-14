@@ -104,7 +104,7 @@ namespace PainTrax.Web.Services
         
         public List<SelectListItem> GetProviders(int cmpid)
         {
-            string query = "SELECT fullname FROM vm_cm_user WHERE desig_name = 'provider' and cmp_id=" + cmpid;
+            string query = "SELECT Id,fullname FROM vm_cm_user WHERE desig_name = 'provider' and cmp_id=" + cmpid;
             DataTable dataTable = GetData(query);
 
             List<SelectListItem> providers = new List<SelectListItem>();
@@ -114,10 +114,11 @@ namespace PainTrax.Web.Services
 
             foreach (DataRow row in dataTable.Rows)
             {
+                int id = Convert.ToInt32(row["Id"]);
                 providers.Add(new SelectListItem
                 {
                     Text = row["fullname"].ToString(),
-                    Value = row["fullname"].ToString()  // Assuming fullname is unique
+                    Value = id.ToString()
                 });
             }
 

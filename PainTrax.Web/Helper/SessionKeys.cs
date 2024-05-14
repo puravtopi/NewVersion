@@ -18,6 +18,6 @@
         public static string SessionRoleAccess = "roleAccess";
         public static string SessionSelectedProviderName = "providerFullNames";
         public static string SessionPageBreak = "pageBreak";
-
+        public static string SessionUserId = "userid";
     }
 }

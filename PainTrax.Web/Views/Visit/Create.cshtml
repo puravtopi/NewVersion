@@ -170,6 +170,15 @@
                                                             <select asp-for="accidentType" class="form-select" asp-items="@ViewBag.asList"></select>
 
                                                         </div>
+                                                        <label for="provider" class="col-sm-2 col-form-label">Provider:</label>
+                                                            <div class="col-sm-4">
+                                                            <select asp-for="providerid" name="provider" class="form-select">
+                                                                    @foreach (var item in ViewBag.providerList)
+                                                                    {
+                                                                        <option value="@item.Value">@item.Text</option>
+                                                                    }
+                                                                </select>
+                                                            </div>
                                                     </div>
 
                                                 </div>
@@ -1150,6 +1159,7 @@
                         "id": $("#id").val(),
                         "patientid": $("#patientid").val(),
                         "locationid": $("#locationid").val(),
+                        "providerid": $("#providerid").val(),
                         "dos": $("#dos").val(),
                         "doa": $("#doa").val(),
                         "compensation": $("#compensation").val(),

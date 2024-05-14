@@ -167,6 +167,9 @@ namespace PainTrax.Web.Controllers
                 macroList = _websiteMacrosService.GetAutoComplete(cmpid.Value, "PE");
                 ViewBag.pemacroList = JsonConvert.SerializeObject(macroList);
 
+                var providers = _userService.GetProviders(cmpid.Value);
+                ViewBag.providerList = providers;
+
                 if (id > 0)
                 {
                     var ieData = _ieService.GetOnebyPatientId(id);
@@ -192,6 +195,7 @@ namespace PainTrax.Web.Controllers
 
                         obj.compensation = ieData.compensation;
                         obj.accidentType = ieData.accidentType;
+                        obj.providerid = ieData.providerid;
                     }
 
 
@@ -414,7 +418,7 @@ namespace PainTrax.Web.Controllers
                     obj.Other.followup_duration = "2 weeks.";
                     obj.dos = System.DateTime.Now;
                     obj.locationid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
-
+                    
                     var _data = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
 
 
@@ -687,6 +691,7 @@ namespace PainTrax.Web.Controllers
                     emp_id = empId,
                     is_active = true,
                     location_id = model.locationid,
+                    provider_id=model.providerid,
                     patient_id = patientId,
                     primary_claim_no = model.prime_claim_no,
                     primary_ins_cmp_id = priminsId,

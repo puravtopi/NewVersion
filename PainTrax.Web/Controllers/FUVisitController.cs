@@ -81,13 +81,16 @@ namespace PainTrax.Web.Controllers
 
                 ViewBag.macroList = JsonConvert.SerializeObject(macroList);
 
-
+                
 
                 macroList = _websiteMacrosService.GetAutoComplete(cmpid.Value, "CC");
                 ViewBag.ccmacroList = JsonConvert.SerializeObject(macroList);
 
                 macroList = _websiteMacrosService.GetAutoComplete(cmpid.Value, "PE");
                 ViewBag.pemacroList = JsonConvert.SerializeObject(macroList);
+
+                var providers = _userService.GetProviders(cmpid.Value);
+                ViewBag.providerList = providers;
 
                 ViewBag.type = type;
 
@@ -102,6 +105,7 @@ namespace PainTrax.Web.Controllers
                         obj.id = ieData.id;
                         patientId = ieData.patient_id.Value;
                         obj.locationid = ieData.location_id;
+                        obj.providerid = ieData.providerid;
                         obj.location = ieData.location;
                         obj.doa = ieData.doa;
                         obj.dos = ieData.doe;
@@ -333,6 +337,7 @@ namespace PainTrax.Web.Controllers
 
                         obj.locationid = ieData.location_id;
                         obj.location = ieData.location;
+                        obj.providerid = ieData.providerid;
                         obj.doa = ieData.doa;
                         obj.dos = ieData.doe;
                         obj.prime_claim_no = ieData.primary_claim_no;
@@ -769,6 +774,7 @@ namespace PainTrax.Web.Controllers
                     emp_id = empId,
                     is_active = true,
                     location_id = model.locationid,
+                    provider_id=model.providerid,
                     patient_id = patientId,
                     primary_claim_no = model.prime_claim_no,
                     primary_ins_cmp_id = priminsId,
@@ -808,7 +814,8 @@ namespace PainTrax.Web.Controllers
                     patient_id = patientId,
                     extra_comments = model.alert_note,
                     type = model.type,
-                    accident_type = model.accidentType
+                    accident_type = model.accidentType,
+                    provider_id = model.providerid
                 };
                 int fu_id = 0;
                 if (model.fu_id.Value > 0)

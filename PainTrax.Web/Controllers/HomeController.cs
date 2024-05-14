@@ -61,9 +61,9 @@ namespace PainTrax.Web.Controllers
                 ViewBag.TodaysIncCo = _dashboardservices.GetTotalInsuranceCompany(cmpid.Value);
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                SaveLog(ex,"Index");
+                SaveLog(ex, "Index");
             }
             return View();
         }
@@ -99,7 +99,7 @@ namespace PainTrax.Web.Controllers
                     HttpContext.Session.SetString(SessionKeys.SessionCmpEmail, response.Model.emailid);
                     HttpContext.Session.SetString(SessionKeys.SessionUserName, response.Model.uname);
                     HttpContext.Session.SetString(SessionKeys.SessionDesignation, response.Model.desig_name);
-                   
+
 
                     var setting = _setting.GetOne(response.Model.cmp_id.Value);
 
@@ -110,7 +110,7 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionDateFormat, setting.dateformat);
                         HttpContext.Session.SetString(SessionKeys.SessionPageBreak, setting.pageBreakForInjection.ToString().ToLower());
 
-                      
+
                     }
                     else
                     {
@@ -123,13 +123,13 @@ namespace PainTrax.Web.Controllers
 
                     //get menu access from assign group
 
-                    tbl_groups objgroup = new tbl_groups() { Id= response.Model.groupid}; 
+                    tbl_groups objgroup = new tbl_groups() { Id = response.Model.groupid };
                     var groupDetails = _groupservices.GetOne(objgroup);
 
                     if (groupDetails != null)
                     {
-                        HttpContext.Session.SetString(SessionKeys.SessionPagesAccess,  groupDetails.pages_name);
-                        HttpContext.Session.SetString(SessionKeys.SessionRoleAccess,  groupDetails.role_name);
+                        HttpContext.Session.SetString(SessionKeys.SessionPagesAccess, groupDetails.pages_name);
+                        HttpContext.Session.SetString(SessionKeys.SessionRoleAccess, groupDetails.role_name);
                     }
 
 
@@ -219,15 +219,16 @@ namespace PainTrax.Web.Controllers
             ViewBag.locList = lst;
 
             var providers = _userService.GetProviders(cmpid.Value);
-            ViewBag.providerList = providers;            
+            ViewBag.providerList = providers;
             return View();
         }
 
         [HttpPost]
         public IActionResult GetProvider(GetProviderVM model, [FromForm] string[] selectedProviders)
         {
-           
-            HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, model.locationid);
+
+
+            HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, model.locationid == null ? 0 : model.locationid.Value);
             if (selectedProviders != null)
             {
                 string selectedProvidersString = string.Join(",", selectedProviders);
@@ -254,10 +255,10 @@ namespace PainTrax.Web.Controllers
         public IActionResult Logout()
         {
             _session.Clear();
-           /* foreach (var item in _httpContextAccessor.HttpContext.Request.Cookies.Keys)
-            {
-                _httpContextAccessor.HttpContext.Response.Cookies.Delete(item);
-            }*/
+            /* foreach (var item in _httpContextAccessor.HttpContext.Request.Cookies.Keys)
+             {
+                 _httpContextAccessor.HttpContext.Response.Cookies.Delete(item);
+             }*/
             return RedirectToAction("Login", "Home");
         }
         public IActionResult AdminLogout()

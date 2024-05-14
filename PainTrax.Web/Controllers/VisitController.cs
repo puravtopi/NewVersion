@@ -2039,6 +2039,7 @@ namespace PainTrax.Web.Controllers
 
                     // body = body.Replace("#CT", System.Enum.GetName(typeof(CaseType), Convert.ToInt32(patientData.compensation)));
                     body = body.Replace("#CT", patientData.compensation);
+                    body = body.Replace("#casetype", patientData.compensation);
                 }
 
                 //header printing
@@ -2049,6 +2050,7 @@ namespace PainTrax.Web.Controllers
                 {
                     body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : "Dr. " + locData[0].nameofpractice);
                     body = body.Replace("#address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
+                    body = body.Replace("#loc", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                 }
 
                 //ADL printing
@@ -2074,6 +2076,8 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#CC", string.IsNullOrEmpty(page1Data.cc) ? "" : this.removePtag(page1Data.cc));
                     body = body.Replace("#PE", string.IsNullOrEmpty(page1Data.pe) ? "" : page1Data.pe);
                     body = body.Replace("#history", string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history);
+                    body = body.Replace("#DD", string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd);
+                    body = body.Replace("#WorkStatus", string.IsNullOrEmpty(page1Data.work_status) ? "" : page1Data.work_status);
                     string bodypart = "";
 
                     if (!string.IsNullOrEmpty(page1Data.bodypart))
@@ -2131,6 +2135,7 @@ namespace PainTrax.Web.Controllers
                 {
 
                     body = body.Replace("#Sen_Exm", this.removePtag(pageNEData.sensory));
+                    body = body.Replace("#SE", this.removePtag(pageNEData.sensory));
                     body = body.Replace("#MMST", this.removePtag(pageNEData.manual_muscle_strength_testing));
                     body = body.Replace("#NE", this.removePtag(pageNEData.neurological_exam));
                     body = body.Replace("#DTR", this.removePtag(pageNEData.other_content));
@@ -2138,6 +2143,7 @@ namespace PainTrax.Web.Controllers
                 }
                 else
                 {
+                    body = body.Replace("#SE", "");
                     body = body.Replace("#DTR", "");
                     body = body.Replace("#NE", "");
                     body = body.Replace("#MMST", "");
@@ -2182,11 +2188,13 @@ namespace PainTrax.Web.Controllers
 
 
                     body = body.Replace("#FollowUp", this.removePtag(fup_duration));
+                    body = body.Replace("#fup", this.removePtag(fup_duration));
 
 
                 }
                 else
                 {
+                    body = body.Replace("#fup", "");
                     body = body.Replace("#FollowUp", "");
                     body = body.Replace("#Treatment", "");
                 }

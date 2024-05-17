@@ -49,6 +49,7 @@
                                         <th scope="col">DOS</th>
                                         <th scope="col">Case Type</th>
                                         <th scope="col">Location</th>
+                                        <th scope="col">Provider</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -342,6 +343,7 @@
 
                     { "data": "compensation", "autoWidth": true },
                     { "data": "location", "location": "location", "autoWidth": true },
+                    { "data": "providerName", "providerName": "providerName", "autoWidth": true },
                     {
                         "render": function (data, type, full, meta) {
                             //var index = '<a data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"  href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" title="Edit"></i></a> &nbsp; &nbsp;'

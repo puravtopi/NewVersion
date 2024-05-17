@@ -229,14 +229,8 @@ namespace PainTrax.Web.Controllers
 
 
             HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, model.locationid == null ? 0 : model.locationid.Value);
-            if (selectedProviders != null)
-            {
-                string selectedProvidersString = string.Join(",", selectedProviders);
-
-                // Store in session
-                HttpContext.Session.SetString(SessionKeys.SessionSelectedProviderName, selectedProvidersString);
-            }
-
+            HttpContext.Session.SetInt32(SessionKeys.SessionSelectedProviderId, model.providerid == null ? 0 : model.providerid.Value);
+            
             return RedirectToAction("Index", "Home");
         }
 

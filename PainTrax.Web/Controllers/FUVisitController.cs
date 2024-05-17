@@ -105,7 +105,7 @@ namespace PainTrax.Web.Controllers
                         obj.id = ieData.id;
                         patientId = ieData.patient_id.Value;
                         obj.locationid = ieData.location_id;
-                        obj.providerid = ieData.providerid;
+                        obj.providerid = ieData.provider_id;
                         obj.location = ieData.location;
                         obj.doa = ieData.doa;
                         obj.dos = ieData.doe;
@@ -337,7 +337,7 @@ namespace PainTrax.Web.Controllers
 
                         obj.locationid = ieData.location_id;
                         obj.location = ieData.location;
-                        obj.providerid = ieData.providerid;
+                        obj.providerid = ieData.provider_id;
                         obj.doa = ieData.doa;
                         obj.dos = ieData.doe;
                         obj.prime_claim_no = ieData.primary_claim_no;

@@ -20,9 +20,10 @@ public class vm_patient_ie
     public int? secondary_ins_cmp_id { get; set; }
     public int? emp_id { get; set; }
     public int? adjuster_id { get; set; }
-    public int? providerid { get; set; }
+    public int? provider_id { get; set; }
     public string? primary_claim_no { get; set; }
     public string? secondary_claim_no { get; set; }
+    public string? providerName { get; set; }
     public string? primary_policy_no { get; set; }
     public string? secondary_policy_no { get; set; }
 

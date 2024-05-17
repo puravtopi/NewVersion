@@ -186,6 +186,7 @@ namespace PainTrax.Web.Controllers
                         obj.prime_claim_no = ieData.primary_claim_no;
                         obj.prime_policy_no = ieData.primary_policy_no;
                         obj.prime_WCB_group = ieData.primary_wcb_group;
+                        obj.providerid = ieData.provider_id;
 
                         obj.sec_claim_no = ieData.secondary_claim_no;
                         obj.sec_policy_no = ieData.secondary_policy_no;
@@ -195,7 +196,7 @@ namespace PainTrax.Web.Controllers
 
                         obj.compensation = ieData.compensation;
                         obj.accidentType = ieData.accidentType;
-                        obj.providerid = ieData.providerid;
+
                     }
 
 
@@ -314,7 +315,7 @@ namespace PainTrax.Web.Controllers
                     else
                         obj.Page3 = new tbl_ie_page3();
 
-                    
+
 
                     obj.Page3.care = string.IsNullOrEmpty(obj.Page3.care) ? _defaultdata.care : obj.Page3.care;
                     obj.Page3.goal = string.IsNullOrEmpty(obj.Page3.goal) ? _defaultdata.goal : obj.Page3.goal;
@@ -418,7 +419,7 @@ namespace PainTrax.Web.Controllers
                     obj.Other.followup_duration = "2 weeks.";
                     obj.dos = System.DateTime.Now;
                     obj.locationid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
-                    
+
                     var _data = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
 
 
@@ -691,7 +692,7 @@ namespace PainTrax.Web.Controllers
                     emp_id = empId,
                     is_active = true,
                     location_id = model.locationid,
-                    provider_id=model.providerid,
+                    provider_id = model.providerid,
                     patient_id = patientId,
                     primary_claim_no = model.prime_claim_no,
                     primary_ins_cmp_id = priminsId,
@@ -2263,11 +2264,38 @@ namespace PainTrax.Web.Controllers
 
                 ViewBag.ieId = patientData.id;
                 ViewBag.locId = patientData.location_id;
-                ViewBag.content = body;               
+                ViewBag.content = body;
 
-                string signatureUrl = $"/signatures/{id}.jpeg";     
-                
-                body = body.Replace("#Sign", $"<img src='{signatureUrl}' alt='Patient Signature' />");
+                string signName = "";
+                int signUserId = 0;
+
+                int? providorId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
+
+                if (patientData.provider_id != null)
+                {
+                    signUserId = patientData.provider_id.Value;
+                }
+                else if (providorId != null)
+                {
+                    signUserId = providorId.Value;
+                }
+
+                if (signUserId > 0)
+                {
+                    tbl_users _user = new tbl_users()
+                    {
+                        Id = signUserId
+                    };
+                    var userData = _userService.GetOne(_user);
+
+                    signName = userData.signature;
+                    // string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
+                    string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
+
+                    body = body.Replace("#Sign", $"<img src='{signatureUrl}' alt='Patient Signature' />");
+                }
+                else
+                    body = body.Replace("#Sign", "");
 
                 ViewBag.content = body;
 
@@ -2305,7 +2333,7 @@ namespace PainTrax.Web.Controllers
         [HttpPost]
         public IActionResult DownloadWord(string htmlContent, int ieId, int id)
         {
-            
+
             string filePath = "", docName = "", patientName = "";
             // Create a new DOCX package
             using (MemoryStream memStream = new MemoryStream())
@@ -2329,12 +2357,12 @@ namespace PainTrax.Web.Controllers
 
                     var header = new Header(new Paragraph(new Run(new Text("Header Test"))));
                     HeaderReference headerReference = new HeaderReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(headerPart) };
-                    var footer = new Footer(new Paragraph(new Run(new Text("Page"), new SimpleField() { Instruction = "PAGE" })));
-                    FooterReference footerReference = new FooterReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(footerPart) };
+                    //var footer = new Footer(new Paragraph(new Run(new Text("Page"), new SimpleField() { Instruction = "PAGE" })));
+                    //FooterReference footerReference = new FooterReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(footerPart) };
 
                     headerPart.Header = header;
-                    footerPart.Footer = footer;
-                    mainPart.Document.Body.Append(new SectionProperties(headerReference, footerReference));
+                   
+                    mainPart.Document.Body.Append(new SectionProperties(headerReference));
 
                 }
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
@@ -2363,7 +2391,7 @@ namespace PainTrax.Web.Controllers
             }
 
             return Json(new { filePath = filePath, fileName = docName, patientName = patientName });
-           
+
         }
 
         [HttpGet]
@@ -2527,8 +2555,13 @@ namespace PainTrax.Web.Controllers
                         headerPart.FeedData(firstHeader.GetStream());
                     }
                 }
+
+                
+
                 var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
                 restheaderPart.Header = new Header(new Paragraph(new Run(new Text(patientName))));
+                restheaderPart.Header.AppendChild(new Paragraph(new Run(new Text("Page"), new SimpleField() { Instruction = "PAGE" })));
+               
                 //  restheaderPart.Header = new Header(new Paragraph("Purav\nSandip"));
                 string restId = mainPart.GetIdOfPart(restheaderPart);
                 // Get SectionProperties and Replace HeaderReference with new Id.

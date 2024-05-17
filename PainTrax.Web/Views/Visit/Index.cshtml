@@ -30,9 +30,9 @@
                             @{
                                 if (HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionRoleAccess).Contains("Add Patient"))
                                 {
-                                        <div class="col-md-12 col-lg-12">
-                                            <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
-                                        </div>
+                                            <div class="col-md-12 col-lg-12">
+                                                <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
+                                            </div>
                                 }
                             }
                         </div>
@@ -246,7 +246,7 @@
         resizeCanvas();
 
         function bindList() {
-
+          
             var url = '@Url.Action("List", "Visit")';
             var editurl = '@Url.Action("Create", "Visit")';
             var printurl = '@Url.Action("IEPrint", "Visit")';
@@ -636,6 +636,7 @@
         }
 
         function fnGetFUList(d) {
+            debugger
             // `d` is the original data object for the row
             debugger
             var id = d.id;
@@ -655,6 +656,7 @@
             head += "<th>  Case Type </th>";
             head += "<th>  Location </th>";
             head += "<th>  Type </th>";
+            head += "<th>  Provider </th>";
             head += "<th>  Action </th>";
             head += "</tr>  <thead>";
             childtab.innerHTML += head;
@@ -687,6 +689,7 @@
                             row += "<td>" + value.compensation + "</td>";
                             row += "<td>" + value.location + "</td>";
                             row += "<td>" + value.type + "</td>";
+                            row += "<td>" + value.providerName + "</td>";
                             row += "<td>" + index + "</td>";
                             childtab.innerHTML += row;
 

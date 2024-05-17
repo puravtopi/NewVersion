@@ -128,6 +128,7 @@ namespace PainTrax.Web.Controllers
                     obj.dos = fuData.doe;
                     obj.dov = fuData.doe;
                     obj.accidentType = fuData.accident_type;
+                   
 
                     if (ieData.primary_ins_cmp_id != null)
                     {

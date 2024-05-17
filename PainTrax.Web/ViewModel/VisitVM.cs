@@ -11,7 +11,8 @@ namespace PainTrax.Web.ViewModel
         public int? fu_id { get; set; }
         public int? patientid { get; set; }
         public int? locationid { get; set; }
-        public int? providerid { get; set; }
+        public int? providerid { get; set; } 
+        public string? providerName { get; set; }
 
         //[DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? dos { get; set; }

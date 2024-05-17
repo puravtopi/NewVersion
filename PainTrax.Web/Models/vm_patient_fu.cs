@@ -7,12 +7,14 @@ public class vm_patient_fu{
 	public int? patient_id {get;set;}
 	public int? patientFU { get;set;}
 	public int? location_id {get;set;}
-	public int? attorney_id {get;set;}
+    public int? provider_id { get; set; }
+    public int? attorney_id {get;set;}
 	public int? primary_ins_cmp_id {get;set;}
 	public int? secondary_ins_cmp_id {get;set;}
 	public int? emp_id {get;set;}
 	public int? adjuster_id {get;set;}
-	public DateTime? doe {get;set;}
+    public string? providerName { get; set; }
+    public DateTime? doe {get;set;}
 	public DateTime? doa {get;set;}
 	public string? primary_claim_no {get;set;}
 	public string? secondary_claim_no {get;set;}

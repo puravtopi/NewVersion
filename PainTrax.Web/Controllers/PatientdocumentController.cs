@@ -21,7 +21,6 @@ namespace PainTrax.Web.Controllers
     {
         private readonly ILogger<PatientdocumentController> _logger;
         private readonly IMapper _mapper;
-        private readonly PatientDocumentServices _services = new PatientDocumentServices();
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
         private IConfiguration Configuration;
 
@@ -37,7 +36,7 @@ namespace PainTrax.Web.Controllers
         {
 
             HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, id);
-            var data = new List<tbl_patientdocument>();
+            //var data = new List<tbl_patientdocument>();
             string PatientID = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId).ToString();
 
 
@@ -58,7 +57,7 @@ namespace PainTrax.Web.Controllers
                 i++;
                 string FolderName = System.IO.Path.GetFileName(item);
                 //nodes.Add(new TreeViewNode { id = Convert.ToString(i), parent = "#", text = item });
-                
+
 
                 var FolderPathFile = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", FolderName.ToString(), PatientID);
                 int j = 0;
@@ -74,7 +73,7 @@ namespace PainTrax.Web.Controllers
                     // data.Add(new tbl_patientdocument { DocName = System.IO.Path.GetFileName(item), Path = item });
                 }
 
-                nodes.Add(new TreeViewNode { id = i.ToString(), parent = "#", text = FolderName.ToString()+"("+j+")" });
+                nodes.Add(new TreeViewNode { id = i.ToString(), parent = "#", text = FolderName.ToString() + "(" + j + ")" });
 
             }
 
@@ -87,31 +86,6 @@ namespace PainTrax.Web.Controllers
         {
 
             List<TreeViewNode> items = JsonConvert.DeserializeObject<List<TreeViewNode>>(selectedItems);
-            //string parentid = items[0].id;
-            //string SelectedFolder = string.Empty;
-            //int i = 0;
-
-
-            //var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments");
-            //bool folderExists = Directory.Exists(FolderPath);
-            //if (!folderExists)
-            //    Directory.CreateDirectory(FolderPath);
-
-            //// Dstring rootPath = @"C:\Users\Koushik\Desktop\TestFolder";
-            //string[] dirs = Directory.GetDirectories(FolderPath, "*", SearchOption.TopDirectoryOnly);
-            //foreach (var item in dirs)
-            //{
-            //    i++;
-            //    string FolderName = System.IO.Path.GetFileName(item);
-            //    if (i == Convert.ToInt32(parentid))
-            //    {
-            //        SelectedFolder = FolderName.ToString();
-            //    }
-            //}
-
-            //HttpContext.Session.SetString(SessionKeys.SessionSelectedFolder, SelectedFolder);
-            //string selectedFolder = HttpContext.Session.GetString(SessionKeys.SessionSelectedFolder);
-
             return RedirectToAction("Index");
         }
 
@@ -181,60 +155,7 @@ namespace PainTrax.Web.Controllers
                 {".csv", "text/csv"}
             };
         }
-        public IActionResult Delete(int id)
-        {
-            try
-            {
-                tbl_patientdocument obj = new tbl_patientdocument();
-                obj.Document_ID = id;
-                _services.Delete(obj);
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "Delete");
-            }
-            return RedirectToAction("Index");
-        }
 
-        public IActionResult List()
-        {
-            try
-            {
-                string PatientID = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId).ToString();
-                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
-                // Skiping number of Rows count
-                var start = Request.Form["start"].FirstOrDefault();
-                // Paging Length 10,20
-                var length = Request.Form["length"].FirstOrDefault();
-                // Sort Column Name
-                var sortColumn = Request.Form["columns[" + Request.Form["order[0][column]"].FirstOrDefault() + "][name]"].FirstOrDefault();
-                // Sort Column Direction ( asc ,desc)
-                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
-                // Search Value from (Search box)
-                var searchValue = Request.Form["search[value]"].FirstOrDefault();
-                //Paging Size (10,20,50,100)
-                int pageSize = length != null ? Convert.ToInt32(length) : 0;
-                int skip = start != null ? Convert.ToInt32(start) : 0;
-                int recordsTotal = 0;
-                string cnd = " and PatientID = " + PatientID;// + " and DocName like '%" + searchValue + "%' ";
-                var Data = _services.GetAll(cnd);
-                //Sorting
-                //Search
-                //total number of rows count 
-                recordsTotal = Data.Count();
-                //Paging 
-                var data = Data.Skip(skip).Take(pageSize).ToList();
-                //Returning Json Data
-                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
-
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "List");
-            }
-            return Json("");
-
-        }
         [HttpPost]
         public IActionResult ImportData(string selectedParent, IFormFile[] postedFile)
         {
@@ -246,7 +167,6 @@ namespace PainTrax.Web.Controllers
                 {
                     foreach (var file in postedFile)
                     {
-                        tbl_patientdocument obj = new tbl_patientdocument();
                         // Get the file name from the browser
                         var fileName = System.IO.Path.GetFileName(file.FileName);
 
@@ -274,13 +194,7 @@ namespace PainTrax.Web.Controllers
                         {
                             uploadedFile.CopyTo(localFile);
                         }
-                        obj.DocName = fileName.ToString();
-                        obj.Path = filePath.ToString();
-                        obj.PatientID = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId);
-                        obj.UploadDate = System.DateTime.Now;
-                        obj.CreatedBy = HttpContext.Session.GetString(SessionKeys.SessionUserName);
-                        obj.CreatedDate = System.DateTime.Now;
-                        _services.Insert(obj);
+
                     }
                 }
             }

@@ -251,6 +251,7 @@
             var editurl = '@Url.Action("Create", "Visit")';
             var printurl = '@Url.Action("IEPrint", "Visit")';
             var appurl = '@Url.Action("Appointments", "Appointment")';
+            var editurldocument = '@Url.Action("Index", "Patientdocument")';
 
             var tab = $("#tbl").DataTable({
                 "lengthMenu": [[25, 50, 100], [25, 50, 100]],
@@ -357,6 +358,7 @@
                             index += ' <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"  href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" title="Edit"></i><span>Edit</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnDeletePatient(' + full.id + ')" href="#"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove" data-bs-original-title="Remove"></i><span>Delete</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Document"  href="' + editurldocument + '/' + full.patient_id + '"><i class="bi bi-folder-fill" title="Document"></i><span>Document</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowComment(' + full.id + ')" href="#" ><i class="bi bi-chat-right-text-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Comments" data-bs-original-title="Add Comments"></i><span>Add Comments</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowPOCSummary(' + full.id + ',0)" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i><span>POC Summary</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + full.id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li>';

@@ -9,10 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\FormsController.cs" />
     <Compile Remove="Controllers\MapPdfController.cs" />
-    <Compile Remove="Controllers\PatientdocumentController.cs" />
-    <Compile Remove="Helper\PdfHelper.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +29,7 @@
     <PackageReference Include="HtmlToOpenXml.dll" Version="2.3.0" />
     <PackageReference Include="itext" Version="8.0.3" />
     <PackageReference Include="itext.bouncy-castle-adapter" Version="8.0.3" />
+    <PackageReference Include="iTextSharp.LGPLv2.Core" Version="3.4.20" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.5" />
@@ -41,6 +39,7 @@
 
   <ItemGroup>
     <Folder Include="Logfiles\" />
+    <Folder Include="PatientDocuments\" />
     <Folder Include="Report\" />
     <Folder Include="Uploads\HeaderTemplate\" />
     <Folder Include="Uploads\Sign\" />
@@ -48,6 +47,7 @@
 
   <ItemGroup>
     <None Include="Views\Forms\Index.cshtml" />
+    <None Include="Views\Patientdocument\Index.cshtml" />
     <None Include="wwwroot\assets\vendor\bootbox\bootbox.all.js" />
     <None Include="wwwroot\assets\vendor\bootbox\bootbox.all.min.js" />
     <None Include="wwwroot\assets\vendor\bootbox\bootbox.js" />

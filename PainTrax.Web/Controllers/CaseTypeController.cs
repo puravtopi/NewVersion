@@ -78,6 +78,7 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
+                model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 _services.Update(model);
             }
             catch (Exception ex)

@@ -11,7 +11,7 @@ namespace PainTrax.Web.Models
         [Required(ErrorMessage = "Please enter Insco EmailId ")]
         public string emailid { get; set; }
         public string? telephone { get; set; }        
-        public string address1 { get; set; }
+        public string? address1 { get; set; }
         public int? id { get; set; }
         public string? address2 { get; set; }
         public string? city { get; set; }
@@ -26,8 +26,8 @@ namespace PainTrax.Web.Models
         public DateTime? updatedate { get; set; }
         public int? updatedby { get; set; }
         public int? old_id { get; set; }
-        public string label { get; set; }
-        public string val { get; set; }
+        public string? label { get; set; }
+        public string? val { get; set; }
 
     }
 }

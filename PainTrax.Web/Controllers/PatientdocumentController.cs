@@ -38,7 +38,7 @@ namespace PainTrax.Web.Controllers
             HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, id);
             //var data = new List<tbl_patientdocument>();
             string PatientID = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId).ToString();
-
+           
 
             //var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", PatientID);
 

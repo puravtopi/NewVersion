@@ -1224,18 +1224,18 @@ namespace PainTrax.Web.Controllers
         {
             var data = _patientFUservices.GetAllByIeId(ieId);
             tbl_users user = new tbl_users();
-            for (int i = 0; i<data.Count;i++)
+            for (int i = 0; i < data.Count; i++)
             {
                 user.Id = data[i].provider_id;
                 var providerData = _userService.GetOne(user);
-                if(providerData != null)
+                if (providerData != null)
                 {
                     data[i].providerName = providerData.fullname;
                 }
-                
+
 
             }
-            
+
             return Json(data);
         }
 
@@ -2385,7 +2385,7 @@ namespace PainTrax.Web.Controllers
                     //FooterReference footerReference = new FooterReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(footerPart) };
 
                     headerPart.Header = header;
-                   
+
                     mainPart.Document.Body.Append(new SectionProperties(headerReference));
 
                 }
@@ -2580,12 +2580,12 @@ namespace PainTrax.Web.Controllers
                     }
                 }
 
-                
+
 
                 var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
                 restheaderPart.Header = new Header(new Paragraph(new Run(new Text(patientName))));
                 restheaderPart.Header.AppendChild(new Paragraph(new Run(new Text("Page"), new SimpleField() { Instruction = "PAGE" })));
-               
+
                 //  restheaderPart.Header = new Header(new Paragraph("Purav\nSandip"));
                 string restId = mainPart.GetIdOfPart(restheaderPart);
                 // Get SectionProperties and Replace HeaderReference with new Id.
@@ -2602,8 +2602,6 @@ namespace PainTrax.Web.Controllers
                 }
             }
         }
-
-
         private void SaveLog(Exception ex, string actionname)
         {
             var msg = "";
@@ -2625,7 +2623,6 @@ namespace PainTrax.Web.Controllers
             };
             new LogService().Insert(logdata);
         }
-
 
         private string removePtag(string content)
         {

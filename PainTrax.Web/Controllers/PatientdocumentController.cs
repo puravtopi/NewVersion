@@ -34,7 +34,7 @@ namespace PainTrax.Web.Controllers
         }
         public ActionResult Index(int id = 0)
         {
-
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
             HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, id);
             //var data = new List<tbl_patientdocument>();
             string PatientID = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId).ToString();
@@ -59,7 +59,8 @@ namespace PainTrax.Web.Controllers
                 //nodes.Add(new TreeViewNode { id = Convert.ToString(i), parent = "#", text = item });
 
 
-                var FolderPathFile = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", FolderName.ToString(), PatientID);
+
+                var FolderPathFile = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments",  FolderName.ToString(), PatientID);
                 int j = 0;
 
                 bool folderExistsNew = Directory.Exists(FolderPathFile);

@@ -476,6 +476,15 @@ namespace PainTrax.Web.Controllers
                         obj.Page2.ros = defaultPage2.ros;
 
                     }
+                    var defaultNE = _defaultSettingService.GetOneNE(cmpid.Value);
+
+                    if(defaultNE != null)
+                    {
+                        obj.NE.neurological_exam = defaultNE.neurological_exam;
+                        obj.NE.sensory = defaultNE.sensory;
+                        obj.NE.manual_muscle_strength_testing = defaultNE.manual_muscle_strength_testing;
+                        obj.NE.other_content = defaultNE.other_content;
+                    }
 
                 }
 

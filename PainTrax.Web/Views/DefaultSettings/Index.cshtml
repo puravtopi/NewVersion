@@ -76,7 +76,7 @@
                                 <a class="nav-link " id="page1-tab" data-bs-target="#bordered-page2" role="tab" aria-controls="profile" aria-selected="false">Page2</a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" id="page2-tab" data-bs-target="#bordered-page3" role="tab" aria-controls="contact" aria-selected="false">Page3</a>
+                                <a class="nav-link" id="page2-tab" data-bs-target="#bordered-ne" role="tab" aria-controls="contact" aria-selected="false">NE</a>
                             </li>
                         </ul>
                         <div class="tab-content pt-2" id="borderedTabContent">
@@ -86,8 +86,8 @@
                             <div class="tab-pane fade" id="bordered-page2" role="tabpanel" aria-labelledby="profile-tab">
                                 @Html.Partial("_Page2",Model.Page2)
                             </div>
-                            <div class="tab-pane fade" id="bordered-page3" role="tabpanel" aria-labelledby="contact-tab">
-                                <h1>Page3</h1>
+                            <div class="tab-pane fade" id="bordered-ne" role="tabpanel" aria-labelledby="profile-tab">
+                                @Html.Partial("_NE",Model.NE)
                             </div>
                         </div><!-- End Bordered Tabs Justified -->
                     </div>
@@ -247,7 +247,7 @@
         else if (id === "bordered-page2") {
             fnPage2Save(t);
         }
-        else if (id === "bordered-page3") {
+        else if (id === "bordered-ne") {
             fnNESave(t);
         }
         else if (id === "bordered-p4") {

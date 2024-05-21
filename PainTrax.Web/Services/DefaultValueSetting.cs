@@ -29,9 +29,9 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@pe", data.pe);
             cm.Parameters.AddWithValue("@rom", data.rom);
             cm.Parameters.AddWithValue("@note", data.note);
-       
+
             cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
-          
+
             cm.Parameters.AddWithValue("@bodypart", data.bodypart);
             cm.Parameters.AddWithValue("@daignosis_desc", data.daignosis_desc);
             cm.Parameters.AddWithValue("@daignosis_delimit", data.daignosis_delimit);
@@ -99,7 +99,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@ros", data.ros);
             cm.Parameters.AddWithValue("@aod", data.aod);
             cm.Parameters.AddWithValue("@other", data.other);
-           
+
             cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
             var result = ExecuteScalar(cm);
             return result;
@@ -126,6 +126,60 @@ namespace PainTrax.Web.Services
             var datalist = ConvertDataTable<tbl_ie_page2_default>(GetData(cm)).FirstOrDefault();
             return datalist;
         }
+        #endregion
+
+        #region NE
+        public int InsertNE(tbl_ie_ne_default data)
+        {
+            MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_ie_ne_default
+        (neurological_exam,sensory,manual_muscle_strength_testing,other_content,ie_id,patient_id,cmp_id)values
+        (@neurological_exam,@sensory,@manual_muscle_strength_testing,@other_content,@ie_id,@patient_id,@cmp_id);", conn);
+            
+            cm.Parameters.AddWithValue("@neurological_exam",data.neurological_exam);
+            cm.Parameters.AddWithValue("@sensory",data.sensory);
+            cm.Parameters.AddWithValue("@manual_muscle_strength_testing",data.manual_muscle_strength_testing);
+            cm.Parameters.AddWithValue("@other_content", data.other_content);
+            cm.Parameters.AddWithValue("@ie_id",data.ie_id);
+            cm.Parameters.AddWithValue("@patient_id",data.patient_id);
+            cm.Parameters.AddWithValue("@cmp_id",data.cmp_id);
+
+            var result = ExecuteScalar(cm);
+            return result;
+        }
+
+        public int UpdateNE(tbl_ie_ne_default data) 
+        {
+            MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_ie_ne_default set 
+        neurological_exam=@neurological_exam,
+        sensory=@sensory,
+        manual_muscle_strength_testing=@manual_muscle_strength_testing,
+        other_content=@other_content,
+        ie_id=@ie_id,
+        patient_id=@patient_id,
+        cmp_id=@cmp_id where id=@id;select 1;", conn);
+
+            cm.Parameters.AddWithValue("@id", data.id);
+            cm.Parameters.AddWithValue("@neurological_exam", data.neurological_exam);
+            cm.Parameters.AddWithValue("@sensory", data.sensory);
+            cm.Parameters.AddWithValue("@manual_muscle_strength_testing", data.manual_muscle_strength_testing);
+            cm.Parameters.AddWithValue("@other_content", data.other_content);
+            cm.Parameters.AddWithValue("@ie_id", data.ie_id);
+            cm.Parameters.AddWithValue("@patient_id", data.patient_id);
+            cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+
+            var result = ExecuteScalar(cm);
+            return result;
+        }
+
+        public tbl_ie_ne_default? GetOneNE(int id)
+        {
+            DataTable dt = new DataTable();
+            MySqlCommand cm = new MySqlCommand("select * from tbl_ie_ne_default where cmp_id=@id ", conn);
+            cm.Parameters.AddWithValue("@id", id);
+            var datalist = ConvertDataTable<tbl_ie_ne_default>(GetData(cm)).FirstOrDefault();
+            return datalist;
+        }
+
         #endregion
     }
 }

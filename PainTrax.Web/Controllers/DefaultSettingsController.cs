@@ -47,6 +47,10 @@ namespace PainTrax.Web.Controllers
 
                 if (model.Page2 == null)
                     model.Page2 = new tbl_ie_page2_default();
+
+                model.NE = services.GetOneNE(cmpid.Value);
+                if(model.NE == null)
+                   model.NE = new tbl_ie_ne_default();
             }
             catch(Exception ex)
             {
@@ -102,6 +106,31 @@ namespace PainTrax.Web.Controllers
             }
             return Json(data);
         }
+
+        [HttpPost]
+        public IActionResult SaveNE(tbl_ie_ne_default model)
+        {
+            var data = 0;
+            try
+            {
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                model.cmp_id = cmpid;
+
+                if (model.id > 0)
+                {
+                    data = model.id.Value;
+                    services.UpdateNE(model);
+                }
+                else
+                    data = services.InsertNE(model);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "SaveNE");
+            }
+            return Json(data);
+        }
+
         #region public Method
         private void SaveLog(Exception ex,string actionname)
         {

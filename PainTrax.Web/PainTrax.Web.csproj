@@ -39,7 +39,6 @@
 
   <ItemGroup>
     <Folder Include="Logfiles\" />
-    <Folder Include="PatientDocuments\" />
     <Folder Include="Report\" />
     <Folder Include="Uploads\HeaderTemplate\" />
     <Folder Include="Uploads\Sign\" />

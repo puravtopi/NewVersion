@@ -226,42 +226,45 @@ namespace PainTrax.Web.Controllers
 
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                        tbl_procedures obj = new tbl_procedures()
+                        if (!string.IsNullOrEmpty(dt.Rows[i]["Position"].ToString()))
                         {
-                            cmp_id = cmpid,
-                            position = dt.Rows[i]["Position"].ToString(),
-                            display_order = string.IsNullOrEmpty(dt.Rows[i]["DisplayOrder"].ToString()) ? 0 : Convert.ToInt16(dt.Rows[i]["DisplayOrder"].ToString()),
-                            hasmuscle = dt.Rows[i]["Muscle"].ToString(),
-                            hassubprocedure = dt.Rows[i]["Sub Procedure"].ToString(),
-                            pedesc = dt.Rows[i]["R_PEDesc"].ToString(),
-                            pdesc = dt.Rows[i]["R_PDesc"].ToString(),
-                            s_ccdesc = dt.Rows[i]["S_CCDesc"].ToString(),
-                            s_adesc = dt.Rows[i]["S_ADesc"].ToString(),
-                            e_heading = dt.Rows[i]["E-Heading"].ToString(),
-                            e_pedesc = dt.Rows[i]["E_PEDesc"].ToString(),
-                            e_pdesc = dt.Rows[i]["E_PDesc"].ToString(),
-                            sidesdefault = dt.Rows[i]["SidesDefault"].ToString(),
-                            inhouseprocbit = string.IsNullOrEmpty(dt.Rows[i]["InHouseProcbit"].ToString()) ? false : Convert.ToBoolean(dt.Rows[i]["InHouseProcbit"].ToString()),
-                            sides = string.IsNullOrEmpty(dt.Rows[i]["sides"].ToString()) ? false : Convert.ToBoolean(dt.Rows[i]["sides"].ToString()),
-                            haslevel = string.IsNullOrEmpty(dt.Rows[i]["haslevel"].ToString()) ? false : Convert.ToBoolean(dt.Rows[i]["haslevel"].ToString()),
-                            cf = string.IsNullOrEmpty(dt.Rows[i]["cf"].ToString()) ? false : Convert.ToBoolean(dt.Rows[i]["cf"].ToString()),
-                            pn = string.IsNullOrEmpty(dt.Rows[i]["pn"].ToString()) ? false : Convert.ToBoolean(dt.Rows[i]["pn"].ToString()),
-                            inout = string.IsNullOrEmpty(dt.Rows[i]["InOut"].ToString()) ? false : Convert.ToBoolean(dt.Rows[i]["InOut"].ToString()),
-                            bodypart = dt.Rows[i]["BodyPart"].ToString(),
-                            heading = dt.Rows[i]["Heading"].ToString(),
-                            hasmedication = dt.Rows[i]["HasMedication"].ToString(),
-                            ccdesc = dt.Rows[i]["CCDesc"].ToString(),
-                            adesc = dt.Rows[i]["ADesc"].ToString(),
-                            s_heading = dt.Rows[i]["S_Heading"].ToString(),
-                            s_pedesc = dt.Rows[i]["S_PEDesc"].ToString(),
-                            e_ccdesc = dt.Rows[i]["E_CCDesc"].ToString(),
-                            e_adesc = dt.Rows[i]["E_ADesc"].ToString(),
-                            levelsdefault = dt.Rows[i]["LevelsDefault"].ToString(),
-                            mcode = dt.Rows[i]["MCode"].ToString(),
-                            mcode_desc = dt.Rows[i]["MCode Desc"].ToString(),
-                        };
+                            tbl_procedures obj = new tbl_procedures()
+                            {
+                                cmp_id = cmpid,
+                                position = dt.Rows[i]["Position"].ToString(),
+                                display_order = string.IsNullOrEmpty(dt.Rows[i]["DisplayOrder"].ToString()) ? 0 : Convert.ToInt16(dt.Rows[i]["DisplayOrder"].ToString()),
+                                hasmuscle = dt.Rows[i]["Muscle"].ToString(),
+                                hassubprocedure = dt.Rows[i]["SubProcedure"].ToString(),
+                                pedesc = dt.Rows[i]["R_PEDesc"].ToString(),
+                                pdesc = dt.Rows[i]["R_PDesc"].ToString(),
+                                s_ccdesc = dt.Rows[i]["S_CCDesc"].ToString(),
+                                s_adesc = dt.Rows[i]["S_ADesc"].ToString(),
+                                e_heading = dt.Rows[i]["E_Heading"].ToString(),
+                                e_pedesc = dt.Rows[i]["E_PEDesc"].ToString(),
+                                e_pdesc = dt.Rows[i]["E_PDesc"].ToString(),
+                                sidesdefault = dt.Rows[i]["SidesDefault"].ToString(),
+                                inhouseprocbit = ConvertToBoolean(dt.Rows[i]["InHouseProcbit"]),
+                                sides = ConvertToBoolean(dt.Rows[i]["sides"]), 
+                                haslevel = ConvertToBoolean(dt.Rows[i]["haslevel"]),
+                                cf = ConvertToBoolean(dt.Rows[i]["cf"]),
+                                pn = ConvertToBoolean(dt.Rows[i]["pn"]),
+                                inout = ConvertToBoolean(dt.Rows[i]["inout"]),
+                                bodypart = dt.Rows[i]["BodyPart"].ToString(),
+                                heading = dt.Rows[i]["Heading"].ToString(),
+                                hasmedication = dt.Rows[i]["HasMedication"].ToString(),
+                                ccdesc = dt.Rows[i]["CCDesc"].ToString(),
+                                adesc = dt.Rows[i]["ADesc"].ToString(),
+                                s_heading = dt.Rows[i]["S_Heading"].ToString(),
+                                s_pedesc = dt.Rows[i]["S_PEDesc"].ToString(),
+                                e_ccdesc = dt.Rows[i]["E_CCDesc"].ToString(),
+                                e_adesc = dt.Rows[i]["E_ADesc"].ToString(),
+                                levelsdefault = dt.Rows[i]["LevelsDefault"].ToString(),
+                                mcode = dt.Rows[i]["MCode"].ToString(),
+                                mcode_desc = dt.Rows[i]["MCodeDesc"].ToString(),
+                            };
 
-                        _services.Insert(obj);
+                            _services.Insert(obj);
+                        }
 
                     }
                 }
@@ -271,6 +274,14 @@ namespace PainTrax.Web.Controllers
                 SaveLog(ex, "ImportData");
             }
             return RedirectToAction("Index");
+        }
+        private bool ConvertToBoolean(object value)
+        {
+            if (value == null || string.IsNullOrEmpty(value.ToString()))
+                return false;
+
+            string val = value.ToString().ToLower();
+            return val == "1" || val == "true" || val == "yes";
         }
 
         public DataTable Read2007Xlsx(IFormFile postedFile)

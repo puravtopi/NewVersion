@@ -1,16 +1,21 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Newtonsoft.Json;
 using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using System.Data;
+using System.Text;
 using System.Text.RegularExpressions;
+using Xceed.Words.NET;
 
 
 
@@ -23,6 +28,8 @@ namespace PainTrax.Web.Controllers
         private readonly IMapper _mapper;
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
         private IConfiguration Configuration;
+        private string _outputPath;
+        private string _storagePath;
 
         public PatientdocumentController(IMapper mapper, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment,
                                 ILogger<PatientdocumentController> logger, IConfiguration configuration)
@@ -31,55 +38,50 @@ namespace PainTrax.Web.Controllers
             _logger = logger;
             Environment = environment;
             Configuration = configuration;
+            _outputPath = Path.Combine(environment.ContentRootPath, "wwwroot/Content");
+            _storagePath = Path.Combine(environment.ContentRootPath, "PatientDocuments");
+
         }
         public ActionResult Index(int id = 0)
         {
-            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-            HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, id);
-            //var data = new List<tbl_patientdocument>();
-            string PatientID = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId).ToString();
-           
-
-            //var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", PatientID);
-
-            var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments");
-            bool folderExists = Directory.Exists(FolderPath);
-            if (!folderExists)
-                Directory.CreateDirectory(FolderPath);
-
-            string[] dirs = Directory.GetDirectories(FolderPath, "*", SearchOption.TopDirectoryOnly);
-
-            List<TreeViewNode> nodes = new List<TreeViewNode>();
-
-            int i = 0;
-            foreach (var item in dirs)
             {
-                i++;
-                string FolderName = System.IO.Path.GetFileName(item);
-                //nodes.Add(new TreeViewNode { id = Convert.ToString(i), parent = "#", text = item });
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+                HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, id);
 
+                var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments");
+                bool folderExists = Directory.Exists(FolderPath);
+                if (!folderExists)
+                    Directory.CreateDirectory(FolderPath);
 
+                string[] dirs = Directory.GetDirectories(FolderPath, "*", SearchOption.TopDirectoryOnly);
 
-                var FolderPathFile = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments",  FolderName.ToString(), PatientID);
-                int j = 0;
+                List<TreeViewNode> nodes = new List<TreeViewNode>();
 
-                bool folderExistsNew = Directory.Exists(FolderPathFile);
-                if (!folderExistsNew)
-                    Directory.CreateDirectory(FolderPathFile);
-
-                foreach (var item1 in Directory.GetFiles(FolderPathFile))
+                int i = 0;
+                foreach (var item in dirs)
                 {
-                    j++;
-                    nodes.Add(new TreeViewNode { id = j.ToString() + "-" + i.ToString() + "~" + FolderName.ToString() + "$" + System.IO.Path.GetFileName(item1), parent = i.ToString(), text = System.IO.Path.GetFileName(item1) });
-                    // data.Add(new tbl_patientdocument { DocName = System.IO.Path.GetFileName(item), Path = item });
+                    i++;
+                    string FolderName = System.IO.Path.GetFileName(item);
+                    var FolderPathFile = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", FolderName.ToString(), id.ToString());
+                    int j = 0;
+
+                    bool folderExistsNew = Directory.Exists(FolderPathFile);
+                    if (!folderExistsNew)
+                        Directory.CreateDirectory(FolderPathFile);
+
+                    foreach (var item1 in Directory.GetFiles(FolderPathFile))
+                    {
+                        j++;
+                        nodes.Add(new TreeViewNode { id = j.ToString() + "-" + i.ToString() + "~" + FolderName.ToString() + "$" + System.IO.Path.GetFileName(item1), parent = i.ToString(), text = System.IO.Path.GetFileName(item1) });
+                    }
+
+                    nodes.Add(new TreeViewNode { id = i.ToString(), parent = "#", text = FolderName.ToString() + "(" + j + ")" });
                 }
 
-                nodes.Add(new TreeViewNode { id = i.ToString(), parent = "#", text = FolderName.ToString() + "(" + j + ")" });
-
+                ViewBag.Json = JsonConvert.SerializeObject(nodes, Formatting.Indented);
+                return View();
             }
 
-            ViewBag.Json = JsonConvert.SerializeObject(nodes, Formatting.Indented);
-            return View();
         }
 
         [HttpPost]
@@ -132,31 +134,56 @@ namespace PainTrax.Web.Controllers
             return RedirectToAction("Index", "Patientdocument", new { id = PatientID });
             // return RedirectToAction("Index");
         }
+        public IActionResult PreviewDoc(string filename)
+        {
+            string PatientID = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId).ToString();
+            string selectedfolder = filename.Split('~')[0];
+            string filenamenew = filename.Split('~')[1];
 
-        private string GetContentType(string path)
-        {
-            var types = GetMimeTypes();
-            var ext = Path.GetExtension(path).ToLowerInvariant();
-            return types[ext];
-        }
-        private Dictionary<string, string> GetMimeTypes()
-        {
-            return new Dictionary<string, string>
+            if (string.IsNullOrEmpty(filenamenew))
+                return Content("Filename is not available");
+
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", selectedfolder, PatientID);
+            var path = Path.Combine(folderPath, filenamenew);
+
+            if (!System.IO.File.Exists(path))
+                return NotFound();
+
+            var contentType = GetContentType(path);
+
+            ViewBag.ContentType = contentType;
+            ViewBag.Filename = filename;
+
+            if (contentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
             {
-                {".txt", "text/plain"},
-                {".pdf", "application/pdf"},
-                {".doc", "application/vnd.ms-word"},
-                {".docx", "application/vnd.ms-word"},
-                {".xls", "application/vnd.ms-excel"},
-                {".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
-                {".png", "image/png"},
-                {".jpg", "image/jpeg"},
-                {".jpeg", "image/jpeg"},
-                {".gif", "image/gif"},
-                {".csv", "text/csv"}
-            };
-        }
+                // Extract content from the Word document and generate HTML
+                string htmlContent = ConvertWordToHtml(path);
+                ViewBag.DocContent = htmlContent;
+            }
 
+            return View();
+        }
+        public IActionResult GetFile(string filename)
+        {
+            string PatientID = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId).ToString();
+            string selectedfolder = filename.Split('~')[0];
+            string filenamenew = filename.Split('~')[1];
+
+            if (string.IsNullOrEmpty(filenamenew))
+                return Content("Filename is not available");
+
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", selectedfolder, PatientID);
+            var path = Path.Combine(folderPath, filenamenew);
+
+            if (!System.IO.File.Exists(path))
+                return NotFound();
+
+            var contentType = GetContentType(path);
+
+            var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+            return File(fileStream, contentType);
+        }
+       
         [HttpPost]
         public IActionResult ImportData(string selectedParent, IFormFile[] postedFile)
         {
@@ -262,6 +289,99 @@ namespace PainTrax.Web.Controllers
             };
             new LogService().Insert(logdata);
         }
+
+        private string GetContentType(string path)
+        {
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(path, out var contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+            return contentType;
+        }
+
+        //private string GetContentType(string path)
+        //{
+        //    var types = GetMimeTypes();
+        //    var ext = Path.GetExtension(path).ToLowerInvariant();
+        //    return types[ext];
+        //}
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
+        }
+        private string ConvertWordToHtml(string filePath)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false))
+            {
+                Body body = wordDoc.MainDocumentPart.Document.Body;
+
+                foreach (var element in body.Elements())
+                {
+                    sb.Append(GetHtmlFromElement(element));
+                }
+            }
+
+            // Wrap the generated HTML content with a <div> and apply some basic styles
+            return $"<div style=\"font-family: Arial; font-size: 14px;\">{sb}</div>";
+        }
+
+        private string GetHtmlFromElement(OpenXmlElement element)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (element is Paragraph)
+            {
+                sb.Append("<p>");
+
+                foreach (var run in element.Elements<Run>())
+                {
+                    sb.Append(GetHtmlFromRun(run));
+                }
+
+                sb.Append("</p>");
+            }
+            else if (element is Run)
+            {
+                sb.Append(GetHtmlFromRun(element));
+            }
+            // Add handling for other element types as needed
+
+            return sb.ToString();
+        }
+
+        private string GetHtmlFromRun(OpenXmlElement run)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("<span>");
+
+            // Extract text content from the run element
+            foreach (var text in run.Elements<DocumentFormat.OpenXml.Wordprocessing.Text>())
+            {
+                sb.Append(text.Text);
+            }
+
+            sb.Append("</span>");
+
+            return sb.ToString();
+        }
+
         #endregion
     }
 }

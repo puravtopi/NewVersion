@@ -132,15 +132,14 @@ namespace PainTrax.Web.Services
         public int InsertNE(tbl_ie_ne_default data)
         {
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_ie_ne_default
-        (neurological_exam,sensory,manual_muscle_strength_testing,other_content,ie_id,patient_id,cmp_id)values
-        (@neurological_exam,@sensory,@manual_muscle_strength_testing,@other_content,@ie_id,@patient_id,@cmp_id);", conn);
+        (neurological_exam,sensory,manual_muscle_strength_testing,other_content,cmp_id)values
+        (@neurological_exam,@sensory,@manual_muscle_strength_testing,@other_content,@cmp_id);select 1;", conn);
             
             cm.Parameters.AddWithValue("@neurological_exam",data.neurological_exam);
             cm.Parameters.AddWithValue("@sensory",data.sensory);
             cm.Parameters.AddWithValue("@manual_muscle_strength_testing",data.manual_muscle_strength_testing);
             cm.Parameters.AddWithValue("@other_content", data.other_content);
-            cm.Parameters.AddWithValue("@ie_id",data.ie_id);
-            cm.Parameters.AddWithValue("@patient_id",data.patient_id);
+           
             cm.Parameters.AddWithValue("@cmp_id",data.cmp_id);
 
             var result = ExecuteScalar(cm);
@@ -154,8 +153,7 @@ namespace PainTrax.Web.Services
         sensory=@sensory,
         manual_muscle_strength_testing=@manual_muscle_strength_testing,
         other_content=@other_content,
-        ie_id=@ie_id,
-        patient_id=@patient_id,
+       
         cmp_id=@cmp_id where id=@id;select 1;", conn);
 
             cm.Parameters.AddWithValue("@id", data.id);
@@ -163,8 +161,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@sensory", data.sensory);
             cm.Parameters.AddWithValue("@manual_muscle_strength_testing", data.manual_muscle_strength_testing);
             cm.Parameters.AddWithValue("@other_content", data.other_content);
-            cm.Parameters.AddWithValue("@ie_id", data.ie_id);
-            cm.Parameters.AddWithValue("@patient_id", data.patient_id);
+           
             cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
 
             var result = ExecuteScalar(cm);

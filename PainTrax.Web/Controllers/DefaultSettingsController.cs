@@ -12,9 +12,9 @@ namespace PainTrax.Web.Controllers
     public class DefaultSettingsController : Controller
     {
         private readonly ILogger<tbl_default> _logger;
-        DefaultValueSettingServices services = new DefaultValueSettingServices(); 
-        WebsiteMacrosMasterService _websiteMacrosService = new WebsiteMacrosMasterService(); 
-       
+        DefaultValueSettingServices services = new DefaultValueSettingServices();
+        WebsiteMacrosMasterService _websiteMacrosService = new WebsiteMacrosMasterService();
+
         public DefaultSettingsController(ILogger<tbl_default> logger)
         {
             _logger = logger;
@@ -25,7 +25,7 @@ namespace PainTrax.Web.Controllers
             SettingsVM model = new SettingsVM();
             try
             {
-                
+
                 var cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
 
@@ -49,10 +49,13 @@ namespace PainTrax.Web.Controllers
                     model.Page2 = new tbl_ie_page2_default();
 
                 model.NE = services.GetOneNE(cmpid.Value);
-                if(model.NE == null)
-                   model.NE = new tbl_ie_ne_default();
+                if (model.NE == null)
+                {
+                    model.NE = new tbl_ie_ne_default();
+                    model.NE.id = 0;
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Index");
             }
@@ -66,7 +69,7 @@ namespace PainTrax.Web.Controllers
             try
             {
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-                model.cmp_id = cmpid;                
+                model.cmp_id = cmpid;
                 if (model.id > 0)
                 {
                     data = model.id.Value;
@@ -75,7 +78,7 @@ namespace PainTrax.Web.Controllers
                 else
                     data = services.InsertPage1(model);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "SavePage1");
             }
@@ -100,7 +103,7 @@ namespace PainTrax.Web.Controllers
                 else
                     data = services.InsertPage2(model);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "SavePage2");
             }
@@ -118,7 +121,7 @@ namespace PainTrax.Web.Controllers
 
                 if (model.id > 0)
                 {
-                    data = model.id.Value;
+                    data = model.id;
                     services.UpdateNE(model);
                 }
                 else
@@ -132,10 +135,10 @@ namespace PainTrax.Web.Controllers
         }
 
         #region public Method
-        private void SaveLog(Exception ex,string actionname)
+        private void SaveLog(Exception ex, string actionname)
         {
             var msg = "";
-            if(ex.InnerException == null)
+            if (ex.InnerException == null)
             {
                 _logger.LogError(ex.Message);
                 msg = ex.Message;

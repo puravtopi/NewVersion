@@ -95,18 +95,18 @@ namespace PainTrax.Web.Controllers
                     cnd = cnd + " and (fname like '%" + searchValue + "%' or lname  like '%" + searchValue + "%' or location  like '%" + searchValue + "%' or DATE_FORMAT(dob,\"%m/%d/%Y\") = '" + searchValue + "' or DATE_FORMAT(doe,\"%m/%d/%Y\") = '" + searchValue + "'  or compensation like '%" + searchValue + "%' or DATE_FORMAT(doa,\"%m/%d/%Y\") = '" + searchValue + "') ";
 
                 var Data = _ieService.GetAll(cnd);
-                tbl_users user = new tbl_users();
-                for (int i = 0; i < Data.Count; i++)
-                {
-                    user.Id = Data[i].provider_id;
-                    var providerData = _userService.GetOne(user);
-                    if (providerData != null)
-                    {
-                        Data[i].providerName = providerData.fullname;
-                    }
+                //tbl_users user = new tbl_users();
+                //for (int i = 0; i < Data.Count; i++)
+                //{
+                //    user.Id = Data[i].provider_id;
+                //    var providerData = _userService.GetOne(user);
+                //    if (providerData != null)
+                //    {
+                //        Data[i].providerName = providerData.fullname;
+                //    }
 
 
-                }
+                //}
 
                 //Sorting
                 if (sortColumn != "0")
@@ -2325,7 +2325,7 @@ namespace PainTrax.Web.Controllers
                     // string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
                     string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
 
-                    body = body.Replace("#Sign", $"<img src='{signatureUrl}' alt='Patient Signature' />");
+                    body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
                 }
                 else
                     body = body.Replace("#Sign", "");

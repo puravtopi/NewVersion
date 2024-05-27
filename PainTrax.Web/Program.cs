@@ -26,6 +26,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Home/Login";
     options.SlidingExpiration = true;
 });
+builder.Services.AddScoped<UserService>();
 
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<ILoggingService, LoggingService>();

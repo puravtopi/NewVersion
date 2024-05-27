@@ -277,6 +277,16 @@ namespace PainTrax.Web.Controllers
         {
             return View();
         }
+        
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
 
         #region private Method
         private void SaveLog(Exception ex, string actionname)

@@ -2320,12 +2320,12 @@ namespace PainTrax.Web.Controllers
                         Id = signUserId
                     };
                     var userData = _userService.GetOne(_user);
-
                     signName = userData.signature;
-                    // string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
-                    string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
-
-                    body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
+                     string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
+                    //string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
+                    string base64Image = ImageToBase64(Environment.WebRootPath+signatureUrl);
+                    body = body.Replace("#Sign", $" <img src='data:image/jpg;base64,{base64Image}' alt='My Image' />");
+                    // body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
                 }
                 else
                     body = body.Replace("#Sign", "");
@@ -2361,6 +2361,14 @@ namespace PainTrax.Web.Controllers
 
         #endregion
 
+        #region Image to Base64
+        public string ImageToBase64(string imagePath)
+        {
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            string base64String = Convert.ToBase64String(imageBytes);
+            return base64String;
+        }
+        #endregion
         #region private method
 
         [HttpPost]

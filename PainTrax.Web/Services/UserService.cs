@@ -63,6 +63,8 @@ namespace PainTrax.Web.Services
         }
         public void Update(tbl_users data)
         {
+            string fullName = data.fname + " " + data.lname;
+            data.fullname = fullName;
             MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_users SET
 		fname=@fname,
 		lname=@lname,
@@ -83,7 +85,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@lname", data.lname);
             cm.Parameters.AddWithValue("@emailid", data.emailid);
             cm.Parameters.AddWithValue("@address", data.address);
-            cm.Parameters.AddWithValue("@fullname", data.fullname);
+            cm.Parameters.AddWithValue("@fullname", fullName);
             cm.Parameters.AddWithValue("@uname", data.uname);
             cm.Parameters.AddWithValue("@password", data.password);
             cm.Parameters.AddWithValue("@groupid", data.groupid);

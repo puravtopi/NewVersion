@@ -103,6 +103,7 @@
             var url = '@Url.Action("List","Procedure")';
             var editurl = '@Url.Action("Edit","Procedure")';
             var deleteurl = '@Url.Action("Delete","Procedure")';
+            var cloneUrl = '@Url.Action("Clone", "Procedure")';
 
             $("#tbl").DataTable({
                  "lengthMenu": [[25, 50, 100], [25, 50, 100]],
@@ -136,6 +137,8 @@
                         "render": function(data, type, full, meta) {
                             var index = '<a href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'
                             index += '<a href="' + deleteurl + '/' + full.id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+                            index += '<a href="#" onclick="cloneProcedure(' + full.id + ')"><i class="bi bi-files" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Clone"></i></a>';
+                            
                             return index;
                         }
                     }
@@ -198,6 +201,27 @@
                 }
             }
             xhr.send();
+        }
+
+        function cloneProcedure(id) {
+            var cloneUrl = '@Url.Action("Clone", "Procedure")';
+
+            $.ajax({
+                type: "POST",
+                url: cloneUrl,
+                data: { id: id },
+                success: function (response) {
+                    if (response.success) {
+                        var table = $('#tbl').DataTable();
+                        table.ajax.reload(null, false); // Reload the DataTable without resetting the paging
+                    } else {
+                        alert("Failed to clone the procedure.");
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while cloning the procedure.");
+                }
+            });
         }
 
     </script>

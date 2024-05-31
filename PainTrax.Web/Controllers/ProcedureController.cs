@@ -488,6 +488,122 @@ namespace PainTrax.Web.Controllers
             }
         }
 
+        //public IActionResult Clone(int id)
+        //{
+        //    try
+        //    {
+        //        // Fetch the procedure to be cloned
+        //        var eProcedure = _services.GetOne(new tbl_procedures { id = id });
+        //        if (eProcedure == null)
+        //        {
+        //            return NotFound("Procedure not found.");
+        //        }
+
+        //        // Create a new procedure object with the same data
+        //        var clonedProcedure = new tbl_procedures
+        //        {
+        //            cmp_id = eProcedure.cmp_id,
+        //            position = eProcedure.position,
+        //            display_order = eProcedure.display_order,
+        //            hasmuscle = eProcedure.hasmuscle,
+        //            hassubprocedure = eProcedure.hassubprocedure,
+        //            pedesc = eProcedure.pedesc,
+        //            pdesc = eProcedure.pdesc,
+        //            s_ccdesc = eProcedure.s_ccdesc,
+        //            s_adesc = eProcedure.s_adesc,
+        //            e_heading = eProcedure.e_heading,
+        //            e_pedesc = eProcedure.e_pedesc,
+        //            e_pdesc = eProcedure.e_pdesc,
+        //            sidesdefault = eProcedure.sidesdefault,
+        //            inhouseprocbit = eProcedure.inhouseprocbit,
+        //            sides = eProcedure.sides,
+        //            haslevel = eProcedure.haslevel,
+        //            cf = eProcedure.cf,
+        //            pn = eProcedure.pn,
+        //            inout = eProcedure.inout,
+        //            bodypart = eProcedure.bodypart,
+        //            heading = eProcedure.heading,
+        //            hasmedication = eProcedure.hasmedication,
+        //            ccdesc = eProcedure.ccdesc,
+        //            adesc = eProcedure.adesc,
+        //            s_heading = eProcedure.s_heading,
+        //            s_pedesc = eProcedure.s_pedesc,
+        //            e_ccdesc = eProcedure.e_ccdesc,
+        //            e_adesc = eProcedure.e_adesc,
+        //            levelsdefault = eProcedure.levelsdefault,
+        //            mcode = eProcedure.mcode,
+        //            mcode_desc = eProcedure.mcode_desc,
+        //            upload_template = eProcedure.upload_template // Copy the template file name
+        //        };
+
+        //        _services.Insert(clonedProcedure);
+
+        //        return RedirectToAction("Index", new { id = clonedProcedure.id });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        SaveLog(ex, "Clone");
+        //        return RedirectToAction("Index");
+        //    }
+        //}
+        [HttpPost]
+        public IActionResult Clone(int id)
+        {
+            try
+            {
+                var originalProcedure = _services.GetOne(new tbl_procedures { id = id });
+                if (originalProcedure != null)
+                {
+                    var clonedProcedure = new tbl_procedures
+                    {
+                        bodypart = originalProcedure.bodypart ,
+                        mcode = originalProcedure.mcode ,
+                        heading = originalProcedure.heading ,
+                        cmp_id = originalProcedure.cmp_id,
+                        position = originalProcedure.position,
+                        display_order = originalProcedure.display_order,
+                        hasmuscle = originalProcedure.hasmuscle,
+                        hassubprocedure = originalProcedure.hassubprocedure,
+                        pedesc = originalProcedure.pedesc,
+                        pdesc = originalProcedure.pdesc,
+                        s_ccdesc = originalProcedure.s_ccdesc,
+                        s_adesc = originalProcedure.s_adesc,
+                        e_heading = originalProcedure.e_heading,
+                        e_pedesc = originalProcedure.e_pedesc,
+                        e_pdesc = originalProcedure.e_pdesc,
+                        sidesdefault = originalProcedure.sidesdefault,
+                        inhouseprocbit = originalProcedure.inhouseprocbit,
+                        sides = originalProcedure.sides,
+                        haslevel = originalProcedure.haslevel,
+                        cf = originalProcedure.cf,
+                        pn = originalProcedure.pn,
+                        inout = originalProcedure.inout,                       
+                        hasmedication = originalProcedure.hasmedication,
+                        ccdesc = originalProcedure.ccdesc,
+                        adesc = originalProcedure.adesc,
+                        s_heading = originalProcedure.s_heading,
+                        s_pedesc = originalProcedure.s_pedesc,
+                        e_ccdesc = originalProcedure.e_ccdesc,
+                        e_adesc = originalProcedure.e_adesc,
+                        levelsdefault = originalProcedure.levelsdefault,                       
+                        mcode_desc = originalProcedure.mcode_desc,
+                        upload_template = originalProcedure.upload_template
+                    };
+
+                    _services.Insert(clonedProcedure);
+                    return Json(new { success = true ,message="Procedure clone successfully"});
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Original procedure not found." });
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                return Json(new { success = false, message = "An error occurred while cloning the procedure." });
+            }
+        }
 
         #region Private Method
         private void SaveLog(Exception ex, string actionname)

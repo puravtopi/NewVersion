@@ -478,7 +478,7 @@ namespace PainTrax.Web.Controllers
                     }
                     var defaultNE = _defaultSettingService.GetOneNE(cmpid.Value);
 
-                    if(defaultNE != null)
+                    if (defaultNE != null)
                     {
                         obj.NE.neurological_exam = defaultNE.neurological_exam;
                         obj.NE.sensory = defaultNE.sensory;
@@ -2321,10 +2321,10 @@ namespace PainTrax.Web.Controllers
                     };
                     var userData = _userService.GetOne(_user);
                     signName = userData.signature;
-                     string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
+                    string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
                     //string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
-                    string base64Image = ImageToBase64(Environment.WebRootPath+signatureUrl);
-                    body = body.Replace("#Sign", $" <img src='data:image/jpg;base64,{base64Image}' alt='My Image' />");
+                    string base64Image = ImageToBase64(Environment.WebRootPath + signatureUrl);
+                    body = body.Replace("#Sign", $" <img style='height:100px;width:200px;border-bottom:1px black solid;' src='data:image/jpg;base64,{base64Image}' alt='My Image' /><br/>" + userData.fullname);
                     // body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
                 }
                 else

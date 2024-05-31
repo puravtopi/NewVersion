@@ -587,7 +587,12 @@ namespace PainTrax.Web.Controllers
                         e_adesc = originalProcedure.e_adesc,
                         levelsdefault = originalProcedure.levelsdefault,                       
                         mcode_desc = originalProcedure.mcode_desc,
-                        upload_template = originalProcedure.upload_template
+                        upload_template = originalProcedure.upload_template,
+                        inhouseproc= originalProcedure.inhouseproc,
+                        injection_description= originalProcedure.injection_description,
+                        preselect=originalProcedure.preselect,
+                        status= originalProcedure.status,
+                        s_pdesc= originalProcedure.s_pdesc
                     };
 
                     _services.Insert(clonedProcedure);

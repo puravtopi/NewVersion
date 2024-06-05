@@ -8,5 +8,6 @@
         public int cmp_id { get; set; }
         public string dateformat { get; set; }
         public bool pageBreakForInjection { get; set; }
+        public bool injectionAsSeparateBlock { get; set; }
     }
 }

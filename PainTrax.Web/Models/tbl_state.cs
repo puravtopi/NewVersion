@@ -6,8 +6,8 @@ namespace PainTrax.Web.Models
         [Required(ErrorMessage = "Please Enter State Name")]
         public string? state_name { get; set; }
         public int id { get; set; }
-        public string? label { get; set; }
-        public string? val { get; set; }
-        
+        public int cmp_id { get; set; }
+    //    public string? label { get; set; }
+    //    public string? val { get; set; }        
     }
 }

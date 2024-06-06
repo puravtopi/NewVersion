@@ -43,8 +43,8 @@ public class PatientService : ParentService
     public int Insert(tbl_patient data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_patient
-		(fname,lname,mname,gender,dob,age,email,handeness,ssn,address,city,state,zip,home_ph,mobile,vaccinated,mc,account_no,createddate,createdby,cmp_id)Values
-				(@fname,@lname,@mname,@gender,@dob,@age,@email,@handeness,@ssn,@address,@city,@state,@zip,@home_ph,@mobile,@vaccinated,@mc,@account_no,@createddate,@createdby,@cmp_id);select @@identity;", conn);
+		(fname,lname,mname,gender,dob,age,email,handeness,ssn,address,city,state,zip,home_ph,mobile,vaccinated,mc,account_no,createddate,createdby,cmp_id,physicianid)Values
+				(@fname,@lname,@mname,@gender,@dob,@age,@email,@handeness,@ssn,@address,@city,@state,@zip,@home_ph,@mobile,@vaccinated,@mc,@account_no,@createddate,@createdby,@cmp_id,@physicianid);select @@identity;", conn);
         cm.Parameters.AddWithValue("@fname", data.fname);
         cm.Parameters.AddWithValue("@lname", data.lname);
         cm.Parameters.AddWithValue("@mname", data.mname);
@@ -66,6 +66,7 @@ public class PatientService : ParentService
         cm.Parameters.AddWithValue("@createddate", System.DateTime.Now);
         cm.Parameters.AddWithValue("@createdby", data.createdby);
         cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+        cm.Parameters.AddWithValue("@physicianid", data.physicianid);
         var result = ExecuteScalar(cm);
         return result;
     }
@@ -90,6 +91,7 @@ public class PatientService : ParentService
 		vaccinated=@vaccinated,
 		mc=@mc,
 		account_no=@account_no,
+        physicianid=@physicianid,
 		updatedate=@updatedate,
 		updatedby=@updatedby
 		where id=@id", conn);
@@ -112,6 +114,7 @@ public class PatientService : ParentService
         cm.Parameters.AddWithValue("@vaccinated", data.vaccinated);
         cm.Parameters.AddWithValue("@mc", data.mc);
         cm.Parameters.AddWithValue("@account_no", data.account_no);
+        cm.Parameters.AddWithValue("@physicianid", data.physicianid);
         cm.Parameters.AddWithValue("@updatedate", data.updatedate);
         cm.Parameters.AddWithValue("@updatedby", data.updatedby);
 

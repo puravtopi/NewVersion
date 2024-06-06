@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using iText.Signatures;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PainTrax.Web.Controllers
 {
@@ -49,6 +50,7 @@ namespace PainTrax.Web.Controllers
         private readonly ILogger<VisitController> _logger;
         private readonly SettingsService _settingservices = new SettingsService();
         private readonly ProcedureService _procedureservices = new ProcedureService();
+        private readonly ReferringPhysicianService _physicianService = new ReferringPhysicianService();
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
         private IMapper _mapper;
 
@@ -159,11 +161,12 @@ namespace PainTrax.Web.Controllers
                 obj.vaccinated = false;
 
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
                 ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
-
-
                 ViewBag.csList = _commonservices.GetCaseType(cmpid.Value);
                 ViewBag.asList = _commonservices.GetAccidenttype(cmpid.Value);
+                ViewBag.stateList = _commonservices.GetState(cmpid.Value);
+                ViewBag.physicianList = _commonservices.GetPhysician(cmpid.Value);
 
                 var _defaultdata = _defaultService.GetOneByCompany(cmpid.Value);
 
@@ -207,6 +210,7 @@ namespace PainTrax.Web.Controllers
 
                         obj.compensation = ieData.compensation;
                         obj.accidentType = ieData.accidentType;
+                        obj.state = ieData.state;
 
                     }
 
@@ -526,6 +530,7 @@ namespace PainTrax.Web.Controllers
                     mobile = model.mobile,
                     ssn = model.ssn,
                     state = model.state,
+                    physicianid = model.physicianid,
                     vaccinated = model.vaccinated,
                     zip = model.zip,
                     cmp_id = cmpid,
@@ -724,6 +729,8 @@ namespace PainTrax.Web.Controllers
                     secondary_wcb_group = model.sec_WCB_group,
                     compensation = model.compensation,
                     accident_type = model.accidentType,
+                    state = model.state,
+                    physicianid = model.physicianid, 
                     alert_note = model.alert_note,
                     referring_physician = model.referring_physician
 
@@ -1225,6 +1232,18 @@ namespace PainTrax.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        public JsonResult GetPhysiciansByLocation(int locationId)
+        {
+            var physicians = _physicianService.GetAll(" AND locationid=" + locationId); 
+            var physicianList = physicians.Select(p => new SelectListItem
+            {
+                Text = p.physicianname,
+                Value = p.physicianname
+            }).ToList();
+
+            return Json(physicianList);
+        }
         #endregion
 
         #region FU method

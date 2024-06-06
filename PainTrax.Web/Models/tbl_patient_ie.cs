@@ -29,6 +29,8 @@ public class tbl_patient_ie{
 	public int? created_by {get;set;}
 	public int? updated_by {get;set;}
 	public DateTime? updated_date {get;set;}
-	public bool? is_active {get;set;}
+	public bool? is_active {get;set; }
+	public string? state { get; set; }
+	public int? physicianid { get;set;}
 
 }

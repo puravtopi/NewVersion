@@ -135,7 +135,7 @@
                                                             Location
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            <select asp-for=locationid class="form-select" asp-items="@ViewBag.locList"></select>
+                                                            <select id="locationDropdown" asp-for=locationid class="form-select" asp-items="@ViewBag.locList"></select>
                                                             <span id="error-locationid" style="display:none" class="errorSpan">Please Select Location.</span>
                                                         </div>
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
@@ -246,7 +246,9 @@
                                                     <div class="row mb-3">
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">State</label>
                                                         <div class="col-sm-4">
-                                                            <input class="form-control" type="text" asp-for="state">
+                                                            <select asp-for="state" class="form-select" asp-items="@ViewBag.stateList">
+                                                                <span id="error-state" class="errorSpan">Please Select State</span>
+                                                            </select>
                                                         </div>
 
                                                         <label for="inputDate" class="col-sm-2 col-form-label">Zip</label>
@@ -294,7 +296,7 @@
                                                             Referring Physician
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control" asp-for="referring_physician">
+                                                            <select id="physicianDropdown" asp-for=referring_physician class="form-select" asp-items="@ViewBag.physicianList"></select>
                                                         </div>
                                                     </div>
 
@@ -520,10 +522,10 @@
 
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="col-lg-12">
 
-                                            <div class="col-lg-12">
-
-                                                <div class="card">
+                                             <div class="card">
                                                     <div class="card-body">
                                                         <h5 class="card-title">Adjuster  Details</h5>
 
@@ -565,10 +567,9 @@
                                                 </div>
 
 
-                                            </div>
-                                            <div class="col-lg-12">
-
-                                                <div class="card">
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="card">
                                                     <div class="card-body">
                                                         <h5 class="card-title">Alert Note</h5>
 
@@ -584,10 +585,7 @@
 
                                                         </div>
                                                     </div>
-                                                </div>
-
-
-                                            </div>
+                                                </div>                                           
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -1054,9 +1052,7 @@
 
 
         })
-    });
-
-
+    });        
 
     $('#borderedTab a').on('click', function (e) {
 
@@ -1132,6 +1128,32 @@
         }
 
     });
+
+    $('#locationDropdown').change(function () {
+        debugger
+        var locationid = $(this).val();
+        $.ajax({
+            url: '@Url.Action("GetPhysiciansByLocation", "Visit")',
+            type: 'GET',
+            data: { locationid: locationid },
+            success: function (data) {
+
+                locationwisephysician("#physicianDropdown", data)
+            },
+            error: function (xhr, status, error) {
+                alert("Error fetching physicians: " + error);
+            }
+        });
+    });
+
+    function locationwisephysician(dropDownId, list, selectedId) {
+        $(dropDownId).empty();
+        $(dropDownId).append("<option value='0'>Select</option>")
+        $.each(list, function (index, row) {
+            $(dropDownId).append("<option value='" + row.value + "'>" + row.text + "</option>")
+        });
+    }
+
 
     function fnDetailsSave(t) {
 

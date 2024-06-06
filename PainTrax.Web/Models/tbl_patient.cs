@@ -28,5 +28,5 @@ public class tbl_patient{
 	public int? cmp_id {get;set;}
 	public string? label { get; set; }
 	public string? val { get; set; }
-
+	public int? physicianid { get;set;}
 }

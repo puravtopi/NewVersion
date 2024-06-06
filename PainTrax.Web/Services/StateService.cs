@@ -34,18 +34,20 @@ namespace PainTrax.Web.Services
 
         public int Insert(tbl_state data)
         {
-            MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_state(state_name) Values(@state_name)", conn);
+            MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_state(state_name,cmp_id) Values(@state_name,@cmp_id)", conn);
             //cm.Parameters.AddWithValue("@Id", data.Id);
-            cm.Parameters.AddWithValue("@state_name", data.state_name);          
+            cm.Parameters.AddWithValue("@state_name", data.state_name);
+            cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
             var result = Execute(cm);
             return result;
         }
         public void Update(tbl_state data)
         {
-            MySqlCommand cm = new MySqlCommand(@"Update tbl_state set state_name=@state_name where id=@id", conn);
+            MySqlCommand cm = new MySqlCommand(@"Update tbl_state set state_name=@state_name,cmp_id=@cmp_id where id=@id", conn);
             cm.Parameters.AddWithValue("@id", data.id);
             cm.Parameters.AddWithValue("@state_name", data.state_name);
-            
+            cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+
             Execute(cm);
         }
         public void Delete(tbl_state data)

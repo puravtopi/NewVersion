@@ -16,6 +16,8 @@ namespace PainTrax.Web.Helper
         private readonly UserService _userservices = new UserService();
         private readonly CommonService _commonService = new CommonService();
         private readonly AccidentTypeService _accidentTypeService = new AccidentTypeService();
+        private readonly StateService _stateService = new StateService();
+        private readonly ReferringPhysicianService _physicianService = new ReferringPhysicianService();
 
         public List<SelectListItem> GetDesignation(int cmp_id)
         {
@@ -149,7 +151,6 @@ namespace PainTrax.Web.Helper
             var data = _userservices.GetAll(cnd);
             var list = new List<SelectListItem>();
 
-
             list.Add(new SelectListItem
             {
                 Text = "--Select User--",
@@ -162,6 +163,56 @@ namespace PainTrax.Web.Helper
                 {
                     Text = item.fname + ' ' + item.lname,
                     Value = item.Id.ToString()
+                });
+            }
+
+            return list;
+        }
+        public List<SelectListItem> GetState(int cmp_id)
+        {
+            string cnd = " and cmp_id=" + cmp_id;
+            var data = _stateService.GetAll(cnd);
+            var list = new List<SelectListItem>();
+
+
+            list.Add(new SelectListItem
+            {
+                Text = "--Select State--",
+                Value = ""
+            });
+
+
+            foreach (var item in data)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = item.state_name,
+                    Value = item.state_name
+                });
+            }
+
+            return list;
+        }
+        public List<SelectListItem> GetPhysician(int cmp_id)
+        {
+            string cnd = " and cmp_id=" + cmp_id;
+            var data = _physicianService.GetAll(cnd);
+            var list = new List<SelectListItem>();
+
+
+            list.Add(new SelectListItem
+            {
+                Text = "--Select Physician--",
+                Value = ""
+            });
+
+
+            foreach (var item in data)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = item.physicianname,
+                    Value = item.physicianname
                 });
             }
 

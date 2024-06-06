@@ -1,52 +1,55 @@
-﻿using AutoMapper;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MS.Models;
+using Optivem.Framework.Core.Domain;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using System.Data;
 using System.Text.RegularExpressions;
+using AutoMapper;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PainTrax.Web.Controllers
 {
-    public class StateController : Controller
+    public class ReferringPhysicianController : Controller
     {
         private readonly IMapper _mapper;
-        private readonly ILogger<StateController> _logger;
-        private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
-        private readonly StateService _services = new StateService();
-
-        public StateController(ILogger<StateController> logger,IMapper mapper,Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
-        {            
-            _logger = logger;
+        private readonly ILogger<ReferringPhysicianController> _logger;
+        private readonly ReferringPhysicianService _services = new ReferringPhysicianService();
+        private readonly Common _commonservices = new Common(); 
+        private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
+        
+        public ReferringPhysicianController(IMapper mapper,ILogger<ReferringPhysicianController> logger, 
+                                            Microsoft.AspNetCore.Hosting.IHostingEnvironment environment )
+        {
             _mapper = mapper;
+            _logger = logger;
             Environment = environment;
         }
-
-        public IActionResult Index(string searchtxt = "")
+        public IActionResult Index()
         {
             return View();
         }
         public IActionResult Create()
         {
-            tbl_state obj = new tbl_state();
-            return View(obj);
+            //tbl_referring_physician data = new tbl_referring_physician();
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            ViewBag.locationList = _commonservices.GetLocations(cmpid.Value);
+            return View();
         }
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Create(tbl_state model)
+        public IActionResult Create(tbl_referring_physician model)
         {
             try
             {
-                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-
                 if (ModelState.IsValid)
                 {
-                    model.cmp_id = (int)cmpid;
+                    model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                     _services.Insert(model);
                 }
             }
@@ -58,11 +61,13 @@ namespace PainTrax.Web.Controllers
         }
         public IActionResult Edit(int id)
         {
-            tbl_state data = new tbl_state();
+            tbl_referring_physician data = new tbl_referring_physician();
             try
             {
-                tbl_state obj = new tbl_state();
-                obj.id = id;
+                tbl_referring_physician obj = new tbl_referring_physician();
+                obj.Id = id;
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                ViewBag.locationList = _commonservices.GetLocations(cmpid.Value);
                 data = _services.GetOne(id);
             }
             catch (Exception ex)
@@ -71,21 +76,31 @@ namespace PainTrax.Web.Controllers
             }
             return View(data);
         }
+
         [HttpPost]
-        public IActionResult Edit(tbl_state model)
+        public IActionResult Edit(tbl_referring_physician model)
         {
-            _services.Update(model);
+            try
+            {
+                model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                _services.Update(model);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "Create");
+            }
             return RedirectToAction("Index");
         }
+
         public IActionResult Delete(int id)
         {
             try
             {
-                tbl_state obj = new tbl_state();
-                obj.id = id;
+                tbl_referring_physician obj = new tbl_referring_physician();
+                obj.Id = id;
                 _services.Delete(obj);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Delete");
             }
@@ -95,7 +110,7 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
-                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
                 // Skiping number of Rows count
                 var start = Request.Form["start"].FirstOrDefault();
@@ -112,23 +127,21 @@ namespace PainTrax.Web.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                string cnd =  " and state_name like '%" + searchValue + "%' ";
+                string cnd = " and cmp_id=" + cmpid + " and physicianname like '%" + searchValue + "%'";
+
                 var Data = _services.GetAll(cnd);
 
                 //Sorting
                 if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
                 {
-                    var property = typeof(tbl_state).GetProperties()[Convert.ToInt32(sortColumn)];
+                    var property = typeof(tbl_referring_physician).GetProperties()[Convert.ToInt32(sortColumn)];
                     if (sortColumnDirection.ToUpper() == "ASC")
                     {
                         Data = Data.OrderBy(x => property.GetValue(x, null)).ToList();
                     }
                     else
-                    {
                         Data = Data.OrderByDescending(x => property.GetValue(x, null)).ToList();
-                    }
                 }
-
                 //Search
 
                 //total number of rows count 
@@ -146,6 +159,19 @@ namespace PainTrax.Web.Controllers
             return Json("");
         }
 
+        [HttpGet]
+        public JsonResult GetPhysiciansByLocation(int locationId)
+        {
+            var physicians = _services.GetAll(" and locationid=" + locationId); 
+            var physicianList = physicians.Select(p => new SelectListItem
+            {
+                Text = p.physicianname,
+                Value = p.physicianname
+            }).ToList();
+
+            return Json(physicianList);
+        }
+        [HttpPost]
         public IActionResult ImportData(IFormFile postedFile)
         {
             try
@@ -155,16 +181,18 @@ namespace PainTrax.Web.Controllers
                     DataTable dt = this.Read2007Xlsx(postedFile);
                     int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                     int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
-
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                        if (!string.IsNullOrEmpty(dt.Rows[i]["StateName"].ToString()))
+                        if (!string.IsNullOrEmpty(dt.Rows[i]["PhysicianName"].ToString()))
                         {
-                            tbl_state obj = new tbl_state()
-                            {                               
-                                state_name = dt.Rows[i]["StateName"].ToString(),                              
-                            };
+                            tbl_referring_physician obj = new tbl_referring_physician()
+                            {
+                                cmp_id = cmpid,
+                                physicianname = dt.Rows[i]["PhysicianName"].ToString(),
+                                address = dt.Rows[i]["Address"].ToString(),
+                                locationid = string.IsNullOrEmpty(dt.Rows[i]["LocationId"].ToString()) ? 0 : Convert.ToInt16(dt.Rows[i]["LocationId"].ToString()),
 
+                            };
                             _services.Insert(obj);
                         }
                     }
@@ -182,6 +210,8 @@ namespace PainTrax.Web.Controllers
             DataTable dt = new DataTable();
             try
             {
+
+
                 if (postedFile != null && postedFile.Length > 0)
                 {
                     // Read the uploaded Excel file using Open XML
@@ -231,11 +261,16 @@ namespace PainTrax.Web.Controllers
             }//end try
             catch (Exception ex)
             {
-                SaveLog(ex, "Read2007Xlsx");
             }
 
             return dt;
-        }//end Read2007Xlsx method        
+        }//end Read2007Xlsx method
+
+        /// <summary>
+        /// Given a cell name, parses the specified cell to get the column name.
+        /// </summary>
+        /// <param name="cellReference">Address of the cell (ie. B2)</param>
+        /// <returns>Column Name (ie. B)</returns>
         public static string GetColumnName(string cellReference)
         {
             // Create a regular expression to match the column name portion of the cell name.
@@ -243,6 +278,14 @@ namespace PainTrax.Web.Controllers
             Match match = regex.Match(cellReference);
             return match.Value;
         } //end GetColumnName method
+
+        /// <summary>
+        /// Given just the column name (no row index), it will return the zero based column index.
+        /// Note: This method will only handle columns with a length of up to two (ie. A to Z and AA to ZZ). 
+        /// A length of three can be implemented when needed.
+        /// </summary>
+        /// <param name="columnName">Column Name (ie. A or AB)</param>
+        /// <returns>Zero based index if the conversion was successful; otherwise null</returns>
         public static int? GetColumnIndexFromName(string columnName)
         {
             //return columnIndex;
@@ -278,11 +321,11 @@ namespace PainTrax.Web.Controllers
         [HttpGet]
         public ActionResult DownloadDocument()
         {
-            var path = Path.Combine(Environment.WebRootPath + "/Uploads/Sample", "State.xlsx");
+            var path = Path.Combine(Environment.WebRootPath + "/Uploads/Sample", "physician.xlsx");
             var fs = new FileStream(path, FileMode.Open);
 
             // Return the file. A byte array can also be used instead of a stream
-            return File(fs, "application/octet-stream", "State.xlsx");
+            return File(fs, "application/octet-stream", "Samplephysician.xlsx");
         }
 
         [HttpGet]
@@ -295,15 +338,19 @@ namespace PainTrax.Web.Controllers
                 // Create a new DataTable
                 DataTable dt = new DataTable();
                 // Add columns to the DataTable
-                dt.Columns.AddRange(new DataColumn[]
+                dt.Columns.AddRange(new DataColumn[1]
                 {
-                    new DataColumn("StateName", typeof(string))
+                    new DataColumn("physician", typeof(string))
+
                 });
 
                 // Populate the DataTable with data from the list of attorneys
-                foreach (var state in data)
+                foreach (var physician in data)
                 {
-                    dt.Rows.Add(state.state_name);
+                    dt.Rows.Add(physician.physicianname);
+                    dt.Rows.Add(physician.address);
+                    dt.Rows.Add(physician.locationid);
+                    dt.Rows.Add(physician.cmp_id);
                 }
 
                 // Create a new Excel file
@@ -318,7 +365,7 @@ namespace PainTrax.Web.Controllers
                     worksheetPart.Worksheet = new Worksheet(sheetData);
 
                     var sheets = document.WorkbookPart.Workbook.AppendChild(new Sheets());
-                    var sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "States" };
+                    var sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Physician" };
                     sheets.Append(sheet);
 
                     var headerRow = new Row();
@@ -342,7 +389,7 @@ namespace PainTrax.Web.Controllers
                 }
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
-                return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "States.xlsx");
+                return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Physician.xlsx");
             }
             catch (Exception ex)
             {
@@ -374,5 +421,6 @@ namespace PainTrax.Web.Controllers
             new LogService().Insert(logdata);
         }
         #endregion
+
     }
 }

@@ -18,6 +18,10 @@ using System.Text.RegularExpressions;
 using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using iText.Signatures;
+using Xceed.Words.NET;
+using Org.BouncyCastle.Crypto.IO;
+using System.IO.Compression;
+using NuGet.Packaging;
 
 namespace PainTrax.Web.Controllers
 {
@@ -51,7 +55,7 @@ namespace PainTrax.Web.Controllers
         private readonly ProcedureService _procedureservices = new ProcedureService();
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
         private IMapper _mapper;
-
+        string SessionDiffDoc = "true";
 
         public VisitController(ILogger<VisitController> logger, IMapper mapper, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
         {
@@ -2048,6 +2052,7 @@ namespace PainTrax.Web.Controllers
 
         public IActionResult IEPrint(int id)
         {
+            
             try
             {
                 ViewBag.IsHome = true;
@@ -2245,20 +2250,28 @@ namespace PainTrax.Web.Controllers
 
                 body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
                 body = body.Replace("#ReflexExam", "");
-                string injectionHtml = dataPOC.strInjectionDesc;
+                // string injectionHtml = dataPOC.strInjectionDesc;
+                string injectionHtml = "Injection Test Test Test";
 
-                if (HttpContext.Session.GetString(SessionKeys.SessionPageBreak) == "true")
+                if (SessionDiffDoc != "true")
                 {
-                    // Create HTML with a page break before the injection section
-                    string pageBreakHtml = "<div style='page-break-before: always;'>";
-                    pageBreakHtml += injectionHtml;
-                    pageBreakHtml += "</div>";
+                    if (HttpContext.Session.GetString(SessionKeys.SessionPageBreak) == "true")
+                    {
+                        // Create HTML with a page break before the injection section
+                        string pageBreakHtml = "<div style='page-break-before: always;'>";
+                        pageBreakHtml += injectionHtml;
+                        pageBreakHtml += "</div>";
 
-                    body = body.Replace("#injection", pageBreakHtml);
+                        body = body.Replace("#injection", pageBreakHtml);
+                    }
+                    else
+                    {
+                        body = body.Replace("#injection", injectionHtml);
+                    }
                 }
                 else
                 {
-                    body = body.Replace("#injection", injectionHtml);
+                    body = body.Replace("#injection", "");
                 }
 
 
@@ -2320,17 +2333,23 @@ namespace PainTrax.Web.Controllers
                         Id = signUserId
                     };
                     var userData = _userService.GetOne(_user);
-
                     signName = userData.signature;
-                    // string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
-                    string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
-
-                    body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
+                     string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
+                    //string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
+                    string base64Image = ImageToBase64(Environment.WebRootPath+signatureUrl);
+                    body = body.Replace("#Sign", $" <img src='data:image/jpg;base64,{base64Image}' alt='My Image' />");
+                    // body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
                 }
                 else
                     body = body.Replace("#Sign", "");
 
-                ViewBag.content = body;
+                if (SessionDiffDoc == "true")
+                {
+                    body+="<br><br><!--Diff Doc-->";
+                    body += injectionHtml;
+                }
+
+                    ViewBag.content = body;
 
             }
             catch (Exception ex)
@@ -2361,74 +2380,128 @@ namespace PainTrax.Web.Controllers
 
         #endregion
 
-        #region private method
-
-        [HttpPost]
-        public IActionResult DownloadWord(string htmlContent, int ieId, int id)
+        #region Image to Base64
+        public string ImageToBase64(string imagePath)
         {
-
-            string filePath = "", docName = "", patientName = "";
-            // Create a new DOCX package
-            using (MemoryStream memStream = new MemoryStream())
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            string base64String = Convert.ToBase64String(imageBytes);
+            return base64String;
+        }
+        #endregion
+        #region private method
+        public MemoryStream ConvertHtmlToWord(string htmlContent)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            using (WordprocessingDocument doc = WordprocessingDocument.Create(memoryStream  ,WordprocessingDocumentType.Document))
             {
-                using (WordprocessingDocument doc = WordprocessingDocument.Create(memStream, WordprocessingDocumentType.Document))
-                {
-
-                    MainDocumentPart mainPart = doc.AddMainDocumentPart();
-                    var headerPart = mainPart.AddNewPart<HeaderPart>();
-                    var footerPart = mainPart.AddNewPart<FooterPart>();
-
-                    // Create the main document part content
-                    mainPart.Document = new Document();
-                    Body body = mainPart.Document.AppendChild(new Body());
-
-                    // Convert HTML to OpenXML and add to the body
-                    HtmlConverter converter = new HtmlConverter(mainPart);
-                    var generatedBody = converter.Parse(htmlContent);
-                    body.Append(generatedBody);
-
-
-                    var header = new Header(new Paragraph(new Run(new Text("Header Test"))));
-                    HeaderReference headerReference = new HeaderReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(headerPart) };
-                    //var footer = new Footer(new Paragraph(new Run(new Text("Page"), new SimpleField() { Instruction = "PAGE" })));
-                    //FooterReference footerReference = new FooterReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(footerPart) };
-
-                    headerPart.Header = header;
-
-                    mainPart.Document.Body.Append(new SectionProperties(headerReference));
-
-                }
-                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-
-                var patientData = _ieService.GetOnebyPatientId(ieId);
-
-                docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + ".docx";
-
-                patientName = patientData.lname + ", " + patientData.fname;
-
-                string subPath = "Report/" + cmpid; // Your code goes here
-
-                bool exists = System.IO.Directory.Exists(subPath);
-
-                if (!exists)
-                    System.IO.Directory.CreateDirectory(subPath);
-
-                filePath = subPath + "/" + docName;
-
-                // Save the memory stream to a file
-                using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
-                {
-
-                    memStream.WriteTo(fileStream);
-                }
+                MainDocumentPart mainPart = doc.AddMainDocumentPart();
+                mainPart.Document = new Document();
+                Body body = mainPart.Document.AppendChild(new Body());
+                HtmlConverter converter = new HtmlConverter(mainPart);
+                var generatedBody = converter.Parse(htmlContent);
+                body.Append(generatedBody);
             }
-
-            return Json(new { filePath = filePath, fileName = docName, patientName = patientName });
-
+            return memoryStream;
         }
 
+        public IActionResult DownloadWord(string htmlContent, int ieId, int id)
+         {
+
+             string filePath = "", docName = "", patientName = "", injDocName = "";
+            string[] splitContent;
+            string injHtmlContent = "";
+            if (SessionDiffDoc == "true")
+            {
+
+                splitContent = htmlContent.Split(new string[] { "<!--Diff Doc-->" }, StringSplitOptions.None);
+                htmlContent = splitContent[0];
+                if(splitContent.Length>1)
+                    injHtmlContent = splitContent[1];
+            
+            }
+
+
+            
+
+            // Create a new DOCX package
+            using (MemoryStream memStream = new MemoryStream())
+             {
+                 using (WordprocessingDocument doc = WordprocessingDocument.Create(memStream, WordprocessingDocumentType.Document))
+                 {
+
+                     MainDocumentPart mainPart = doc.AddMainDocumentPart();
+                     var headerPart = mainPart.AddNewPart<HeaderPart>();
+                     var footerPart = mainPart.AddNewPart<FooterPart>();
+
+                     // Create the main document part content
+                     mainPart.Document = new Document();
+                     Body body = mainPart.Document.AppendChild(new Body());
+
+                     // Convert HTML to OpenXML and add to the body
+                     HtmlConverter converter = new HtmlConverter(mainPart);
+                     var generatedBody = converter.Parse(htmlContent);
+                     body.Append(generatedBody);
+
+
+                     var header = new Header(new Paragraph(new Run(new Text("Header Test"))));
+                     HeaderReference headerReference = new HeaderReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(headerPart) };
+                     //var footer = new Footer(new Paragraph(new Run(new Text("Page"), new SimpleField() { Instruction = "PAGE" })));
+                     //FooterReference footerReference = new FooterReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(footerPart) };
+
+                     headerPart.Header = header;
+
+                     mainPart.Document.Body.Append(new SectionProperties(headerReference));
+
+                 }
+                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+
+                 var patientData = _ieService.GetOnebyPatientId(ieId);
+
+                 docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + ".docx";
+
+                 patientName = patientData.lname + ", " + patientData.fname;
+
+                 string subPath = "Report/" + cmpid; // Your code goes here
+
+                 bool exists = System.IO.Directory.Exists(subPath);
+
+                 if (!exists)
+                     System.IO.Directory.CreateDirectory(subPath);
+
+                 string htmlhtmlContentPart1= 
+                 filePath = subPath + "/" + docName;
+
+                 // Save the memory stream to a file
+                 using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+                 {
+
+                     memStream.WriteTo(fileStream);
+                }
+                injDocName = subPath + "/" + patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_injection.docx";
+                System.IO.File.Delete(injDocName);
+                injHtmlContent = Regex.Replace(injHtmlContent, @"</ol>", string.Empty, RegexOptions.IgnoreCase);
+                injHtmlContent = injHtmlContent.Trim();
+
+                if (injHtmlContent!="")
+                 {
+                    
+                    MemoryStream injMemStream = ConvertHtmlToWord(injHtmlContent);
+                   // injDocName = subPath + "/"+ patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_injection.docx";
+                    using (FileStream fileStream = new FileStream(injDocName, FileMode.Create))
+                    {
+
+                        injMemStream.WriteTo(fileStream);
+                    }
+                }
+            
+             }
+
+             return Json(new { filePath = filePath, fileName = docName, patientName = patientName,injFileName= injDocName });
+
+         }
+        
         [HttpGet]
-        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "")
+        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "", string injFileName = "")
         {
 
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
@@ -2447,7 +2520,43 @@ namespace PainTrax.Web.Controllers
                 }
             }
             byte[] data = System.IO.File.ReadAllBytes(filePath);
-            return File(data, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            byte[] injdata = new byte[0];
+            if (System.IO.File.Exists(injFileName))
+                 injdata = System.IO.File.ReadAllBytes(injFileName);
+            if (SessionDiffDoc == "true" && injdata.Length>0)
+            {
+                
+                var files = new List<(string FileName, byte[] FileContent)>
+                {
+                    (fileName, data),
+
+                    (Path.GetFileName(injFileName), injdata)
+                };
+
+                var zipFileName = Path.ChangeExtension(fileName, ".zip"); ;
+                var zipFilePath = Path.ChangeExtension(filePath, ".zip");
+                System.IO.File.Delete(zipFilePath);
+                using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
+                {
+                    foreach (var file in files)
+                    {
+                        var entry = zip.CreateEntry(file.FileName);
+                        using (var entryStream = entry.Open())
+                        using (var fileStream = new MemoryStream(file.FileContent))
+                        {
+                            fileStream.CopyTo(entryStream);
+                        }
+                    }
+                }
+
+                byte[] zipFileBytes = System.IO.File.ReadAllBytes(zipFilePath);
+                return File(zipFileBytes, "application/zip", zipFileName);
+            }
+            else
+            {
+                return File(data, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+                
 
         }
 

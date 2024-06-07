@@ -206,8 +206,8 @@ namespace PainTrax.Web.Controllers
                         obj.sec_policy_no = ieData.secondary_policy_no;
                         obj.sec_WCB_group = ieData.secondary_wcb_group;
                         obj.alert_note = ieData.alert_note;
-                        obj.referring_physician = ieData.referring_physician;
-
+                        //obj.referring_physician = ieData.referring_physician;
+                        obj.physicianid = ieData.physicianid;
                         obj.compensation = ieData.compensation;
                         obj.accidentType = ieData.accidentType;
                         obj.state = ieData.state;
@@ -419,6 +419,7 @@ namespace PainTrax.Web.Controllers
                         obj.vaccinated = patientData.vaccinated;
                         obj.patientid = patientData.id;
                         obj.age = patientData.age;
+                        obj.physicianid = patientData.physicianid;
                     }
                 }
                 else
@@ -1239,7 +1240,7 @@ namespace PainTrax.Web.Controllers
             var physicianList = physicians.Select(p => new SelectListItem
             {
                 Text = p.physicianname,
-                Value = p.physicianname
+                Value = p.Id.ToString(),
             }).ToList();
 
             return Json(physicianList);

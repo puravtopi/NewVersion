@@ -50,8 +50,8 @@ public class PatientIEService : ParentService
     public int Insert(tbl_patient_ie data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_patient_ie
-		(patient_id,location_id,attorney_id,primary_ins_cmp_id,secondary_ins_cmp_id,emp_id,adjuster_id,provider_id,doe,doa,primary_claim_no,secondary_claim_no,primary_policy_no,secondary_policy_no,compensation,note,ins_note,alert_note,created_date,created_by,is_active,secondary_wcb_group,primary_wcb_group,referring_physician,accident_type)Values
-				(@patient_id,@location_id,@attorney_id,@primary_ins_cmp_id,@secondary_ins_cmp_id,@emp_id,@adjuster_id,@provider_id,@doe,@doa,@primary_claim_no,@secondary_claim_no,@primary_policy_no,@secondary_policy_no,@compensation,@note,@ins_note,@alert_note,@created_date,@created_by,@is_active,@secondary_wcb_group,@primary_wcb_group,@referring_physician,@accident_type);select @@identity;", conn);
+		(patient_id,location_id,attorney_id,primary_ins_cmp_id,secondary_ins_cmp_id,emp_id,adjuster_id,provider_id,doe,doa,primary_claim_no,secondary_claim_no,primary_policy_no,secondary_policy_no,compensation,note,ins_note,alert_note,created_date,created_by,is_active,secondary_wcb_group,primary_wcb_group,referring_physician,accident_type,physicianid)Values
+				(@patient_id,@location_id,@attorney_id,@primary_ins_cmp_id,@secondary_ins_cmp_id,@emp_id,@adjuster_id,@provider_id,@doe,@doa,@primary_claim_no,@secondary_claim_no,@primary_policy_no,@secondary_policy_no,@compensation,@note,@ins_note,@alert_note,@created_date,@created_by,@is_active,@secondary_wcb_group,@primary_wcb_group,@referring_physician,@accident_type,@physicianid);select @@identity;", conn);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
         cm.Parameters.AddWithValue("@location_id", data.location_id);
         cm.Parameters.AddWithValue("@attorney_id", data.attorney_id);
@@ -77,6 +77,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@is_active", data.is_active);
          cm.Parameters.AddWithValue("@referring_physician", data.referring_physician);
          cm.Parameters.AddWithValue("@accident_type", data.accident_type);
+        cm.Parameters.AddWithValue("@physicianid", data.physicianid);
         var result = ExecuteScalar(cm);
         return result;
     }
@@ -107,6 +108,7 @@ public class PatientIEService : ParentService
         updated_by=@updated_by,
 		updated_date=@updated_date,
         accident_type=@accident_type,
+        physicianid=@physicianid,
 		is_active=@is_active		where id=@id", conn);
         cm.Parameters.AddWithValue("@id", data.id);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
@@ -134,7 +136,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@is_active", data.is_active);
         cm.Parameters.AddWithValue("@referring_physician", data.referring_physician);
         cm.Parameters.AddWithValue("@accident_type", data.accident_type);
-
+        cm.Parameters.AddWithValue("@physicianid", data.physicianid);
         Execute(cm);
     }
 
@@ -156,8 +158,8 @@ public class PatientIEService : ParentService
 		secondary_policy_no=@secondary_policy_no,
 		compensation=@compensation,
 		primary_wcb_group=@primary_wcb_group,
-		referring_physician=@referring_physician,
-		note=@note,
+        physicianid=@physicianid,
+        note=@note,
 		ins_note=@ins_note,
 		alert_note=@alert_note,
 		secondary_wcb_group=@secondary_wcb_group,
@@ -187,8 +189,8 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@updated_by", data.updated_by);
         cm.Parameters.AddWithValue("@updated_date", data.updated_date);
         cm.Parameters.AddWithValue("@is_active", data.is_active);
-        cm.Parameters.AddWithValue("@referring_physician", data.referring_physician);
-
+        //cm.Parameters.AddWithValue("@referring_physician", data.referring_physician);
+        cm.Parameters.AddWithValue("@physicianid", data.physicianid);
         Execute(cm);
     }
 

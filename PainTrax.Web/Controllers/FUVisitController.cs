@@ -17,6 +17,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml;
 using HtmlToOpenXml;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PainTrax.Web.Controllers
 {
@@ -49,6 +50,7 @@ namespace PainTrax.Web.Controllers
         private EnumHelper enumHelper = new EnumHelper();
         private readonly ILogger<VisitController> _logger;
         private IMapper _mapper;
+        private readonly ReferringPhysicianService _physicianService = new ReferringPhysicianService();
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
 
         public FUVisitController(ILogger<VisitController> logger, IMapper mapper, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
@@ -80,8 +82,9 @@ namespace PainTrax.Web.Controllers
                 ViewBag.asList = _commonservices.GetAccidenttype(cmpid.Value);
 
                 ViewBag.macroList = JsonConvert.SerializeObject(macroList);
+                ViewBag.physicianList = _commonservices.GetPhysician(cmpid.Value);
+                ViewBag.stateList = _commonservices.GetState(cmpid.Value);
 
-                
 
                 macroList = _websiteMacrosService.GetAutoComplete(cmpid.Value, "CC");
                 ViewBag.ccmacroList = JsonConvert.SerializeObject(macroList);
@@ -117,7 +120,8 @@ namespace PainTrax.Web.Controllers
                         obj.sec_policy_no = ieData.secondary_policy_no;
                         obj.sec_WCB_group = ieData.secondary_wcb_group;
                         obj.alert_note = ieData.alert_note;
-                        obj.referring_physician = ieData.referring_physician;
+                        //obj.referring_physician = ieData.referring_physician;
+                        obj.physicianid = ieData.physicianid;
                         obj.casetype = ieData.casetype;
                         obj.compensation = ieData.compensation;
                         obj.accidentType = ieData.accidentType;
@@ -128,7 +132,7 @@ namespace PainTrax.Web.Controllers
                     obj.dos = fuData.doe;
                     obj.dov = fuData.doe;
                     obj.accidentType = fuData.accident_type;
-                   
+                    obj.physicianid = fuData.physicianid;
 
                     if (ieData.primary_ins_cmp_id != null)
                     {
@@ -324,6 +328,7 @@ namespace PainTrax.Web.Controllers
                         obj.vaccinated = patientData.vaccinated;
                         obj.patientid = patientData.id;
                         obj.age = patientData.age;
+                        obj.physicianid = patientData.physicianid;
                     }
 
                 }
@@ -349,8 +354,8 @@ namespace PainTrax.Web.Controllers
                         obj.sec_policy_no = ieData.secondary_policy_no;
                         obj.sec_WCB_group = ieData.secondary_wcb_group;
                         obj.alert_note = ieData.alert_note;
-                        obj.referring_physician = ieData.referring_physician;
-
+                        //obj.referring_physician = ieData.referring_physician;
+                        obj.physicianid = ieData.physicianid;
                         obj.compensation = ieData.compensation;
                         obj.casetype = ieData.casetype;
                     }
@@ -530,6 +535,7 @@ namespace PainTrax.Web.Controllers
                         obj.mc = patientData.mc;
                         obj.vaccinated = patientData.vaccinated;
                         obj.patientid = patientData.id;
+                        obj.physicianid = patientData.physicianid;
                     }
                 }
                 else
@@ -589,6 +595,7 @@ namespace PainTrax.Web.Controllers
                     mobile = model.mobile,
                     ssn = model.ssn,
                     state = model.state,
+                    physicianid = model.physicianid,
                     vaccinated = model.vaccinated,
                     zip = model.zip,
                     cmp_id = cmpid,
@@ -816,7 +823,8 @@ namespace PainTrax.Web.Controllers
                     extra_comments = model.alert_note,
                     type = model.type,
                     accident_type = model.accidentType,
-                    provider_id = model.providerid
+                    provider_id = model.providerid,
+                    physicianid = model.physicianid
                 };
                 int fu_id = 0;
                 if (model.fu_id.Value > 0)
@@ -1845,6 +1853,19 @@ namespace PainTrax.Web.Controllers
 
             }
             return PartialView("_POCSummary", Data);
+        }
+
+        [HttpGet]
+        public JsonResult GetPhysiciansByLocation(int locationId)
+        {
+            var physicians = _physicianService.GetAll(" AND locationid=" + locationId);
+            var physicianList = physicians.Select(p => new SelectListItem
+            {
+                Text = p.physicianname,
+                Value = p.Id.ToString(),
+            }).ToList();
+
+            return Json(physicianList);
         }
         #endregion
 

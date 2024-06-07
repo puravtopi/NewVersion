@@ -2340,11 +2340,17 @@ namespace PainTrax.Web.Controllers
                     };
                     var userData = _userService.GetOne(_user);
                     signName = userData.signature;
-                     string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
-                    //string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
-                    string base64Image = ImageToBase64(Environment.WebRootPath+signatureUrl);
-                    body = body.Replace("#Sign", $" <img src='data:image/jpg;base64,{base64Image}' alt='My Image' />");
-                    // body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
+
+                    if (!string.IsNullOrEmpty(signName))
+                    {
+                        string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
+                        //string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
+                        string base64Image = ImageToBase64(Environment.WebRootPath + signatureUrl);
+                        body = body.Replace("#Sign", $" <img src='data:image/jpg;base64,{base64Image}' alt='My Image' />");
+                        // body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
+                    }
+                    else
+                        body = body.Replace("#Sign", "");
                 }
                 else
                     body = body.Replace("#Sign", "");

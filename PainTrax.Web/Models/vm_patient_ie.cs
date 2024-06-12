@@ -36,7 +36,7 @@ public class vm_patient_ie
     public int? created_by { get; set; }
     public DateTime? updated_date { get; set; }
 
-    public string? referring_physician { get; set; }
+    public int? physicianid { get; set; }
     public int? updated_by { get; set; }
     public bool? is_active { get; set; }
     public int? patientId { get; set; }

@@ -321,11 +321,11 @@ namespace PainTrax.Web.Controllers
         [HttpGet]
         public ActionResult DownloadDocument()
         {
-            var path = Path.Combine(Environment.WebRootPath + "/Uploads/Sample", "physician.xlsx");
+            var path = Path.Combine(Environment.WebRootPath + "/Uploads/Sample", "Physician.xlsx");
             var fs = new FileStream(path, FileMode.Open);
 
             // Return the file. A byte array can also be used instead of a stream
-            return File(fs, "application/octet-stream", "Samplephysician.xlsx");
+            return File(fs, "application/octet-stream", "Physician.xlsx");
         }
 
         [HttpGet]
@@ -333,24 +333,23 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
-                var data = _services.GetAll(); // Retrieve all attorneys from the database
+                var data = _services.GetAll(); 
 
                 // Create a new DataTable
                 DataTable dt = new DataTable();
                 // Add columns to the DataTable
-                dt.Columns.AddRange(new DataColumn[1]
+                dt.Columns.AddRange(new DataColumn[4]
                 {
-                    new DataColumn("physician", typeof(string))
-
+                    new DataColumn("Physicianname", typeof(string)),
+                    new DataColumn("Address",typeof(string)),
+                    new DataColumn("LocationId", typeof(int)),
+                    new DataColumn("CmpId", typeof(int))
                 });
 
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var physician in data)
                 {
-                    dt.Rows.Add(physician.physicianname);
-                    dt.Rows.Add(physician.address);
-                    dt.Rows.Add(physician.locationid);
-                    dt.Rows.Add(physician.cmp_id);
+                    dt.Rows.Add(physician.physicianname, physician.address, physician.locationid,physician.cmp_id);
                 }
 
                 // Create a new Excel file
@@ -397,6 +396,74 @@ namespace PainTrax.Web.Controllers
                 return Content("Error: " + ex.Message);
             }
         }
+        //public IActionResult ExportToExcel()
+        //{
+        //    try
+        //    {
+        //        var data = _services.GetAll(); // Retrieve all attorneys from the database
+
+        //        // Create a new DataTable
+        //        DataTable dt = new DataTable();
+        //        // Add columns to the DataTable
+        //        dt.Columns.AddRange(new DataColumn[1]
+        //        {
+        //            new DataColumn("physician", typeof(string))
+
+        //        });
+
+        //        // Populate the DataTable with data from the list of attorneys
+        //        foreach (var physician in data)
+        //        {
+        //            dt.Rows.Add(physician.physicianname);
+        //            dt.Rows.Add(physician.address);
+        //            dt.Rows.Add(physician.locationid);
+        //            dt.Rows.Add(physician.cmp_id);
+        //        }
+
+        //        // Create a new Excel file
+        //        var memoryStream = new MemoryStream();
+        //        using (var document = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook))
+        //        {
+        //            var workbookPart = document.AddWorkbookPart();
+        //            workbookPart.Workbook = new Workbook();
+
+        //            var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+        //            var sheetData = new SheetData();
+        //            worksheetPart.Worksheet = new Worksheet(sheetData);
+
+        //            var sheets = document.WorkbookPart.Workbook.AppendChild(new Sheets());
+        //            var sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Physician" };
+        //            sheets.Append(sheet);
+
+        //            var headerRow = new Row();
+        //            foreach (DataColumn column in dt.Columns)
+        //            {
+        //                var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName) };
+        //                headerRow.AppendChild(cell);
+        //            }
+        //            sheetData.AppendChild(headerRow);
+
+        //            foreach (DataRow row in dt.Rows)
+        //            {
+        //                var newRow = new Row();
+        //                foreach (var value in row.ItemArray)
+        //                {
+        //                    var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
+        //                    newRow.AppendChild(cell);
+        //                }
+        //                sheetData.AppendChild(newRow);
+        //            }
+        //        }
+
+        //        memoryStream.Seek(0, SeekOrigin.Begin);
+        //        return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Physician.xlsx");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log or handle the exception as needed
+        //        return Content("Error: " + ex.Message);
+        //    }
+        //}
 
         #region Private Method
         private void SaveLog(Exception ex, string actionname)

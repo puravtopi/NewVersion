@@ -53,6 +53,7 @@ namespace PainTrax.Web.Controllers
         private readonly ReferringPhysicianService _physicianService = new ReferringPhysicianService();
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
         private IMapper _mapper;
+        string SessionDiffDoc = "true";
 
 
         public VisitController(ILogger<VisitController> logger, IMapper mapper, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
@@ -2266,21 +2267,28 @@ namespace PainTrax.Web.Controllers
                 body = body.Replace("#ReflexExam", "");
                 string injectionHtml = dataPOC.strInjectionDesc;
 
-                if (HttpContext.Session.GetString(SessionKeys.SessionPageBreak) == "true")
-                {
-                    // Create HTML with a page break before the injection section
-                    string pageBreakHtml = "<div style='page-break-before: always;'>";
-                    pageBreakHtml += injectionHtml;
-                    pageBreakHtml += "</div>";
 
-                    body = body.Replace("#injection", pageBreakHtml);
+                if (SessionDiffDoc != "true")
+                {
+
+                    if (HttpContext.Session.GetString(SessionKeys.SessionPageBreak) == "true")
+                    {
+                        // Create HTML with a page break before the injection section
+                        string pageBreakHtml = "<div style='page-break-before: always;'>";
+                        pageBreakHtml += injectionHtml;
+                        pageBreakHtml += "</div>";
+
+                        body = body.Replace("#injection", pageBreakHtml);
+                    }
+                    else
+                    {
+                        body = body.Replace("#injection", injectionHtml);
+                    }
                 }
                 else
                 {
-                    body = body.Replace("#injection", injectionHtml);
+                    body = body.Replace("#injection", "");
                 }
-
-
 
                 body = body.Replace("#location", patientData.location);
                 body = body.Replace("#dob", Common.commonDate(patientData.dob));
@@ -2355,6 +2363,13 @@ namespace PainTrax.Web.Controllers
                 else
                     body = body.Replace("#Sign", "");
 
+                if (SessionDiffDoc == "true")
+                {
+                    body += "<br><br><!--Diff Doc-->";
+                    body += injectionHtml;
+                }
+
+
                 ViewBag.content = body;
 
             }
@@ -2400,7 +2415,19 @@ namespace PainTrax.Web.Controllers
         public IActionResult DownloadWord(string htmlContent, int ieId, int id)
         {
 
-            string filePath = "", docName = "", patientName = "";
+
+            string filePath = "", docName = "", patientName = "", injDocName = "";
+            string[] splitContent;
+            string injHtmlContent = "";
+            if (SessionDiffDoc == "true")
+            {
+
+                splitContent = htmlContent.Split(new string[] { "<!--Diff Doc-->" }, StringSplitOptions.None);
+                htmlContent = splitContent[0];
+                if (splitContent.Length > 1)
+                    injHtmlContent = splitContent[1];
+
+            }
             // Create a new DOCX package
             using (MemoryStream memStream = new MemoryStream())
             {

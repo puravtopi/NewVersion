@@ -99,7 +99,7 @@ namespace PainTrax.Web.Controllers
                     HttpContext.Session.SetString(SessionKeys.SessionCmpEmail, response.Model.emailid);
                     HttpContext.Session.SetString(SessionKeys.SessionUserName, response.Model.uname);
                     HttpContext.Session.SetString(SessionKeys.SessionDesignation, response.Model.desig_name);
-
+                    HttpContext.Session.SetInt32(SessionKeys.SessionUserId, response.Model.Id.Value);
 
                     var setting = _setting.GetOne(response.Model.cmp_id.Value);
 

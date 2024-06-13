@@ -35,6 +35,15 @@ namespace PainTrax.Web.Services
             var datalist = ConvertDataTable<tbl_users>(GetData(cm)).FirstOrDefault();
             return datalist;
         }
+        public tbl_users? GetOneById(int id)
+        {
+            DataTable dt = new DataTable();
+            MySqlCommand cm = new MySqlCommand("select * from tbl_users where Id=@id", conn);
+            cm.Parameters.AddWithValue("@Id", id);
+            var datalist = ConvertDataTable<tbl_users>(GetData(cm)).FirstOrDefault();
+            return datalist;
+
+        }
 
         public void Insert(tbl_users data)
         {
@@ -96,6 +105,39 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@signature", data.signature);
             Execute(cm);
         }
+
+        public void UpdateUserProfile(tbl_users data)
+        {
+            string fullName = data.fname + " " + data.lname;
+            data.fullname = fullName;
+            MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_users SET
+		fname=@fname,
+		lname=@lname,
+		emailid=@emailid,
+		address=@address,
+		fullname=@fullname,
+		uname=@uname,
+		password=@password,		
+		phoneno=@phoneno,
+	    updateddate=@updateddate,
+		updatedby=@updatedby,
+        signature=@signature
+        where Id=@Id", conn);
+            cm.Parameters.AddWithValue("@Id", data.Id);
+            cm.Parameters.AddWithValue("@fname", data.fname);
+            cm.Parameters.AddWithValue("@lname", data.lname);
+            cm.Parameters.AddWithValue("@emailid", data.emailid);
+            cm.Parameters.AddWithValue("@address", data.address);
+            cm.Parameters.AddWithValue("@fullname", fullName);
+            cm.Parameters.AddWithValue("@uname", data.uname);
+            cm.Parameters.AddWithValue("@password", data.password);
+            cm.Parameters.AddWithValue("@updateddate", data.updateddate);
+            cm.Parameters.AddWithValue("@updatedby", data.updatedby);
+            cm.Parameters.AddWithValue("@phoneno", data.phoneno);
+            cm.Parameters.AddWithValue("@signature", data.signature);
+            Execute(cm);
+        }
+
         public void Delete(tbl_users data)
         {
             MySqlCommand cm = new MySqlCommand(@"DELETE FROM tbl_users

@@ -295,11 +295,17 @@
                             </li>
 
                             <li>
-                                <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
+                                <a class="dropdown-item d-flex align-items-center" asp-action="EditUserProfile" asp-controller="User">
                                     <i class="bi bi-person"></i>
                                     <span>My Profile</span>
                                 </a>
-                            </li>
+                            </li> 
+                            @* <li class="nav-item">
+                                <a class="nav-link" asp-action="Edit" asp-controller="User">
+                                    <i class="bi bi-person"></i>
+                                    <span>MyProfile</span>
+                                </a>
+                            </li> *@
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -462,11 +468,11 @@
                                 </a>
                             </li>
                         }
-                        if (pageAccess.ToLower().Contains("manage users"))
+                        if (pageAccess.ToLower().Contains("users"))
                         {
                             <li>
                                 <a asp-action="Index" asp-controller="User">
-                                    <i class="bi bi-circle"></i><span>Manage Users</span>
+                                    <i class="bi bi-circle"></i><span>Users</span>
                                 </a>
 
                             </li>
@@ -606,6 +612,12 @@
                 <a class="nav-link" asp-action="Index" asp-controller="Appointment">
                     <i class="bi bi-person"></i>
                     <span>Appointments</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-action="EditUserProfile" asp-controller="User">
+                    <i class="bi bi-person"></i>
+                    <span>EditUserProfile</span>
                 </a>
             </li>
         </ul>

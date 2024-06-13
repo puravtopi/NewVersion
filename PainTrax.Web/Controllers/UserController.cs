@@ -482,6 +482,83 @@ namespace PainTrax.Web.Controllers
             }
         }
 
+        //public IActionResult EditUserProfile(int id)
+        //{
+        //    var data = new tbl_users();
+        //    try
+        //    {
+        //        int? userId = HttpContext.Session.GetInt32(SessionKeys.SessionUserId);
+        //        data = _services.GetOneById(id);
+        //        int? cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        SaveLog(ex, "Edit");
+        //    }
+        //    return View(data);
+        //}
+        public IActionResult EditUserProfile()
+        {
+            var data = new tbl_users();
+            try
+            {
+                int? userId = HttpContext.Session.GetInt32(SessionKeys.SessionUserId);
+                if (userId.HasValue)
+                {
+                    data = _services.GetOneById(userId.Value);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (implement SaveLog method as per your logging mechanism)
+                SaveLog(ex, "EditUserProfile");
+                // Handle the exception appropriately
+            }
+            return View(data);
+        }
+
+        [HttpPost]
+        public IActionResult EditUserProfile(tbl_users model, IFormFile signature)
+        {
+            try
+            {
+                model.updatedby = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
+                model.updateddate = System.DateTime.Now;
+                if (signature != null)
+                {
+                    string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/Sign", model.cmp_id.ToString());
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    // Generate a unique filename 
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(signature.FileName);
+                    string filePath = Path.Combine(folderPath, fileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        signature.CopyTo(fileStream);
+                    }
+                    model.signature = fileName;
+                }
+                else
+                {
+                    model.signature = model.signature_hidden;
+                }
+                _services.UpdateUserProfile(model);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "EditUserProfile");
+            }
+            return View("EditUserProfile",model);
+        }
+
         #region Private Method
         private void SaveLog(Exception ex, string actionname)
         {

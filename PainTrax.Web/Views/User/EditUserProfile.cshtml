@@ -1,0 +1,129 @@
+﻿@model PainTrax.Web.Models.tbl_users
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Manage Users</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Location">Home</a></li>
+                <li class="breadcrumb-item active">Edit</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <h5 class="card-title">Edit User</h5>
+                            </div>
+                            @* <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
+                                <a class="btn btn-primary" asp-action="Index" asp-controller="User">Cancel</a>
+                            </div> *@
+                        </div>
+
+                        <!-- General Form Elements -->
+                        <form asp-action="EditUserProfile" asp-controller="User" enctype="multipart/form-data">
+                            <input type="hidden" asp-for="Id" />
+                            <input type="hidden" asp-for="createdby" />
+                            <input type="hidden" asp-for="createddate" />
+                            <input type="hidden" asp-for="cmp_id" />
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">First Name</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="fname">
+                                            <span asp-validation-for="fname" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">UserName</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="uname">
+                                            <span asp-validation-for="uname" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Email</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="email" class="form-control" asp-for="emailid">
+                                            <span asp-validation-for="emailid" class="text-danger"></span>
+                                        </div>
+                                    </div>  
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Mobile No</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="phoneno">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-sm-10">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                            <a class="btn btn-primary" asp-action="Index" asp-controller="Home">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Last Name</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="lname">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Password</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="password">
+                                            <span asp-validation-for="password" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Address</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="address">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Upload Signature</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <input type="file" class="form-control" asp-for="signature" accept=".jpg,.jpeg,.pjpeg,.png,.svg">
+                                        </div>
+                                    </div>
+                                     <div class="row mb-3">
+                                    <label class="col-md-4 col-lg-5 col-form-label"></label>
+                                    <div class="col-md-8 col-lg-7">
+                                    @if (!string.IsNullOrEmpty(Model.signature))
+                                    {
+                                    <a href="@Url.Content("~/Uploads/Sign/"  + Model.cmp_id + "/"  + Model.signature)" target="_blank">@Model.signature</a>
+                                    }
+                                    else
+                                    {
+                                    <span>No file uploaded</span>
+                                    }
+                                    </div>
+                                    <input type="hidden" id="signature_hidden" name="header_template_hidden" value="@Model.signature" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

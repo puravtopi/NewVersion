@@ -4,6 +4,7 @@ using MS.Services;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
+using System;
 //using iText.Forms.Fields;
 //using iText.Kernel.Pdf;
 //using iText.Forms;
@@ -54,39 +55,55 @@ namespace PainTrax.Web.Controllers
 
             }
 
-            string[] formsPaths = Directory.GetFiles(downloadFolder + "/Forms");
-            string[] bsPaths = Directory.GetFiles(downloadFolder + "/BS");
-            string[] lettersPaths = Directory.GetFiles(downloadFolder + "/Letters");
-            string[] othersPaths = Directory.GetFiles(downloadFolder + "/Others");
+            //string[] formsPaths = Directory.GetFiles(downloadFolder + "/Forms");
+            //string[] bsPaths = Directory.GetFiles(downloadFolder + "/BS");
+            //string[] lettersPaths = Directory.GetFiles(downloadFolder + "/Letters");
+            //string[] othersPaths = Directory.GetFiles(downloadFolder + "/Others");
 
-            List<string> pdffiles = new List<string>();
-            List<string> bsfiles = new List<string>();
-            List<string> lettersfiles = new List<string>();
-            List<string> othersfiles = new List<string>();
-            for (int i = 0; i < formsPaths.Length; i++)
+            //List<string> pdffiles = new List<string>();
+            //List<string> bsfiles = new List<string>();
+            //List<string> lettersfiles = new List<string>();
+            //List<string> othersfiles = new List<string>();
+            //for (int i = 0; i < formsPaths.Length; i++)
+            //{
+            //    if (formsPaths[i].ToLower().EndsWith("pdf"))
+            //        pdffiles.Add(formsPaths[i].Substring(formsPaths[i].LastIndexOf("\\") + 1));
+            //}
+            //for (int i = 0; i < bsPaths.Length; i++)
+            //{
+            //    if (bsPaths[i].ToLower().EndsWith("pdf"))
+            //        bsfiles.Add(bsPaths[i].Substring(bsPaths[i].LastIndexOf("\\") + 1));
+            //}
+            //for (int i = 0; i < lettersPaths.Length; i++)
+            //{
+            //    if (lettersPaths[i].ToLower().EndsWith("pdf"))
+            //        lettersfiles.Add(lettersPaths[i].Substring(lettersPaths[i].LastIndexOf("\\") + 1));
+            //}
+            //for (int i = 0; i < othersPaths.Length; i++)
+            //{
+            //    if (othersPaths[i].ToLower().EndsWith("pdf"))
+            //        othersfiles.Add(othersPaths[i].Substring(othersPaths[i].LastIndexOf("\\") + 1));
+            //}
+            //ViewBag.pdffiles = pdffiles;
+            //ViewBag.bsfiles = bsfiles;
+            //ViewBag.lettersfiles = lettersfiles;
+            //ViewBag.othersfiles = othersfiles;
+
+            var subFolders = Directory.GetDirectories(downloadFolder);
+
+            var filesByFolder = new Dictionary<string, List<string>>();
+
+            foreach (var folder in subFolders)
             {
-                if (formsPaths[i].ToLower().EndsWith("pdf"))
-                    pdffiles.Add(formsPaths[i].Substring(formsPaths[i].LastIndexOf("\\") + 1));
+                var folderName = Path.GetFileName(folder);
+                var pdfFiles = Directory.GetFiles(folder, "*.pdf")
+                                        .Select(Path.GetFileName)
+                                        .ToList();
+
+                filesByFolder.Add(folderName, pdfFiles);
             }
-            for (int i = 0; i < bsPaths.Length; i++)
-            {
-                if (bsPaths[i].ToLower().EndsWith("pdf"))
-                    bsfiles.Add(bsPaths[i].Substring(bsPaths[i].LastIndexOf("\\") + 1));
-            }
-            for (int i = 0; i < lettersPaths.Length; i++)
-            {
-                if (lettersPaths[i].ToLower().EndsWith("pdf"))
-                    lettersfiles.Add(lettersPaths[i].Substring(lettersPaths[i].LastIndexOf("\\") + 1));
-            }
-            for (int i = 0; i < othersPaths.Length; i++)
-            {
-                if (othersPaths[i].ToLower().EndsWith("pdf"))
-                    othersfiles.Add(othersPaths[i].Substring(othersPaths[i].LastIndexOf("\\") + 1));
-            }
-            ViewBag.pdffiles = pdffiles;
-            ViewBag.bsfiles = bsfiles;
-            ViewBag.lettersfiles = lettersfiles;
-            ViewBag.othersfiles = othersfiles;
+
+            ViewBag.FilesByFolder = filesByFolder;
 
 
             return View(data);
@@ -165,12 +182,14 @@ namespace PainTrax.Web.Controllers
             string outputfilename = "";
             var uploadsFolder = "";
             var filePath = "";
+            var signPath = "";
 
             try
             {
                  uploadsFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
                  filePath = Path.Combine(uploadsFolder, pdffile);
 
+                signPath = Path.Combine(_environment.WebRootPath, "signatures" );
             }
             catch (Exception ex) {
                 SaveLog(ex, "set Paths");
@@ -229,7 +248,7 @@ namespace PainTrax.Web.Controllers
 
             try
             {
-                pdfBytes= _pdfhelper.Stamping(filePath, "Id", id, controls, cmpid);
+                pdfBytes= _pdfhelper.Stamping(filePath, "Id", id, controls, cmpid, signPath);
             }
             catch (Exception ex) {
                 SaveLog(ex, "Pdf Stamping");

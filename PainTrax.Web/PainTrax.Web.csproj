@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\PatientdocumentController.cs" />
+    <Compile Remove="Helper\PdfHelper - Copy.cs" />
   </ItemGroup>
 
   <ItemGroup>

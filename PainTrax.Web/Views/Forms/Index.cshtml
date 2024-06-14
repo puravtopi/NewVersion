@@ -30,7 +30,7 @@
                
         }
 
-    #sign, #bssign, #letterssign, #otherssign {
+    #sign, #bssign, #letterssign, #otherssign, .sign {
             background-color:white;
             border: 1px solid #ccc;
             width:20px !important;
@@ -57,7 +57,7 @@
 
     <section class="section">
         <div class="row">
-            <button class="collapsible" onclick="ChkToggle();"><span id="sign">+</span>  Forms</button>
+   @*          <button class="collapsible" onclick="ChkToggle();"><span id="sign">+</span>  Forms</button>
             <div class="content">
                 @foreach(var pdf in ViewBag.pdffiles)
                 {
@@ -96,6 +96,28 @@
 
                 }
             </div>
+ *@
+            @{
+                ViewBag.Title = "PDF Files by Folder";
+                var filesByFolder = ViewBag.FilesByFolder as Dictionary<string, List<string>>;
+            }
+
+            @foreach (var folder in filesByFolder)
+            {
+                <button class="collapsible" onclick="toggleContent('@folder.Key');">
+                    <span id="@folder.Key-sign" class="sign">+</span> @folder.Key
+                </button>
+                <div class="@folder.Key-content" style="display:none;">
+                    @foreach (var pdf in folder.Value)
+                    {
+                        <div>
+                            <input type="checkbox" id="pdfCheckbox" name="pdfCheckbox" value="@folder.Key/@pdf" class="pdfCheckbox" />@pdf
+
+                        </div>
+                    }
+                </div>
+            }
+
 
         </div>
         <div class="row">
@@ -437,6 +459,18 @@
                 $("#otherssign").text("+");
             }
         }
+        function toggleContent(contentClass) {
+            var content = document.querySelector('.' + contentClass + '-content');
+            var sign = document.getElementById(contentClass + '-sign');
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                sign.innerText = "+";
+            } else {
+                content.style.display = "block";
+                sign.innerText = "-";
+            }
+        }
+
 
     </script>
 </main>

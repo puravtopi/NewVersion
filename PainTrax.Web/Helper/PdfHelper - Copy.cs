@@ -62,6 +62,32 @@ namespace PainTrax.Web.Helper
 
                 string textvalue = pdfFormFields.GetField(de.Key.ToString());
                 string[] textpair = textvalue.Split('|');
+               /* if (textpair.Length > 1)
+                {
+                    try
+                    {
+                        if (dt.Rows[0][textpair[1]] is DateTime)
+                            pdfFormFields.SetField(textpair[0], DateTime.Parse(dt.Rows[0][textpair[1]].ToString()).ToString("MM/dd/yyyy"));
+                        else
+                            pdfFormFields.SetField(textpair[0], dt.Rows[0][textpair[1]].ToString());
+
+                        if (textpair.Length > 2)
+                        {
+                            if (dt.Rows[0][textpair[1]] == null || dt.Rows[0][textpair[1]].ToString().Trim() == string.Empty)
+                                pdfFormFields.SetField(textpair[0], textpair[2]);
+                            else
+                                pdfFormFields.SetField(textpair[0], "");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        pdfFormFields.SetField(textpair[0], "");
+
+                    }
+                }
+                else
+                {*/
                     if (!de.Key.ToLower().StartsWith("txtfix"))
                     {
                         if (controls != null && controls.Count != 0)
@@ -85,6 +111,7 @@ namespace PainTrax.Web.Helper
                             pdfFormFields.SetField(textpair[0], "");
                         }
 
+
                         if (de.Key.StartsWith("#"))
                         {
                             try
@@ -106,23 +133,24 @@ namespace PainTrax.Web.Helper
                                 }
                                 else if (headpair.Length == 4)
                                 {
-                                try
-                                {
-                                    DataTable dtCode = _parentService.GetData("select * from " + headpair[0] + " where " + headpair[2] + "='" + controls[headpair[1]] + "' and cmp_id=" + cmpid);
+
+                                    // TextBox txt = (TextBox)ctrl.FindControl(headpair[1]);
+
+                                    //                                HttpContext.Current.Response.Write(txt.Text);
+                                    //                              HttpContext.Current.Response.Write(headpair[2]);
+                                    //                            HttpContext.Current.Response.Write(headpair[3]);
+                                    //                          HttpContext.Current.Response.Write("select * from " + headpair[0] + " where " + headpair[2] + "='" + txt.Text + "'");
+                                    //DataTable dtCode = GetData("select * from " + headpair[0] + " where " + headpair[2] + "='" + txt.Text + "'");
+                                    DataTable dtCode = _parentService.GetData("select * from " + headpair[0] + " where " + headpair[2] + "='" + controls[de.Key.Substring(1)] + "' and cmpid=" + cmpid);
                                     if (dtCode.Rows.Count > 0)
                                     {
                                         pdfFormFields.SetField(de.Key.ToString(), dtCode.Rows[0][headpair[3]].ToString());
+                                        //HttpContext.Current.Response.Write(dtCode.Rows [0][ headpair[3]]);
                                     }
                                     else
                                     {
-                                        pdfFormFields.SetField(de.Key.ToString(), "");
+                                        pdfFormFields.SetField(textpair[0], "");
                                     }
-                                }
-                                catch (Exception ex)
-                                {
-                                    pdfFormFields.SetField(de.Key.Substring(1), "");
-                                }
-
                                 }
                                 else
                                 {
@@ -132,7 +160,8 @@ namespace PainTrax.Web.Helper
                             catch (Exception ex)
                             {
                                 pdfFormFields.SetField(textpair[0], "");
-                            }                    
+                            }
+                     
                         }
                         else
                             pdfFormFields.SetField(textpair[0], "");
@@ -148,8 +177,8 @@ namespace PainTrax.Web.Helper
                     {
                         if (path != "")
                         {
-                          //  path = System.IO.Path.Combine(path, "Sign");
-                            string[] files = System.IO.Directory.GetFiles(path, ID + ".jp*g", System.IO.SearchOption.TopDirectoryOnly);
+                            path = System.IO.Path.Combine(path, "Sign");
+                            string[] files = System.IO.Directory.GetFiles(path, "*_*.jp*g", System.IO.SearchOption.TopDirectoryOnly);
                             if (files.Length > 0)
                             {
 

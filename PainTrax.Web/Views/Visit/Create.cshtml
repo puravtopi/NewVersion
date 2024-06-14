@@ -281,7 +281,10 @@
 
                                                         <label for="inputDate" class="col-sm-2 col-form-label">MC</label>
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control" asp-for="mc">
+                                                            <select class ="form-select" asp-for="mc" arial--label="Default select example">
+                                                                <option value="true">Yes</option>
+                                                                <option value="false">No</option>                                                            </select>
+                                                           @*  <input type="text" class="form-control" asp-for="mc"> *@
                                                         </div>
                                                     </div>
                                                     <div class="row mb-3">

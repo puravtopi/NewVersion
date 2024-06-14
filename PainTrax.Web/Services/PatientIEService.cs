@@ -705,6 +705,7 @@ public class PatientIEService : ParentService
         var datalist = ConvertDataTable<tbl_ie_sign>(GetData(cm)).FirstOrDefault();
         return datalist;
     }
+    
     public int InsertSign(tbl_ie_sign data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_ie_sign
@@ -713,7 +714,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@ie_id", data.ie_id);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
         cm.Parameters.AddWithValue("@signatureData", data.signatureData);       
-        var result = ExecuteScalar(cm); // Get the new record ID
+        var result = ExecuteScalar(cm); 
         return Convert.ToInt32(result);
     }
     public void UpdateSign(tbl_ie_sign data)

@@ -212,7 +212,7 @@ namespace PainTrax.Web.Helper
                 list.Add(new SelectListItem
                 {
                     Text = item.physicianname,
-                    Value = item.physicianname
+                    Value = item.Id.ToString(),
                 });
             }
 

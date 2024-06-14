@@ -19,6 +19,7 @@ using AutoMapper;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using iText.Signatures;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Diagnostics;
 
 namespace PainTrax.Web.Controllers
 {
@@ -160,6 +161,7 @@ namespace PainTrax.Web.Controllers
             try
             {
                 obj.vaccinated = false;
+                obj.mc = false;
 
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
@@ -1060,68 +1062,29 @@ namespace PainTrax.Web.Controllers
             return Json(data);
         }
 
-        //[HttpPost]
-        //public IActionResult SaveSignature([FromBody] tbl_ie_sign model)
-        //{
-        //    try
-        //    {
-        //        if (string.IsNullOrEmpty(model.signatureData))
-        //            return BadRequest("Invalid signature data.");
-
-        //        var base64Data = model.signatureData.Split(',')[1]; // Extract base64 part
-        //        var imageData = Convert.FromBase64String(base64Data); // Convert to byte array
-
-        //        var filename = $"{Guid.NewGuid()}.jpg";
-        //        var savePath = Path.Combine(Environment.WebRootPath, "signatures", filename);
-
-        //        if (!Directory.Exists(Path.GetDirectoryName(savePath)))
-        //        {
-        //            Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-        //        }
-
-        //        System.IO.File.WriteAllBytes(savePath, imageData); // Save the file
-
-        //        return Ok(new { FileName = filename });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, "Error saving signature: " + ex.Message);
-        //    }
-        //}
-        //[HttpPost]
-        //public IActionResult GetSignature(int ieId)
-        //{
-        //    try
-        //    {
-        //        var record = _ieService.GetOnesign(ieId);
-        //        if (record != null && !string.IsNullOrEmpty(record.signatureData))
-        //        {
-        //            return Ok(new { SignatureFile = record.signatureData });
-        //        }
-        //        return NotFound("Signature not found.");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, "Error retrieving signature: " + ex.Message);
-        //    }
-        //}
 
         [HttpPost]
         public IActionResult SaveSign([FromBody] tbl_ie_sign model)
         {
             if (string.IsNullOrEmpty(model.signatureData))
                 return BadRequest("Invalid signature data.");
-
             try
             {
-                // Remove the 'data:image/jpeg;base64,' prefix if needed
-                var base64Data = model.signatureData.Contains(",")
-                                ? model.signatureData.Split(',')[1]
-                                : model.signatureData;
+                //var base64Data = model.signatureData.Contains(",")
+                //                ? model.signatureData.Split(',')[1]
+                //                : model.signatureData;
+                var base64Data = ExtractBase64Data(model.signatureData);
+
+                if (base64Data == null || !IsBase64String(base64Data))
+                {
+                    return BadRequest("Invalid Base-64 string.");
+                }
+
 
                 var imageData = Convert.FromBase64String(base64Data);
-
                 var signaturesDir = Path.Combine(Environment.WebRootPath, "signatures");
+                Debug.WriteLine($"Received tbl_ie_sign: id={model.id}, ie_id={model.ie_id}, signatureData length={model.signatureData?.Length}");
+               
                 if (!Directory.Exists(signaturesDir))
                 {
                     Directory.CreateDirectory(signaturesDir);
@@ -1131,13 +1094,77 @@ namespace PainTrax.Web.Controllers
 
                 System.IO.File.WriteAllBytes(savePath, imageData);
                 model.signatureData = savePath;
-                _ieService.InsertSign(model);
+                if (model.id > 0)
+                {
+                    _ieService.UpdateSign(model);
+                }
+                else
+                {
+                    _ieService.InsertSign(model);
+                }
                 return Ok(new { FileName = filename });
             }
             catch (Exception ex)
             {
                 return StatusCode(500, "Error saving signature: " + ex.Message);
             }
+        }
+        private string ExtractBase64Data(string signatureData)
+        {
+            // Example method to extract Base64 data from a comma-separated string
+            // Adjust as per your actual data structure
+            return signatureData.Contains(",")
+                   ? signatureData.Split(',')[1].Trim()
+                   : signatureData.Trim();
+        }
+
+        //public IActionResult SaveSign([FromBody] tbl_ie_sign model)
+        //{
+        //   // if (string.IsNullOrEmpty(model.signatureData))
+        //  //    return BadRequest("Invalid signature data.");
+        //    var data = model.id;   
+        //    try
+        //    {
+        //        var base64Data = model.signatureData.Contains(",")
+        //                        ? model.signatureData.Split(',')[1]
+        //                        : model.signatureData;
+        //        if (!IsBase64String(base64Data))
+        //        {
+        //            return BadRequest("Invalid Base-64 string.");
+        //        }
+
+        //        var imageData = Convert.FromBase64String(base64Data);
+
+        //        var signaturesDir = Path.Combine(Environment.WebRootPath, "signatures");
+        //        if (!Directory.Exists(signaturesDir))
+        //        {
+        //            Directory.CreateDirectory(signaturesDir);
+        //        }
+        //        var filename = $"{model.ie_id}.jpeg";
+        //        var savePath = Path.Combine(signaturesDir, filename);
+
+        //        System.IO.File.WriteAllBytes(savePath, imageData);
+        //        model.signatureData = savePath;
+        //        if (model.id > 0)
+        //        {
+        //            data = model.id;
+        //            _ieService.UpdateSign(model);
+        //        }
+        //        else
+        //        {
+        //            _ieService.InsertSign(model);
+        //        }
+        //        return Ok(new { FileName = filename });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, "Error saving signature: " + ex.Message);
+        //    }
+        //}
+        private bool IsBase64String(string base64)
+        {
+            Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
+            return Convert.TryFromBase64String(base64, buffer, out _);
         }
 
 

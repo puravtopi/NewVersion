@@ -430,8 +430,6 @@
                 "ie_id": $("#ie_id").val()
             }
 
-
-
             $.ajax({
                 type: "Post",
                 url: url,
@@ -450,7 +448,7 @@
 
        
         function fnShowSign(ieId) {
-
+            debugger
 
             var url = '@Url.Action("GetSign", "Visit")?ieId=' + ieId
 
@@ -462,7 +460,6 @@
                     if (data != null) {
                         $("#signature-pad").val(data.signatureData);
                         $("#id").val(data.id);
-
                     }
                     else {
                         $("#signature-pad").val("");
@@ -479,17 +476,16 @@
             });
 
         }
-        function fnSaveSign(signatureData) {
+        function fnSaveSign() {
+            debugger
 
             var url = '@Url.Action("SaveSign", "Visit")';
-            var ieId = $("#ie_id").val(); // Extract ie_id as needed
+            var ieId = $("#ie_id").val();
             var model = {
                 "id": $("#id").val(),
-                "signature-pad": $("#signature-pad").val(),
+                "signatureData": $("#signature-pad").val(),
                 "ie_id": $("#ie_id").val()
             }
-
-
             $.ajax({
                 type: "POST",
                 url: url,
@@ -497,10 +493,7 @@
                 contentType: "application/json",
                 success: function (response) {
                     console.log("Signature saved successfully:", response);
-                    $("#signModal").modal("hide"); // This line will close the modal
-                },
-                error: function (xhr, status, error) {
-                    alert("Error saving signature: " + xhr.status);
+                    $("#signModal").modal("hide"); 
                 },
             });
         }

@@ -67,6 +67,7 @@ public class PatientService : ParentService
         cm.Parameters.AddWithValue("@createdby", data.createdby);
         cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
         //cm.Parameters.AddWithValue("@physicianid", data.physicianid);
+        //cm.Parameters.AddWithValue("@mc_details", data.mc_details);
         var result = ExecuteScalar(cm);
         return result;
     }
@@ -92,7 +93,9 @@ public class PatientService : ParentService
 		mc=@mc,
 		account_no=@account_no,        
 		updatedate=@updatedate,
-		updatedby=@updatedby
+		updatedby=@updatedby,
+
+
 		where id=@id", conn);
         cm.Parameters.AddWithValue("@id", data.id);
         cm.Parameters.AddWithValue("@fname", data.fname);
@@ -112,8 +115,9 @@ public class PatientService : ParentService
         cm.Parameters.AddWithValue("@mobile", data.mobile);
         cm.Parameters.AddWithValue("@vaccinated", data.vaccinated);
         cm.Parameters.AddWithValue("@mc", data.mc);
+      //  cm.Parameters.AddWithValue("@mc_details", data.mc_details);
         cm.Parameters.AddWithValue("@account_no", data.account_no);
-        //cm.Parameters.AddWithValue("@physicianid", data.physicianid);
+       // cm.Parameters.AddWithValue("@physicianid", data.physicianid);
         cm.Parameters.AddWithValue("@updatedate", data.updatedate);
         cm.Parameters.AddWithValue("@updatedby", data.updatedby);
 

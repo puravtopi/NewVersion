@@ -46,6 +46,7 @@ namespace PainTrax.Web.ViewModel
         public string? history { get; set; }
         public bool? vaccinated { get; set; }
         public bool? mc { get; set; }
+        public string? mc_details { get; set; }
         public string? account_no { get; set; }
         public string? prime_cmpname { get; set; }
         public string? prime_address { get; set; }

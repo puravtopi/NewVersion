@@ -209,7 +209,7 @@ namespace PainTrax.Web.Controllers
                         obj.sec_policy_no = ieData.secondary_policy_no;
                         obj.sec_WCB_group = ieData.secondary_wcb_group;
                         obj.alert_note = ieData.alert_note;
-                        //obj.referring_physician = ieData.referring_physician;
+                       
                         obj.physicianid = ieData.physicianid;
                         obj.compensation = ieData.compensation;
                         obj.accidentType = ieData.accidentType;
@@ -422,7 +422,7 @@ namespace PainTrax.Web.Controllers
                         obj.vaccinated = patientData.vaccinated;
                         obj.patientid = patientData.id;
                         obj.age = patientData.age;
-                        obj.physicianid = patientData.physicianid;
+                      //  obj.physicianid = patientData.physicianid;
                     }
                 }
                 else

@@ -29,4 +29,6 @@ public class tbl_patient{
 	public string? label { get; set; }
 	public string? val { get; set; }
 	public int? physicianid { get;set;}
+
+    public string? mc_details { get; set; }
 }

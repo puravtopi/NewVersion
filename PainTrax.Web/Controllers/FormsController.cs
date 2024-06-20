@@ -104,12 +104,116 @@ namespace PainTrax.Web.Controllers
             }
 
             ViewBag.FilesByFolder = filesByFolder;
-
+      
 
             return View(data);
 
         }
+        public IActionResult Manage(string searchtxt = "")
+        {
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
+            string cnd = " and cmp_id=" + cmpid;
+
+            if (!string.IsNullOrEmpty(searchtxt))
+                cnd = " and title like '%" + searchtxt + "%' ";
+
+            var result = _patientservices.GetAll(cnd);
+            var data = result;
+
+            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+            var subFolders = Directory.GetDirectories(downloadFolder);
+
+            var filesByFolder = new Dictionary<string, List<string>>();
+
+            foreach (var folder in subFolders)
+            {
+                var folderName = Path.GetFileName(folder);
+                var pdfFiles = Directory.GetFiles(folder, "*.pdf")
+                                        .Select(Path.GetFileName)
+                                        .ToList();
+
+                filesByFolder.Add(folderName, pdfFiles);
+            }
+
+            ViewBag.FilesByFolder = filesByFolder;
+            ViewBag.FolderNames = filesByFolder.Keys.ToList();
+
+            return View();
+
+        }
+
+        [HttpPost]
+        public ActionResult CreateFolder(string folderName)
+        {
+
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+            string newFolderPath = Path.Combine(downloadFolder, folderName);
+            if (!Directory.Exists(newFolderPath))
+            {
+                Directory.CreateDirectory(newFolderPath);
+                TempData["Message"] = "Folder created successfully.";
+            }
+            else
+            {
+                TempData["Message"] = "Folder already exists.";
+            }
+
+            return RedirectToAction("Manage");
+        }
+
+        [HttpPost]
+        public ActionResult DeleteFolder(string folderName)
+        {
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+            string folderPath = Path.Combine(downloadFolder, folderName);
+            if (Directory.Exists(folderPath))
+            {
+                if (!Directory.EnumerateFileSystemEntries(folderPath).Any())
+                {
+                    Directory.Delete(folderPath);
+                    TempData["Message"] = "Folder deleted successfully.";
+                }
+                else
+                {
+                    TempData["Message"] = "Folder is not empty.";
+                }
+            }
+            else
+            {
+                TempData["Message"] = "Folder does not exist.";
+            }
+
+            return RedirectToAction("Manage");
+        }
+
+        [HttpPost]
+        public ActionResult UploadFile(string folderName, IFormFile file)
+        {
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+            if (file != null && file.Length > 0 && Path.GetExtension(file.FileName).ToLower() == ".pdf")
+            {
+                string folderPath = Path.Combine(downloadFolder, folderName);
+                if (Directory.Exists(folderPath))
+                {
+                    string filePath = Path.Combine(folderPath, Path.GetFileName(file.FileName));
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    TempData["Message"] = "File uploaded successfully.";
+                }
+                else
+                {
+                    TempData["Message"] = "Selected folder does not exist.";
+                }
+            }
+             return RedirectToAction("Manage");
+
+        }
         public IActionResult List()
         {
             try

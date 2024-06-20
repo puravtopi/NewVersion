@@ -62,6 +62,33 @@ namespace PainTrax.Web.Helper
 
                 string textvalue = pdfFormFields.GetField(de.Key.ToString());
                 string[] textpair = textvalue.Split('|');
+                if (textpair.Length > 1)
+                {
+                    try
+                    {
+                        if (dt.Rows[0][textpair[1]] is DateTime)
+                            pdfFormFields.SetField(textpair[0], DateTime.Parse(dt.Rows[0][textpair[1]].ToString()).ToString("MM/dd/yyyy"));
+                        else
+                            pdfFormFields.SetField(textpair[0], dt.Rows[0][textpair[1]].ToString());
+
+                        if (textpair.Length > 2)
+                        {
+                            if (dt.Rows[0][textpair[1]] == null || dt.Rows[0][textpair[1]].ToString().Trim() == string.Empty)
+                                pdfFormFields.SetField(textpair[0], textpair[2]);
+                            else
+                                pdfFormFields.SetField(textpair[0], "");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        pdfFormFields.SetField(textpair[0], "");
+
+                    }
+                }
+                else
+                {
+
                     if (!de.Key.ToLower().StartsWith("txtfix"))
                     {
                         if (controls != null && controls.Count != 0)
@@ -140,7 +167,7 @@ namespace PainTrax.Web.Helper
                     else
                         pdfFormFields.SetField(textpair[0], "");
 
-                //}
+                }
                 if (de.Key.ToLower().StartsWith("imgsign"))
                 {
 

@@ -30,7 +30,7 @@ namespace PainTrax.Web.Helper
                 document.Open();
                 using (var htmlStream = new MemoryStream(Encoding.UTF8.GetBytes(html)))
                 {
-                    //  XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, htmlStream, null, Encoding.UTF8);
+                  //  XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, htmlStream, null, Encoding.UTF8);
                 }
                 document.Close();
 
@@ -39,7 +39,173 @@ namespace PainTrax.Web.Helper
 
             return pdfBytes;
         }
-        public byte[] Stamping(string SourceFile, string ColumnName, string ID, Dictionary<string, string> controls, string cmpid = "0")
+        public byte[] Stamping(string SourceFile, string ColumnName, string ID, Dictionary<string, string> controls, string cmpid = "0",string path="")
+        {
+            WebHostBuilderContext webHost = new WebHostBuilderContext();
+            ParentService _parentService = new ParentService();
+            PdfReader pdfReader = new PdfReader(SourceFile);
+            AcroFields readPdfFields = pdfReader.AcroFields;
+            String tabname = readPdfFields.GetField("txtTable");
+            if (tabname == null || tabname == "")
+                tabname = "ViewPdf";
+ 
+
+            DataTable dt = _parentService.GetData("select * from " + tabname + " where " + ColumnName + "=" + ID);
+
+            MemoryStream pdfOutput = new MemoryStream();
+            PdfStamper pdfStamper = new PdfStamper(pdfReader, pdfOutput);
+            AcroFields pdfFormFields = pdfStamper.AcroFields;
+            pdfStamper.FormFlattening = false;
+            AcroFields ae = pdfReader.AcroFields;
+            foreach (KeyValuePair<string, iTextSharp.text.pdf.AcroFields.Item> de in pdfReader.AcroFields.Fields)
+            {
+
+                string textvalue = pdfFormFields.GetField(de.Key.ToString());
+                string[] textpair = textvalue.Split('|');
+                if (textpair.Length > 1 && !de.Key.StartsWith("#"))
+                {
+                    try
+                    {
+                        if (dt.Rows[0][textpair[1]] is DateTime)
+                            pdfFormFields.SetField(textpair[0], DateTime.Parse(dt.Rows[0][textpair[1]].ToString()).ToString("MM/dd/yyyy"));
+                        else
+                            pdfFormFields.SetField(textpair[0], dt.Rows[0][textpair[1]].ToString());
+
+                        if (textpair.Length > 2)
+                        {
+                            if (dt.Rows[0][textpair[1]] == null || dt.Rows[0][textpair[1]].ToString().Trim() == string.Empty)
+                                pdfFormFields.SetField(textpair[0], textpair[2]);
+                            else
+                                pdfFormFields.SetField(textpair[0], "");
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        pdfFormFields.SetField(textpair[0], "");
+
+                    }
+                }
+                else
+                {
+
+                    if (!de.Key.ToLower().StartsWith("txtfix"))
+                    {
+                        if (controls != null && controls.Count != 0)
+                        {
+                            if (de.Key.StartsWith("@"))
+                            {
+                                try
+                                {
+                                    pdfFormFields.SetField(de.Key.ToString(), controls[de.Key.Substring(1)]);
+                                }
+                                catch (Exception ex)
+                                {
+                                    pdfFormFields.SetField(textpair[0], "");
+                                }
+                            }
+                            else
+                                pdfFormFields.SetField(textpair[0], "");
+                        }
+                        else
+                        {
+                            pdfFormFields.SetField(textpair[0], "");
+                        }
+
+                        if (de.Key.StartsWith("#"))
+                        {
+                            try
+                            {
+                                string[] headpair = de.Key.Substring(1).Split('|');
+                                if (headpair.Length == 1)
+                                {
+                                    try
+                                    {
+                                        if (dt.Rows[0][de.Key.Substring(1)] is DateTime)
+                                            pdfFormFields.SetField(de.Key.ToString(), DateTime.Parse(dt.Rows[0][de.Key.Substring(1)].ToString()).ToString("MM/dd/yyyy"));
+                                        else
+                                            pdfFormFields.SetField(de.Key.ToString(), dt.Rows[0][de.Key.Substring(1)].ToString());
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        pdfFormFields.SetField(de.Key.Substring(1), "");
+                                    }
+                                }
+                                else if (headpair.Length == 4)
+                                {
+                                try
+                                {
+                                    DataTable dtCode = _parentService.GetData("select * from " + headpair[0] + " where " + headpair[2] + "='" + controls[headpair[1]] + "' and cmp_id=" + cmpid);
+                                    if (dtCode.Rows.Count > 0)
+                                    {
+                                        pdfFormFields.SetField(de.Key.ToString(), dtCode.Rows[0][headpair[3]].ToString());
+                                    }
+                                    else
+                                    {
+                                        pdfFormFields.SetField(de.Key.ToString(), "");
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    pdfFormFields.SetField(de.Key.Substring(1), "");
+                                }
+
+                                }
+                                else
+                                {
+                                    pdfFormFields.SetField(textpair[0], "");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                pdfFormFields.SetField(textpair[0], "");
+                            }                    
+                        }
+                        else
+                            pdfFormFields.SetField(textpair[0], "");
+                    }
+                    else
+                        pdfFormFields.SetField(textpair[0], "");
+
+                }
+                if (de.Key.ToLower().StartsWith("imgsign"))
+                {
+
+                    try
+                    {
+                        if (path != "")
+                        {
+                          //  path = System.IO.Path.Combine(path, "Sign");
+                            string[] files = System.IO.Directory.GetFiles(path, ID + ".jp*g", System.IO.SearchOption.TopDirectoryOnly);
+                            if (files.Length > 0)
+                            {
+
+                                Stream inputImageStream = new FileStream(files[0], FileMode.Open, FileAccess.Read, FileShare.Read);
+                                float[] fieldPosition = null;
+                                fieldPosition = ae.GetFieldPositions(de.Key.ToString());
+                                var pdfContentByte = pdfStamper.GetOverContent((int)fieldPosition[0]);
+                                iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(inputImageStream);
+                                image.ScaleToFit(fieldPosition[3]- fieldPosition[1], fieldPosition[4]- fieldPosition[2] + 10);
+                                image.SetAbsolutePosition(fieldPosition[1], fieldPosition[2]);
+                                pdfContentByte.AddImage(image);
+                            }
+                        }
+                    }
+
+                    catch (Exception ex) { }
+                    finally { pdfFormFields.SetFieldProperty(de.Key.ToString(), "flags", PdfFormField.FLAGS_NOVIEW, null); }
+                }
+
+            }
+            pdfStamper.Close();
+            pdfReader.Close();
+            return pdfOutput.ToArray();
+
+        }
+
+
+        /*
+        public byte[] Stamping(string SourceFile, string ColumnName, string ID, Dictionary<string, string> controls, string cmpid = "0", string path = "")
         {
             WebHostBuilderContext webHost = new WebHostBuilderContext();
             ParentService _parentService = new ParentService();
@@ -203,25 +369,34 @@ namespace PainTrax.Web.Helper
 
                     try
                     {
-                        string webRootPath = webHost.HostingEnvironment.WebRootPath;
-                        string path = "";
-                        path = System.IO.Path.Combine(webRootPath, "Sign");
-                        // DataTable dts = GetData("select * from tblPatientIESign where " + ColumnName + "=" + ID);
-                        string[] files = System.IO.Directory.GetFiles(path, ID + "_*.jp*g", System.IO.SearchOption.TopDirectoryOnly);
-                        if (files.Length > 0)
+                        // string webRootPath = webHost.HostingEnvironment.WebRootPath;
+                        // string path = "";
+                        if (path != "")
                         {
+                            path = System.IO.Path.Combine(path, "Sign");
+                            // DataTable dts = GetData("select * from tblPatientIESign where " + ColumnName + "=" + ID);
+                            //string[] files = System.IO.Directory.GetFiles(path, ID + "_*.jp*g", System.IO.SearchOption.TopDirectoryOnly);
+                            string[] files = System.IO.Directory.GetFiles(path, "*_*.jp*g", System.IO.SearchOption.TopDirectoryOnly);
+                            if (files.Length > 0)
+                            {
 
-                            Stream inputImageStream = new FileStream(files[0], FileMode.Open, FileAccess.Read, FileShare.Read);
-                            float[] fieldPosition = null;
-                            fieldPosition = ae.GetFieldPositions(de.Key.ToString());
+                                Stream inputImageStream = new FileStream(files[0], FileMode.Open, FileAccess.Read, FileShare.Read);
+                                float[] fieldPosition = null;
+                                fieldPosition = ae.GetFieldPositions(de.Key.ToString());
 
-                            //// AcroFields.FieldPosition f = ae.GetFieldPositions(de.Key.ToString())[0];
-                            // var pdfContentByte = pdfStamper.GetOverContent(f.page);
-                            // iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(inputImageStream);
-                            // image.ScaleToFit(f.position.Width, f.position.Height + 10);
+                                // AcroFields.FieldPosition f = ae.GetFieldPositions(de.Key.ToString())[0];
+                                //AcroFields.FieldPosition[] fieldPositions = ae.GetFieldPositions(de.Key.ToString());
+                                //  var pdfContentByte = pdfStamper.GetOverContent(f.page);
+                                var pdfContentByte = pdfStamper.GetOverContent((int)fieldPosition[0]);
+                                iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(inputImageStream);
+                                //image.ScaleToFit(f.position.Width, f.position.Height + 10);
 
-                            // image.SetAbsolutePosition(f.position.Left, f.position.Bottom);
-                            // pdfContentByte.AddImage(image);
+                                //image.SetAbsolutePosition(f.position.Left, f.position.Bottom);
+                                image.ScaleToFit(fieldPosition[3] - fieldPosition[1], fieldPosition[4] - fieldPosition[2] + 10);
+
+                                image.SetAbsolutePosition(fieldPosition[1], fieldPosition[2]);
+                                pdfContentByte.AddImage(image);
+                            }
                         }
                         //    pdfFormFields.SetFieldProperty(de.Key.ToString(), "flags", PdfFormField.FLAGS_NOVIEW, null);
                     }
@@ -260,6 +435,6 @@ namespace PainTrax.Web.Helper
                 // Logger.Error(ex);
             }
 
-        }
+        }*/
     }
 }

@@ -49,6 +49,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\AppProvider\Create.cshtml" />
+    <None Include="Views\AppProvider\Edit.cshtml" />
+    <None Include="Views\AppProvider\Index.cshtml" />
+    <None Include="Views\AppStatus\Create.cshtml" />
+    <None Include="Views\AppStatus\Edit.cshtml" />
+    <None Include="Views\AppStatus\Index.cshtml" />
     <None Include="Views\Forms\Index.cshtml" />
     <None Include="Views\Patientdocument\Index.cshtml" />
     <None Include="wwwroot\assets\vendor\bootbox\bootbox.all.js" />

@@ -57,7 +57,6 @@ namespace PainTrax.Web.Services
 
         public int GetTotalInsuranceCompany(int cmp_id)
         {
-
             string query = "select count(id) from tbl_inscos where cmp_id=@cmp_id";
 
             MySqlCommand cm = new MySqlCommand(query, conn);

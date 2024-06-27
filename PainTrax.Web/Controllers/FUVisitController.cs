@@ -359,6 +359,7 @@ namespace PainTrax.Web.Controllers
                         obj.physicianid = ieData.physicianid;
                         obj.compensation = ieData.compensation;
                         obj.casetype = ieData.casetype;
+                        obj.accidentType = ieData.accidentType;
                     }
                     //if (obj.compensation != null)
                     //    obj.casetype = System.Enum.GetName(typeof(CaseType), Convert.ToInt32(obj.compensation));
@@ -794,6 +795,7 @@ namespace PainTrax.Web.Controllers
                     secondary_policy_no = model.sec_policy_no,
                     secondary_wcb_group = model.sec_WCB_group,
                     compensation = model.compensation,
+                    accident_type = model.accidentType,
                     alert_note = model.alert_note,
                     referring_physician = model.referring_physician
 

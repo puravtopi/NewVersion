@@ -27,6 +27,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<SignatureService>();
 
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<ILoggingService, LoggingService>();

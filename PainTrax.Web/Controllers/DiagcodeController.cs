@@ -33,7 +33,7 @@ namespace PainTrax.Web.Controllers
         }
 
         public IActionResult Index()
-        {            
+        {
             return View();
         }
 
@@ -50,7 +50,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Create(tbl_diagcodes model)
         {
             try
-            {                
+            {
                 if (ModelState.IsValid)
                 {
                     model.CreatedBy = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
@@ -189,7 +189,18 @@ namespace PainTrax.Web.Controllers
                                 CreatedDate = System.DateTime.Now
                             };
 
-                            _services.Insert(obj);
+                            string cnd = " and DiagCode=" + dt.Rows[i]["DiagCode"].ToString() + " and cmp_id=" + cmpid;
+
+                            var objIsExist = _services.GetAll(cnd);
+
+                            if (objIsExist.Count == 0)
+                                _services.Insert(obj);
+                            else
+                            { 
+                                obj.Id= objIsExist[0].Id;
+                                _services.Update(obj);
+                            }
+
                         }
                     }
                 }

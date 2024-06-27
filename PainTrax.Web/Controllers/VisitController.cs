@@ -209,7 +209,7 @@ namespace PainTrax.Web.Controllers
                         obj.sec_policy_no = ieData.secondary_policy_no;
                         obj.sec_WCB_group = ieData.secondary_wcb_group;
                         obj.alert_note = ieData.alert_note;
-                       
+
                         obj.physicianid = ieData.physicianid;
                         obj.compensation = ieData.compensation;
                         obj.accidentType = ieData.accidentType;
@@ -422,7 +422,7 @@ namespace PainTrax.Web.Controllers
                         obj.vaccinated = patientData.vaccinated;
                         obj.patientid = patientData.id;
                         obj.age = patientData.age;
-                      //  obj.physicianid = patientData.physicianid;
+                        //  obj.physicianid = patientData.physicianid;
                     }
                 }
                 else
@@ -454,6 +454,8 @@ namespace PainTrax.Web.Controllers
 
                     if (defaultPage1 != null)
                     {
+                       
+                      
                         obj.Page1.allergies = defaultPage1.allergies;
                         obj.Page1.dd = defaultPage1.dd;
                         obj.Page1.daignosis_desc = defaultPage1.daignosis_desc;
@@ -486,7 +488,7 @@ namespace PainTrax.Web.Controllers
                     }
                     var defaultNE = _defaultSettingService.GetOneNE(cmpid.Value);
 
-                    if(defaultNE != null)
+                    if (defaultNE != null)
                     {
                         obj.NE.neurological_exam = defaultNE.neurological_exam;
                         obj.NE.sensory = defaultNE.sensory;
@@ -734,7 +736,7 @@ namespace PainTrax.Web.Controllers
                     compensation = model.compensation,
                     accident_type = model.accidentType,
                     state = model.state,
-                    physicianid = model.physicianid, 
+                    physicianid = model.physicianid,
                     alert_note = model.alert_note,
                     referring_physician = model.referring_physician
 
@@ -1084,7 +1086,7 @@ namespace PainTrax.Web.Controllers
                 var imageData = Convert.FromBase64String(base64Data);
                 var signaturesDir = Path.Combine(Environment.WebRootPath, "signatures");
                 Debug.WriteLine($"Received tbl_ie_sign: id={model.id}, ie_id={model.ie_id}, signatureData length={model.signatureData?.Length}");
-               
+
                 if (!Directory.Exists(signaturesDir))
                 {
                     Directory.CreateDirectory(signaturesDir);
@@ -1264,7 +1266,7 @@ namespace PainTrax.Web.Controllers
         [HttpGet]
         public JsonResult GetPhysiciansByLocation(int locationId)
         {
-            var physicians = _physicianService.GetAll(" AND locationid=" + locationId); 
+            var physicians = _physicianService.GetAll(" AND locationid=" + locationId);
             var physicianList = physicians.Select(p => new SelectListItem
             {
                 Text = p.physicianname,
@@ -2137,8 +2139,10 @@ namespace PainTrax.Web.Controllers
                 {
                     body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : "Dr. " + locData[0].nameofpractice);
                     body = body.Replace("#address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
-                    body = body.Replace("#loc", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
-                    body = body.Replace("#Location", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
+                    body = body.Replace("#loc", locData[0].location);
+                    body = body.Replace("#Location", locData[0].location);
+                    //body = body.Replace("#loc", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
+                    //body = body.Replace("#Location", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                 }
 
                 //ADL printing
@@ -2163,7 +2167,14 @@ namespace PainTrax.Web.Controllers
                 {
                     body = body.Replace("#CC", string.IsNullOrEmpty(page1Data.cc) ? "" : this.removePtag(page1Data.cc));
                     body = body.Replace("#PE", string.IsNullOrEmpty(page1Data.pe) ? "" : page1Data.pe);
-                    body = body.Replace("#history", string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history);
+
+                    var history = string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history;
+
+
+                    history.Replace("#dos", Common.commonDate(patientData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
+                    history.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
+
+                    body = body.Replace("#history",history);
                     body = body.Replace("#DD", string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd);
                     body = body.Replace("#WorkStatus", string.IsNullOrEmpty(page1Data.work_status) ? "" : page1Data.work_status);
                     string bodypart = "";
@@ -2177,7 +2188,10 @@ namespace PainTrax.Web.Controllers
                     string assessment = "";
                     if (!string.IsNullOrEmpty(page1Data.assessment))
                     {
-                        assessment = page1Data.assessment.Replace("#PC", Common.FirstCharToUpper(bodypart) + " pain.");
+                        if (bodypart != null)
+                            assessment = page1Data.assessment.Replace("#PC", Common.FirstCharToUpper(bodypart) + " pain.");
+                        else
+                            assessment = page1Data.assessment.Replace("#PC", "");
                         assessment = assessment.Replace("#accidenttype", patientData.accidentType);
                     }
 

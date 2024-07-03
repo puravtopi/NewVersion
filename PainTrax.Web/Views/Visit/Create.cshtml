@@ -291,7 +291,7 @@
 
                                                     <div class="row mb-3">
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
-                                                            Vaccinated
+                                                            Note
                                                         </label>
                                                         <div class="col-sm-10">
                                                             <textarea asp-for="mc_details" class="form-control"></textarea>
@@ -1275,17 +1275,30 @@
                                     var age = calcAge($("#dob").val());
                                     var doi = $("#doa").val();
 
+
                                     if (doi != '') {
                                         doi = formatDate(doi);
                                     }
 
+                                    var dos = $("#dos").val();
+
+                                    if (dos != '') {
+                                        dos = formatDate(dos);
+                                    }
+                                    debugger
+
                                     var gender = $("#gender option:selected").text().toLowerCase();
                                     var accidenttype = $("#accidentType option:selected").text().toLowerCase();
+                                    var fullName = $("#fname").val() + ' ' + $("#mname").val() + ' ' + $("#lname").val()
 
                                     var content = (ckHistory.getData());
-                                    content = content.replace("#doi", doi);
-                                    content = content.replace("#age", age);
+                                    content = content.replace("#doi", doi == undefined ? "" : doi);
+                                    // content = content.replace("#age", age);
                                     content = content.replace("#gender", gender);
+                                    content = content.replace("#dos", dos == undefined ? "" : dos)
+                                    content = content.replace("#patientname", fullName == undefined ? "" : fullName);
+                                    content = content.replace("#lname", $("#lname").val());
+                                    content = content.replace("#fname", $("#fname").val());
                                     content = content.replace("#accidenttype", accidenttype);
                                     ckHistory.data.set(content);
 
@@ -1314,17 +1327,13 @@
         });
     }
     function formatDate(inputDate) {
-        var date = new Date(inputDate);
-
-        // Check if the date is valid
-        if (isNaN(date.getTime())) {
-            return "Invalid Date";
-        }
+        debugger
+        var date = inputDate.split('-');
 
         // Extract date components
-        var month = date.getMonth() + 1; // Months are zero based
-        var day = date.getDate();
-        var year = date.getFullYear();
+        var month = parseInt(date[1]); // Months are zero based
+        var day = parseInt(date[2])
+        var year = date[0];
 
         // Pad single digit month and day with leading zeros
         if (month < 10) {

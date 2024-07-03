@@ -20,32 +20,37 @@ namespace PainTrax.Web.Controllers
             var data = new tbl_settings();
             try
             {
-              
+
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
                 ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
                 data = _services.GetOne(cmpid.Value);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Index");
-            }           
+            }
 
             return View(data);
         }
 
         [HttpPost]
         public IActionResult Index(tbl_settings model)
-        {           
+        {
             try
-            {              
+            {
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 model.cmp_id = cmpid.Value;
                 _services.Update(model);
-                
+
                 ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
                 HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, model.location);
                 HttpContext.Session.SetInt32(SessionKeys.SessionPageSize, model.page_size);
+                HttpContext.Session.SetString(SessionKeys.SessionPageBreak, model.pageBreakForInjection.ToString().ToLower());
+                HttpContext.Session.SetString(SessionKeys.SessionIsDaignosis, model.isdaignosisshow.ToString().ToLower());
+                HttpContext.Session.SetString(SessionKeys.SessionDaignosisFoundStatment, model.foundStatment == null ? "" : model.foundStatment);
+                HttpContext.Session.SetString(SessionKeys.SessionDaignosisNotFoundStatment, model.notfoundStatment == null ? "" : model.notfoundStatment);
+                HttpContext.Session.SetString(SessionKeys.SessionInjectionAsSeparateBlock, model.injectionAsSeparateBlock.ToString().ToLower());
                 return View(model);
             }
             catch (Exception ex)

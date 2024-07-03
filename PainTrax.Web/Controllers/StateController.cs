@@ -95,7 +95,7 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
-                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
                 // Skiping number of Rows count
                 var start = Request.Form["start"].FirstOrDefault();

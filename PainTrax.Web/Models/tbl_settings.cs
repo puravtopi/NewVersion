@@ -9,5 +9,8 @@
         public string dateformat { get; set; }
         public bool pageBreakForInjection { get; set; }
         public bool injectionAsSeparateBlock { get; set; }
+        public bool isdaignosisshow { get; set; }
+        public string foundStatment { get; set; }
+        public string notfoundStatment { get; set; }
     }
 }

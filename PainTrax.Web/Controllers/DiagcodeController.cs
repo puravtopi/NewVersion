@@ -342,6 +342,7 @@ namespace PainTrax.Web.Controllers
                                 {
                                     // Gets the column index of the cell with data
                                     int cellColumnIndex = (int)GetColumnIndexFromName(GetColumnName(cell.CellReference));
+                                   // int cellColumnIndex = (int)GetColumnIndexFromName(GetColumnName(cell.CellValue.InnerText));
                                     cellColumnIndex--; //zero based index
                                     if (columnIndex < cellColumnIndex)
                                     {

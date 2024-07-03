@@ -37,7 +37,7 @@ namespace PainTrax.Web.Services
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_state(state_name,cmp_id) Values(@state_name,@cmp_id)", conn);
             //cm.Parameters.AddWithValue("@Id", data.Id);
             cm.Parameters.AddWithValue("@state_name", data.state_name);
-            cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+            cm.Parameters.AddWithValue("@cmp_id", 0);
             var result = Execute(cm);
             return result;
         }
@@ -46,7 +46,7 @@ namespace PainTrax.Web.Services
             MySqlCommand cm = new MySqlCommand(@"Update tbl_state set state_name=@state_name,cmp_id=@cmp_id where id=@id", conn);
             cm.Parameters.AddWithValue("@id", data.id);
             cm.Parameters.AddWithValue("@state_name", data.state_name);
-            cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+            cm.Parameters.AddWithValue("@cmp_id", 0);
 
             Execute(cm);
         }

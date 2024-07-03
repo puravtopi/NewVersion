@@ -30,13 +30,16 @@ namespace PainTrax.Web.Services
         {
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_settings
 		(page_size,location,dateformat,cmp_id,pageBreakForInjection,injectionAsSeparateBlock)Values
-				(@page_size,@location,@dateformat,@cmp_id,@pageBreakForInjection,@injectionAsSeparateBlock)", conn);
+				(@page_size,@location,@dateformat,@cmp_id,@pageBreakForInjection,@injectionAsSeparateBlock,@isdaignosisshow,@foundStatment,@notfoundStatment)", conn);
             cm.Parameters.AddWithValue("@page_size", data.page_size);
             cm.Parameters.AddWithValue("@location", data.location);
             cm.Parameters.AddWithValue("@dateformat",data.dateformat);
             cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
             cm.Parameters.AddWithValue("@pageBreakForInjection", data.pageBreakForInjection);
             cm.Parameters.AddWithValue("@injectionAsSeparateBlock", data.injectionAsSeparateBlock);
+            cm.Parameters.AddWithValue("@isdaignosisshow", data.isdaignosisshow);
+            cm.Parameters.AddWithValue("@foundStatment", data.foundStatment);
+            cm.Parameters.AddWithValue("@notfoundStatment", data.notfoundStatment);
             Execute(cm);
 
         }
@@ -47,8 +50,10 @@ namespace PainTrax.Web.Services
         dateformat=@dateformat,
 		location=@location,
         pageBreakForInjection=@pageBreakForInjection,
-        injectionAsSeparateBlock=@injectionAsSeparateBlock
-      
+        injectionAsSeparateBlock=@injectionAsSeparateBlock,
+isdaignosisshow=@isdaignosisshow,
+      foundStatment=@foundStatment,
+notfoundStatment=@notfoundStatment
 			where cmp_id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.cmp_id);
             cm.Parameters.AddWithValue("@page_size", data.page_size);
@@ -56,6 +61,9 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@dateformat", data.dateformat);
             cm.Parameters.AddWithValue("@pageBreakForInjection", data.pageBreakForInjection);
             cm.Parameters.AddWithValue("@injectionAsSeparateBlock", data.injectionAsSeparateBlock);
+            cm.Parameters.AddWithValue("@isdaignosisshow", data.isdaignosisshow);
+            cm.Parameters.AddWithValue("@foundStatment", data.foundStatment);
+            cm.Parameters.AddWithValue("@notfoundStatment", data.notfoundStatment);
 
             Execute(cm);
         }

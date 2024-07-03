@@ -134,8 +134,9 @@
 
                 if (data > 0) {
                     $('#myModalMessage').modal('show');
-                    $('#messBody').html('<p>Saveed.</p>');
-                    $(t).tab('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    if (t != null)
+                        $(t).tab('show');
                 }
                 else
                     alert("Error in Save.");

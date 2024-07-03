@@ -359,7 +359,6 @@ namespace PainTrax.Web.Controllers
                         obj.physicianid = ieData.physicianid;
                         obj.compensation = ieData.compensation;
                         obj.casetype = ieData.casetype;
-                        obj.accidentType = ieData.accidentType;
                     }
                     //if (obj.compensation != null)
                     //    obj.casetype = System.Enum.GetName(typeof(CaseType), Convert.ToInt32(obj.compensation));
@@ -784,7 +783,7 @@ namespace PainTrax.Web.Controllers
                     emp_id = empId,
                     is_active = true,
                     location_id = model.locationid,
-                    provider_id=model.providerid,
+                    provider_id = model.providerid,
                     patient_id = patientId,
                     primary_claim_no = model.prime_claim_no,
                     primary_ins_cmp_id = priminsId,
@@ -795,7 +794,6 @@ namespace PainTrax.Web.Controllers
                     secondary_policy_no = model.sec_policy_no,
                     secondary_wcb_group = model.sec_WCB_group,
                     compensation = model.compensation,
-                    accident_type = model.accidentType,
                     alert_note = model.alert_note,
                     referring_physician = model.referring_physician
 
@@ -1960,7 +1958,10 @@ namespace PainTrax.Web.Controllers
                     string assessment = "";
                     if (!string.IsNullOrEmpty(page1Data.assessment))
                     {
-                        assessment = page1Data.assessment.Replace("#PC", Common.FirstCharToUpper(bodypart) + " pain.");
+                        if (!string.IsNullOrEmpty(bodypart))
+                            assessment = page1Data.assessment.Replace("#PC", Common.FirstCharToUpper(bodypart) + " pain.");
+                        else
+                            assessment = page1Data.assessment.Replace("#PC", "");
                         assessment = assessment.Replace("#accidenttype", fuData.accident_type);
                     }
 

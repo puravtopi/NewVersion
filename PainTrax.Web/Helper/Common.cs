@@ -170,7 +170,8 @@ namespace PainTrax.Web.Helper
         }
         public List<SelectListItem> GetState(int cmp_id)
         {
-            string cnd = " and cmp_id=" + cmp_id;
+            // string cnd = " and cmp_id=" + cmp_id;
+            string cnd = " ";
             var data = _stateService.GetAll(cnd);
             var list = new List<SelectListItem>();
 
@@ -432,7 +433,7 @@ namespace PainTrax.Web.Helper
                 return null;
         }
 
-        public static string commonDate(DateTime? date,string dateformat="MM/dd/yyyy")
+        public static string commonDate(DateTime? date, string dateformat = "MM/dd/yyyy")
         {
             if (date != null)
                 return Convert.ToDateTime(date).ToString(dateformat).Replace('-', '/');
@@ -506,7 +507,7 @@ namespace PainTrax.Web.Helper
                 new SelectListItem{ Text="Occupation", Value = "occupation",Selected=false },
                 new SelectListItem{ Text="Degree of Disability", Value = "dd",Selected=false },
                 new SelectListItem{ Text="Work Status", Value = "work_status",Selected=false }
-               
+
 
                           };
             return returnstatus;

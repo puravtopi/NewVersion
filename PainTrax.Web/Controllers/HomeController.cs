@@ -109,6 +109,10 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetInt32(SessionKeys.SessionPageSize, setting.page_size);
                         HttpContext.Session.SetString(SessionKeys.SessionDateFormat, setting.dateformat);
                         HttpContext.Session.SetString(SessionKeys.SessionPageBreak, setting.pageBreakForInjection.ToString().ToLower());
+                        HttpContext.Session.SetString(SessionKeys.SessionIsDaignosis, setting.isdaignosisshow.ToString().ToLower());
+                        HttpContext.Session.SetString(SessionKeys.SessionDaignosisFoundStatment, setting.foundStatment == null ? "" : setting.foundStatment);
+                        HttpContext.Session.SetString(SessionKeys.SessionDaignosisNotFoundStatment, setting.notfoundStatment == null ? "" : setting.notfoundStatment);
+                        HttpContext.Session.SetString(SessionKeys.SessionInjectionAsSeparateBlock, setting.injectionAsSeparateBlock.ToString().ToLower());
 
 
                     }
@@ -118,6 +122,7 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetInt32(SessionKeys.SessionPageSize, 25);
                         HttpContext.Session.SetString(SessionKeys.SessionDateFormat, "MM/dd/yyyy");
                         HttpContext.Session.SetString(SessionKeys.SessionPageBreak, "false");
+                        HttpContext.Session.SetString(SessionKeys.SessionIsDaignosis, "false");
                     }
 
 
@@ -230,7 +235,7 @@ namespace PainTrax.Web.Controllers
 
             HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, model.locationid == null ? 0 : model.locationid.Value);
             HttpContext.Session.SetInt32(SessionKeys.SessionSelectedProviderId, model.providerid == null ? 0 : model.providerid.Value);
-            
+
             return RedirectToAction("Index", "Home");
         }
 
@@ -277,7 +282,7 @@ namespace PainTrax.Web.Controllers
         {
             return View();
         }
-        
+
         public IActionResult ForgotPassword()
         {
             return View();

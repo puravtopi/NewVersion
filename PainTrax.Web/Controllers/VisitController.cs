@@ -20,6 +20,7 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using iText.Signatures;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
 
 namespace PainTrax.Web.Controllers
 {
@@ -454,8 +455,8 @@ namespace PainTrax.Web.Controllers
 
                     if (defaultPage1 != null)
                     {
-                       
-                      
+
+
                         obj.Page1.allergies = defaultPage1.allergies;
                         obj.Page1.dd = defaultPage1.dd;
                         obj.Page1.daignosis_desc = defaultPage1.daignosis_desc;
@@ -1085,17 +1086,21 @@ namespace PainTrax.Web.Controllers
 
                 var imageData = Convert.FromBase64String(base64Data);
                 var signaturesDir = Path.Combine(Environment.WebRootPath, "signatures");
-                Debug.WriteLine($"Received tbl_ie_sign: id={model.id}, ie_id={model.ie_id}, signatureData length={model.signatureData?.Length}");
+                Debug.WriteLine($"Received tbl_ie_sign: id={model.id}, ie_id={model.patient_id}, signatureData length={model.signatureData?.Length}");
 
                 if (!Directory.Exists(signaturesDir))
                 {
                     Directory.CreateDirectory(signaturesDir);
                 }
-                var filename = $"{model.ie_id}.jpeg";
+                var filename = $"{model.patient_id}.jpeg";
                 var savePath = Path.Combine(signaturesDir, filename);
 
                 System.IO.File.WriteAllBytes(savePath, imageData);
-                model.signatureData = savePath;
+                model.signatureValue = model.signatureData;
+                model.signatureData = filename;
+
+
+
                 if (model.id > 0)
                 {
                     _ieService.UpdateSign(model);
@@ -1108,6 +1113,7 @@ namespace PainTrax.Web.Controllers
             }
             catch (Exception ex)
             {
+                SaveLog(ex, "SaveSign");
                 return StatusCode(500, "Error saving signature: " + ex.Message);
             }
         }
@@ -1171,12 +1177,12 @@ namespace PainTrax.Web.Controllers
 
 
         [HttpPost]
-        public IActionResult GetSign(int ieId)
+        public IActionResult GetSign(int pId)
         {
             var data = new tbl_ie_sign();
             try
             {
-                data = _ieService.GetOnesign(ieId);
+                data = _ieService.GetOnesign(pId);
             }
             catch (Exception ex)
             {
@@ -2105,6 +2111,7 @@ namespace PainTrax.Web.Controllers
 
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 string body = string.Empty;
+                string bodypart = "";
                 //using streamreader for reading my htmltemplate   
 
                 var templateData = _printService.GetTemplate(cmpid, "IE");
@@ -2117,7 +2124,11 @@ namespace PainTrax.Web.Controllers
                 if (patientData != null)
                 {
                     gender = Common.GetMrMrsFromSex(patientData.gender);
-                    body = body.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
+                    //body = body.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
+                    body = body.Replace("#patientname", gender + " " + patientData.lname + ", " + patientData.fname + " " + patientData.mname);
+                    body = body.Replace("#fn", patientData.fname);
+                    body = body.Replace("#ln", patientData.lname);
+                    body = body.Replace("#gender", gender);
 
                     body = body.Replace("#doi", Common.commonDate(patientData.doa));
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
@@ -2138,7 +2149,8 @@ namespace PainTrax.Web.Controllers
                 if (locData != null && locData.Count > 0)
                 {
                     body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : "Dr. " + locData[0].nameofpractice);
-                    body = body.Replace("#address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
+                    body = body.Replace("#address", locData[0].address);
+                    //  body = body.Replace("#address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                     body = body.Replace("#loc", locData[0].location);
                     body = body.Replace("#Location", locData[0].location);
                     //body = body.Replace("#loc", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
@@ -2165,6 +2177,19 @@ namespace PainTrax.Web.Controllers
                 var page1Data = _ieService.GetOnePage1(id);
                 if (page1Data != null)
                 {
+                    if (!string.IsNullOrEmpty(page1Data.bodypart))
+                    {
+                        bodypart = Common.ReplceCommowithAnd(page1Data.bodypart);
+                        body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart) + " pain.");
+
+                    }
+                    else
+                    {
+                        body = body.Replace("#PC", "");
+                    }
+
+
+
                     body = body.Replace("#CC", string.IsNullOrEmpty(page1Data.cc) ? "" : this.removePtag(page1Data.cc));
                     body = body.Replace("#PE", string.IsNullOrEmpty(page1Data.pe) ? "" : page1Data.pe);
 
@@ -2172,24 +2197,25 @@ namespace PainTrax.Web.Controllers
 
 
                     history.Replace("#dos", Common.commonDate(patientData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
-                    history.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
+                    //  history.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
+                    history.Replace("#patientname", gender + " " + patientData.lname + " " + patientData.fname + " " + patientData.lname);
 
-                    body = body.Replace("#history",history);
+                    body = body.Replace("#history", history);
+                    body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
                     body = body.Replace("#DD", string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd);
                     body = body.Replace("#WorkStatus", string.IsNullOrEmpty(page1Data.work_status) ? "" : page1Data.work_status);
-                    string bodypart = "";
 
-                    if (!string.IsNullOrEmpty(page1Data.bodypart))
-                        bodypart = Common.ReplceCommowithAnd(page1Data.bodypart);
 
-                    body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart) + " pain.");
+
+
+                    body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : bodypart.ToLower());
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(page1Data.bodypart) ? "" : page1Data.bodypart.ToLower());
 
                     string assessment = "";
                     if (!string.IsNullOrEmpty(page1Data.assessment))
                     {
                         if (bodypart != null)
-                            assessment = page1Data.assessment.Replace("#PC", Common.FirstCharToUpper(bodypart) + " pain.");
+                            assessment = page1Data.assessment.Replace("#PC", bodypart + " pain.");
                         else
                             assessment = page1Data.assessment.Replace("#PC", "");
                         assessment = assessment.Replace("#accidenttype", patientData.accidentType);
@@ -2311,6 +2337,8 @@ namespace PainTrax.Web.Controllers
                 string injectionHtml = dataPOC.strInjectionDesc;
 
 
+                string SessionDiffPage = HttpContext.Session.GetString(SessionKeys.SessionPageBreak);
+
                 if (SessionDiffDoc != "true")
                 {
 
@@ -2343,9 +2371,19 @@ namespace PainTrax.Web.Controllers
                 if (cmpid != "4")
                 {
                     if (string.IsNullOrEmpty(strDiagnostic))
-                        strDiagnostic = "None Reviewed";
+                    {
+                        if (HttpContext.Session.GetString(SessionKeys.SessionIsDaignosis) == "true")
+                        {
+                            strDiagnostic = HttpContext.Session.GetString(SessionKeys.SessionDaignosisNotFoundStatment);
+                        }
+                    }
                     else
-                        strDiagnostic = strDiagnostic + "<br/><br/>The above diagnostic studies were reviewed.";
+                    {
+                        if (HttpContext.Session.GetString(SessionKeys.SessionIsDaignosis) == "true")
+                        {
+                            strDiagnostic = strDiagnostic + "<br/><br/>" + HttpContext.Session.GetString(SessionKeys.SessionDaignosisFoundStatment); ;
+                        }
+                    }
                 }
 
                 body = body.Replace("#Diagnostic", this.removePtag(strDiagnostic));
@@ -2406,6 +2444,8 @@ namespace PainTrax.Web.Controllers
                 else
                     body = body.Replace("#Sign", "");
 
+                SessionDiffDoc = HttpContext.Session.GetString(SessionKeys.SessionInjectionAsSeparateBlock);
+
                 if (SessionDiffDoc == "true")
                 {
                     body += "<br><br><!--Diff Doc-->";
@@ -2459,7 +2499,7 @@ namespace PainTrax.Web.Controllers
         {
 
 
-            string filePath = "", docName = "", patientName = "", injDocName = "";
+            string filePath = "", docName = "", patientName = "", injDocName = "", dos = "";
             string[] splitContent;
             string injHtmlContent = "";
             if (SessionDiffDoc == "true")
@@ -2509,6 +2549,8 @@ namespace PainTrax.Web.Controllers
 
                 patientName = patientData.lname + ", " + patientData.fname;
 
+                dos = patientData.doe == null ? "" : patientData.doe.Value.ToShortDateString();
+
                 string subPath = "Report/" + cmpid; // Your code goes here
 
                 bool exists = System.IO.Directory.Exists(subPath);
@@ -2526,12 +2568,12 @@ namespace PainTrax.Web.Controllers
                 }
             }
 
-            return Json(new { filePath = filePath, fileName = docName, patientName = patientName });
+            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos });
 
         }
 
         [HttpGet]
-        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "")
+        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "", string dos = "")
         {
 
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
@@ -2546,7 +2588,7 @@ namespace PainTrax.Web.Controllers
 
 
                     string filepathTo = filePath;
-                    AddHeaderFromTo(filepathFrom, filepathTo, patientName);
+                    AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
                 }
             }
             byte[] data = System.IO.File.ReadAllBytes(filePath);
@@ -2659,7 +2701,7 @@ namespace PainTrax.Web.Controllers
             return pocDetails;
         }
 
-        public static void AddHeaderFromTo(string filepathFrom, string filepathTo, string patientName = "")
+        public void AddHeaderFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "")
         {
             // Replace header in target document with header of source document.
             using (WordprocessingDocument
@@ -2692,10 +2734,19 @@ namespace PainTrax.Web.Controllers
                     }
                 }
 
-
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
                 var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
                 restheaderPart.Header = new Header(new Paragraph(new Run(new Text(patientName))));
+                if (cmpid == 7)
+                {
+                    if (!string.IsNullOrEmpty(dos))
+                    {
+                        string _dos = Common.commonDate(Convert.ToDateTime(dos), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
+                        restheaderPart.Header.AppendChild(new Paragraph(new Run(new Text(_dos))));
+                    }
+                }
+
                 restheaderPart.Header.AppendChild(new Paragraph(new Run(new Text("Page"), new SimpleField() { Instruction = "PAGE" })));
 
                 //  restheaderPart.Header = new Header(new Paragraph("Purav\nSandip"));
@@ -3119,6 +3170,8 @@ namespace PainTrax.Web.Controllers
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
 
+            var ieData = _ieService.GetOne(patientIEId);
+
             tbl_patient_fu objFU = new tbl_patient_fu()
             {
                 created_by = userid,
@@ -3129,7 +3182,10 @@ namespace PainTrax.Web.Controllers
                 is_active = true,
                 patient_id = patientId,
                 extra_comments = "",
-                type = type
+                type = type,
+                accident_type = ieData.accident_type,
+
+
             };
             int fu_id = _patientFUservices.Insert(objFU);
 

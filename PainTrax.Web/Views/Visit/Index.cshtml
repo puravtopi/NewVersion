@@ -30,9 +30,9 @@
                             @{
                                 if (HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionRoleAccess).Contains("Add Patient"))
                                 {
-                                            <div class="col-md-12 col-lg-12">
-                                                <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
-                                            </div>
+                                    <div class="col-md-12 col-lg-12">
+                                        <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
+                                    </div>
                                 }
                             }
                         </div>
@@ -92,7 +92,7 @@
             </div><!-- End Large Modal-->
         </div>
     </div>
-   
+
     <div class="modal fade" id="signModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -101,16 +101,53 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="id" />
-                    <input type="hidden" id="ie_id" />
+
+                    <input type="hidden" id="sid" />
+                    <input type="hidden" id="pid" />
                     <div class="col-sm-10">
-                        <canvas id="signature-pad" style="border: 1px solid #000;" crossorigin="anonymous"></canvas>
+
+                        <p>
+                            I, <b id="pname"></b>, hereby authorize <b>
+                                Quality Orthopedics &
+                                Complete Joint Care, PC
+                            </b> to use my signature as signed below for the following
+                        </p>
+                        <p>documents:</p>
+                        <ul>
+                            <li>
+                                NY Motor Vehicle No-Fault AOB Form
+                            </li>
+                            <li>
+                                NYS Form NF-2
+                            </li>
+                            <li>
+                                NYS Form NF-3
+                            </li>
+                            <li>
+                                Attorney Lien document
+                            </li>
+                            <li>
+                                HIPAA (OCA official Form N0.: 960)
+                            </li>
+                        </ul>
+                        <center><b>WC Forms</b></center>
+                        <ul>
+                            <li>Workers Compensation Insurance form</li>
+                            <li>HIPAA (OCA official Form N0.: 960) </li>
+                        </ul>
+                        <center>
+                            <canvas id="signature-pad" style="border: 1px solid #000;" crossorigin="anonymous"></canvas>
+                            <img id="imgSign" style="display:none" />
+                        </center>
                     </div>
-                    <div class="mt-3">
+                    <div class="mt-3" id="signaction">
                         <button type="button" class="btn btn-danger" id="clear-signature">Clear</button>
                         <button type="button" class="btn btn-warning" id="undo-signature">Undo</button>
                         <button type="button" class="btn btn-secondary" id="redo-signature">Redo</button>
                         <button type="button" class="btn btn-primary" id="save-signature" onclick="fnSaveSign()">Save Signature</button>
+                    </div>
+                    <div class="mt-3" id="changesign" style="display:none">
+                        <button type="button" class="btn btn-primary" onclick="fnChangeSave()">Change Signature</button>
                     </div>
                 </div>
             </div>
@@ -166,38 +203,45 @@
     <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+
+
+
     <script>
 
         var pageSize = @ViewBag.pageSize;
+
+
+        var canvas = document.getElementById("signature-pad");
+        var signaturePad = new SignaturePad(canvas, {
+            penColor: 'black',
+            backgroundColor: 'white',
+        });
+
         $(document).ready(function () {
             bindList();
-            var canvas = document.getElementById("signature-pad");
-            var signaturePad = new SignaturePad(canvas, {
-                penColor: 'black', 
-                backgroundColor: 'white',
-            });
+          
 
-            var undoStack = []; 
+            var undoStack = [];
 
             $("#clear-signature").click(function () {
-                signaturePad.clear(); 
-                undoStack = []; 
+                signaturePad.clear();
+                undoStack = [];
             });
 
             $("#undo-signature").click(function () {
-                var data = signaturePad.toData(); 
+                var data = signaturePad.toData();
                 if (data.length > 0) {
-                    var removedStroke = data.pop(); 
+                    var removedStroke = data.pop();
                     undoStack.push(removedStroke);
-                    signaturePad.fromData(data); 
+                    signaturePad.fromData(data);
                 }
             });
 
             $("#redo-signature").click(function () {
                 if (undoStack.length > 0) {
                     var redoStroke = undoStack.pop();
-                    var data = signaturePad.toData(); 
-                    data.push(redoStroke); 
+                    var data = signaturePad.toData();
+                    data.push(redoStroke);
                     signaturePad.fromData(data);
                 }
             });
@@ -206,8 +250,8 @@
                 if (signaturePad.isEmpty()) {
                     alert("Please draw your signature before saving.");
                 } else {
-                    var signatureData = signaturePad.toDataURL("image/jpeg"); 
-                    fnSaveSign(signatureData); 
+                    var signatureData = signaturePad.toDataURL("image/jpeg");
+                    fnSaveSign(signatureData);
                 }
             });
 
@@ -216,20 +260,23 @@
 
                 var url = '@Url.Action("SaveSign", "Visit")';
 
-                var ieId = $("#ie_id").val(); 
+                var pId = $("#pid").val();
+                var sid = $("#sid").val();
                 var data = {
-                    ie_id: ieId,
-                    signatureData: signatureData, 
+                    id: sid,
+                    patient_id: pId,
+                    signatureData: signatureData,
                 };
 
                 $.ajax({
                     type: "POST",
-                    url: url, 
-                    data: JSON.stringify(data), 
+                    url: url,
+                    data: JSON.stringify(data),
                     contentType: "application/json",
                     success: function (response) {
                         console.log("Signature saved successfully:", response);
-                        $("#signModal").modal("hide"); 
+                        $("#signModal").modal("hide");
+
                     },
                     error: function (xhr, status, error) {
                         console.log("Error saving signature:", xhr.status, error);
@@ -244,13 +291,13 @@
             canvas.width = canvas.offsetWidth * ratio;
             canvas.height = canvas.offsetHeight * ratio;
             canvas.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
-            signaturePad.clear(); 
-        }        
+            signaturePad.clear();
+        }
         // window.addEventListener("resize", resizeCanvas);
         // resizeCanvas();
 
         function bindList() {
-          
+
             var url = '@Url.Action("List", "Visit")';
             var editurl = '@Url.Action("Create", "Visit")';
             var printurl = '@Url.Action("IEPrint", "Visit")';
@@ -295,13 +342,13 @@
                     },
                     {
                         "render": function (data, type, full, meta) {
-                            return '<a  href="' + editurl + '/' + full.id + '">' + full.fname + '</a>';
+                            return '<a  href="' + editurl + '/' + full.id + '" id="fname_' + full.patient_id + '">' + full.fname + '</a>';
                         }
                     },
                     //{ "data": "lname", "lname": "lname", "autoWidth": true },
                     {
                         "render": function (data, type, full, meta) {
-                            return '<a  href="' + editurl + '/' + full.id + '">' + full.lname + '</a>';
+                            return '<a  href="' + editurl + '/' + full.id + '"  id="lname_' + full.patient_id + '">' + full.lname + '</a>';
                         }
                     },
                     {
@@ -370,8 +417,8 @@
                             index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + printurl + '/' + full.id + '" ><i class="bi bi-printer-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print" data-bs-original-title="Print"></i><span>Print</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnFuType(' + full.id + ',' + full.patient_id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Next Visit</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + full.id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li></ul></a>';
-                 
-                         
+
+
                             return index;
                         }
                     }
@@ -425,7 +472,7 @@
             });
 
         }
-        
+
         function fnSaveComment() {
 
 
@@ -452,11 +499,25 @@
 
         }
 
-       
-        function fnShowSign(ieId) {
+
+        function fnShowSign(pId) {
+
+
+
+
             debugger
 
-            var url = '@Url.Action("GetSign", "Visit")?ieId=' + ieId
+            var url = '@Url.Action("GetSign", "Visit")?pId=' + pId
+
+            var fname = $("#fname_" + pId).text();
+            var lname = $("#lname_" + pId).text();
+
+
+            $("#pid").val(pId);
+            $("#pname").html(fname + ' ' + lname);
+
+          
+
 
             $.ajax({
                 type: "Post",
@@ -464,15 +525,19 @@
                 contentType: "application/x-www-form-urlencoded",
                 success: function (data, status, xhr) {
                     if (data != null) {
-                        $("#signature-pad").val(data.signatureData);
-                        $("#id").val(data.id);
+
+                        $("#sid").val(data.id);
+                        const canvas = document.getElementById("signature-pad");
+
+                        const signaturePad = new SignaturePad(canvas);
+                        signaturePad.fromDataURL(data.signatureValue);
                     }
                     else {
-                        $("#signature-pad").val("");
-                        $("#id").val("0");
-                    }
 
-                    $("#ie_id").val(ieId);
+                        $("#sid").val("0");
+                        signaturePad.clear();
+                        undoStack = [];
+                    }
 
                     $("#signModal").modal('show');
                 },
@@ -482,26 +547,10 @@
             });
 
         }
-        function fnSaveSign() {
-            debugger
+        function fnChangeSave() {
+            $("#signaction").hide();
+            $("#changesign").show();
 
-            var url = '@Url.Action("SaveSign", "Visit")';
-            var ieId = $("#ie_id").val();
-            var model = {
-                "id": $("#id").val(),
-                "signatureData": $("#signature-pad").val(),
-                "ie_id": $("#ie_id").val()
-            }
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: JSON.stringify(model),
-                contentType: "application/json",
-                success: function (response) {
-                    console.log("Signature saved successfully:", response);
-                    $("#signModal").modal("hide"); 
-                },
-            });
         }
 
 

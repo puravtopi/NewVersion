@@ -69,7 +69,7 @@
                                         </div>
                                     </div>
                                     <div class="row mb-3">
-                                        <label for="title" asp-for="pageBreakForInjection" class="col-md-4 col-lg-3 col-form-label">PageBreack For Injection</label>
+                                        <label for="title" asp-for="pageBreakForInjection" class="col-md-4 col-lg-3 col-form-label">PageBreak For Injection</label>
                                         <div class="col-md-8 col-lg-9">
                                             <select class="form-select" asp-for="pageBreakForInjection">
                                                 <option value="true">Yes</option>
@@ -80,10 +80,22 @@
                                     <div class="row mb-3">
                                         <label for="title" asp-for="injectionAsSeparateBlock" class="col-md-4 col-lg-3 col-form-label">Injection As Separate Block</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <select class="form-select" asp-for="injectionAsSeparateBlock"> 
+                                            <select class="form-select" asp-for="injectionAsSeparateBlock">
                                                 <option value="true">Yes</option>
                                                 <option value="false">No</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="injectionAsSeparateBlock" class="col-md-4 col-lg-3 col-form-label">Diagnostics Settings</label>
+                                        <div class="col-md-1 col-lg-1">
+                                            <input type="checkbox" asp-for="isdaignosisshow" />
+                                        </div>
+                                        <div class="col-md-1 col-lg-4">
+                                            <textarea asp-for="foundStatment" class="form-control" placeholder="Found Statment"></textarea>
+                                        </div>
+                                        <div class="col-md-1 col-lg-4">
+                                            <textarea asp-for="notfoundStatment" class="form-control" placeholder="Not Found Statment"></textarea>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -109,4 +121,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    }
+}

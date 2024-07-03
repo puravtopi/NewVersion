@@ -368,7 +368,8 @@
                     $('#messBody').html('<p>Saved.</p>');
                    
 
-                    $(t).tab('show');
+                    if (t != null)
+                        $(t).tab('show');
                 }
                 else
                     alert("Error in Save.");

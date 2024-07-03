@@ -47,7 +47,7 @@ namespace PainTrax.Web.Helper
             AcroFields readPdfFields = pdfReader.AcroFields;
             String tabname = readPdfFields.GetField("txtTable");
             if (tabname == null || tabname == "")
-                tabname = "ViewPdf";
+                tabname = "View_Pdf";
  
 
             DataTable dt = _parentService.GetData("select * from " + tabname + " where " + ColumnName + "=" + ID);

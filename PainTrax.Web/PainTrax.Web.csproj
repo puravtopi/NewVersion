@@ -9,15 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\MapPdfController.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Controllers\kcctpvjn.nct~" />
-    <None Remove="Views\Shared\_AdminLayout.cshtml.css" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Templete\1\IEReport.html" />
   </ItemGroup>
 
@@ -49,14 +40,134 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\AccidentType\Create.cshtml" />
+    <None Include="Views\AccidentType\Edit.cshtml" />
+    <None Include="Views\AccidentType\Index.cshtml" />
+    <None Include="Views\Adjuster\Create.cshtml" />
+    <None Include="Views\Adjuster\Edit.cshtml" />
+    <None Include="Views\Adjuster\Index.cshtml" />
+    <None Include="Views\Admin\Index.cshtml" />
+    <None Include="Views\Appointment\Appointments.cshtml" />
+    <None Include="Views\Appointment\ChangeStatus.cshtml" />
+    <None Include="Views\Appointment\Index.cshtml" />
+    <None Include="Views\Appointment\Multiple.cshtml" />
+    <None Include="Views\Appointment\New.cshtml" />
+    <None Include="Views\Appointment\Reports.cshtml" />
     <None Include="Views\AppProvider\Create.cshtml" />
     <None Include="Views\AppProvider\Edit.cshtml" />
     <None Include="Views\AppProvider\Index.cshtml" />
     <None Include="Views\AppStatus\Create.cshtml" />
     <None Include="Views\AppStatus\Edit.cshtml" />
     <None Include="Views\AppStatus\Index.cshtml" />
+    <None Include="Views\Attorneys\Create.cshtml" />
+    <None Include="Views\Attorneys\Edit.cshtml" />
+    <None Include="Views\Attorneys\Index.cshtml" />
+    <None Include="Views\CaseType\Create.cshtml" />
+    <None Include="Views\CaseType\Edit.cshtml" />
+    <None Include="Views\CaseType\Index.cshtml" />
+    <None Include="Views\Company\Create.cshtml" />
+    <None Include="Views\Company\Edit.cshtml" />
+    <None Include="Views\Company\Index.cshtml" />
+    <None Include="Views\DefaultSettings\Index.cshtml" />
+    <None Include="Views\DefaultSettings\_NE.cshtml" />
+    <None Include="Views\DefaultSettings\_Page1.cshtml" />
+    <None Include="Views\DefaultSettings\_Page2.cshtml" />
+    <None Include="Views\Designation\Create.cshtml" />
+    <None Include="Views\Designation\Edit.cshtml" />
+    <None Include="Views\Designation\Index.cshtml" />
+    <None Include="Views\Diagcode\Create.cshtml" />
+    <None Include="Views\Diagcode\Edit.cshtml" />
+    <None Include="Views\Diagcode\Index.cshtml" />
     <None Include="Views\Forms\Index.cshtml" />
+    <None Include="Views\Forms\Manage.cshtml" />
+    <None Include="Views\ForwardSetting\IETOFU.cshtml" />
+    <None Include="Views\FUVisit\Create.cshtml" />
+    <None Include="Views\FUVisit\FUPrint.cshtml" />
+    <None Include="Views\FUVisit\_DaignoCode.cshtml" />
+    <None Include="Views\FUVisit\_NE.cshtml" />
+    <None Include="Views\FUVisit\_OtherPage.cshtml" />
+    <None Include="Views\FUVisit\_Page1.cshtml" />
+    <None Include="Views\FUVisit\_Page2.cshtml" />
+    <None Include="Views\FUVisit\_Page3.cshtml" />
+    <None Include="Views\FUVisit\_POC.cshtml" />
+    <None Include="Views\FUVisit\_POCSummary.cshtml" />
+    <None Include="Views\Group\Create.cshtml" />
+    <None Include="Views\Group\Edit.cshtml" />
+    <None Include="Views\Group\Index.cshtml" />
+    <None Include="Views\Home\AdminDashboard.cshtml" />
+    <None Include="Views\Home\AdminLogin.cshtml" />
+    <None Include="Views\Home\ForgotPassword.cshtml" />
+    <None Include="Views\Home\ForgotPasswordConfirmation.cshtml" />
+    <None Include="Views\Home\GetProvider.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Login.cshtml" />
+    <None Include="Views\Home\Privacy.cshtml" />
+    <None Include="Views\Home\ResetPassword.cshtml" />
+    <None Include="Views\Home\SessionExpired.cshtml" />
+    <None Include="Views\Inscos\Create.cshtml" />
+    <None Include="Views\Inscos\Edit.cshtml" />
+    <None Include="Views\Inscos\Index.cshtml" />
+    <None Include="Views\Location\Create.cshtml" />
+    <None Include="Views\Location\Edit.cshtml" />
+    <None Include="Views\Location\Index.cshtml" />
+    <None Include="Views\Log\Index.cshtml" />
+    <None Include="Views\Macros\Create.cshtml" />
+    <None Include="Views\Macros\Edit.cshtml" />
+    <None Include="Views\Macros\Index.cshtml" />
+    <None Include="Views\MapPdf\Index.cshtml" />
     <None Include="Views\Patientdocument\Index.cshtml" />
+    <None Include="Views\Patientdocument\PreviewDoc.cshtml" />
+    <None Include="Views\Patient\Create.cshtml" />
+    <None Include="Views\Patient\Edit.cshtml" />
+    <None Include="Views\Patient\Index.cshtml" />
+    <None Include="Views\PrintSetting\Index.cshtml" />
+    <None Include="Views\PrintSetting\ModifyTemplate.cshtml" />
+    <None Include="Views\PrintSetting\Templates.cshtml" />
+    <None Include="Views\Procedure\Create.cshtml" />
+    <None Include="Views\Procedure\Edit.cshtml" />
+    <None Include="Views\Procedure\Index.cshtml" />
+    <None Include="Views\Provider\Create.cshtml" />
+    <None Include="Views\Provider\Edit.cshtml" />
+    <None Include="Views\Provider\Index.cshtml" />
+    <None Include="Views\ReferringPhysician\Create.cshtml" />
+    <None Include="Views\ReferringPhysician\Edit.cshtml" />
+    <None Include="Views\ReferringPhysician\Index.cshtml" />
+    <None Include="Views\Settings\Index.cshtml" />
+    <None Include="Views\Shared\Error.cshtml" />
+    <None Include="Views\Shared\_AdminLayout.cshtml" />
+    <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Views\Shared\_ProviderLayout.cshtml" />
+    <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="Views\Signature\Create.cshtml" />
+    <None Include="Views\Signature\Edit.cshtml" />
+    <None Include="Views\Signature\Index.cshtml" />
+    <None Include="Views\State\Create.cshtml" />
+    <None Include="Views\State\Edit.cshtml" />
+    <None Include="Views\State\Index.cshtml" />
+    <None Include="Views\Treatment\Create.cshtml" />
+    <None Include="Views\Treatment\Edit.cshtml" />
+    <None Include="Views\Treatment\Index.cshtml" />
+    <None Include="Views\User\Create.cshtml" />
+    <None Include="Views\User\Edit.cshtml" />
+    <None Include="Views\User\EditUserProfile.cshtml" />
+    <None Include="Views\User\Index.cshtml" />
+    <None Include="Views\Visit\Create.cshtml" />
+    <None Include="Views\Visit\IEPrint.cshtml" />
+    <None Include="Views\Visit\Index.cshtml" />
+    <None Include="Views\Visit\_DaignoCode.cshtml" />
+    <None Include="Views\Visit\_FUList.cshtml" />
+    <None Include="Views\Visit\_NE.cshtml" />
+    <None Include="Views\Visit\_OtherPage.cshtml" />
+    <None Include="Views\Visit\_Page1.cshtml" />
+    <None Include="Views\Visit\_Page2.cshtml" />
+    <None Include="Views\Visit\_Page3.cshtml" />
+    <None Include="Views\Visit\_POC.cshtml" />
+    <None Include="Views\Visit\_POCSummary.cshtml" />
+    <None Include="Views\WebsiteMacros\Create.cshtml" />
+    <None Include="Views\WebsiteMacros\Edit.cshtml" />
+    <None Include="Views\WebsiteMacros\Index.cshtml" />
+    <None Include="Views\_ViewImports.cshtml" />
+    <None Include="Views\_ViewStart.cshtml" />
     <None Include="wwwroot\assets\vendor\bootbox\bootbox.all.js" />
     <None Include="wwwroot\assets\vendor\bootbox\bootbox.all.min.js" />
     <None Include="wwwroot\assets\vendor\bootbox\bootbox.js" />
@@ -149,19 +260,6 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\WebsiteMacros\Create.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\WebsiteMacros\Create.cshtml" />
-    <_ContentIncludedByDefault Remove="Views\WebsiteMacros\Edit.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\WebsiteMacros\Edit.cshtml" />
   </ItemGroup>
 
 </Project>

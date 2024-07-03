@@ -800,7 +800,21 @@
                         </div>
                     }
                 }
-                
+                @{
+                    if (Model.id > 0)
+                    {
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"></h5>
+                                <center>
+
+                                    <a href="@Url.Action("FUPrint","FUVisit")?ieid=@Model.id&fuid=@Model.fu_id" target="_new" class="btn btn-success">Click for Print Preview</a>
+
+                                </center>
+                            </div>
+                        </div>
+                    }
+                }
 
 
                 <div class="card">

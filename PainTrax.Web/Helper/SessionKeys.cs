@@ -19,5 +19,9 @@
         public static string SessionSelectedProviderId = "provider_id";
         public static string SessionPageBreak = "pageBreak";
         public static string SessionUserId = "userid";
+        public static string SessionIsDaignosis = "isdaignosis";
+        public static string SessionDaignosisFoundStatment = "foundStatment";
+        public static string SessionDaignosisNotFoundStatment = "foundnoStatment";
+        public static string SessionInjectionAsSeparateBlock = "injectionAsSeparateBlock";
     }
 }

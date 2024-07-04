@@ -51,8 +51,8 @@ namespace PainTrax.Web.Services
             data.fullname = fullName;
             //data.password = EncryptionHelper.Encrypt(data.password);
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_users
-		(fname,lname,emailid,address,fullname,uname,password,groupid,desigid,cmp_id,createdby,createddate,phoneno,signature)Values
-				(@fname,@lname,@emailid,@address,@fullname,@uname,@password,@groupid,@desigid,@cmpid,@createdby,@createddate,@phoneno,@signature)", conn);
+		(fname,lname,emailid,address,fullname,uname,password,groupid,desigid,cmp_id,createdby,createddate,phoneno,signature,providername,assistant_providername)Values
+				(@fname,@lname,@emailid,@address,@fullname,@uname,@password,@groupid,@desigid,@cmpid,@createdby,@createddate,@phoneno,@signature,@providername,@assistant_providername)", conn);
             cm.Parameters.AddWithValue("@fname", data.fname);
             cm.Parameters.AddWithValue("@lname", data.lname);
             cm.Parameters.AddWithValue("@emailid", data.emailid);
@@ -67,6 +67,8 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@createddate", data.createddate);
             cm.Parameters.AddWithValue("@phoneno", data.phoneno);
             cm.Parameters.AddWithValue("@signature", data.signature);
+            cm.Parameters.AddWithValue("@providername", data.providername);
+            cm.Parameters.AddWithValue("@assistant_providername", data.assistant_providername);
 
             Execute(cm);
         }
@@ -87,7 +89,9 @@ namespace PainTrax.Web.Services
 		phoneno=@phoneno,
 	    updateddate=@updateddate,
 		updatedby=@updatedby,
-        signature=@signature
+        signature=@signature,
+        providername=@providername,
+        assistant_providername=@assistant_providername
         where Id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.Id);
             cm.Parameters.AddWithValue("@fname", data.fname);
@@ -103,6 +107,8 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@updatedby", data.updatedby);
             cm.Parameters.AddWithValue("@phoneno", data.phoneno);
             cm.Parameters.AddWithValue("@signature", data.signature);
+            cm.Parameters.AddWithValue("@providername", data.providername);
+            cm.Parameters.AddWithValue("@assistant_providername", data.assistant_providername);
             Execute(cm);
         }
 

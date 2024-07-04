@@ -74,6 +74,13 @@
                                          
                                         </div>
                                     </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Provider Name</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="providername">
+
+                                        </div>
+                                    </div>
                                 <div class="row mb-3">
 
                                     <div class="col-sm-10">
@@ -133,6 +140,13 @@
                                         </div>
 
                                         <input type="hidden" id="signature_hidden" name="header_template_hidden" value="@Model.signature" />
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">Assistant Provider Name</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" class="form-control" asp-for="assistant_providername">
+
+                                        </div>
                                     </div>
                             </div>
                         </div>

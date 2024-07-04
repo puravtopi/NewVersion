@@ -22,6 +22,8 @@ namespace PainTrax.Web.Models
 		public int? updatedby { get; set; }
         public string? signature { get; set; }
         public string? signature_hidden { get; set; }
+		public string? providername { get; set; }
+		public string? assistant_providername {  get; set; }
 
     }
 }

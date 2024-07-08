@@ -32,9 +32,9 @@ namespace PainTrax.Web.Services
                 tDate = new DateTime(year, 12, 31).ToString("yyyy-MM-dd");
             }
             if (type == 4)
-                query = "select count(id) from tbl_patient where cmp_id=@cmp_id";
+                query = "SELECT count(id) FROM tbl_patient_ie WHERE patient_id IN (SELECT id FROM tbl_patient WHERE  cmp_id=@cmp_id)";
             else
-                query = "select count(id) from tbl_patient where cmp_id=@cmp_id and createddate BETWEEN '" + fDate + "' AND '" + tDate + "'";
+                query = "SELECT count(id) FROM tbl_patient_ie WHERE patient_id IN (SELECT id FROM tbl_patient WHERE  cmp_id=@cmp_id and createddate BETWEEN '" + fDate + "' AND '" + tDate + "')";
 
             MySqlCommand cm = new MySqlCommand(query, conn);
             cm.Parameters.AddWithValue("@cmp_id", cmp_id);

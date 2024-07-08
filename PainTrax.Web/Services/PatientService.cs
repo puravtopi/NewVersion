@@ -93,7 +93,7 @@ public class PatientService : ParentService
 		mc=@mc,
 		account_no=@account_no,        
 		updatedate=@updatedate,
-		updatedby=@updatedby,
+		updatedby=@updatedby
 
 
 		where id=@id", conn);

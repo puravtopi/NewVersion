@@ -75,8 +75,8 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@created_date", System.DateTime.Now);
         cm.Parameters.AddWithValue("@created_by", data.created_by);
         cm.Parameters.AddWithValue("@is_active", data.is_active);
-         cm.Parameters.AddWithValue("@referring_physician", data.referring_physician);
-         cm.Parameters.AddWithValue("@accident_type", data.accident_type);
+        cm.Parameters.AddWithValue("@referring_physician", data.referring_physician);
+        cm.Parameters.AddWithValue("@accident_type", data.accident_type);
         cm.Parameters.AddWithValue("@physicianid", data.physicianid);
         var result = ExecuteScalar(cm);
         return result;
@@ -632,7 +632,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@note3", data.note3);
         cm.Parameters.AddWithValue("@followup_date", data.followup_date);
         cm.Parameters.AddWithValue("@followup_duration", data.followup_duration);
-        cm.Parameters.AddWithValue("@treatment_delimit_desc", data.treatment_delimit_desc.TrimStart('^'));
+        cm.Parameters.AddWithValue("@treatment_delimit_desc", data.treatment_delimit_desc == null ? "" : data.treatment_delimit_desc.TrimStart('^'));
         cm.Parameters.AddWithValue("@treatment_delimit", data.treatment_delimit == null ? "" : data.treatment_delimit.TrimStart(','));
         var result = ExecuteScalar(cm);
         return result;
@@ -705,17 +705,17 @@ public class PatientIEService : ParentService
         var datalist = ConvertDataTable<tbl_ie_sign>(GetData(cm)).FirstOrDefault();
         return datalist;
     }
-    
+
     public int InsertSign(tbl_ie_sign data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_ie_sign
         (patient_id, signatureData,signatureValue) VALUES
             (@patient_id, @signatureData,@signatureValue); select @@identity", conn);
-     
+
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
-        cm.Parameters.AddWithValue("@signatureData", data.signatureData);       
-        cm.Parameters.AddWithValue("@signatureValue", data.signatureValue);       
-        var result = ExecuteScalar(cm); 
+        cm.Parameters.AddWithValue("@signatureData", data.signatureData);
+        cm.Parameters.AddWithValue("@signatureValue", data.signatureValue);
+        var result = ExecuteScalar(cm);
         return Convert.ToInt32(result);
     }
     public void UpdateSign(tbl_ie_sign data)

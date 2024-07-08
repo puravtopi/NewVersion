@@ -216,6 +216,7 @@ namespace PainTrax.Web.Controllers
                         obj.accidentType = ieData.accidentType;
                         obj.state = ieData.state;
 
+
                     }
 
 
@@ -288,13 +289,15 @@ namespace PainTrax.Web.Controllers
                     {
                         obj.Page1 = page1Data;
 
+                        ViewBag.Assessment = page1Data.assessment;
+
                         string daignoLink = "";
                         if (!string.IsNullOrEmpty(page1Data.bodypart))
                         {
                             for (int i = 0; i < page1Data.bodypart.Split(',').Length; i++)
                             {
                                 var linkbody = page1Data.bodypart.Split(',')[i].Replace(" ", "_");
-                                daignoLink += "<a href=# onclick=openDaignoModel('" + linkbody + "')>" + page1Data.bodypart.Split(',')[i] + "</a>&nbsp;";
+                                daignoLink += "<a href=# onclick=openDaignoModel('" + linkbody + "')>" + page1Data.bodypart.Split(',')[i] + "</a><br/>";
                             }
 
                         }
@@ -475,7 +478,7 @@ namespace PainTrax.Web.Controllers
                         obj.Page1.social_history = defaultPage1.social_history;
                         obj.Page1.vital = defaultPage1.vital;
                         obj.Page1.work_status = defaultPage1.work_status;
-
+                        ViewBag.Assessment = defaultPage1.assessment;
                     }
 
                     var defaultPage2 = _defaultSettingService.GetOnePage2(cmpid.Value);
@@ -1192,10 +1195,18 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetDaignoCodeList(string bodyparts)
+        public IActionResult GetDaignoCodeList(string bodyparts, int ieId)
         {
             try
             {
+
+                var page1Data = _ieService.GetOnePage1(ieId);
+
+                string assetment = "";
+                
+                if (page1Data != null)
+                    assetment = page1Data.assessment;
+
                 bodyparts = bodyparts.Replace("_", " ");
                 ViewBag.BodyPart = bodyparts.ToUpper();
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
@@ -1212,7 +1223,7 @@ namespace PainTrax.Web.Controllers
                                   DaignoCodeId = c.Id.Value,
                                   Description = c.Description,
                                   DiagCode = c.DiagCode,
-                                  IsSelect = c.PreSelect,
+                                  IsSelect = assetment.IndexOf(c.Description) > 0 ? true : c.PreSelect,
                                   Display_Order = c.display_order,
                                   cmp_id = c.cmp_id
 
@@ -2150,10 +2161,12 @@ namespace PainTrax.Web.Controllers
                 {
                     body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : "Dr. " + locData[0].nameofpractice);
                     body = body.Replace("#address", locData[0].address);
+                    body = body.Replace("#Address", locData[0].address);
                     //  body = body.Replace("#address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                     body = body.Replace("#loc", locData[0].location);
                     body = body.Replace("#Location", locData[0].location);
-                    //body = body.Replace("#loc", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
+                    body = body.Replace("#Nameofpractice", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : "Dr. " + locData[0].nameofpractice);
+                    body = body.Replace("#Phone", locData[0].telephone);
                     //body = body.Replace("#Location", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                 }
 
@@ -2440,6 +2453,9 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                         body = body.Replace("#Sign", "");
+
+                    body = body.Replace("#ProviderName", userData.providername);
+                    body = body.Replace("#AssProviderName", userData.assistant_providername);
                 }
                 else
                     body = body.Replace("#Sign", "");
@@ -2823,7 +2839,7 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(data.diagcervialbulge_text))
                     {
 
-                        strDaignosis = strDaignosis + " of the cervical spine " + data.diagcervialbulge_text + ", ";
+                        strDaignosis = strDaignosis + " of the cervical spine: " + data.diagcervialbulge_text + ", ";
 
                         stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
@@ -2866,7 +2882,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
                     {
-                        strDaignosis = strDaignosis + " of the thoracic spine " + data.diagthoracicbulge_text + ", ";
+                        strDaignosis = strDaignosis + " of the thoracic spine: " + data.diagthoracicbulge_text + ", ";
 
                         stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
@@ -2909,7 +2925,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
                     {
-                        strDaignosis = strDaignosis + " of the lumbar spine " + data.diaglumberbulge_text + ", ";
+                        strDaignosis = strDaignosis + " of the lumbar spine: " + data.diaglumberbulge_text + ", ";
 
                         stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;

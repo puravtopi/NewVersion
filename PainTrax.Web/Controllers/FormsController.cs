@@ -362,6 +362,13 @@ namespace PainTrax.Web.Controllers
             
             return File(pdfBytes, "application/pdf");
         }
+        public IActionResult DisplayColumns()
+        {
+
+            var viewStructure = _patientservices.GetData("DESCRIBE View_Pdf;");
+            ViewBag.ViewStructure = viewStructure;
+            return View();
+        }
 
 
         #region Private Method

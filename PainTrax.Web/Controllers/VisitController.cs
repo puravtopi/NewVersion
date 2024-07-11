@@ -21,6 +21,7 @@ using iText.Signatures;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using System.IO.Compression;
 
 namespace PainTrax.Web.Controllers
 {
@@ -2348,9 +2349,10 @@ namespace PainTrax.Web.Controllers
                 body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
                 body = body.Replace("#ReflexExam", "");
                 string injectionHtml = dataPOC.strInjectionDesc;
+                //string injectionHtml = "<h2>Injection Test</h2>";
 
-
-                string SessionDiffPage = HttpContext.Session.GetString(SessionKeys.SessionPageBreak);
+                //string SessionDiffPage = HttpContext.Session.GetString(SessionKeys.SessionPageBreak);
+                SessionDiffDoc = HttpContext.Session.GetString(SessionKeys.SessionInjectionAsSeparateBlock);
 
                 if (SessionDiffDoc != "true")
                 {
@@ -2460,8 +2462,7 @@ namespace PainTrax.Web.Controllers
                 else
                     body = body.Replace("#Sign", "");
 
-                SessionDiffDoc = HttpContext.Session.GetString(SessionKeys.SessionInjectionAsSeparateBlock);
-
+                
                 if (SessionDiffDoc == "true")
                 {
                     body += "<br><br><!--Diff Doc-->";
@@ -2509,6 +2510,20 @@ namespace PainTrax.Web.Controllers
         }
         #endregion
         #region private method
+        public MemoryStream ConvertHtmlToWord(string htmlContent)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            using (WordprocessingDocument doc = WordprocessingDocument.Create(memoryStream, WordprocessingDocumentType.Document))
+            {
+                MainDocumentPart mainPart = doc.AddMainDocumentPart();
+                mainPart.Document = new Document();
+                Body body = mainPart.Document.AppendChild(new Body());
+                HtmlConverter converter = new HtmlConverter(mainPart);
+                var generatedBody = converter.Parse(htmlContent);
+                body.Append(generatedBody);
+            }
+            return memoryStream;
+        }
 
         [HttpPost]
         public IActionResult DownloadWord(string htmlContent, int ieId, int id)
@@ -2582,14 +2597,31 @@ namespace PainTrax.Web.Controllers
 
                     memStream.WriteTo(fileStream);
                 }
+                injDocName = subPath + "/" + patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_injection.docx";
+                System.IO.File.Delete(injDocName);
+                injHtmlContent = Regex.Replace(injHtmlContent, @"</ol>", string.Empty, RegexOptions.IgnoreCase);
+                injHtmlContent = injHtmlContent.Trim();
+
+                if (injHtmlContent != "")
+                {
+
+                    MemoryStream injMemStream = ConvertHtmlToWord(injHtmlContent);
+                    // injDocName = subPath + "/"+ patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_injection.docx";
+                    using (FileStream fileStream = new FileStream(injDocName, FileMode.Create))
+                    {
+
+                        injMemStream.WriteTo(fileStream);
+                    }
+                }
+
             }
 
-            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos });
+            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos, injFileName = injDocName });
 
         }
 
         [HttpGet]
-        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "", string dos = "")
+        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "", string dos = "", string injFileName = "")
         {
 
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
@@ -2608,7 +2640,43 @@ namespace PainTrax.Web.Controllers
                 }
             }
             byte[] data = System.IO.File.ReadAllBytes(filePath);
-            return File(data, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            byte[] injdata = new byte[0];
+            if (System.IO.File.Exists(injFileName))
+                injdata = System.IO.File.ReadAllBytes(injFileName);
+            if (SessionDiffDoc == "true" && injdata.Length > 0)
+            {
+
+                var files = new List<(string FileName, byte[] FileContent)>
+                {
+                    (fileName, data),
+
+                    (Path.GetFileName(injFileName), injdata)
+                };
+
+                var zipFileName = Path.ChangeExtension(fileName, ".zip"); ;
+                var zipFilePath = Path.ChangeExtension(filePath, ".zip");
+                System.IO.File.Delete(zipFilePath);
+                using (var zip = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
+                {
+                    foreach (var file in files)
+                    {
+                        var entry = zip.CreateEntry(file.FileName);
+                        using (var entryStream = entry.Open())
+                        using (var fileStream = new MemoryStream(file.FileContent))
+                        {
+                            fileStream.CopyTo(entryStream);
+                        }
+                    }
+                }
+
+                byte[] zipFileBytes = System.IO.File.ReadAllBytes(zipFilePath);
+                return File(zipFileBytes, "application/zip", zipFileName);
+            }
+            else
+            {
+
+                return File(data, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
 
         }
 

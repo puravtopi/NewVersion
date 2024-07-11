@@ -8,6 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 
+using DocumentFormat.OpenXml.Math;
+using Humanizer;
+using Microsoft.CodeAnalysis;
+using Org.BouncyCastle.Asn1.Ocsp;
+
 namespace PainTrax.Web.Services
 {
     public class POCServices : ParentService
@@ -56,7 +61,7 @@ namespace PainTrax.Web.Services
             }
         }
 
-        public DataTable GetAllProcedures(string bodyParts, int patientIEID, string potion, int cmp_id)
+        public System.Data.DataTable GetAllProcedures(string bodyParts, int patientIEID, string potion, int cmp_id)
         {
             try
             {
@@ -74,7 +79,7 @@ namespace PainTrax.Web.Services
             }
         }
 
-        public DataTable GetAllProceduresFU(string bodyParts, int patientFUID, string potion, int cmp_id)
+        public System.Data.DataTable GetAllProceduresFU(string bodyParts, int patientFUID, string potion, int cmp_id)
         {
             try
             {
@@ -213,7 +218,7 @@ namespace PainTrax.Web.Services
             }
         }
 
-        public DataTable GetProcedureCountDetails(int ProcedureID, int PatientIEID)
+        public System.Data.DataTable GetProcedureCountDetails(int ProcedureID, int PatientIEID)
         {
             try
             {
@@ -347,6 +352,48 @@ namespace PainTrax.Web.Services
             {
                 return 0;
             }
+        }
+
+        public List<POCReportVM> GetPOCReport(string cnd)
+        {
+            string query = "SELECT tp.ProcedureDetail_ID,pm.gender,CONCAT(pm.lname,', ',pm.fname)as 'Name',IFNULL(pm.MC,'') AS MC," +
+            "ie.Compensation AS 'CaseType' ,ie.doa,pm.dob,pm.mobile AS Phone,ie.primary_policy_no,ie.primary_claim_no,ins.cmpname," +
+            "lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE ," +
+            "tp.Requested," +
+            "tp.Executed," +
+            "tp.Scheduled  FROM tbl_Procedures_Details tp" +
+            " inner join tbl_patient_ie ie on tp.PatientIE_ID = ie.id" +
+            " inner join tbl_Procedures pp on pp.id=tp.Procedure_Master_ID" +
+            " inner join tbl_Patient pm on pm.id = ie.Patient_ID" +
+            " inner join tbl_locations lc ON ie.Location_ID = lc.id" +
+            " LEFT JOIN tbl_inscos ins ON ie.primary_ins_cmp_id = ins.id";
+            // query += " where  (tp.Scheduled>='" + DateTime.Now.Date.ToString("yyyy/MM/dd") + "')";
+
+            if (!string.IsNullOrEmpty(cnd))
+            {
+                query = query + " " + cnd;
+            }
+
+            MySqlCommand cm = new MySqlCommand(query, conn);
+
+            var datalist = ConvertDataTable<POCReportVM>(GetData(cm));
+            return datalist;
+        }
+
+        public void TransferToExecute(string id, string sDate)
+        {
+            string query = "update tbl_Procedures_Details set Executed='" + Convert.ToDateTime(sDate).ToString("yyyy/MM/dd") + "',Scheduled=null where ProcedureDetail_ID=" + id;
+            MySqlCommand cm = new MySqlCommand(query, conn);
+
+            Execute(cm);
+        }
+
+        public void TransferToReschedules(string id)
+        {
+            string query = "update tbl_Procedures_Details set Scheduled=null where ProcedureDetail_ID=" + id;
+            MySqlCommand cm = new MySqlCommand(query, conn);
+
+            Execute(cm);
         }
     }
 }

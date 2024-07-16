@@ -67,8 +67,44 @@ namespace PainTrax.Web.Services
         public void Delete(tbl_signature data)
         {
             MySqlCommand cm = new MySqlCommand(@"DELETE from tbl_signature where id=@id", conn);
-            cm.Parameters.AddWithValue("@id",data.id);
+            cm.Parameters.AddWithValue("@id", data.id);
             Execute(cm);
+        }
+
+        public int ManageSign(tbl_ie_sign data)
+        {
+
+            DataTable dt = new DataTable();
+            MySqlCommand cm = new MySqlCommand("select * from tbl_ie_sign where patient_id=@id ", conn);
+            cm.Parameters.AddWithValue("@id", data.patient_id);
+            var datalist = ConvertDataTable<tbl_signature>(GetData(cm)).FirstOrDefault();
+
+            int Result = 0;
+
+            if (datalist != null)
+            {
+                cm = new MySqlCommand(@"UPDATE tbl_ie_sign SET
+				signatureData=@signatureData where patient_id=@patient_id", conn);
+                cm.Parameters.AddWithValue("@patient_id", data.patient_id);
+                cm.Parameters.AddWithValue("@signatureData", data.signatureData);
+
+                Execute(cm);
+                Result = 1;
+            }
+            else
+            {
+                cm = new MySqlCommand(@"INSERT INTO tbl_ie_sign
+        (patient_id, signatureData,signatureValue) VALUES
+            (@patient_id, @signatureData,@signatureValue); select @@identity", conn);
+
+                cm.Parameters.AddWithValue("@patient_id", data.patient_id);
+                cm.Parameters.AddWithValue("@signatureData", data.signatureData);
+                cm.Parameters.AddWithValue("@signatureValue", null);
+                var result = ExecuteScalar(cm);
+                Result = Convert.ToInt32(result);
+            }
+            return Result;
+
         }
     }
 }

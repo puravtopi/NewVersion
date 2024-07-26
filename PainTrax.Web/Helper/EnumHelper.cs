@@ -35,6 +35,8 @@ namespace PainTrax.Web.Helper
 
         public enum Gender
         {
+            [Display(Name = "")]
+            na = 0,
             [Display(Name = "Male")]
             male = 1,
             [Display(Name = "Female")]

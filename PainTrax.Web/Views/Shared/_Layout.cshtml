@@ -396,6 +396,16 @@
                                 </a>
                             </li>
                         }
+                        <li>
+                            <a asp-action="Index" asp-controller="AppStatus">
+                                <i class="bi bi-circle"></i><span>Appointment Status</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-action="Index" asp-controller="AppProvider">
+                                <i class="bi bi-circle"></i><span>Appointment Provider</span>
+                            </a>
+                        </li>
                         if (pageAccess.ToLower().Contains("attorney"))
                         {
                             <li>
@@ -468,15 +478,7 @@
                                 </a>
                             </li>
                         }
-                        if (pageAccess.ToLower().Contains("users"))
-                        {
-                            <li>
-                                <a asp-action="Index" asp-controller="User">
-                                    <i class="bi bi-circle"></i><span>Users</span>
-                                </a>
-
-                            </li>
-                        }
+                        
                         if (pageAccess.ToLower().Contains("map pdf"))
                         {
                             <li>
@@ -485,6 +487,11 @@
                                 </a>
                             </li>
                         }
+                        <li>
+                            <a asp-action="Index" asp-controller="Patient">
+                                <i class="bi bi-circle"></i><span>Patients</span>
+                            </a>
+                        </li>
                         if (pageAccess.ToLower().Contains("procedure"))
                         {
                             <li>
@@ -533,16 +540,16 @@
                                 </a>
                             </li>
                         }
-                        <li>
-                            <a asp-action="Index" asp-controller="AppStatus">
-                                <i class="bi bi-circle"></i><span>Appointment Status</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-action="Index" asp-controller="AppProvider">
-                                <i class="bi bi-circle"></i><span>Appointment Provider</span>
-                            </a>
-                        </li>
+                        if (pageAccess.ToLower().Contains("users"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="User">
+                                    <i class="bi bi-circle"></i><span>Users</span>
+                                </a>
+
+                            </li>
+                        }
+                        
                     }
                 </ul>
             </li><!-- End Components Nav -->
@@ -640,6 +647,11 @@
                     <li>
                         <a class="nav-link collapsed" asp-action="UploadSign" asp-controller="Utility">
                             <i class="bi bi-circle"></i><span>Upload Sign</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="UploadDocuments" asp-controller="Utility">
+                            <i class="bi bi-circle"></i><span>Upload Documents</span>
                         </a>
                     </li>
                     @* <li>

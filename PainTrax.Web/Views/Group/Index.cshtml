@@ -32,8 +32,8 @@
                                         <th scope="col" style="width:5%">#</th>
                                         <th scope="col">Title</th>
                                         <th scope="col">Location</th>
-                                        <th scope="col">Pages</th>
-                                        <th scope="col">Reports</th>
+                                      @*   <th scope="col">Pages</th>
+                                        <th scope="col">Reports</th> *@
                                         <th style="width:5%">Action</th>
                                     </tr>
                                 </thead>
@@ -91,8 +91,8 @@
                     { "data": "id", "ID": "id", "autoWidth": true },
                     { "data": "title", "Title": "title", "autoWidth": true },
                     { "data": "location_name", "Location": "location_name", "autoWidth": true },
-                    { "data": "pages_name", "Pages": "location_name", "autoWidth": true },
-                    { "data": "report_name", "Reports": "report_name", "autoWidth": true },
+                    // { "data": "pages_name", "Pages": "location_name", "autoWidth": true },
+                    // { "data": "report_name", "Reports": "report_name", "autoWidth": true },
                     {
                         "render": function(data, type, full, meta) {
                             var index = '<a href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'

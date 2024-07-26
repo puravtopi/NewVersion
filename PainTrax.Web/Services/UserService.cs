@@ -19,7 +19,7 @@ namespace PainTrax.Web.Services
 
             string query = "select * from vm_cm_user where 1=1 ";
 
-            if (!string.IsNullOrEmpty(query))
+            if (!string.IsNullOrEmpty(cnd))
                 query = query + cnd;
 
             List<vm_cm_user> dataList = ConvertDataTable<vm_cm_user>(GetData(query));
@@ -49,7 +49,7 @@ namespace PainTrax.Web.Services
         {
             string fullName = data.fname + " " + data.lname;
             data.fullname = fullName;
-            //data.password = EncryptionHelper.Encrypt(data.password);
+            data.password = EncryptionHelper.Encrypt(data.password);
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_users
 		(fname,lname,emailid,address,fullname,uname,password,groupid,desigid,cmp_id,createdby,createddate,phoneno,signature,providername,assistant_providername)Values
 				(@fname,@lname,@emailid,@address,@fullname,@uname,@password,@groupid,@desigid,@cmpid,@createdby,@createddate,@phoneno,@signature,@providername,@assistant_providername)", conn);
@@ -123,7 +123,6 @@ namespace PainTrax.Web.Services
 		address=@address,
 		fullname=@fullname,
 		uname=@uname,
-		password=@password,		
 		phoneno=@phoneno,
 	    updateddate=@updateddate,
 		updatedby=@updatedby,
@@ -136,7 +135,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@address", data.address);
             cm.Parameters.AddWithValue("@fullname", fullName);
             cm.Parameters.AddWithValue("@uname", data.uname);
-            cm.Parameters.AddWithValue("@password", data.password);
+           
             cm.Parameters.AddWithValue("@updateddate", data.updateddate);
             cm.Parameters.AddWithValue("@updatedby", data.updatedby);
             cm.Parameters.AddWithValue("@phoneno", data.phoneno);
@@ -151,7 +150,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@Id", data.Id);
             Execute(cm);
         }
-        
+
         public List<SelectListItem> GetProviders(int cmpid)
         {
             string query = "SELECT Id,fullname FROM vm_cm_user WHERE desig_name = 'provider' and cmp_id=" + cmpid;
@@ -175,7 +174,21 @@ namespace PainTrax.Web.Services
             return providers;
         }
 
+      /*  public void PasswordEncrypt()
+        {
+            DataTable dt = new DataTable();
+            MySqlCommand cm = new MySqlCommand("select * from tbl_users", conn);
 
+            var datalist = ConvertDataTable<tbl_users>(GetData(cm));
+
+
+            foreach (var item in datalist)
+            {
+                var encryPass = EncryptionHelper.Encrypt(item.password);
+                cm = new MySqlCommand("update  tbl_users set password='" + encryPass + "' where id=" + item.Id, conn);
+                Execute(cm);
+            }
+        }*/
 
     }
 }

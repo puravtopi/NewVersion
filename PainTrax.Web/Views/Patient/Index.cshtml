@@ -28,7 +28,7 @@
                                 <button class="btn btn-primary" style="float:right;margin-left:10px" data-bs-toggle="modal" data-bs-target="#importModal">Import</button>
                                 <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcel" asp-controller="Patient">Export</a>
                                 <button class="btn btn-secondary" style="float:right;margin-left:10px" onclick="fndownalodSample()">DownLoad Sample</button>
-                                <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Patient">Add New</a>
+                                <a class="btn btn-success" style="float:right;display:none" asp-action="Create" asp-controller="Patient">Add New</a>
                             </div>
                         </div>
                         <div style="overflow-x:auto;">
@@ -119,12 +119,12 @@
                     "type": "POST",
                     "datatype": "json"
                 },
-                "columnDefs":
-                    [{
-                        "targets": [0],
-                        "visible": false,
-                        "searchable": false
-                    }],
+                // "columnDefs":
+                //     [{
+                //         "targets": [0],
+                //         "visible": false,
+                //         "searchable": false
+                //     }],
                 "columns": [
                     { "data": "id", "id": "id", "autoWidth": true },
                     { "data": "fname", "fname": "fname", "autoWidth": true },

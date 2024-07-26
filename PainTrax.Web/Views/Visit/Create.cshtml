@@ -131,14 +131,14 @@
                                                     <!-- Advanced Form Elements -->
 
                                                     <div class="row mb-3">
-                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#location">
                                                             Location
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            <select asp-for="locationid" class="form-select" asp-items="@ViewBag.locList"></select>                                                            <span id="error-locationid" style="display:none" class="errorSpan">Please Select Location.</span>
+                                                            <select asp-for="locationid" class="form-select" asp-items="@ViewBag.locList"></select>
                                                             <span id="error-locationid" style="display:none" class="errorSpan">Please Select Location.</span>
                                                         </div>
-                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#dos">
                                                             DOS.
                                                         </label>
                                                         <div class="col-sm-4">
@@ -146,13 +146,13 @@
                                                         </div>
                                                     </div>
                                                     <div class="row mb-3">
-                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#doi">
                                                             DOA.
                                                         </label>
                                                         <div class="col-sm-4">
                                                             <input type="date" asp-for="doa" class="form-control" />
                                                         </div>
-                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#CT">
                                                             Case Type
                                                         </label>
                                                         <div class="col-sm-4">
@@ -195,12 +195,12 @@
                                                     <!-- General Form Elements -->
 
                                                     <div class="row mb-3">
-                                                        <label for="inputText" class="col-sm-2 col-form-label">Last Name</label>
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#ln">Last Name</label>
                                                         <div class="col-sm-4">
                                                             <input type="text" class="form-control" asp-for="lname" onchange="fnCheckPatientNameOnly()">
                                                             <span id="error-lname" style="display:none" class="errorSpan">Please Enter Last Name.</span>
                                                         </div>
-                                                        <label for="inputText" class="col-sm-2 col-form-label">First Name</label>
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#fn">First Name</label>
                                                         <div class="col-sm-4">
                                                             <input type="text" class="form-control" asp-for="fname" onchange="fnCheckPatientNameOnly()">
                                                             <span id="error-fname" style="display:none" class="errorSpan">Please Enter First Name.</span>
@@ -212,15 +212,16 @@
                                                         <div class="col-sm-4">
                                                             <input type="text" class="form-control" asp-for="mname" onchange="fnCheckPatientNameOnly()">
                                                         </div>
-                                                        <label for="inputText" class="col-sm-2 col-form-label">Sex</label>
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#gender">Sex</label>
                                                         <div class="col-sm-4">
                                                             <select asp-for="gender" class="form-select" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Gender>()"></select>
+                                                            <span id="error-gender" style="display:none" class="errorSpan">Please Select Gender.</span>
                                                         </div>
 
 
                                                     </div>
                                                     <div class="row mb-3">
-                                                        <label for="inputText" class="col-sm-2 col-form-label">DOB</label>
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#dob">DOB</label>
                                                         <div class="col-sm-4">
                                                             <input type="date" class="form-control" asp-for="dob">
                                                             <span id="error-dob" style="display:none" class="errorSpan">Please Enter DOB.</span>
@@ -1377,7 +1378,7 @@
 
     function isDetaildValid() {
 
-        if (requirValidation("lname") && requirValidation("fname") && requirValidation("dob") && requirValidation("locationid"))
+        if (requirValidation("lname") && requirValidation("fname") && requirValidation("dob") && requirValidation("locationid") && requirValidation("gender"))
             return true;
         else
             return false;
@@ -1387,7 +1388,8 @@
     function requirValidation(id) {
         var result = true;
         var text = $("#" + id).val();
-        if (text.length === 0) {
+       
+        if (text.length === 0 || text === "0") {
             $("#error-" + id).show();
             result = false;
         }

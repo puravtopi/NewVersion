@@ -38,7 +38,7 @@ namespace PainTrax.Web.Controllers
         }
 
         public IActionResult Index()
-        {           
+        {
             return View();
         }
 
@@ -206,6 +206,23 @@ namespace PainTrax.Web.Controllers
                     cnd = " and (fname like '%" + searchValue + "%' or lname like '%" + searchValue + "%' or emailid like '%" + searchValue + "%' or fullname like '%" + searchValue + "%' Or ";
                     cnd += " uname like '%" + searchValue + "%' or address like '%" + searchValue + "%'  )";
                 }
+
+
+                var designation = HttpContext.Session.GetString(SessionKeys.SessionDesignation);
+
+                if (designation == "Provider")
+                {
+                    cnd = " and desig_name in ('Provider','Staff')";
+                }
+                else if (designation == "Client Admin")
+                {
+                    cnd = " and desig_name in ('Provider','Staff','Client Admin')";
+                }
+                else if (designation == "Admin")
+                {
+                    cnd = " and desig_name in ('Provider','Staff','Client Admin','Admin')";
+                }
+
                 var Data = _services.GetAll(cnd);
 
 
@@ -556,7 +573,7 @@ namespace PainTrax.Web.Controllers
             {
                 SaveLog(ex, "EditUserProfile");
             }
-            return View("EditUserProfile",model);
+            return View("EditUserProfile", model);
         }
 
         #region Private Method

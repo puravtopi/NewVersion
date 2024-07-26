@@ -98,7 +98,11 @@ namespace PainTrax.Web.Controllers
                 string cnd = " and cmp_id = " + cmpid;
 
                 if (!string.IsNullOrEmpty(searchValue))
-                    cnd = cnd + " and (fname like '%" + searchValue + "%' or lname  like '%" + searchValue + "%' or location  like '%" + searchValue + "%' or DATE_FORMAT(dob,\"%m/%d/%Y\") = '" + searchValue + "' or DATE_FORMAT(doe,\"%m/%d/%Y\") = '" + searchValue + "'  or compensation like '%" + searchValue + "%' or DATE_FORMAT(doa,\"%m/%d/%Y\") = '" + searchValue + "') ";
+                {
+                    cnd = cnd + " and (fname like '%" + searchValue + "%' or lname  like '%" + searchValue + "%' or CONCAT(fname,' ',lname)  LIKE '%"+ searchValue + "%' or CONCAT(lname,' ',fname)  LIKE '%"+ searchValue +"%' or " +
+                        "location  like '%" + searchValue + "%' or DATE_FORMAT(dob,\"%m/%d/%Y\") = '" + searchValue + "' or DATE_FORMAT(doe,\"%m/%d/%Y\") = '" + searchValue + "'  or " +
+                        "compensation like '%" + searchValue + "%' or DATE_FORMAT(doa,\"%m/%d/%Y\") = '" + searchValue + "') ";
+                }
 
                 var Data = _ieService.GetAll(cnd);
                 //tbl_users user = new tbl_users();
@@ -337,8 +341,6 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                         obj.Page3 = new tbl_ie_page3();
-
-
 
                     obj.Page3.care = string.IsNullOrEmpty(obj.Page3.care) ? _defaultdata.care : obj.Page3.care;
                     obj.Page3.goal = string.IsNullOrEmpty(obj.Page3.goal) ? _defaultdata.goal : obj.Page3.goal;
@@ -1204,7 +1206,7 @@ namespace PainTrax.Web.Controllers
                 var page1Data = _ieService.GetOnePage1(ieId);
 
                 string assetment = "";
-                
+
                 if (page1Data != null)
                     assetment = page1Data.assessment;
 
@@ -1224,7 +1226,7 @@ namespace PainTrax.Web.Controllers
                                   DaignoCodeId = c.Id.Value,
                                   Description = c.Description,
                                   DiagCode = c.DiagCode,
-                                  IsSelect = assetment.IndexOf(c.Description) > 0 ? true : c.PreSelect,
+                                  IsSelect = assetment != null ? (assetment.IndexOf(c.Description) > 0 ? true : c.PreSelect) : false,
                                   Display_Order = c.display_order,
                                   cmp_id = c.cmp_id
 
@@ -2219,6 +2221,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
                     body = body.Replace("#DD", string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd);
                     body = body.Replace("#WorkStatus", string.IsNullOrEmpty(page1Data.work_status) ? "" : page1Data.work_status);
+                    body = body.Replace("#POPlan", string.IsNullOrEmpty(page1Data.plan) ? "" : page1Data.plan);
 
 
 
@@ -2463,7 +2466,7 @@ namespace PainTrax.Web.Controllers
                 else
                     body = body.Replace("#Sign", "");
 
-                
+
                 if (SessionDiffDoc == "true")
                 {
                     body += "<br><br><!--Diff Doc-->";
@@ -2769,7 +2772,7 @@ namespace PainTrax.Web.Controllers
                             {
                                 inject_desc = "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
                                 inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
-                                inject_desc = inject_desc.Replace("#Muscles", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+                                inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
                             }
                         }
                         strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + dsPOC.Rows[i]["PDesc"].ToString() + "</li>";

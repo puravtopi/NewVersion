@@ -1947,6 +1947,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#history", string.IsNullOrEmpty(page1Data.history) ? "" : this.removePtag(page1Data.history));
 
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(page1Data.bodypart) ? "" : page1Data.bodypart.ToLower());
+                    body = body.Replace("#POPlan", string.IsNullOrEmpty(page1Data.plan) ? "" : page1Data.plan);
 
                     string bodypart = "";
 

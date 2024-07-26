@@ -16,7 +16,7 @@ public class PatientService : ParentService
 
         string query = "select * from tbl_patient where 1=1 ";
 
-        if (!string.IsNullOrEmpty(query))
+        if (!string.IsNullOrEmpty(cnd))
             query = query + cnd;
 
 
@@ -144,5 +144,7 @@ public class PatientService : ParentService
 
         return _patients;
     }
+
+    
 
 }

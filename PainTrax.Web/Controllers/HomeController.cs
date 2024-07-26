@@ -35,6 +35,9 @@ namespace PainTrax.Web.Controllers
 
         public IActionResult Index()
         {
+
+           
+
             //TblCompany tbl = new TblCompany()
             //{
             //    Address = "123",
@@ -70,8 +73,7 @@ namespace PainTrax.Web.Controllers
 
         public IActionResult Login()
         {
-            var encrypt = EncryptionHelper.Encrypt("ram");
-            var dcrypt = EncryptionHelper.Decrypt("u8cMaogbLx2JzhgJ0/kjugaNkaaYjvUT83FMJwS0VTs=");
+            
             if (Request.Cookies["LoginCookie"] != null)
             {
                 var savedLogin = JsonConvert.DeserializeObject<LoginVM>(Request.Cookies["LoginCookie"]);

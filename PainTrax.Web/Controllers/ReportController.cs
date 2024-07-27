@@ -166,16 +166,20 @@ namespace PainTrax.Web.Controllers
                     new DataColumn("MCODE", typeof(string)),
                     new DataColumn("Phone", typeof(string)),
                     new DataColumn("Location", typeof(string)),
+                    new DataColumn("Ins Co", typeof(string)),
+                    new DataColumn("Claim Number", typeof(string)),
+                    new DataColumn("Policy No", typeof(string)),
                     new DataColumn("Requested", typeof(string)),
                     new DataColumn("Scheduled", typeof(string)),
                     new DataColumn("Executed", typeof(string)),                   
+                                    
                    // new DataColumn("PhoneNo", typeof(string)),                                   
                 });
 
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var user in data)
                 {
-                    dt.Rows.Add(user.name, user.casetype, user.dob, user.doa, user.mcode, user.phone, user.location, user.requested, user.scheduled, user.executed);
+                    dt.Rows.Add(user.name, user.casetype, user.dob == null ? "" : user.doa.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.phone, user.location, user.cmpname, user.primary_claim_no, user.primary_policy_no, user.requested, user.scheduled, user.executed);
                 }
 
                 // Create a new Excel file

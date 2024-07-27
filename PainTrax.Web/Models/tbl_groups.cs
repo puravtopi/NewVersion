@@ -19,6 +19,7 @@ namespace PainTrax.Web.Models
         public string? reports_ids { get; set; }
         public string? role_ids { get; set; }
         public string? role_name { get; set; }
+        public string? form_name { get; set; }
         public DateTime? CreatedDate { get; set; }
 		public int? CreatedBy { get; set; }
 		public int? old_id { get; set; }

@@ -385,7 +385,7 @@
                             
                             var link = document.createElement('a');
                             link.href = window.URL.createObjectURL(blob);
-                            link.download = lname+","+fname+"_"+$(checkbox).val();
+                            link.download = lname + "," + fname + "_" + $(checkbox).val().split('/').pop();
                             link.click();
                         })
                         .catch(error => {

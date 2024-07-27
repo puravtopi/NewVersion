@@ -66,13 +66,14 @@ namespace PainTrax.Web.Controllers
         }
 
         #region IE method
-        public IActionResult Index(string searchtxt = "")
+        public IActionResult Index(string searchtxt = "", string f = "")
         {
             ViewBag.pageSize = HttpContext.Session.GetInt32(SessionKeys.SessionPageSize).Value;
+            ViewBag.filterCase = f;
             return View();
         }
 
-        public IActionResult List()
+        public IActionResult List(string f = "")
         {
             try
             {
@@ -99,9 +100,25 @@ namespace PainTrax.Web.Controllers
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    cnd = cnd + " and (fname like '%" + searchValue + "%' or lname  like '%" + searchValue + "%' or CONCAT(fname,' ',lname)  LIKE '%"+ searchValue + "%' or CONCAT(lname,' ',fname)  LIKE '%"+ searchValue +"%' or " +
+                    cnd = cnd + " and (fname like '%" + searchValue + "%' or lname  like '%" + searchValue + "%' or CONCAT(fname,' ',lname)  LIKE '%" + searchValue + "%' or CONCAT(lname,' ',fname)  LIKE '%" + searchValue + "%' or " +
                         "location  like '%" + searchValue + "%' or DATE_FORMAT(dob,\"%m/%d/%Y\") = '" + searchValue + "' or DATE_FORMAT(doe,\"%m/%d/%Y\") = '" + searchValue + "'  or " +
                         "compensation like '%" + searchValue + "%' or DATE_FORMAT(doa,\"%m/%d/%Y\") = '" + searchValue + "') ";
+                }
+
+                if (!string.IsNullOrEmpty(f))
+                {
+                    if (f == "A")
+                    {
+                        cnd = cnd + " AND  attorney_id=0 and patient_id IN(SELECT id FROM tbl_patient WHERE cmp_id = " + cmpid + ")";
+                    }
+                    else if (f == "I")
+                    {
+                        cnd = cnd + " AND primary_ins_cmp_id=0 AND patient_id IN (SELECT id FROM tbl_patient WHERE cmp_id=" + cmpid + ")";
+                    }
+                    else if (f == "C")
+                    {
+                        cnd = cnd + " AND  (primary_claim_no IS NULL OR primary_claim_no='') AND patient_id IN (SELECT id FROM tbl_patient WHERE cmp_id=" + cmpid + ")";
+                    }
                 }
 
                 var Data = _ieService.GetAll(cnd);

@@ -183,7 +183,7 @@ namespace PainTrax.Web.Controllers
             var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
             return File(fileStream, contentType);
         }
-       
+
         [HttpPost]
         public IActionResult ImportData(string selectedParent, IFormFile[] postedFile)
         {

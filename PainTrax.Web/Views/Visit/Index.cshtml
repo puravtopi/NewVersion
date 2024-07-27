@@ -196,6 +196,9 @@
             </div><!-- End Large Modal-->
         </div>
     </div>
+
+    <input type="hidden" id="hfilter" value="@ViewBag.filterCase" />
+
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@latest/dist/signature_pad.umd.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
@@ -219,7 +222,7 @@
 
         $(document).ready(function () {
             bindList();
-          
+
 
             var undoStack = [];
 
@@ -298,7 +301,7 @@
 
         function bindList() {
 
-            var url = '@Url.Action("List", "Visit")';
+            var url = '@Url.Action("List", "Visit")?f=' + $("#hfilter").val();
             var editurl = '@Url.Action("Create", "Visit")';
             var printurl = '@Url.Action("IEPrint", "Visit")';
             var appurl = '@Url.Action("Appointments", "Appointment")';
@@ -516,7 +519,7 @@
             $("#pid").val(pId);
             $("#pname").html(fname + ' ' + lname);
 
-          
+
 
 
             $.ajax({

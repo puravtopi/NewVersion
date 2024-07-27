@@ -62,6 +62,7 @@ namespace PainTrax.Web.Controllers
                 ViewBag.TodaysPatient = _dashboardservices.GetTotalPatient(cmpid.Value, 1);
                 ViewBag.TodaysAttorny = _dashboardservices.GetTotalAttorny(cmpid.Value);
                 ViewBag.TodaysIncCo = _dashboardservices.GetTotalInsuranceCompany(cmpid.Value);
+                ViewBag.TotalClaimNo = _dashboardservices.GetTotalClaimNo(cmpid.Value);
 
             }
             catch (Exception ex)

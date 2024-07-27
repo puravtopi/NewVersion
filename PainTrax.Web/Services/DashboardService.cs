@@ -46,8 +46,19 @@ namespace PainTrax.Web.Services
         public int GetTotalAttorny(int cmp_id)
         {
 
-            string query = "select count(id) from tbl_attorneys where cmp_id=@cmp_id";
+            string query = "SELECT count(id) FROM tbl_patient_ie WHERE attorney_id=0 AND patient_id IN (SELECT id FROM tbl_patient WHERE cmp_id=@cmp_id) ";
             
+            MySqlCommand cm = new MySqlCommand(query, conn);
+            cm.Parameters.AddWithValue("@cmp_id", cmp_id);
+
+            var result = ExecuteScalar(cm);
+            return result;
+        }
+        public int GetTotalClaimNo(int cmp_id)
+        {
+
+            string query = "SELECT count(id) FROM tbl_patient_ie WHERE (primary_claim_no IS NULL OR primary_claim_no='') AND patient_id IN (SELECT id FROM tbl_patient WHERE cmp_id=@cmp_id) ";
+
             MySqlCommand cm = new MySqlCommand(query, conn);
             cm.Parameters.AddWithValue("@cmp_id", cmp_id);
 
@@ -57,7 +68,7 @@ namespace PainTrax.Web.Services
 
         public int GetTotalInsuranceCompany(int cmp_id)
         {
-            string query = "select count(id) from tbl_inscos where cmp_id=@cmp_id";
+            string query = "SELECT count(id) FROM tbl_patient_ie WHERE primary_ins_cmp_id=0 AND patient_id IN (SELECT id FROM tbl_patient WHERE cmp_id=@cmp_id) ";
 
             MySqlCommand cm = new MySqlCommand(query, conn);
             cm.Parameters.AddWithValue("@cmp_id", cmp_id);

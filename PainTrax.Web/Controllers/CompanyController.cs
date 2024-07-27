@@ -18,8 +18,7 @@ namespace PainTrax.Web.Controllers
             _logger = logger;
         }
         public IActionResult Index(string searchtxt = "")
-        {
-            
+        {          
             return View();
         }
 

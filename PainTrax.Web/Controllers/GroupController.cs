@@ -20,11 +20,13 @@ namespace PainTrax.Web.Controllers
         private readonly IMapper _mapper;
         private readonly GroupsService _services = new GroupsService();
         private readonly Common _commonservices = new Common();
+        private readonly IWebHostEnvironment _environment;
 
-        public GroupController(IMapper mapper,ILogger<GroupController> logger)
+        public GroupController(IMapper mapper,ILogger<GroupController> logger, IWebHostEnvironment environment)
         {
             _mapper = mapper;
-            _logger = logger;   
+            _logger = logger;
+            _environment = environment;
         }
 
         public IActionResult Index()
@@ -41,7 +43,24 @@ namespace PainTrax.Web.Controllers
                 obj.LocationList = _commonservices.GetLocationsCheckBoxList(cmpid.Value);
                 obj.PagesList = _commonservices.GetPagesCheckBoxList();
                 obj.ReportsList = _commonservices.GetReportsCheckBoxList();
-                obj.RoleList = _commonservices.GetRolsCheckBoxList();               
+                obj.RoleList = _commonservices.GetRolsCheckBoxList();
+
+                var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+                var subFolders = Directory.GetDirectories(downloadFolder);
+
+                var filesByFolder = new Dictionary<string, List<string>>();
+
+                foreach (var folder in subFolders)
+                {
+                    var folderName = Path.GetFileName(folder);
+                    var pdfFiles = Directory.GetFiles(folder, "*.pdf")
+                                            .Select(Path.GetFileName)
+                                            .ToList();
+
+                    filesByFolder.Add(folderName, pdfFiles);
+                }
+
+                ViewBag.FilesByFolder = filesByFolder;
             }
             catch(Exception ex)
             {

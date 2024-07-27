@@ -25,9 +25,6 @@
                                 <h5 class="card-title">Add Group</h5>
                             </div>
                             <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
-
-                               
-
                             </div>
                         </div>
 
@@ -50,7 +47,7 @@
                                             <div class="col-md-3 col-lg-3">
 
                                                 <div class="form-check">
-                                                   
+
                                                     <input class="form-check-input" type="checkbox" id="chkall_location">
                                                     <label class="form-check-label">Check All</label>
                                                 </div>
@@ -59,11 +56,11 @@
 
                                             @{
                                                 var i = 0;
-                                              
+
                                             }
                                             @foreach (var item in Model.LocationList)
                                             {
-                                              
+
 
                                                 <div class="col-md-3 col-lg-3">
 
@@ -81,10 +78,10 @@
                                         <label for="currentPassword" asp-for="pages_ids" class="col-md-4 col-lg-3 col-form-label">Pages</label>
                                         <div class="row mb-9">
 
-                                             <div class="col-md-3 col-lg-3">
+                                            <div class="col-md-3 col-lg-3">
 
                                                 <div class="form-check">
-                                                   
+
                                                     <input class="form-check-input" type="checkbox" id="chkall_page">
                                                     <label class="form-check-label">Check All</label>
                                                 </div>
@@ -172,7 +169,36 @@
                                             }
                                         </div>
                                     </div>
+                                    <div class="row mb-3">
+                                        <label for="currentPassword" asp-for="pages_ids" class="col-md-4 col-lg-3 col-form-label">Form</label>
+                                        <div class="row mb-9">
 
+
+                                            @{
+                                                ViewBag.Title = "PDF Files by Folder";
+                                                var filesByFolder = ViewBag.FilesByFolder as Dictionary<string, List<string>>;
+                                            }
+
+                                            @foreach (var folder in filesByFolder)
+                                            {
+                                                <button type="button" class="collapsible" onclick="toggleContent('@folder.Key');">
+                                                    <span id="@folder.Key-sign" class="sign">+</span> @folder.Key
+                                                </button>
+                                                <div class="row @folder.Key-content" style="display:none;">
+                                                    @foreach (var pdf in folder.Value)
+                                                    {
+                                                        <div class="col-md-3 col-lg-3">
+
+                                                            <div class="form-check">
+                                                                <input type="checkbox" id="pdfCheckbox" name="pdfCheckbox" value="@folder.Key/@pdf" class="pdfCheckbox" />@pdf
+
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
 
                                     <div class="row mb-3">
 
@@ -203,7 +229,7 @@
     function fnSave() {
 
         var url = $("#frmCreate").attr("action");
-        var redirecturl = '@Url.Action("Index","Group")';
+        var redirecturl = '@Url.Action("Index", "Group")';
 
         var listLocation = [];
 
@@ -252,12 +278,12 @@
         var model = {
             "Title": $("#Title").val(),
             "LocationList": listLocation,
-            "PagesList":listPages,
+            "PagesList": listPages,
             "ReportsList": listReports,
             "RoleList": listRoles
 
         }
-        
+
         $.ajax({
             type: "Post",
             url: url,
@@ -265,7 +291,7 @@
             contentType: "application/x-www-form-urlencoded",
             success: function (data, status, xhr) {
 
-                
+
 
                 if (data === 1) {
                     window.location = redirecturl;
@@ -295,11 +321,21 @@
         $('.clsrole').prop('checked', this.checked);
     });
 
-
+    function toggleContent(contentClass) {
+        var content = document.querySelector('.' + contentClass + '-content');
+        var sign = document.getElementById(contentClass + '-sign');
+        if (content.style.display === "block") {
+            content.style.display = "none";
+            sign.innerText = "+";
+        } else {
+            content.style.display = "block";
+            sign.innerText = "-";
+        }
+    }
 </script>
 @section Scripts {
-   
+
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    }
+}

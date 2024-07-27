@@ -28,8 +28,8 @@ namespace PainTrax.Web.Services
         public void Insert(tbl_groups data)
         {
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_groups
-		(Title,Location_ids,CreatedDate,CreatedBy,cmp_id,location_name,pages_ids,pages_name,reports_ids,report_name,role_ids,role_name)Values
-				(@Title,@Location_ids,@CreatedDate,@CreatedBy,@cmp_id,@location_name,@pages_ids,@pages_name,@reports_ids,@report_name,@role_ids,@role_name)", conn);
+		(Title,Location_ids,CreatedDate,CreatedBy,cmp_id,location_name,pages_ids,pages_name,reports_ids,report_name,role_ids,role_name,form_name)Values
+				(@Title,@Location_ids,@CreatedDate,@CreatedBy,@cmp_id,@location_name,@pages_ids,@pages_name,@reports_ids,@report_name,@role_ids,@role_name,@form_name)", conn);
             cm.Parameters.AddWithValue("@Title", data.Title);
             cm.Parameters.AddWithValue("@Location_ids", data.Location_ids);
             cm.Parameters.AddWithValue("@CreatedDate", data.CreatedDate);
@@ -41,6 +41,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@report_name", data.report_name);
             cm.Parameters.AddWithValue("@role_ids", data.role_ids);
             cm.Parameters.AddWithValue("@role_name", data.role_name);
+            cm.Parameters.AddWithValue("@form_name", data.form_name);
 
             cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
             Execute(cm);
@@ -57,6 +58,7 @@ namespace PainTrax.Web.Services
 		report_name=@report_name,
 		role_ids=@role_ids,
 		role_name=@role_name
+		form_name=@form_name
 			where Id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.Id);
             cm.Parameters.AddWithValue("@Title", data.Title);
@@ -68,6 +70,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@report_name", data.report_name);
             cm.Parameters.AddWithValue("@role_ids", data.role_ids);
             cm.Parameters.AddWithValue("@role_name", data.role_name);
+            cm.Parameters.AddWithValue("@form_name", data.form_name);
 
             Execute(cm);
         }

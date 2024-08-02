@@ -21,5 +21,7 @@ public class tbl_fu_page1{
 	public int? cmp_id {get;set;}
 	public int? patient_id {get;set;}
 	public string? occupation {get;set;}
+	public string? psh {get;set;}
+	public string? pmh {get;set;}
 
 }

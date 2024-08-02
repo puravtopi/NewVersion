@@ -15,7 +15,7 @@ namespace PainTrax.Web.Services
         private readonly PatientIEService _ieService = new PatientIEService();
 
         #region  IE_to_FU
-        public void CopyProperties(object source, object destination, string tblname = "")
+        public void CopyProperties(object source, object destination, int cmp_id, string tblname = "")
         {
             Type sourceType = source.GetType();
             Type destinationType = destination.GetType();
@@ -23,7 +23,7 @@ namespace PainTrax.Web.Services
             PropertyInfo[] sourceProperties = sourceType.GetProperties();
             PropertyInfo[] destinationProperties = destinationType.GetProperties();
             if (tblname != null)
-                dataList = ConvertDataTable<tbl_ie_fu_select>(GetData("select * from tbl_ie_fu_select where tbl_name='" + tblname + "'"));
+                dataList = ConvertDataTable<tbl_ie_fu_select>(GetData("select * from tbl_ie_fu_select where tbl_name='" + tblname + "' and cmp_id=" + cmp_id));
 
             foreach (PropertyInfo sourceProperty in sourceProperties)
             {
@@ -50,7 +50,7 @@ namespace PainTrax.Web.Services
                 }
             }
         }
-        public tbl_fu_page1? GetOnePage1(int ie_id, int fu_id,int cmp_id,int patient_id)
+        public tbl_fu_page1? GetOnePage1(int ie_id, int fu_id, int cmp_id, int patient_id)
         {
             PatientIEService service = new PatientIEService();
             tbl_ie_page1 ie_Page1 = new tbl_ie_page1();
@@ -60,7 +60,7 @@ namespace PainTrax.Web.Services
             if (fu_Page1 == null)
             {
                 fu_Page1 = new tbl_fu_page1();
-                CopyProperties(ie_Page1, fu_Page1, "page1");
+                CopyProperties(ie_Page1, fu_Page1,cmp_id, "page1");
                 fu_Page1.ie_id = ie_id;
                 fu_Page1.fu_id = fu_id;
                 fu_Page1.cmp_id = cmp_id;
@@ -80,7 +80,7 @@ namespace PainTrax.Web.Services
             if (fu_Page2 == null)
             {
                 fu_Page2 = new tbl_fu_page2();
-                CopyProperties(ie_Page2, fu_Page2, "page2");
+                CopyProperties(ie_Page2, fu_Page2,cmp_id, "page2");
                 fu_Page2.ie_id = ie_id;
                 fu_Page2.fu_id = fu_id;
                 fu_Page2.cmp_id = cmp_id;
@@ -100,7 +100,7 @@ namespace PainTrax.Web.Services
             if (fu_ne == null)
             {
                 fu_ne = new tbl_fu_ne();
-                CopyProperties(ie_ne, fu_ne, "ne");
+                CopyProperties(ie_ne, fu_ne,cmp_id, "ne");
                 fu_ne.ie_id = ie_id;
                 fu_ne.fu_id = fu_id;
                 fu_ne.cmp_id = cmp_id;
@@ -110,7 +110,7 @@ namespace PainTrax.Web.Services
             return fu_ne;
         }
 
-        public tbl_fu_other? GetOneOther(int ie_id, int fu_id,  int patient_id)
+        public tbl_fu_other? GetOneOther(int ie_id, int fu_id,int cmp_id, int patient_id)
         {
             PatientIEService service = new PatientIEService();
             tbl_ie_other ie_other = new tbl_ie_other();
@@ -120,17 +120,17 @@ namespace PainTrax.Web.Services
             if (fu_other == null)
             {
                 fu_other = new tbl_fu_other();
-                CopyProperties(ie_other, fu_other, "other");
+                CopyProperties(ie_other, fu_other,cmp_id, "other");
                 fu_other.ie_id = ie_id;
                 fu_other.fu_id = fu_id;
                 fu_other.patient_id = patient_id;
-               
+
                 _fuotherservices.Insert(fu_other);
             }
             return fu_other;
         }
 
-      
+
         #endregion
     }
 }

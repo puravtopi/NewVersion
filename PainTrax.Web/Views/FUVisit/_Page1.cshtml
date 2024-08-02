@@ -42,7 +42,20 @@
             <input type="text" class="form-control" asp-for="work_status" />
         </div>
     </div>
-
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PastMedicalHistory">
+            PMH
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="pmh" />
+        </div>
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PastSurgicalHistory">
+            PSH
+        </label>
+        <div class="col-sm-4">
+            <input type="text" class="form-control globalauto" asp-for="psh" />
+        </div>
+    </div>
     <div class="row mb-3">
         <label for="inputNumber" class="col-sm-2 col-form-label">
             Body Parts
@@ -427,6 +440,8 @@
             "work_status": $("#work_status").val(),
             "occupation": $("#occupation").val(),
             "history": ckHistory.getData(),
+            "psh": $("#psh").val(),
+            "pmh": $("#pmh").val(),
         }
 
 

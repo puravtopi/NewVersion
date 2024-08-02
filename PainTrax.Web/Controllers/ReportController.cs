@@ -84,6 +84,7 @@ namespace PainTrax.Web.Controllers
             }
             if (_scheduled)
             {
+                ViewBag.ShowTransfer = true;
                 if (fdate != null && tdate != null)
                 {
                     if (!string.IsNullOrEmpty(_query))
@@ -179,7 +180,7 @@ namespace PainTrax.Web.Controllers
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var user in data)
                 {
-                    dt.Rows.Add(user.name, user.casetype, user.dob == null ? "" : user.doa.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.phone, user.location, user.cmpname, user.primary_claim_no, user.primary_policy_no, user.requested, user.scheduled, user.executed);
+                    dt.Rows.Add(user.name, user.casetype, user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.phone, user.location, user.cmpname, user.primary_claim_no, user.primary_policy_no, user.requested==null?"":user.requested.Value.ToShortDateString(), user.scheduled==null?"":user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString());
                 }
 
                 // Create a new Excel file

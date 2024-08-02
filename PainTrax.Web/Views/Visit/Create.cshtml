@@ -101,7 +101,12 @@
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="ps-tab" data-bs-target="#bordered-ps" role="tab" aria-controls="contact" aria-selected="false">POC Sumarry</a>
                                     </li>
-
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="ps-tab" data-bs-target="#bordered-doc" role="tab" aria-controls="contact" aria-selected="false">Documents</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="ps-tab" data-bs-target="#bordered-comments" role="tab" aria-controls="contact" aria-selected="false">Comments</a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="col-md-2 col-sm-2">
@@ -632,6 +637,14 @@
                                         <div class="col-lg-12" id="pocsummary">
                                         </div>
                                     </div>
+                                    <div class="tab-pane fade" id="bordered-doc" role="tabpanel" aria-labelledby="doc-tab">
+                                        <div class="col-lg-12">
+                                            @Html.Partial("_documents",Model)
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="bordered-comments" role="tabpanel" aria-labelledby="comments-tab">
+                                        @Html.Partial("_Comments", Model.Comment)
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1086,7 +1099,9 @@
             else if (id === "bordered-other") {
                 fnOtherSave(null);
             }
-
+             else if (id === "bordered-comments") {
+                fnOtherSave(null);
+            }
 
         })
     });
@@ -1163,7 +1178,12 @@
 
             $(t).tab('show');
         }
-
+        else if (id === "bordered-doc") {
+            $(t).tab('show');
+        }
+        else if (id === "bordered-comments") {
+            fnSaveComment(t);
+        }
     });
 
 

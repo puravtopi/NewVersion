@@ -131,7 +131,7 @@
                                                 @{
                                                     if (item.scheduled != null)
                                                     {
-                                                            <button class="btn btn-warning" type="button" onclick="fnTransToRescheduledSingle(@item.procedureDetail_id)">Reschedule</button>
+                                                                    <button class="btn btn-warning" type="button" onclick="fnTransToRescheduledSingle(@item.procedureDetail_id)">Reschedule</button>
                                                     }
                                                 }
                                             </td>
@@ -160,6 +160,12 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script>
+
+    var isShow = '@ViewBag.ShowTransfer';
+
+    if (isShow == 'True') { 
+        fnScheduled();
+    }
 
 
     function fnScheduled() {

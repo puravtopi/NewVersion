@@ -506,7 +506,9 @@ namespace PainTrax.Web.Helper
                 new SelectListItem{ Text="Plan", Value = "plan",Selected=false },
                 new SelectListItem{ Text="Occupation", Value = "occupation",Selected=false },
                 new SelectListItem{ Text="Degree of Disability", Value = "dd",Selected=false },
-                new SelectListItem{ Text="Work Status", Value = "work_status",Selected=false }
+                new SelectListItem{ Text="Work Status", Value = "work_status",Selected=false },
+                new SelectListItem{ Text="PMH", Value = "pmh",Selected=false },
+                new SelectListItem{ Text="PSH", Value = "psh",Selected=false }
 
 
                           };

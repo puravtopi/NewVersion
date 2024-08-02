@@ -180,6 +180,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Create(int id = 0)
         {
             VisitVM obj = new VisitVM();
+            int patientId = 0;
 
             try
             {
@@ -237,7 +238,7 @@ namespace PainTrax.Web.Controllers
                         obj.compensation = ieData.compensation;
                         obj.accidentType = ieData.accidentType;
                         obj.state = ieData.state;
-
+                        patientId = ieData.patientId.Value;
 
                     }
 
@@ -446,6 +447,7 @@ namespace PainTrax.Web.Controllers
                         obj.vaccinated = patientData.vaccinated;
                         obj.patientid = patientData.id;
                         obj.age = patientData.age;
+                        patientId = obj.patientid.Value;
                         //  obj.physicianid = patientData.physicianid;
                     }
                 }
@@ -523,6 +525,45 @@ namespace PainTrax.Web.Controllers
                 }
 
                 ViewBag.showPrint = id > 0 ? true : false;
+
+                //for documents
+                {
+                  
+                    HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, patientId);
+
+                    var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments");
+                    bool folderExists = Directory.Exists(FolderPath);
+                    if (!folderExists)
+                        Directory.CreateDirectory(FolderPath);
+
+                    string[] dirs = Directory.GetDirectories(FolderPath, "*", SearchOption.TopDirectoryOnly);
+
+                    List<TreeViewNode> nodes = new List<TreeViewNode>();
+
+                    int i = 0;
+                    foreach (var item in dirs)
+                    {
+                        i++;
+                        string FolderName = System.IO.Path.GetFileName(item);
+                        var FolderPathFile = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", FolderName.ToString(), patientId.ToString());
+                        int j = 0;
+
+                        bool folderExistsNew = Directory.Exists(FolderPathFile);
+                        if (!folderExistsNew)
+                            Directory.CreateDirectory(FolderPathFile);
+
+                        foreach (var item1 in Directory.GetFiles(FolderPathFile))
+                        {
+                            j++;
+                            nodes.Add(new TreeViewNode { id = j.ToString() + "-" + i.ToString() + "~" + FolderName.ToString() + "$" + System.IO.Path.GetFileName(item1), parent = i.ToString(), text = System.IO.Path.GetFileName(item1) });
+                        }
+
+                        nodes.Add(new TreeViewNode { id = i.ToString(), parent = "#", text = FolderName.ToString() + "(" + j + ")" });
+                    }
+
+                    obj.doc_json = JsonConvert.SerializeObject(nodes, Formatting.Indented);
+                  
+                }
 
             }
             catch (Exception ex)
@@ -3323,7 +3364,7 @@ namespace PainTrax.Web.Controllers
 
             try
             {
-                _forwardServices.GetOneOther(patientIEId, fu_id, patientId);
+                _forwardServices.GetOneOther(patientIEId,cmpid.Value, fu_id, patientId);
             }
             catch (Exception ex)
             {

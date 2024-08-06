@@ -20,7 +20,7 @@ namespace PainTrax.Web.Controllers
         private readonly PatientIEService _ieService = new PatientIEService();
         private readonly PatientService _patientservices = new PatientService();
 
-        public FormsController(ILogger<FormsController> logger,IWebHostEnvironment environment)
+        public FormsController(ILogger<FormsController> logger, IWebHostEnvironment environment)
         {
             _environment = environment;
             _logger = logger;
@@ -37,7 +37,7 @@ namespace PainTrax.Web.Controllers
             var result = _patientservices.GetAll(cnd);
             var data = result;
 
-            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/"+cmpid);
+            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
             if (!Directory.Exists(downloadFolder))
             {
                 Directory.CreateDirectory(downloadFolder);
@@ -93,18 +93,30 @@ namespace PainTrax.Web.Controllers
 
             var filesByFolder = new Dictionary<string, List<string>>();
 
+            var formAccess = HttpContext.Session.GetString(SessionKeys.SessionFormsAccess);
+
+            List<string> fileList=new List<string>();
+
             foreach (var folder in subFolders)
             {
+                fileList = new List<string>();
                 var folderName = Path.GetFileName(folder);
                 var pdfFiles = Directory.GetFiles(folder, "*.pdf")
                                         .Select(Path.GetFileName)
                                         .ToList();
 
-                filesByFolder.Add(folderName, pdfFiles);
+                foreach (var item in pdfFiles)
+                {
+                    if (formAccess.Contains(item))
+                    {
+                        fileList.Add(item);
+                    }
+                }
+                filesByFolder.Add(folderName, fileList);
             }
 
             ViewBag.FilesByFolder = filesByFolder;
-      
+
 
             return View(data);
 
@@ -211,7 +223,7 @@ namespace PainTrax.Web.Controllers
                     TempData["Message"] = "Selected folder does not exist.";
                 }
             }
-             return RedirectToAction("Manage");
+            return RedirectToAction("Manage");
 
         }
         public IActionResult List()
@@ -263,7 +275,7 @@ namespace PainTrax.Web.Controllers
             }
 
         }
-        public IActionResult GeneratePdf(string pdffile,string id,string txt_date = "",string txt_surgery = "",string txt_docName="",string txt_MCode_Proc="", string txtProcedureCode="")
+        public IActionResult GeneratePdf(string pdffile, string id, string txt_date = "", string txt_surgery = "", string txt_docName = "", string txt_MCode_Proc = "", string txtProcedureCode = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
             Dictionary<string, string> controls = new Dictionary<string, string>();
@@ -290,16 +302,17 @@ namespace PainTrax.Web.Controllers
 
             try
             {
-                 uploadsFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
-                 filePath = Path.Combine(uploadsFolder, pdffile);
+                uploadsFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+                filePath = Path.Combine(uploadsFolder, pdffile);
 
-                signPath = Path.Combine(_environment.WebRootPath, "signatures" );
+                signPath = Path.Combine(_environment.WebRootPath, "signatures");
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 SaveLog(ex, "set Paths");
             }
 
-            byte[] pdfBytes=null;
+            byte[] pdfBytes = null;
             //try
             //{
             //    // Create a memory stream to hold the modified PDF
@@ -352,14 +365,15 @@ namespace PainTrax.Web.Controllers
 
             try
             {
-                pdfBytes= _pdfhelper.Stamping(filePath, "Id", id, controls, cmpid, signPath);
+                pdfBytes = _pdfhelper.Stamping(filePath, "Id", id, controls, cmpid, signPath);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 SaveLog(ex, "Pdf Stamping");
             }
-           
+
             //string htmlContent = System.IO.File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "demo.html"));
-            
+
             return File(pdfBytes, "application/pdf");
         }
         public IActionResult DisplayColumns()

@@ -138,6 +138,7 @@ namespace PainTrax.Web.Controllers
                     {
                         HttpContext.Session.SetString(SessionKeys.SessionPagesAccess, groupDetails.pages_name);
                         HttpContext.Session.SetString(SessionKeys.SessionRoleAccess, groupDetails.role_name);
+                        HttpContext.Session.SetString(SessionKeys.SessionFormsAccess, groupDetails.form_name==null?"": groupDetails.form_name);
                     }
 
 

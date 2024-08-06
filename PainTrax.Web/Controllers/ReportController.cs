@@ -161,6 +161,7 @@ namespace PainTrax.Web.Controllers
                 dt.Columns.AddRange(new DataColumn[]
                 {
                     new DataColumn("Name", typeof(string)),
+                    new DataColumn("Gender", typeof(string)),
                     new DataColumn("Case", typeof(string)),
                     new DataColumn("DOB", typeof(string)),
                     new DataColumn("DOA", typeof(string)),
@@ -170,6 +171,7 @@ namespace PainTrax.Web.Controllers
                     new DataColumn("Ins Co", typeof(string)),
                     new DataColumn("Claim Number", typeof(string)),
                     new DataColumn("Policy No", typeof(string)),
+                    new DataColumn("MC", typeof(string)),
                     new DataColumn("Requested", typeof(string)),
                     new DataColumn("Scheduled", typeof(string)),
                     new DataColumn("Executed", typeof(string)),                   
@@ -180,7 +182,7 @@ namespace PainTrax.Web.Controllers
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var user in data)
                 {
-                    dt.Rows.Add(user.name, user.casetype, user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.phone, user.location, user.cmpname, user.primary_claim_no, user.primary_policy_no, user.requested==null?"":user.requested.Value.ToShortDateString(), user.scheduled==null?"":user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString());
+                    dt.Rows.Add(user.name,user.gender, user.casetype, user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.phone, user.location, user.cmpname, user.primary_claim_no, user.primary_policy_no, user.mc,user.requested==null?"":user.requested.Value.ToShortDateString(), user.scheduled==null?"":user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString());
                 }
 
                 // Create a new Excel file

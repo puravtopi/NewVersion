@@ -177,6 +177,7 @@
                                             @{
                                                 ViewBag.Title = "PDF Files by Folder";
                                                 var filesByFolder = ViewBag.FilesByFolder as Dictionary<string, List<string>>;
+                                                var f = 1;
                                             }
 
                                             @foreach (var folder in filesByFolder)
@@ -185,16 +186,26 @@
                                                     <span id="@folder.Key-sign" class="sign">+</span> @folder.Key
                                                 </button>
                                                 <div class="row @folder.Key-content" style="display:none;">
-                                                    @foreach (var pdf in folder.Value)
-                                                    {
-                                                        <div class="col-md-3 col-lg-3">
+                                                    <div class="row mb-9">
+                                                        <div class="form-check">
 
-                                                            <div class="form-check">
-                                                                <input type="checkbox" id="pdfCheckbox" name="pdfCheckbox" value="@folder.Key/@pdf" class="pdfCheckbox" />@pdf
-
-                                                            </div>
+                                                            <input class="form-check-input" type="checkbox" id="chkall_@f" onclick="checkAllForm(@f)">
+                                                            <label class="form-check-label">Check All</label>
                                                         </div>
-                                                    }
+                                                        @foreach (var pdf in folder.Value)
+                                                        {
+                                                            <div class="col-md-3 col-lg-3">
+
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" id="pdfCheckbox" name="pdfCheckbox" value="@pdf" class="pdfCheckbox chk_@f" />@pdf
+
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        @{
+                                                            f = f + 1;
+                                                        }
+                                                    </div>
                                                 </div>
                                             }
                                         </div>
@@ -274,13 +285,31 @@
 
             listRoles.push(data);
         }
+        var listForms = [];
+
+        var checkboxes = $('.pdfCheckbox');
+        checkboxes.each(function (index, checkbox) {
+            // Do something with the checkbox element
+            var isChecked = $(checkbox).prop('checked');
+
+            if (isChecked) {
+
+                var data = {};
+                data.Id = $(checkbox).val();
+                data.Item = $(checkbox).val();
+                data.IsChecked = isChecked;
+
+                listForms.push(data);
+            }
+        })
 
         var model = {
             "Title": $("#Title").val(),
             "LocationList": listLocation,
             "PagesList": listPages,
             "ReportsList": listReports,
-            "RoleList": listRoles
+            "RoleList": listRoles,
+            "FormList": listForms
 
         }
 
@@ -304,6 +333,22 @@
             },
         });
     }
+
+
+    function checkAllForm(val) {
+     
+        var cntrlId = 'chkall_' + val;
+
+        if ($('#' + cntrlId).prop('checked')) {
+            $('.chk_' + val).prop('checked', true);
+        }
+        else {
+            $('.chk_' + val).prop('checked', false);
+        }
+
+
+    }
+
 
     $('#chkall_location').change(function () {
         $('.clslocation').prop('checked', this.checked);
@@ -332,6 +377,8 @@
             sign.innerText = "-";
         }
     }
+
+
 </script>
 @section Scripts {
 

@@ -29,6 +29,7 @@ namespace PainTrax.Web.Models
 		public List<CheckBoxItem> PagesList { get; set; }
 		public List<CheckBoxItem> ReportsList { get; set; }
 		public List<CheckBoxItem> RoleList { get; set; }
+		public List<CheckBoxItem> FormList { get; set; }
 
 	}
 }

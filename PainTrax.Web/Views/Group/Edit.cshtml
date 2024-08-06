@@ -23,9 +23,9 @@
                             <div class="col-sm-12 col-md-6">
                                 <h5 class="card-title">Edit Group</h5>
                             </div>
-                          @*   <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
+                            @*   <div class="col-sm-12 col-md-6" style="text-align:right;padding-top:5px;">
 
-                                <a class="btn btn-primary" asp-action="Index" asp-controller="Group">Cancel</a>
+                            <a class="btn btn-primary" asp-action="Index" asp-controller="Group">Cancel</a>
 
                             </div> *@
                         </div>
@@ -182,7 +182,49 @@
                                             }
                                         </div>
                                     </div>
+                                    <div class="row mb-3">
+                                        <label for="currentPassword" asp-for="pages_ids" class="col-md-4 col-lg-3 col-form-label">Form</label>
+                                        <div class="row mb-9">
 
+
+                                            @{
+                                                ViewBag.Title = "PDF Files by Folder";
+                                                var filesByFolder = ViewBag.FilesByFolder as Dictionary<string, List<string>>;
+                                                var f = 1;
+                                            }
+
+                                            @foreach (var folder in filesByFolder)
+                                            {
+                                                <button type="button" class="collapsible" onclick="toggleContent('@folder.Key');">
+                                                    <span id="@folder.Key-sign" class="sign">+</span> @folder.Key
+                                                </button>
+                                                <div class="row @folder.Key-content" style="display:none;">
+                                                    <div class="row mb-9">
+                                                        <div class="form-check">
+
+                                                            <input class="form-check-input" type="checkbox" id="chkall_@f" onclick="checkAllForm(@f)">
+                                                            <label class="form-check-label">Check All</label>
+                                                        </div>
+                                                        @foreach (var pdf in folder.Value)
+                                                        {
+                                                            { chk = Model.form_name.Contains(pdf) ? "checked" : ""; }
+                                                            <div class="col-md-3 col-lg-3">
+
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" id="pdfCheckbox" name="pdfCheckbox" value="@pdf" class="pdfCheckbox chk_@f" @chk />@pdf
+
+                                                                </div>
+                                                            </div>
+
+                                                        }
+                                                        @{
+                                                            f = f + 1;
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
                                     <div class="row mb-3">
 
                                         <div class="col-sm-10">
@@ -259,12 +301,31 @@
             listRoles.push(data);
         }
 
+        var listForms = [];
+
+        var checkboxes = $('.pdfCheckbox');
+        checkboxes.each(function (index, checkbox) {
+            // Do something with the checkbox element
+            var isChecked = $(checkbox).prop('checked');
+
+            if (isChecked) {
+
+                var data = {};
+                data.Id = $(checkbox).val();
+                data.Item = $(checkbox).val();
+                data.IsChecked = isChecked;
+
+                listForms.push(data);
+            }
+        })
+
         var model = {
             "Title": $("#Title").val(),
             "LocationList": listLocation,
             "PagesList": listPages,
             "ReportsList": listReports,
             "RoleList": listRoles,
+            "FormList": listForms,
             "Id": $("#Id").val()
         }
 
@@ -289,6 +350,19 @@
         });
     }
 
+
+    function checkAllForm(val) {
+
+        var cntrlId = 'chkall_' + val;
+
+        if ($('#' + cntrlId).prop('checked')) {
+            $('.chk_' + val).prop('checked', true);
+        }
+        else {
+            $('.chk_' + val).prop('checked', false);
+        }
+    }
+
     $('#chkall_location').change(function () {
         $('.clslocation').prop('checked', this.checked);
     });
@@ -306,6 +380,17 @@
     });
 
 
+    function toggleContent(contentClass) {
+        var content = document.querySelector('.' + contentClass + '-content');
+        var sign = document.getElementById(contentClass + '-sign');
+        if (content.style.display === "block") {
+            content.style.display = "none";
+            sign.innerText = "+";
+        } else {
+            content.style.display = "block";
+            sign.innerText = "-";
+        }
+    }
 </script>
 
 

@@ -128,9 +128,25 @@ namespace PainTrax.Web.Controllers
                 }
                 model.role_ids = role_ids.TrimStart(',');
                 model.role_name = role_name.TrimStart(',');
+
+
+                string form_name = "";
+
+                foreach (var i in model.FormList)
+                {
+                    if (i.IsChecked)
+                    {
+                      
+                        form_name = form_name + "," + i.Item;
+                    }
+                }
+             
+                model.form_name = form_name.TrimStart(',');
                 _services.Insert(model);
+
+                //_services.Insert(model);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Create");
             }
@@ -149,6 +165,24 @@ namespace PainTrax.Web.Controllers
                 data.PagesList = _commonservices.GetPagesCheckBoxList(data.pages_ids);
                 data.ReportsList = _commonservices.GetReportsCheckBoxList(data.reports_ids);
                 data.RoleList = _commonservices.GetRolsCheckBoxList(data.role_ids);
+                data.form_name = data.form_name == null ? "" : data.form_name;
+
+                var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+                var subFolders = Directory.GetDirectories(downloadFolder);
+
+                var filesByFolder = new Dictionary<string, List<string>>();
+
+                foreach (var folder in subFolders)
+                {
+                    var folderName = Path.GetFileName(folder);
+                    var pdfFiles = Directory.GetFiles(folder, "*.pdf")
+                                            .Select(Path.GetFileName)
+                                            .ToList();
+
+                    filesByFolder.Add(folderName, pdfFiles);
+                }
+
+                ViewBag.FilesByFolder = filesByFolder;
             } 
             catch(Exception ex)
             {
@@ -210,6 +244,20 @@ namespace PainTrax.Web.Controllers
                 }
                 model.role_ids = role_ids.TrimStart(',');
                 model.role_name = role_name.TrimStart(',');
+
+                string form_name = "";
+
+                foreach (var i in model.FormList)
+                {
+                    if (i.IsChecked)
+                    {
+
+                        form_name = form_name + "," + i.Item;
+                    }
+                }
+
+                model.form_name = form_name.TrimStart(',');
+
                 _services.Update(model);
             }
             catch(Exception ex)

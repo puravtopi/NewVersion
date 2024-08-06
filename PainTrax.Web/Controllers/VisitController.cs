@@ -492,6 +492,7 @@ namespace PainTrax.Web.Controllers
                         obj.Page1.history = defaultPage1.history;
                         obj.Page1.medication = defaultPage1.medication;
                         obj.Page1.note = defaultPage1.note;
+                       
                         obj.Page1.occupation = defaultPage1.occupation;
                         obj.Page1.plan = defaultPage1.plan;
                         obj.Page1.pmh = defaultPage1.pmh;
@@ -2255,7 +2256,7 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(page1Data.bodypart))
                     {
                         bodypart = Common.ReplceCommowithAnd(page1Data.bodypart);
-                        body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart) + " pain.");
+                        body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",",", ") + " pain.");
 
                     }
                     else
@@ -2309,6 +2310,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#DD", this.removePtag(page1Data.dd));
                     body = body.Replace("#WorkStatus", this.removePtag(page1Data.work_status));
                     body = body.Replace("#IR", this.removePtag(page1Data.impairment_rating));
+                   
 
                 }
                 else
@@ -2363,6 +2365,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#Care", this.removePtag(page3Data.care));
                     body = body.Replace("#Procedures", this.removePtag(page3Data.universal));
                     body = body.Replace("#Goal", this.removePtag(page3Data.goal));
+                    body = body.Replace("#DM", this.removePtag(page3Data.discharge_medications));
                 }
                 else
                 {
@@ -2370,6 +2373,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#Procedures", "");
                     body = body.Replace("#Care", "");
                     body = body.Replace("#Gait", "");
+                    body = body.Replace("#DM", "");
                 }
 
                 //Treatment printing

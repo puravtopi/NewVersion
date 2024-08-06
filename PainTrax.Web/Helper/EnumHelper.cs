@@ -59,6 +59,8 @@ namespace PainTrax.Web.Helper
 
         public enum Study1
         {
+            [Display(Name = "")]
+            NA = 0,
             [Display(Name = "MRI")]
             MRI = 1,
             [Display(Name = "CT-Scan")]
@@ -71,6 +73,8 @@ namespace PainTrax.Web.Helper
 
         public enum Study2
         {
+            [Display(Name = "")]
+            NA = 0,
             [Display(Name = "MRI")]
             MRI = 1,
             [Display(Name = "CT-Scan")]

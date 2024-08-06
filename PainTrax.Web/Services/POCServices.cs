@@ -356,11 +356,12 @@ namespace PainTrax.Web.Services
 
         public List<POCReportVM> GetPOCReport(string cnd)
         {
-            string query = "SELECT tp.ProcedureDetail_ID,pm.gender,CONCAT(pm.lname,', ',pm.fname)as 'Name',IFNULL(pm.MC,'') AS MC," +
+            string query = "SELECT tp.ProcedureDetail_ID,CONCAT(pm.lname,', ',pm.fname)as 'Name',CASE when pm.MC=1 THEN 'Yes' ELSE 'No' END as MC," +
             "ie.Compensation AS 'CaseType' ,ie.doa,pm.dob,pm.mobile AS Phone,ie.primary_policy_no,ie.primary_claim_no,ins.cmpname," +
             "lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE ," +
             "tp.Requested," +
             "tp.Executed," +
+            "CASE when pm.gender = '1' THEN 'Male' when pm.gender = '2' then 'Female' when pm.gender = '3' then 'Other'  ELSE '' END AS gender,"+
             "tp.Scheduled  FROM tbl_Procedures_Details tp" +
             " inner join tbl_patient_ie ie on tp.PatientIE_ID = ie.id" +
             " inner join tbl_Procedures pp on pp.id=tp.Procedure_Master_ID" +

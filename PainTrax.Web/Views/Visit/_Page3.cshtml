@@ -20,7 +20,7 @@
 
             <div class="col-md-3">
 
-                <input type="text" class="form-control" placeholder="Cervical buldge" asp-for="diagcervialbulge_text">
+                <input type="text" class="form-control" placeholder="Cervical bulge" asp-for="diagcervialbulge_text">
             </div>
             <div class="col-md-3">
 
@@ -42,7 +42,7 @@
 
             <div class="col-md-3">
 
-                <input type="text" class="form-control" placeholder="Thoriacic buldge" asp-for="diagthoracicbulge_text">
+                <input type="text" class="form-control" placeholder="Thoracic bulge" asp-for="diagthoracicbulge_text">
             </div>
             <div class="col-md-3">
 
@@ -57,14 +57,14 @@
                 <input type="date" class="form-control pdate" asp-for="diaglumberbulge_date">
             </div>
             <div class="col-md-1">
-
+                 
                 <select class="form-select" aria-label="Default select example" asp-for="diaglumberbulge_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study1>()">
                 </select>
             </div>
 
             <div class="col-md-3">
 
-                <input type="text" class="form-control" placeholder="Lumber buldge" asp-for="diaglumberbulge_text">
+                <input type="text" class="form-control" placeholder="Lumbar bulge" asp-for="diaglumberbulge_text">
             </div>
             <div class="col-md-3">
 
@@ -291,7 +291,7 @@
             <br />
 
             <div class="row mb-3">
-                <label for="inputNumber" class="col-sm-2 col-form-label">
+                <label for="inputNumber" class="col-sm-2 col-form-label" bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#DM">
                     Discharge Medications
 
                 </label>

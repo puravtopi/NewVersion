@@ -21,6 +21,7 @@ public class tbl_patient_ie{
 	public string? primary_wcb_group { get;set;}
 	public string? secondary_wcb_group { get;set;}
 	public string? note {get;set;}
+	public string? poc_note {get;set;}
 	public string? ins_note {get;set;}
 	public string? alert_note {get;set;}
 	public string? referring_physician { get;set;}

@@ -57,7 +57,7 @@ namespace PainTrax.Web.Services
 		reports_ids=@reports_ids,
 		report_name=@report_name,
 		role_ids=@role_ids,
-		role_name=@role_name
+		role_name=@role_name,
 		form_name=@form_name
 			where Id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.Id);

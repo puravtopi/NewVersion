@@ -26,6 +26,7 @@ public class tbl_patient_ie{
 	public string? alert_note {get;set;}
 	public string? referring_physician { get;set;}
 	public string? accident_type { get;set;}
+	
 	public DateTime? created_date {get;set;}
 	public int? created_by {get;set;}
 	public int? updated_by {get;set;}

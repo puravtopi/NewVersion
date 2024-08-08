@@ -24,7 +24,9 @@ public class tbl_ie_page1{
 	public string? bodypart { get;set;}
 	public string? occupation { get;set;}
 	public string? impairment_rating { get;set;}
-	public int? ie_id {get;set;}
+
+    public string? injection_desc { get; set; }
+    public int? ie_id {get;set;}
 	public int? cmp_id {get;set;}
 	public int? patient_id {get;set;}
 

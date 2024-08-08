@@ -580,16 +580,21 @@
                             <i class="bi bi-circle"></i><span>POC Report</span>
                         </a>
                     </li>
-                    @* <li>
-                        <a href="charts-apexcharts.html">
-                            <i class="bi bi-circle"></i><span>Pro / SX Report</span>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="IVFRReport" asp-controller="Report">
+                            <i class="bi bi-circle"></i><span>IVFR Report</span>
                         </a>
                     </li>
                     <li>
-                        <a href="charts-echarts.html">
-                            <i class="bi bi-circle"></i><span>Daily Count</span>
+                        <a class="nav-link collapsed" asp-action="ProSXReport" asp-controller="Report">
+                            <i class="bi bi-circle"></i><span>ProSX Report</span>
                         </a>
-                    </li> *@
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="DailyCountReport" asp-controller="Report">
+                            <i class="bi bi-circle"></i><span>Daily Count Report</span>
+                        </a>
+                    </li>
                 </ul>
             </li><!-- End Charts Nav -->
 

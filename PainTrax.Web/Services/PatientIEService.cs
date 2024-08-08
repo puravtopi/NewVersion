@@ -207,8 +207,8 @@ public class PatientIEService : ParentService
     public int InsertPage1(tbl_ie_page1 data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_ie_page1
-		(history,vital,pmh,psh,allergies,medication,family_history,social_history,cc,pe,rom,note,ie_id,cmp_id,patient_id,bodypart,daignosis_delimit,daignosis_desc,assessment,plan,dd,work_status,occupation,impairment_rating)Values
-				(@history,@vital,@pmh,@psh,@allergies,@medication,@family_history,@social_history,@cc,@pe,@rom,@note,@ie_id,@cmp_id,@patient_id,@bodypart,@daignosis_delimit,@daignosis_desc,@assessment,@plan,@dd,@work_status,@occupation,@impairment_rating);select @@identity;", conn);
+		(history,vital,pmh,psh,allergies,medication,family_history,social_history,cc,pe,rom,note,ie_id,cmp_id,patient_id,bodypart,daignosis_delimit,daignosis_desc,assessment,plan,dd,work_status,occupation,impairment_rating,injection_desc)Values
+				(@history,@vital,@pmh,@psh,@allergies,@medication,@family_history,@social_history,@cc,@pe,@rom,@note,@ie_id,@cmp_id,@patient_id,@bodypart,@daignosis_delimit,@daignosis_desc,@assessment,@plan,@dd,@work_status,@occupation,@impairment_rating,@injection_desc);select @@identity;", conn);
         cm.Parameters.AddWithValue("@history", data.history);
         cm.Parameters.AddWithValue("@vital", data.vital);
         cm.Parameters.AddWithValue("@pmh", data.pmh);
@@ -233,6 +233,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@work_status", data.work_status);
         cm.Parameters.AddWithValue("@occupation", data.occupation);
         cm.Parameters.AddWithValue("@impairment_rating", data.impairment_rating);
+        cm.Parameters.AddWithValue("@injection_desc", data.injection_desc);
         var result = ExecuteScalar(cm);
         return result;
     }
@@ -243,7 +244,8 @@ public class PatientIEService : ParentService
 		history=@history,vital=@vital,pmh=@pmh,psh=@psh,allergies=@allergies,medication=@medication,family_history=@family_history,
         social_history=@social_history,cc=@cc,pe=@pe,rom=@rom,note=@note,
         bodypart=@bodypart,daignosis_desc=@daignosis_desc,daignosis_delimit=@daignosis_delimit,occupation=@occupation,
-        assessment=@assessment,plan=@plan,dd=@dd,work_status=@work_status,impairment_rating=@impairment_rating 
+        assessment=@assessment,plan=@plan,dd=@dd,work_status=@work_status,impairment_rating=@impairment_rating,
+        injection_desc=@injection_desc
 
         where id=@id
 				 ;select 1;", conn);
@@ -269,6 +271,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@work_status", data.work_status);
         cm.Parameters.AddWithValue("@occupation", data.occupation);
         cm.Parameters.AddWithValue("@impairment_rating", data.impairment_rating);
+        cm.Parameters.AddWithValue("@injection_desc", data.injection_desc);
         var result = ExecuteScalar(cm);
         return result;
     }

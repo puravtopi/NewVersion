@@ -16,6 +16,9 @@ namespace PainTrax.Web.Controllers
 
         private readonly ILogger<ReportController> _logger;
         private readonly POCServices _services = new POCServices();
+        private readonly ProSXServices _servicesProSX = new ProSXServices();
+        private readonly IVFRServices _servicesIVFR = new IVFRServices();
+        private readonly DailyCountServices _servicesDailyCount = new DailyCountServices();
         private readonly Common _commonservices = new Common();
 
         public ReportController(ILogger<ReportController> logger)
@@ -222,6 +225,390 @@ namespace PainTrax.Web.Controllers
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "POCReport.xlsx");
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                return Content("Error: " + ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult ProSXReport()
+        {
+
+            var objPro = new ProSXReportVM();
+            objPro.lstProSXReport = new List<ProSXReportVM>();
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+            //objPro._executed = false;
+            //objPro._requested = false;
+            //objPro._scheduled = false;
+
+            return View(objPro);
+        }
+
+        [HttpPost]
+        public IActionResult ProSXReport(DateTime? fdate, DateTime? tdate, int locationid = 0, int mcodeid = 0, bool _executed = false, bool _requested = false, bool _scheduled = false)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+            string query = " where pm.cmp_id=" + cmpid.ToString();
+
+            string _query = "";
+
+            if (fdate != null)
+            {
+                _query = " (tp.Scheduled >= '" + fdate.Value.ToString("yyyy/MM/dd") + "' )";
+            }
+
+            if (!string.IsNullOrEmpty(_query))
+            {
+                query = query + " and (" + _query + ")";
+            }
+
+
+            var data = _servicesProSX.GetProSXReport(query);
+            var objPOC = new ProSXReportVM();
+            objPOC.lstProSXReport = data;
+            TempData["ProSXquery"] = query;
+
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+            return View(objPOC);
+
+        }
+
+        public IActionResult ExportToExcelProSX()
+        {
+            try
+            {
+                string query = TempData["ProSXquery"].ToString();
+                var data = _servicesProSX.GetProSXReport(query);
+
+                // Create a new DataTable
+                DataTable dt = new DataTable();
+                // Add columns to the DataTable
+                dt.Columns.AddRange(new DataColumn[]
+                {
+                    new DataColumn("Name", typeof(string)),
+                    new DataColumn("MC", typeof(string)),
+                    new DataColumn("Case", typeof(string)),
+                    new DataColumn("Location", typeof(string)),
+                    new DataColumn("MCODE", typeof(string)),
+                    new DataColumn("Vaccinated", typeof(string)),
+                    new DataColumn("Scheduled", typeof(string)),
+                });
+
+                // Populate the DataTable with data from the list of attorneys
+                foreach (var proSX in data)
+                {
+                    dt.Rows.Add(proSX.name, proSX.mc, proSX.casetype, proSX.location, proSX.mcode, proSX.vaccinated, proSX.scheduled);
+                }
+
+                // Create a new Excel file
+                var memoryStream = new MemoryStream();
+                using (var document = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook))
+                {
+                    var workbookPart = document.AddWorkbookPart();
+                    workbookPart.Workbook = new Workbook();
+
+                    var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                    var sheetData = new SheetData();
+                    worksheetPart.Worksheet = new Worksheet(sheetData);
+
+                    var sheets = document.WorkbookPart.Workbook.AppendChild(new Sheets());
+                    var sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Users" };
+                    sheets.Append(sheet);
+
+                    var headerRow = new Row();
+                    foreach (DataColumn column in dt.Columns)
+                    {
+                        var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName) };
+                        headerRow.AppendChild(cell);
+                    }
+                    sheetData.AppendChild(headerRow);
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        var newRow = new Row();
+                        foreach (var value in row.ItemArray)
+                        {
+                            var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
+                            newRow.AppendChild(cell);
+                        }
+                        sheetData.AppendChild(newRow);
+                    }
+                }
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ProSX Report.xlsx");
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                return Content("Error: " + ex.Message);
+            }
+        }
+
+
+        [HttpGet]
+        public IActionResult IVFRReport()
+        {
+
+            var objPro = new IVFRReportVM();
+            objPro.lstIVFRReport = new List<IVFRReportVM>();
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+            //objPro._executed = false;
+            //objPro._requested = false;
+            objPro._scheduled = false;
+
+            return View(objPro);
+        }
+
+        [HttpPost]
+        public IActionResult IVFRReport(DateTime? fdate, DateTime? tdate, int locationid = 0, int mcodeid = 0, bool _executed = false, bool _requested = false, bool _scheduled = false)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+            string query = " where pm.cmp_id=" + cmpid.ToString();
+
+            string _query = "";
+
+            //if (fdate != null)
+            //{
+            //    _query = " (tp.Scheduled >= '" + fdate.Value.ToString("yyyy/MM/dd") + "' )";
+            //}
+            if (locationid > 0)
+            {
+                query += " and lc.id =" + locationid;
+            }
+
+            if (_scheduled)
+            {
+                if (fdate != null && tdate != null)
+                {
+                    if (!string.IsNullOrEmpty(_query))
+                        _query = _query + " Or (tp.Scheduled BETWEEN '" + fdate.Value.ToString("yyyy/MM/dd") + "' and '" + tdate.Value.ToString("yyyy/MM/dd") + "')";
+                    else
+                        _query = " (tp.Scheduled BETWEEN '" + fdate.Value.ToString("yyyy/MM/dd") + "' and '" + tdate.Value.ToString("yyyy/MM/dd") + "')";
+
+                }
+            }
+
+            if (!string.IsNullOrEmpty(_query))
+            {
+                query = query + " and (" + _query + ")";
+            }
+
+
+            var data = _servicesIVFR.GetIVFRReport(query);
+            var objPOC = new IVFRReportVM();
+            objPOC.lstIVFRReport = data;
+            TempData["IVFRquery"] = query;
+
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+            return View(objPOC);
+
+        }
+
+        public IActionResult ExportToExcelIVFR()
+        {
+            try
+            {
+                string query = TempData["IVFRquery"].ToString();
+                var data = _servicesIVFR.GetIVFRReport(query);
+
+                // Create a new DataTable
+                DataTable dt = new DataTable();
+                // Add columns to the DataTable
+                dt.Columns.AddRange(new DataColumn[]
+                {
+                    new DataColumn("Name", typeof(string)),
+                    new DataColumn("MCODE", typeof(string)),
+                    new DataColumn("Case", typeof(string)),
+                    new DataColumn("DOB", typeof(string)),
+                    new DataColumn("DOA", typeof(string)),
+                    new DataColumn("SSN", typeof(string)),
+                    new DataColumn("Phone", typeof(string)),
+                    new DataColumn("Location", typeof(string)),
+                    new DataColumn("Address", typeof(string)),
+                    new DataColumn("Ins Co", typeof(string)),
+                    new DataColumn("ClaimNo", typeof(string)),
+                    new DataColumn("Policy", typeof(string)),
+                    new DataColumn("Schedule", typeof(string)),
+
+                });
+
+                // Populate the DataTable with data from the list of attorneys
+                foreach (var IVFR in data)
+                {
+                    dt.Rows.Add(IVFR.name, IVFR.mcode, IVFR.casetype, IVFR.dob, IVFR.doa, IVFR.ssn, IVFR.phone, IVFR.location, IVFR.Address, IVFR.InsCo, IVFR.primary_claim_no, IVFR.primary_policy_no, IVFR.scheduled);
+                }
+
+                // Create a new Excel file
+                var memoryStream = new MemoryStream();
+                using (var document = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook))
+                {
+                    var workbookPart = document.AddWorkbookPart();
+                    workbookPart.Workbook = new Workbook();
+
+                    var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                    var sheetData = new SheetData();
+                    worksheetPart.Worksheet = new Worksheet(sheetData);
+
+                    var sheets = document.WorkbookPart.Workbook.AppendChild(new Sheets());
+                    var sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Users" };
+                    sheets.Append(sheet);
+
+                    var headerRow = new Row();
+                    foreach (DataColumn column in dt.Columns)
+                    {
+                        var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName) };
+                        headerRow.AppendChild(cell);
+                    }
+                    sheetData.AppendChild(headerRow);
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        var newRow = new Row();
+                        foreach (var value in row.ItemArray)
+                        {
+                            var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
+                            newRow.AppendChild(cell);
+                        }
+                        sheetData.AppendChild(newRow);
+                    }
+                }
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "IVFR Report.xlsx");
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                return Content("Error: " + ex.Message);
+            }
+        }
+
+
+        [HttpGet]
+        public IActionResult DailyCountReport()
+        {
+
+            var objPro = new DailyCountReportVM();
+            objPro.lstDailyCountReport = new List<DailyCountReportVM>();
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+            //objPro._executed = false;
+            //objPro._requested = false;
+            //objPro._scheduled = false;
+
+            return View(objPro);
+        }
+        [HttpPost]
+        public IActionResult DailyCountReport(DateTime? fdate, DateTime? tdate)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+            string query = " where pm.cmp_id=" + cmpid.ToString();
+
+            string _query = "";
+
+            //if (fdate != null)
+            //{
+            //    _query = " (tp.Scheduled >= '" + fdate.Value.ToString("yyyy/MM/dd") + "' )";
+            //}
+
+
+
+            if (fdate != null && tdate != null)
+            {
+
+
+                _query = "'" + fdate.Value.ToString("yyyy/MM/dd") + "' and '" + tdate.Value.ToString("yyyy/MM/dd") + "'";
+
+            }
+
+
+
+
+            var data = _servicesDailyCount.GetDailyCountReport(_query);
+            var objPOC = new DailyCountReportVM();
+            objPOC.lstDailyCountReport = data;
+            TempData["DailyCountquery"] = query;
+
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+            return View(objPOC);
+
+        }
+
+        public IActionResult ExportToExcelDailyCount()
+        {
+            try
+            {
+                string query = TempData["DailyCountquery"].ToString();
+                var data = _servicesDailyCount.GetDailyCountReport(query);
+
+                // Create a new DataTable
+                DataTable dt = new DataTable();
+                // Add columns to the DataTable
+                dt.Columns.AddRange(new DataColumn[]
+                {
+                    new DataColumn("DOE", typeof(string)),
+                    new DataColumn("Location", typeof(string)),
+                    new DataColumn("NoOfIE", typeof(Int64)),
+                    new DataColumn("NoOfFU", typeof(Int64)),
+
+
+                });
+
+                // Populate the DataTable with data from the list of attorneys
+                foreach (var cnt in data)
+                {
+                    dt.Rows.Add(cnt.doe, cnt.location, cnt.NoOFIE, cnt.NoOFFU);
+                }
+
+                // Create a new Excel file
+                var memoryStream = new MemoryStream();
+                using (var document = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook))
+                {
+                    var workbookPart = document.AddWorkbookPart();
+                    workbookPart.Workbook = new Workbook();
+
+                    var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                    var sheetData = new SheetData();
+                    worksheetPart.Worksheet = new Worksheet(sheetData);
+
+                    var sheets = document.WorkbookPart.Workbook.AppendChild(new Sheets());
+                    var sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Users" };
+                    sheets.Append(sheet);
+
+                    var headerRow = new Row();
+                    foreach (DataColumn column in dt.Columns)
+                    {
+                        var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName) };
+                        headerRow.AppendChild(cell);
+                    }
+                    sheetData.AppendChild(headerRow);
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        var newRow = new Row();
+                        foreach (var value in row.ItemArray)
+                        {
+                            var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
+                            newRow.AppendChild(cell);
+                        }
+                        sheetData.AppendChild(newRow);
+                    }
+                }
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Daily Count Report.xlsx");
             }
             catch (Exception ex)
             {

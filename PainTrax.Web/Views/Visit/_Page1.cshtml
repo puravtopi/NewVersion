@@ -121,7 +121,7 @@
         </div>
 
     </div>
-    
+
     <div class="row mb-3">
         <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#CC">
             CC
@@ -176,14 +176,11 @@
         </div>
     </div>
     <div class="row mb-3">
-
-        
-
     </div>
     <div class="row mb-3">
         <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Diagnoses">
             Assessment
-            <br/>
+            <br />
             <div class="col-sm-10" id="divdaigo">
                 @Html.Raw(ViewBag.DaignoLink)
             </div>
@@ -199,7 +196,7 @@
             </div>
         </div>
     </div>
-    <div class="row mb-3" >
+    <div class="row mb-3">
         <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#PoPlan">
             Po-Plan
         </label>
@@ -214,7 +211,20 @@
             </div>
         </div>
     </div>
-   
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Injection">
+            Injection Report
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtInjection">@Model.injection_desc</textarea>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 
@@ -233,7 +243,7 @@
 <script>
 
 
-    var ckDaignosis, ckCC, ckPE, ckAssessment, ckPlan, ckHistory;
+    var ckDaignosis, ckCC, ckPE, ckAssessment, ckPlan, ckHistory, ckInjection;
 
 
     var body = '@Model.bodypart';
@@ -356,7 +366,24 @@
             .catch(handleSampleError);
 
 
+        ClassicEditor.create(document.querySelector('#txtInjection'), {
 
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+
+            window.editor = editor;
+            ckInjection = editor;
+        })
+            .catch(handleSampleError);
 
     });
 
@@ -524,6 +551,7 @@
                         "occupation": $("#occupation").val(),
                         "impairment_rating": $("#impairment_rating").val(),
                         "poc_note": $("#poc_note").val(),
+                        "injection_desc": ckInjection.getData(),
                     }
 
                     $.ajax({

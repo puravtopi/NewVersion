@@ -23,5 +23,9 @@ public class tbl_fu_page1{
 	public string? occupation {get;set;}
 	public string? psh {get;set;}
 	public string? pmh {get;set;}
+	public string? allergies { get;set;}
+	public string? medication { get;set;}
+	public string? family_history { get;set;}
+	public string? social_history { get;set;}
 
 }

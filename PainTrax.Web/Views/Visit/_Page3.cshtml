@@ -57,7 +57,7 @@
                 <input type="date" class="form-control pdate" asp-for="diaglumberbulge_date">
             </div>
             <div class="col-md-1">
-                 
+
                 <select class="form-select" aria-label="Default select example" asp-for="diaglumberbulge_study" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Study1>()">
                 </select>
             </div>
@@ -367,6 +367,45 @@
                         data: model,
                         contentType: "application/x-www-form-urlencoded",
                         success: function (data, status, xhr) {
+
+
+
+                            var myContentDaignosis = ckAssessment.getData();
+
+                            var daignoCodeDetails = "<ol>";
+
+                            if ($("#diagcervialbulge_text").val() != '') {
+                                daignoCodeDetails += "<li>" + $("#diagcervialbulge_text").val() + "</li>";
+                            }
+                            if ($("#diagcervialbulge_hnp1").val() != '') {
+                                daignoCodeDetails += "<li>" + $("#diagcervialbulge_hnp1").val() + "</li>";
+                            }
+                            if ($("#diagcervialbulge_hnp2").val() != '') {
+                                daignoCodeDetails += "<li>" + $("#diagcervialbulge_hnp2").val() + "</li>";
+                            }
+
+                            if ($("#diagthoracicbulge_text").val() != '') {
+                                daignoCodeDetails += "<li>" + $("#diagthoracicbulge_text").val() + "</li>";
+                            }
+                            if ($("#diagthoracicbulge_hnp1").val() != '') {
+                                daignoCodeDetails += "<li>" + $("#diagthoracicbulge_hnp1").val() + "</li>";
+                            }
+                            if ($("#diagthoracicbulge_hnp2").val() != '') {
+                                daignoCodeDetails += "<li>" + $("#diagthoracicbulge_hnp2").val() + "</li>";
+                            }
+
+                            if ($("#diaglumberbulge_text").val() != '') {
+                                daignoCodeDetails += "<li>" + $("#diaglumberbulge_text").val() + "</li>";
+                            }
+                            if ($("#diaglumberbulge_hnp1").val() != '') {
+                                daignoCodeDetails += "<li>" + $("#diaglumberbulge_hnp1").val() + "</li>";
+                            }
+                            if ($("#diaglumberbulge_hnp2").val() != '') {
+                                daignoCodeDetails += "<li>" + $("#diaglumberbulge_hnp2").val() + "</li>";
+                            }
+
+                            var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ol>";
+                            //ckAssessment.data.set(htmlDaignosis);
 
                             if (data > 0) {
                                 $('#myModalMessage').modal('show');

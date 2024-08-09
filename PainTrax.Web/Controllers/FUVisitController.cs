@@ -112,7 +112,7 @@ namespace PainTrax.Web.Controllers
                         obj.providerid = ieData.provider_id;
                         obj.location = ieData.location;
                         obj.doa = ieData.doa;
-                        obj.dos = ieData.doe;
+                        obj.doi = ieData.doe;
                         obj.prime_claim_no = ieData.primary_claim_no;
                         obj.prime_policy_no = ieData.primary_policy_no;
                         obj.prime_WCB_group = ieData.primary_wcb_group;

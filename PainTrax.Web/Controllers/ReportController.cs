@@ -185,7 +185,7 @@ namespace PainTrax.Web.Controllers
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var user in data)
                 {
-                    dt.Rows.Add(user.name,user.gender, user.casetype, user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.phone, user.location, user.cmpname, user.primary_claim_no, user.primary_policy_no, user.mc,user.requested==null?"":user.requested.Value.ToShortDateString(), user.scheduled==null?"":user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString());
+                    dt.Rows.Add(user.name, user.gender, user.casetype, user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.phone, user.location, user.cmpname, user.primary_claim_no, user.primary_policy_no, user.mc, user.requested == null ? "" : user.requested.Value.ToShortDateString(), user.scheduled == null ? "" : user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString());
                 }
 
                 // Create a new Excel file
@@ -427,6 +427,7 @@ namespace PainTrax.Web.Controllers
                 dt.Columns.AddRange(new DataColumn[]
                 {
                     new DataColumn("Name", typeof(string)),
+                     new DataColumn("Sex", typeof(string)),
                     new DataColumn("MCODE", typeof(string)),
                     new DataColumn("Case", typeof(string)),
                     new DataColumn("DOB", typeof(string)),
@@ -436,16 +437,16 @@ namespace PainTrax.Web.Controllers
                     new DataColumn("Location", typeof(string)),
                     new DataColumn("Address", typeof(string)),
                     new DataColumn("Ins Co", typeof(string)),
-                    new DataColumn("ClaimNo", typeof(string)),
-                    new DataColumn("Policy", typeof(string)),
-                    new DataColumn("Schedule", typeof(string)),
+                    new DataColumn("Claim Number", typeof(string)),
+                    new DataColumn("Policy No", typeof(string)),
+                    new DataColumn("Scheduled", typeof(string)),
 
                 });
 
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var IVFR in data)
                 {
-                    dt.Rows.Add(IVFR.name, IVFR.mcode, IVFR.casetype, IVFR.dob, IVFR.doa, IVFR.ssn, IVFR.phone, IVFR.location, IVFR.Address, IVFR.InsCo, IVFR.primary_claim_no, IVFR.primary_policy_no, IVFR.scheduled);
+                    dt.Rows.Add(IVFR.name, IVFR.gender, IVFR.mcode, IVFR.casetype, IVFR.dob == null ? "" : IVFR.dob.Value.ToShortDateString(), IVFR.doa == null ? "" : IVFR.doa.Value.ToShortDateString(), IVFR.ssn, IVFR.phone, IVFR.location, IVFR.Address, IVFR.InsCo, IVFR.primary_claim_no, IVFR.primary_policy_no, IVFR.scheduled == null ? "" : IVFR.scheduled.Value.ToShortDateString());
                 }
 
                 // Create a new Excel file

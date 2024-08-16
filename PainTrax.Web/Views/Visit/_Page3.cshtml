@@ -370,7 +370,7 @@
 
 
 
-                            var myContentDaignosis = ckAssessment.getData();
+                        
 
                             var daignoCodeDetails = "<ol>";
 
@@ -404,8 +404,8 @@
                                 daignoCodeDetails += "<li>" + $("#diaglumberbulge_hnp2").val() + "</li>";
                             }
 
-                            var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ol>";
-                            //ckAssessment.data.set(htmlDaignosis);
+                            var htmlDaignosis = daignoCodeDetails + "</ol>";
+                            ckPOCAssestence.data.set(htmlDaignosis);
 
                             if (data > 0) {
                                 $('#myModalMessage').modal('show');

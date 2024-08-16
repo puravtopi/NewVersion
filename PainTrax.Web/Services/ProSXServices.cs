@@ -25,8 +25,9 @@ namespace PainTrax.Web.Services
 
         public List<ProSXReportVM> GetProSXReport(string cnd)
         {
-            string query = "SELECT DISTINCT pm.gender,CONCAT(pm.lname,' ',pm.fname)as 'Name',IFNULL(pm.MC,'') AS MC,ie.Compensation AS 'CaseType' ," +
-           "lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE " +
+            string query = "SELECT DISTINCT CONCAT(pm.lname,' ',pm.fname)as 'Name',IFNULL(pm.MC,'') AS MC,ie.Compensation AS 'CaseType' ," +
+           "lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE, " +
+            "CASE when pm.gender = '1' THEN 'M' when pm.gender = '2' then 'F' when pm.gender = '3' then 'O'  ELSE '' END AS gender" +
            ",tp.Scheduled  FROM tbl_Procedures_Details tp" +
            " inner join tbl_patient_ie ie on tp.PatientIE_ID = ie.id" +
            " inner join tbl_Patient pm on pm.id = ie.Patient_ID" +

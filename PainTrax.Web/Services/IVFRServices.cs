@@ -356,8 +356,9 @@ namespace PainTrax.Web.Services
 
         public List<IVFRReportVM> GetIVFRReport(string cnd)
         {
-            string query = "SELECT tp.ProcedureDetail_ID,pm.gender,CONCAT(pm.lname,', ',pm.fname)as 'Name',IFNULL(pm.MC,'') AS MC," +
+            string query = "SELECT tp.ProcedureDetail_ID,CONCAT(pm.lname,', ',pm.fname)as 'Name',IFNULL(pm.MC,'') AS MC," +
             "ie.Compensation AS 'CaseType' ,ie.doa,pm.dob,pm.mobile AS Phone,ie.primary_policy_no,ie.primary_claim_no,ins.cmpname," +
+            "CASE when pm.gender = '1' THEN 'M' when pm.gender = '2' then 'F' when pm.gender = '3' then 'O'  ELSE '' END AS gender," +
             "lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE,concat(pm.Address,' ',pm.city, ' ',pm.state, ' ',pm.zip) As Address ,ins.cmpname As InsCo," +
             "tp.Requested," +
             "tp.Executed," +

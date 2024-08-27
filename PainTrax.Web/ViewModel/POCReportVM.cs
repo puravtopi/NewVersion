@@ -14,6 +14,8 @@ namespace PainTrax.Web.ViewModel
         public string primary_policy_no { get; set; }
         public string primary_claim_no { get; set; }
         public string cmpname { get; set; }
+        public string allergies { get; set; }
+        public string note { get; set; }
         
         public string casetype { get; set; }
         public string location { get; set; }

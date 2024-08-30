@@ -492,7 +492,7 @@ namespace PainTrax.Web.Controllers
                         obj.Page1.history = defaultPage1.history;
                         obj.Page1.medication = defaultPage1.medication;
                         obj.Page1.note = defaultPage1.note;
-                       
+
                         obj.Page1.occupation = defaultPage1.occupation;
                         obj.Page1.plan = defaultPage1.plan;
                         obj.Page1.pmh = defaultPage1.pmh;
@@ -529,7 +529,7 @@ namespace PainTrax.Web.Controllers
 
                 //for documents
                 {
-                  
+
                     HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, patientId);
 
                     var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments");
@@ -563,7 +563,7 @@ namespace PainTrax.Web.Controllers
                     }
 
                     obj.doc_json = JsonConvert.SerializeObject(nodes, Formatting.Indented);
-                  
+
                 }
 
             }
@@ -2256,7 +2256,7 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(page1Data.bodypart))
                     {
                         bodypart = Common.ReplceCommowithAnd(page1Data.bodypart);
-                        body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",",", ") + " pain.");
+                        body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",", ", ") + " pain.");
 
                     }
                     else
@@ -2310,7 +2310,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#DD", this.removePtag(page1Data.dd));
                     body = body.Replace("#WorkStatus", this.removePtag(page1Data.work_status));
                     body = body.Replace("#IR", this.removePtag(page1Data.impairment_rating));
-                   
+
 
                 }
                 else
@@ -2832,7 +2832,7 @@ namespace PainTrax.Web.Controllers
                         {
                             if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
                             {
-                                inject_desc = "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
+                                inject_desc = inject_desc + "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
                                 inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
                                 inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
                             }
@@ -3368,7 +3368,7 @@ namespace PainTrax.Web.Controllers
 
             try
             {
-                _forwardServices.GetOneOther(patientIEId,cmpid.Value, fu_id, patientId);
+                _forwardServices.GetOneOther(patientIEId, cmpid.Value, fu_id, patientId);
             }
             catch (Exception ex)
             {

@@ -27,7 +27,7 @@ namespace PainTrax.Web.Helper
             FU = 1,
             [Display(Name = "Postop FU")]
             ProFU = 2,
-            [Display(Name = "Preop H&P")]
+            [Display(Name = "Preop H and P")]
             PriFU = 3,
             [Display(Name = "Tele FU")]
             TeleFU = 4

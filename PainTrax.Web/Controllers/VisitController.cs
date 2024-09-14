@@ -3334,7 +3334,7 @@ namespace PainTrax.Web.Controllers
                 extra_comments = "",
                 type = type,
                 accident_type = ieData.accident_type,
-
+                provider_id=ieData.provider_id
 
             };
             int fu_id = _patientFUservices.Insert(objFU);

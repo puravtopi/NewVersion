@@ -247,12 +247,15 @@ namespace PainTrax.Web.Controllers
 
                 string form_name = "";
 
-                foreach (var i in model.FormList)
+                if (model.FormList != null)
                 {
-                    if (i.IsChecked)
+                    foreach (var i in model.FormList)
                     {
+                        if (i.IsChecked)
+                        {
 
-                        form_name = form_name + "," + i.Item;
+                            form_name = form_name + "," + i.Item;
+                        }
                     }
                 }
 

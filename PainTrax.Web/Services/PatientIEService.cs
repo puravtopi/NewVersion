@@ -17,7 +17,7 @@ public class PatientIEService : ParentService
         if (!string.IsNullOrEmpty(query))
             query = query + cnd;
 
-        query = query + " order by id desc";
+        query = query + " order by id desc ";
 
         List<vm_patient_ie> dataList = ConvertDataTable<vm_patient_ie>(GetData(query));
         return dataList;
@@ -150,8 +150,7 @@ public class PatientIEService : ParentService
 		secondary_ins_cmp_id=@secondary_ins_cmp_id,
 		emp_id=@emp_id,
 		adjuster_id=@adjuster_id,
-        provider_id=@provider_id,
-		doa=@doa,
+        		doa=@doa,
 		primary_claim_no=@primary_claim_no,
 		secondary_claim_no=@secondary_claim_no,
 		primary_policy_no=@primary_policy_no,
@@ -174,7 +173,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@secondary_ins_cmp_id", data.secondary_ins_cmp_id);
         cm.Parameters.AddWithValue("@emp_id", data.emp_id);
         cm.Parameters.AddWithValue("@adjuster_id", data.adjuster_id);
-        cm.Parameters.AddWithValue("@provider_id", data.provider_id);
+     
         cm.Parameters.AddWithValue("@doa", data.doa);
         cm.Parameters.AddWithValue("@primary_claim_no", data.primary_claim_no);
         cm.Parameters.AddWithValue("@secondary_claim_no", data.secondary_claim_no);

@@ -1,14 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
+using MS.Models;
 using MS.Services;
 using Optivem.Framework.Core.Domain;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using PainTrax.Web.ViewModel;
+using System.Data;
 using System.Security.Cryptography.Xml;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace PainTrax.Web.Controllers
 {
@@ -20,13 +25,16 @@ namespace PainTrax.Web.Controllers
         private readonly SignatureService _services = new SignatureService();
         private readonly CompanyServices _cmpservices = new CompanyServices();
         private readonly PatientService _patientservices = new PatientService();
+        private readonly ILogger<UtilityController> _logger;
+        private readonly PatientImportService _patientimportservice = new PatientImportService();
 
-        public UtilityController(Microsoft.AspNetCore.Hosting.IHostingEnvironment environment,
+        public UtilityController(Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, ILogger<UtilityController> logger,
                                IConfiguration configuration)
         {
 
             Environment = environment;
             Configuration = configuration;
+            _logger = logger;
         }
 
         public IActionResult UploadSign()
@@ -114,7 +122,7 @@ namespace PainTrax.Web.Controllers
             StringBuilder sb = new StringBuilder();
             try
             {
-                
+
 
                 if (obj.files != null && obj.files.Count > 0)
                 {
@@ -132,9 +140,9 @@ namespace PainTrax.Web.Controllers
 
                         var firstname = "";
 
-                      
 
-                        if (fulllname.Split(',').Length>1)
+
+                        if (fulllname.Split(',').Length > 1)
                             firstname = fulllname.Split(',')[1].TrimStart();
 
 
@@ -189,5 +197,287 @@ namespace PainTrax.Web.Controllers
 
             return Json(sb.ToString());
         }
+
+        public IActionResult UploadPatient()
+        {
+            return View(new UploadSignVM());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UploadPatient(IFormFile patient)
+        {
+
+            try
+            {
+                int cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value;
+              
+                if (patient != null && patient.Length > 0)
+                {
+                    //DataTable dt = this.Read2007Xlsx(patient);
+                    DataTable dt = new DataTable(); 
+                    using (var stream = new MemoryStream())
+                    {
+                        patient.CopyToAsync(stream);
+                        stream.Position = 0;
+
+                        // Convert uploaded Excel to DataTable
+                        dt = ReadExcelToDataTable(stream);
+                    }
+
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            tbl_ie_page1 obj = new tbl_ie_page1()
+                            {
+                                cmp_id = cmpid,
+                                allergies = dt.Rows[i]["Allergies"].ToString(),
+                                cc = dt.Rows[i]["CC"].ToString(),
+                                history = dt.Rows[i]["History"].ToString(),
+                                ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
+                                medication = dt.Rows[i]["Medications"].ToString(),
+                                patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
+                                pe = dt.Rows[i]["Physical Exam"].ToString(),
+                                pmh = dt.Rows[i]["Past Medical"].ToString(),
+                                psh = dt.Rows[i]["Past Surgical"].ToString(),
+                                social_history = dt.Rows[i]["Social History"].ToString(),
+                                assessment = this.getAssement(dt.Rows[i]["Diagnoses"].ToString())
+
+                            };
+                            _patientimportservice.InsertPage1(obj);
+
+                            tbl_ie_page2 obj2 = new tbl_ie_page2() {
+                                aod = dt.Rows[i]["Activities"].ToString(),
+                                ros = dt.Rows[i]["ROS"].ToString(),
+                                ie_id= Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
+                                cmp_id= cmpid,
+                                patient_id= Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
+                            };
+
+                            _patientimportservice.InsertPage2(obj2);
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "ImportData");
+            }
+            return View();
+        }
+
+        private string getAssement(string val)
+        {
+            if (string.IsNullOrEmpty(val))
+                return "";
+            else
+            {
+                val = val.Replace("<p>", "<li>");
+                val = val.Replace("</p>", "</li>");
+                val = "<ul>" + val + "</ul>";
+                return val;
+            }
+        }
+
+        public DataTable Read2007Xlsx(IFormFile postedFile)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                if (postedFile != null && postedFile.Length > 0)
+                {
+                    // Read the uploaded Excel file using Open XML
+                    using (Stream stream = postedFile.OpenReadStream())
+                    {
+
+                        using (SpreadsheetDocument spreadSheetDocument = SpreadsheetDocument.Open(stream, false))
+                        {
+                            WorkbookPart workbookPart = spreadSheetDocument.WorkbookPart;
+                            IEnumerable<Sheet> sheets = spreadSheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
+                            string relationshipId = sheets.First().Id.Value;
+                            WorksheetPart worksheetPart = (WorksheetPart)spreadSheetDocument.WorkbookPart.GetPartById(relationshipId);
+                            Worksheet workSheet = worksheetPart.Worksheet;
+                            SheetData sheetData = workSheet.GetFirstChild<SheetData>();
+                            IEnumerable<Row> rows = sheetData.Descendants<Row>();
+                            foreach (Cell cell in rows.ElementAt(0))
+                            {
+                                dt.Columns.Add(GetCellValue(spreadSheetDocument, cell));
+                            }
+                            foreach (Row row in rows) //this will also include your header row...
+                            {
+                                DataRow tempRow = dt.NewRow();
+                                int columnIndex = 0;
+                                foreach (Cell cell in row.Descendants<Cell>())
+                                {
+                                    // Gets the column index of the cell with data
+                                    int cellColumnIndex = (int)GetColumnIndexFromName(GetColumnName(cell.CellReference));
+                                    cellColumnIndex--; //zero based index
+                                    if (columnIndex < cellColumnIndex)
+                                    {
+                                        do
+                                        {
+                                            tempRow[columnIndex] = ""; //Insert blank data here;
+                                            columnIndex++;
+                                        }
+                                        while (columnIndex < cellColumnIndex);
+                                    }//end if block
+                                    tempRow[columnIndex] = GetCellValue(spreadSheetDocument, cell);
+                                    columnIndex++;
+                                }//end inner foreach loop
+                                dt.Rows.Add(tempRow);
+                            }//end outer foreach loop
+                        }//end using block
+                        dt.Rows.RemoveAt(0); //...so i'm taking it out here.
+                    }
+                }
+            }//end try
+            catch (Exception ex)
+            {
+                SaveLog(ex, "Read2007Xlsx");
+            }
+
+            return dt;
+        }//end Read2007Xlsx method        
+
+        public static string GetColumnName(string cellReference)
+        {
+            // Create a regular expression to match the column name portion of the cell name.
+            Regex regex = new Regex("[A-Za-z]+");
+            Match match = regex.Match(cellReference);
+            return match.Value;
+        } //end GetColumnName method
+        public static int? GetColumnIndexFromName(string columnName)
+        {
+            //return columnIndex;
+            string name = columnName;
+            int number = 0;
+            int pow = 1;
+            for (int i = name.Length - 1; i >= 0; i--)
+            {
+                number += (name[i] - 'A' + 1) * pow;
+                pow *= 26;
+            }
+            return number;
+        } //end GetColumnIndexFromName method
+
+        //public static string GetCellValue(SpreadsheetDocument document, Cell cell)
+        //{
+        //    SharedStringTablePart stringTablePart = document.WorkbookPart.SharedStringTablePart;
+        //    if (cell.CellValue == null)
+        //    {
+        //        return "";
+        //    }
+        //    string value = cell.CellValue.InnerXml;
+        //    if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
+        //    {
+        //        return stringTablePart.SharedStringTable.ChildElements[Int32.Parse(value)].InnerText;
+        //    }
+        //    else
+        //    {
+        //        return value;
+        //    }
+        //}//end GetCellValue method
+
+
+        private DataTable ReadExcelToDataTable(Stream stream)
+        {
+            DataTable dataTable = new DataTable();
+
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(stream, false))
+            {
+                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                Sheets sheets = workbookPart.Workbook.Sheets;
+
+                // Get the first sheet
+                Sheet sheet = sheets.Elements<Sheet>().FirstOrDefault();
+
+                if (sheet == null)
+                {
+                    throw new Exception("No sheet found in the Excel file.");
+                }
+
+                // Get the WorksheetPart based on the sheet's relationship ID
+                WorksheetPart worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id);
+
+                SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().FirstOrDefault();
+
+                bool isFirstRow = true;
+                foreach (Row row in sheetData.Elements<Row>())
+                {
+                    DataRow dataRow = dataTable.NewRow();
+
+                    int columnIndex = 0;
+                    foreach (Cell cell in row.Elements<Cell>())
+                    {
+                        string cellValue = GetCellValue(spreadsheetDocument, cell);
+
+                        if (isFirstRow)
+                        {
+                            // Use the first row to add columns to the DataTable
+                            dataTable.Columns.Add(cellValue);
+                        }
+                        else
+                        {
+                            // Clean HTML tags and add data to the DataTable
+                            string cleanCellValue = System.Text.RegularExpressions.Regex.Replace(cellValue, "<.*?>", string.Empty);
+                            dataRow[columnIndex] = cleanCellValue;
+                        }
+                        columnIndex++;
+                    }
+
+                    if (!isFirstRow)
+                    {
+                        dataTable.Rows.Add(dataRow);
+                    }
+                    isFirstRow = false;
+                }
+            }
+
+            return dataTable;
+        }
+
+
+        private string GetCellValue(SpreadsheetDocument doc, Cell cell)
+        {
+            if (cell == null)
+                return null;
+
+            string value = cell.InnerText;
+
+            if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
+            {
+                var stringTable = doc.WorkbookPart.SharedStringTablePart.SharedStringTable;
+                value = stringTable.ChildElements[int.Parse(value)].InnerText;
+            }
+
+            return value;
+        }
+
+        #region Private Method
+        private void SaveLog(Exception ex, string actionname)
+        {
+            var msg = "";
+            if (ex.InnerException == null)
+            {
+                _logger.LogError(ex.Message);
+                msg = ex.Message;
+            }
+            else
+            {
+                _logger.LogError(ex.InnerException.Message);
+                msg = ex.InnerException.Message;
+            }
+            var logdata = new tbl_log
+            {
+                CreatedDate = DateTime.Now,
+                CreatedBy = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId),
+                Message = msg
+            };
+            new LogService().Insert(logdata);
+        }
+        #endregion
     }
 }

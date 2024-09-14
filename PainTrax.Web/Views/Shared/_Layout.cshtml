@@ -380,7 +380,7 @@
 
                 <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                     @{
-                        if (pageAccess.ToLower().Contains("accidenttype"))
+                        if (pageAccess.ToLower().Contains("accident type"))
                         {
                             <li>
                                 <a asp-action="Index" asp-controller="AccidentType">
@@ -657,6 +657,16 @@
                     <li>
                         <a class="nav-link collapsed" asp-action="UploadDocuments" asp-controller="Utility">
                             <i class="bi bi-circle"></i><span>Upload Documents</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="UploadPatient" asp-controller="Utility">
+                            <i class="bi bi-circle"></i><span>Upload Patients</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="Index" asp-controller="ImportDoc">
+                            <i class="bi bi-circle"></i><span>Import Patients</span>
                         </a>
                     </li>
                     @* <li>

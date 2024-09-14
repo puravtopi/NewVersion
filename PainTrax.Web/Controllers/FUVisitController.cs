@@ -134,6 +134,7 @@ namespace PainTrax.Web.Controllers
                     obj.dov = fuData.doe;
                     obj.accidentType = fuData.accident_type;
                     obj.physicianid = fuData.physicianid;
+                    obj.providerid = fuData.provider_id;
 
                     if (ieData.primary_ins_cmp_id != null)
                     {
@@ -1897,6 +1898,8 @@ namespace PainTrax.Web.Controllers
                     gender = Common.GetMrMrsFromSex(patientData.gender);
 
                     body = body.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
+                    body = body.Replace("#fn", patientData.fname);
+                    body = body.Replace("#ln", patientData.lname);
                     body = body.Replace("#dob", Common.commonDate(patientData.dob));
                     body = body.Replace("#doi", Common.commonDate(patientData.doa));
                     body = body.Replace("#dos", Common.commonDate(fuData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
@@ -1916,7 +1919,13 @@ namespace PainTrax.Web.Controllers
                 if (locData != null && locData.Count > 0)
                 {
                     body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : "Dr. " + locData[0].nameofpractice);
-                    body = body.Replace("#address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
+                    body = body.Replace("#address", locData[0].address);
+                    body = body.Replace("#Address", locData[0].address);
+                    //  body = body.Replace("#address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
+                    body = body.Replace("#loc", locData[0].location);
+                    body = body.Replace("#Location", locData[0].location);
+                    body = body.Replace("#Nameofpractice", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : "Dr. " + locData[0].nameofpractice);
+                    body = body.Replace("#Phone", locData[0].telephone);
                 }
 
                 //ADL printing

@@ -107,6 +107,7 @@
     <None Include="Views\Home\Privacy.cshtml" />
     <None Include="Views\Home\ResetPassword.cshtml" />
     <None Include="Views\Home\SessionExpired.cshtml" />
+    <None Include="Views\ImportDoc\Index.cshtml" />
     <None Include="Views\Inscos\Create.cshtml" />
     <None Include="Views\Inscos\Edit.cshtml" />
     <None Include="Views\Inscos\Index.cshtml" />

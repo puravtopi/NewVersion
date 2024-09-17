@@ -12,6 +12,7 @@ namespace PainTrax.Web.Services
         private readonly FUPage2Service _fuPage2services = new FUPage2Service();
         private readonly FUNEService _funeservices = new FUNEService();
         private readonly FUOtherService _fuotherservices = new FUOtherService();
+        private readonly FUPage3Service _fup3services = new FUPage3Service();
         private readonly PatientIEService _ieService = new PatientIEService();
 
         #region  IE_to_FU
@@ -128,6 +129,26 @@ namespace PainTrax.Web.Services
                 _fuotherservices.Insert(fu_other);
             }
             return fu_other;
+        }
+
+        public tbl_fu_other? GetPage3(int ie_id, int fu_id, int cmp_id, int patient_id)
+        {
+            PatientIEService service = new PatientIEService();
+            tbl_ie_page3 page3= new tbl_ie_page3();
+            tbl_fu_page3 page3fu = new tbl_fu_page3();
+            page3 = _ieService.GetOnePage3(ie_id);
+            page3fu = _fup3services.GetOne(fu_id);
+            if (page3fu == null)
+            {
+                page3fu = new tbl_fu_page3();
+                CopyProperties(page3, page3fu, cmp_id, "dg");
+                page3fu.ie_id = ie_id;
+                page3fu.fu_id = fu_id;
+                page3fu.patient_id = patient_id;
+
+                _fup3services.Insert(page3fu);
+            }
+            return page3fu;
         }
 
 

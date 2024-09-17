@@ -379,6 +379,26 @@ namespace PainTrax.Web.Helper
             return list;
         }
 
+        public List<SelectListItem> GetDaignosisFeilds(string colNames)
+        {
+
+            var data = GetDaignosisFeilds();
+            var list = new List<SelectListItem>();
+
+
+            foreach (var item in data)
+            {
+                list.Add(new SelectListItem
+                {
+                    Value = item.Value,
+                    Text = item.Text,
+                    Selected = colNames.Contains(item.Value)
+                });
+            }
+
+            return list;
+        }
+
         private static string Encrypt(string clearText)
         {
             string encryptionKey = "PAINTRAX2023";
@@ -558,6 +578,89 @@ namespace PainTrax.Web.Helper
                 new SelectListItem{ Text="Treatment", Value = "treatment_details",Selected=false },
                 new SelectListItem{ Text="FOLLOW UP", Value = "followup_duration",Selected=false },
                 new SelectListItem{ Text="FOLLOW Date", Value = "followup_date",Selected=false },
+
+            };
+            return returnstatus;
+
+        }
+
+        private List<SelectListItem> GetDaignosisFeilds()
+        {
+
+            List<SelectListItem> returnstatus = new List<SelectListItem>
+            {
+                new SelectListItem{ Text="Gait", Value = "gait",Selected=false },
+                new SelectListItem{ Text="Goal", Value = "goal",Selected=false },
+                new SelectListItem{ Text="Care", Value = "care",Selected=false },
+                new SelectListItem{ Text="Universal", Value = "universal",Selected=false },
+                new SelectListItem{ Text="Diagcervialbulge Date", Value = "diagcervialbulge_date",Selected=false },
+                new SelectListItem{ Text="Diagcervialbulge Study", Value = "diagcervialbulge_study",Selected=false },
+                new SelectListItem{ Text="Diagcervialbulge", Value = "diagcervialbulge",Selected=false },
+                new SelectListItem{ Text="Diagcervialbulge Text", Value = "diagcervialbulge_text",Selected=false },
+                new SelectListItem{ Text="Diagcervialbulge hnp1", Value = "diagcervialbulge_hnp1",Selected=false },
+                new SelectListItem{ Text="Diagcervialbulge hnp2", Value = "diagcervialbulge_hnp2",Selected=false },
+                new SelectListItem{ Text="Diagthoracicbulge Date", Value = "diagthoracicbulge_date",Selected=false },
+                new SelectListItem{ Text="Diagthoracicbulge Study", Value = "diagthoracicbulge_study",Selected=false },
+                new SelectListItem{ Text="Diagthoracicbulge", Value = "diagthoracicbulge",Selected=false },
+                new SelectListItem{ Text="Diagthoracicbulge Text", Value = "diagthoracicbulge_text",Selected=false },
+                new SelectListItem{ Text="Diagthoracicbulge_hnp1", Value = "diagthoracicbulge_hnp1",Selected=false },
+                new SelectListItem{ Text="Diagthoracicbulge hnp2", Value = "diagthoracicbulge_hnp2",Selected=false },
+                new SelectListItem{ Text="Diaglumberbulge Date", Value = "diaglumberbulge_date",Selected=false },
+                new SelectListItem{ Text="Diaglumberbulge Study", Value = "diaglumberbulge_study",Selected=false },
+                new SelectListItem{ Text="Diaglumberbulge", Value = "diaglumberbulge",Selected=false },
+                new SelectListItem{ Text="Diaglumberbulge Text", Value = "diaglumberbulge_text",Selected=false },
+                new SelectListItem{ Text="Diaglumberbulge hnp1", Value = "diaglumberbulge_hnp1",Selected=false },
+                new SelectListItem{ Text="Diaglumberbulge hhp2", Value = "diaglumberbulge_hnp2",Selected=false },
+                new SelectListItem{ Text="Diagleftshoulder Date", Value = "diagleftshoulder_date",Selected=false },
+                new SelectListItem{ Text="Diagleftshoulder Study", Value = "diagleftshoulder_study",Selected=false },
+                new SelectListItem{ Text="Diagleftshoulder", Value = "diagleftshoulder",Selected=false },
+                new SelectListItem{ Text="Diagleftshoulder Text", Value = "diagleftshoulder_text",Selected=false },
+                new SelectListItem{ Text="Diagrightshoulder Date", Value = "diagrightshoulder_date",Selected=false },
+                new SelectListItem{ Text="Diagrightshoulder Study", Value = "diagrightshoulder_study",Selected=false },
+                new SelectListItem{ Text="Diagrightshoulder", Value = "diagrightshoulder",Selected=false },
+                new SelectListItem{ Text="Diagrightshoulder Text", Value = "diagrightshoulder_text",Selected=false },
+                new SelectListItem{ Text="Diagleftknee Date", Value = "diagleftknee_date",Selected=false },
+                new SelectListItem{ Text="Diagleftknee Study", Value = "diagleftknee_study",Selected=false },
+                new SelectListItem{ Text="Diagleftknee", Value = "diagleftknee",Selected=false },
+                new SelectListItem{ Text="Diagleftknee Text", Value = "diagleftknee_text",Selected=false },
+                new SelectListItem{ Text="Diagrightknee Date", Value = "diagrightknee_date",Selected=false },
+                new SelectListItem{ Text="Diagrightknee Study", Value = "diagrightknee_study",Selected=false },
+                new SelectListItem{ Text="Diagrightknee Text", Value = "diagrightknee_text",Selected=false },
+                new SelectListItem{ Text="Diagbrain Date", Value = "diagbrain_date",Selected=false },
+                new SelectListItem{ Text="Diagbrain Study", Value = "diagbrain_study",Selected=false },
+                new SelectListItem{ Text="Diagbrain", Value = "diagbrain",Selected=false },
+                new SelectListItem{ Text="Diagbrain Text", Value = "diagbrain_text",Selected=false },
+                new SelectListItem{ Text="Other1 Date", Value = "other1_date",Selected=false },
+                new SelectListItem{ Text="Other1 Study", Value = "other1_study",Selected=false },
+                new SelectListItem{ Text="Other1", Value = "other1",Selected=false },
+                new SelectListItem{ Text="Other1 Text", Value = "other1_text",Selected=false },
+                new SelectListItem{ Text="Other2 Date", Value = "other2_date",Selected=false },
+                new SelectListItem{ Text="Other2 Study", Value = "other2_study",Selected=false },
+                new SelectListItem{ Text="Other2", Value = "other2",Selected=false },
+                new SelectListItem{ Text="Other2 Text", Value = "other2_text",Selected=false },
+                new SelectListItem{ Text="Other3 Date", Value = "other3_date",Selected=false },
+                new SelectListItem{ Text="Other3 Study", Value = "other3_study",Selected=false },
+                new SelectListItem{ Text="Other3", Value = "other3",Selected=false },
+                new SelectListItem{ Text="Other3 Text", Value = "other3_text",Selected=false },
+                new SelectListItem{ Text="Other4 Date", Value = "other4_date",Selected=false },
+                new SelectListItem{ Text="Other4 Study", Value = "other4_study",Selected=false },
+                new SelectListItem{ Text="Other4", Value = "other4",Selected=false },
+                new SelectListItem{ Text="Other4 Text", Value = "other4_text",Selected=false },
+                new SelectListItem{ Text="Other5 Date", Value = "other5_date",Selected=false },
+                new SelectListItem{ Text="Other5 Study", Value = "other5_study",Selected=false },
+                new SelectListItem{ Text="Other5", Value = "other5",Selected=false },
+                new SelectListItem{ Text="Other5 Text", Value = "other5_text",Selected=false },
+                new SelectListItem{ Text="Other6 Date", Value = "other6_date",Selected=false },
+                new SelectListItem{ Text="Other6 Study", Value = "other6_study",Selected=false },
+                new SelectListItem{ Text="Other6", Value = "other6",Selected=false },
+                new SelectListItem{ Text="Other6 Text", Value = "other6_text",Selected=false },
+                new SelectListItem{ Text="Other7 Date", Value = "other7_date",Selected=false },
+                new SelectListItem{ Text="Other7 Study", Value = "other7_study",Selected=false },
+                new SelectListItem{ Text="Other7", Value = "other7",Selected=false },
+                new SelectListItem{ Text="Other7 Text", Value = "other7_text",Selected=false },
+                new SelectListItem{ Text="Dollowupin", Value = "followupin",Selected=false },
+                new SelectListItem{ Text="Followupin Date", Value = "followupin_date",Selected=false },
+                new SelectListItem{ Text="Discharge Medications", Value = "discharge_medications",Selected=false },
 
             };
             return returnstatus;

@@ -27,7 +27,7 @@ namespace PainTrax.Web.Services
 
                 if (datalist != null)
                 {
-                    //datalist.password = EncryptionHelper.Decrypt(datalist.password);
+                    datalist.password = EncryptionHelper.Decrypt(datalist.password);
 
                     if (datalist.password == data.PassWord)
                     {

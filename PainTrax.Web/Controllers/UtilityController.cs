@@ -422,7 +422,8 @@ namespace PainTrax.Web.Controllers
                         else
                         {
                             // Clean HTML tags and add data to the DataTable
-                            string cleanCellValue = System.Text.RegularExpressions.Regex.Replace(cellValue, "<.*?>", string.Empty);
+                            //string cleanCellValue = System.Text.RegularExpressions.Regex.Replace(cellValue, "<.*?>", string.Empty);
+                            string cleanCellValue = cellValue;
                             dataRow[columnIndex] = cleanCellValue;
                         }
                         columnIndex++;

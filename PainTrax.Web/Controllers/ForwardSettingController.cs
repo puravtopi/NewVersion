@@ -83,6 +83,19 @@ namespace PainTrax.Web.Controllers
                 ViewBag.PageOtherList = _commonService.GetPageOtherSettingList(colNames.TrimStart(',').ToString());
 
                 data.cntPageOther = ViewBag.PageOtherList.Count;
+
+                var pagedg = _services.GetAll(" and tbl_name='dg' and cmp_id=" + cmpid);
+
+                colNames = "";
+
+                foreach (var item in pagedg)
+                {
+                    colNames = colNames + "," + item.tbl_column;
+                }
+
+                ViewBag.PageDaignoList = _commonService.GetDaignosisFeilds(colNames.TrimStart(',').ToString());
+
+                data.cntPageDaignoList = ViewBag.PageDaignoList.Count;
                 return View(data);
             }
             catch(Exception ex)
@@ -131,6 +144,18 @@ namespace PainTrax.Web.Controllers
                     _services.Insert(item);
                 }
             }
+
+            if (model.dg != null)
+            {
+                foreach (var item in model.dg)
+                {
+                    item.created_by = userid;
+                    item.cmp_id = cmpid;
+
+                    _services.Insert(item);
+                }
+            }
+
 
             if (model.other != null)
             {

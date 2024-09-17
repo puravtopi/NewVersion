@@ -3376,6 +3376,27 @@ namespace PainTrax.Web.Controllers
 
             }
 
+
+            try
+            {
+                _forwardServices.GetOneOther(patientIEId, cmpid.Value, fu_id, patientId);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "CreateFU");
+
+            }
+
+            try
+            {
+                _forwardServices.GetPage3(patientIEId, cmpid.Value, fu_id, patientId);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "CreateFU");
+
+            }
+
             try
             {
                 var iepage3 = _ieService.GetOnePage3(patientIEId);

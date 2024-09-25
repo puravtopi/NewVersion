@@ -21,8 +21,8 @@ namespace PainTrax.Services
             //.AddJsonFile("appSettings.json")
             //.Build();
             //conn = new MySqlConnection("Data Source=10.10.93.18;port=2109;Database=dbpaintrax_live;User ID=purav;Password=G0d$peed@123");
-            //conn = new MySqlConnection("Data Source=10.10.93.20;port=3306;Database=dbpaintrax_live;User ID=purav;Password=amd@2006");
-            conn = new MySqlConnection("Data Source=localhost;Database=dbpaintrax_kdvortho;User ID=root;Password=");
+            //conn = new MySqlConnection("Data Source=10.10.93.20;port=3306;Database=dbpaintrax_test;User ID=purav;Password=amd@2006");
+             conn = new MySqlConnection("Data Source=localhost;Database=dbpaintrax_kdvortho;User ID=root;Password=");
             // conn = new MySqlConnection("Data Source=localhost;Database=dbPaintrax27Aug;User ID=root;Password=");
         }
 

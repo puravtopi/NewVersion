@@ -38,6 +38,15 @@ public class PatientIEService : ParentService
         return datalist;
     }
 
+    public tbl_patient_fu? GetLastFU(int data)
+    {
+        DataTable dt = new DataTable();
+        MySqlCommand cm = new MySqlCommand("select * from tbl_patient_fu where patientIE_ID=@id order by id desc LIMIT 1", conn);
+        cm.Parameters.AddWithValue("@id", data);
+        var datalist = ConvertDataTable<tbl_patient_fu>(GetData(cm)).FirstOrDefault();
+        return datalist;
+    }
+
     public vm_patient_ie? GetOnebyPatientId(int patient_id)
     {
         DataTable dt = new DataTable();
@@ -206,8 +215,8 @@ public class PatientIEService : ParentService
     public int InsertPage1(tbl_ie_page1 data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_ie_page1
-		(history,vital,pmh,psh,allergies,medication,family_history,social_history,cc,pe,rom,note,ie_id,cmp_id,patient_id,bodypart,daignosis_delimit,daignosis_desc,assessment,plan,dd,work_status,occupation,impairment_rating,injection_desc,poc_assesment)Values
-				(@history,@vital,@pmh,@psh,@allergies,@medication,@family_history,@social_history,@cc,@pe,@rom,@note,@ie_id,@cmp_id,@patient_id,@bodypart,@daignosis_delimit,@daignosis_desc,@assessment,@plan,@dd,@work_status,@occupation,@impairment_rating,@injection_desc,@poc_assesment);select @@identity;", conn);
+		(history,vital,pmh,psh,allergies,medication,family_history,social_history,cc,pe,rom,note,ie_id,cmp_id,patient_id,bodypart,daignosis_delimit,daignosis_desc,assessment,plan,dd,work_status,occupation,impairment_rating,injection_desc,poc_assesment,appt_reason)Values
+				(@history,@vital,@pmh,@psh,@allergies,@medication,@family_history,@social_history,@cc,@pe,@rom,@note,@ie_id,@cmp_id,@patient_id,@bodypart,@daignosis_delimit,@daignosis_desc,@assessment,@plan,@dd,@work_status,@occupation,@impairment_rating,@injection_desc,@poc_assesment,@appt_reason);select @@identity;", conn);
         cm.Parameters.AddWithValue("@history", data.history);
         cm.Parameters.AddWithValue("@vital", data.vital);
         cm.Parameters.AddWithValue("@pmh", data.pmh);
@@ -234,6 +243,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@impairment_rating", data.impairment_rating);
         cm.Parameters.AddWithValue("@injection_desc", data.injection_desc);
         cm.Parameters.AddWithValue("@poc_assesment", data.poc_assesment);
+        cm.Parameters.AddWithValue("@appt_reason", data.appt_reason);
         var result = ExecuteScalar(cm);
         return result;
     }
@@ -245,7 +255,7 @@ public class PatientIEService : ParentService
         social_history=@social_history,cc=@cc,pe=@pe,rom=@rom,note=@note,
         bodypart=@bodypart,daignosis_desc=@daignosis_desc,daignosis_delimit=@daignosis_delimit,occupation=@occupation,
         assessment=@assessment,plan=@plan,dd=@dd,work_status=@work_status,impairment_rating=@impairment_rating,
-        injection_desc=@injection_desc,
+        injection_desc=@injection_desc,appt_reason=@appt_reason,
 poc_assesment=@poc_assesment
 
         where id=@id
@@ -274,6 +284,7 @@ poc_assesment=@poc_assesment
         cm.Parameters.AddWithValue("@impairment_rating", data.impairment_rating);
         cm.Parameters.AddWithValue("@injection_desc", data.injection_desc);
         cm.Parameters.AddWithValue("@poc_assesment", data.poc_assesment);
+        cm.Parameters.AddWithValue("@appt_reason", data.appt_reason);
         var result = ExecuteScalar(cm);
         return result;
     }
@@ -286,6 +297,23 @@ poc_assesment=@poc_assesment
         var datalist = ConvertDataTable<tbl_ie_page1>(GetData(cm)).FirstOrDefault();
         return datalist;
     }
+
+    public int UpdatePage1Plan(int id,string plan)
+    {
+        MySqlCommand cm = new MySqlCommand(@"update tbl_ie_page1 set
+		plan=@plan
+
+        where ie_id=@id
+				 ;select 1;", conn);
+       
+        cm.Parameters.AddWithValue("@id", id);     
+        cm.Parameters.AddWithValue("@plan",plan);
+      
+        var result = ExecuteScalar(cm);
+        return result;
+    }
+
+
     #endregion
 
     #region Page2
@@ -657,7 +685,7 @@ poc_assesment=@poc_assesment
         cm.Parameters.AddWithValue("@followup_date", data.followup_date);
         cm.Parameters.AddWithValue("@followup_duration", data.followup_duration);
         cm.Parameters.AddWithValue("@treatment_delimit", data.treatment_delimit == null ? "" : data.treatment_delimit.TrimStart(','));
-        cm.Parameters.AddWithValue("@treatment_delimit_desc", data.treatment_delimit_desc.TrimStart('^'));
+        cm.Parameters.AddWithValue("@treatment_delimit_desc", data.treatment_delimit_desc == null ?"": data.treatment_delimit_desc.TrimStart('^'));
         Execute(cm);
     }
 

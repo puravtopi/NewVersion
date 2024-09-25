@@ -243,7 +243,10 @@ namespace PainTrax.Web.Controllers
                                 pmh = dt.Rows[i]["Past Medical"].ToString(),
                                 psh = dt.Rows[i]["Past Surgical"].ToString(),
                                 social_history = dt.Rows[i]["Social History"].ToString(),
-                                assessment = this.getAssement(dt.Rows[i]["Diagnoses"].ToString())
+                                assessment = this.getAssement(dt.Rows[i]["Diagnoses"].ToString()),
+                                appt_reason = dt.Rows[i]["Reason"].ToString(),
+                                occupation= dt.Rows[i]["Occupation"].ToString(),
+                                impairment_rating = dt.Rows[i]["Tylenol"].ToString(),
 
                             };
                             _patientimportservice.InsertPage1(obj);
@@ -267,6 +270,77 @@ namespace PainTrax.Web.Controllers
                 SaveLog(ex, "ImportData");
             }
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UploadPatientFU(IFormFile patientFU)
+        {
+
+            try
+            {
+                int cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value;
+
+                if (patientFU != null && patientFU.Length > 0)
+                {
+                    //DataTable dt = this.Read2007Xlsx(patient);
+                    DataTable dt = new DataTable();
+                    using (var stream = new MemoryStream())
+                    {
+                        patientFU.CopyToAsync(stream);
+                        stream.Position = 0;
+
+                        // Convert uploaded Excel to DataTable
+                        dt = ReadExcelToDataTable(stream);
+                    }
+
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            tbl_fu_page1 obj = new tbl_fu_page1()
+                            {
+                                cmp_id = cmpid,
+                                allergies = dt.Rows[i]["Allergies"].ToString(),
+                                cc = dt.Rows[i]["CC"].ToString(),
+                                history = dt.Rows[i]["History"].ToString(),
+                                ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
+                                medication = dt.Rows[i]["Medications"].ToString(),
+                                patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
+                                pe = dt.Rows[i]["Physical Exam"].ToString(),
+                                pmh = dt.Rows[i]["Past Medical"].ToString(),
+                                psh = dt.Rows[i]["Past Surgical"].ToString(),
+                                social_history = dt.Rows[i]["Social History"].ToString(),
+                                assessment = this.getAssement(dt.Rows[i]["Diagnoses"].ToString()),
+                                appt_reason = dt.Rows[i]["Reason"].ToString(),
+                                occupation = dt.Rows[i]["Occupation"].ToString(),
+                                impairment_rating = dt.Rows[i]["Tylenol"].ToString(),
+                                fu_id= Convert.ToInt32(dt.Rows[i]["Patient_fu_id"].ToString()),
+
+                            };
+                            _patientimportservice.InsertPage1FU(obj);
+
+                            tbl_fu_page2 obj2 = new tbl_fu_page2()
+                            {
+                                aod = dt.Rows[i]["Activities"].ToString(),
+                                ros = dt.Rows[i]["ROS"].ToString(),
+                                ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
+                                cmp_id = cmpid,
+                                patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
+                            };
+
+                            _patientimportservice.InsertPage2FU(obj2);
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "ImportData");
+            }
+            return View("UploadPatient");
         }
 
         private string getAssement(string val)
@@ -439,7 +513,6 @@ namespace PainTrax.Web.Controllers
 
             return dataTable;
         }
-
 
         private string GetCellValue(SpreadsheetDocument doc, Cell cell)
         {

@@ -215,6 +215,8 @@ namespace PainTrax.Web.Controllers
                 {
                     var ieData = _ieService.GetOnebyPatientId(id);
 
+                    var dataPOC = this.getPOC(id);
+
                     if (ieData != null)
                     {
                         obj.id = ieData.id;
@@ -328,6 +330,10 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                         obj.Page1 = new tbl_ie_page1();
+
+                    if (dataPOC != null && string.IsNullOrEmpty(obj.Page1.plan))
+                        obj.Page1.plan = dataPOC.strPoc;
+
 
                     var page2Data = _ieService.GetOnePage2(id);
 
@@ -1838,6 +1844,15 @@ namespace PainTrax.Web.Controllers
                         data.Executed = Executed;
                         result = _pocService.SaveProcedureDetails(data);
                         break;
+
+                }
+
+                int ie_id = Convert.ToInt32(model.PatientIEID);
+                var pocData = this.getPOC(ie_id);
+
+                if (pocData != null)
+                {
+                    _ieService.UpdatePage1Plan(ie_id, pocData.strPoc);
                 }
             }
             catch (Exception ex)
@@ -2180,6 +2195,7 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
+                string plan = "";
                 ViewBag.IsHome = true;
                 ViewBag.url = HttpContext.Request.GetEncodedUrl();
 
@@ -2253,6 +2269,8 @@ namespace PainTrax.Web.Controllers
                 var page1Data = _ieService.GetOnePage1(id);
                 if (page1Data != null)
                 {
+
+                    plan = page1Data.plan;
                     if (!string.IsNullOrEmpty(page1Data.bodypart))
                     {
                         bodypart = Common.ReplceCommowithAnd(page1Data.bodypart);
@@ -2266,6 +2284,7 @@ namespace PainTrax.Web.Controllers
 
 
 
+                    body = body.Replace("#Reason", string.IsNullOrEmpty(page1Data.appt_reason) ? "" : this.removePtag(page1Data.appt_reason));
                     body = body.Replace("#CC", string.IsNullOrEmpty(page1Data.cc) ? "" : this.removePtag(page1Data.cc));
                     body = body.Replace("#PE", string.IsNullOrEmpty(page1Data.pe) ? "" : page1Data.pe);
 
@@ -2412,7 +2431,10 @@ namespace PainTrax.Web.Controllers
                 var dataPOC = this.getPOC(id);
 
 
-                body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
+                if (string.IsNullOrEmpty(plan))
+                    body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
+                else
+                    body = body.Replace("#Plan", this.removePtag(plan));
                 body = body.Replace("#ReflexExam", "");
                 string injectionHtml = dataPOC.strInjectionDesc;
                 //string injectionHtml = "<h2>Injection Test</h2>";
@@ -2973,7 +2995,7 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(data.diagcervialbulge_text))
                     {
 
-                        strDaignosis = strDaignosis + " of the cervical spine: " + data.diagcervialbulge_text + ", ";
+                        strDaignosis = strDaignosis + " of the cervical spine " + data.diagcervialbulge_text + ", ";
 
                         stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
@@ -3016,7 +3038,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
                     {
-                        strDaignosis = strDaignosis + " of the thoracic spine: " + data.diagthoracicbulge_text + ", ";
+                        strDaignosis = strDaignosis + " of the thoracic spine " + data.diagthoracicbulge_text + ", ";
 
                         stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
@@ -3059,7 +3081,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
                     {
-                        strDaignosis = strDaignosis + " of the lumbar spine: " + data.diaglumberbulge_text + ", ";
+                        strDaignosis = strDaignosis + " of the lumbar spine " + data.diaglumberbulge_text + ", ";
 
                         stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
@@ -3102,7 +3124,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagleftshoulder_text))
                     {
-                        strDaignosis = strDaignosis + " of the left shoulder: " + data.diagleftshoulder_text.TrimEnd('.') + ". ";
+                        strDaignosis = strDaignosis + " of the left shoulder " + data.diagleftshoulder_text.TrimEnd('.') + ". ";
                     }
                     else
                     {
@@ -3124,7 +3146,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagrightshoulder_text))
                     {
-                        strDaignosis = strDaignosis + " of the right shoulder: " + data.diagrightshoulder_text.TrimEnd('.') + ". ";
+                        strDaignosis = strDaignosis + " of the right shoulder " + data.diagrightshoulder_text.TrimEnd('.') + ". ";
                     }
                     else
                     {
@@ -3164,7 +3186,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagrightknee_text))
                     {
-                        strDaignosis = strDaignosis + " of the right knee: " + data.diagrightknee_text.TrimEnd('.') + ". ";
+                        strDaignosis = strDaignosis + " of the right knee " + data.diagrightknee_text.TrimEnd('.') + ". ";
                     }
                     else
                     {
@@ -3319,129 +3341,192 @@ namespace PainTrax.Web.Controllers
 
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
+            int fu_id = 0;
 
-            var ieData = _ieService.GetOne(patientIEId);
+            var fuData = _ieService.GetLastFU(patientIEId);
 
-            tbl_patient_fu objFU = new tbl_patient_fu()
+            if (fuData == null)
             {
-                created_by = userid,
-                doe = System.DateTime.Now,
-                patientIE_ID = patientIEId,
-                cmp_id = cmpid,
-                created_date = System.DateTime.Now,
-                is_active = true,
-                patient_id = patientId,
-                extra_comments = "",
-                type = type,
-                accident_type = ieData.accident_type,
-                provider_id=ieData.provider_id
+                var ieData = _ieService.GetOne(patientIEId);
 
-            };
-            int fu_id = _patientFUservices.Insert(objFU);
-
-            try
-            {
-                _forwardServices.GetOnePage1(patientIEId, fu_id, cmpid.Value, patientId);
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "CreateFU");
-            }
-
-            try
-            {
-                _forwardServices.GetOnePage2(patientIEId, fu_id, cmpid.Value, patientId);
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "CreateFU");
-            }
-
-            try
-            {
-                _forwardServices.GetOneNE(patientIEId, fu_id, cmpid.Value, patientId);
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "CreateFU");
-            }
-
-            try
-            {
-                _forwardServices.GetOneOther(patientIEId, cmpid.Value, fu_id, patientId);
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "CreateFU");
-
-            }
-
-
-            try
-            {
-                _forwardServices.GetOneOther(patientIEId, cmpid.Value, fu_id, patientId);
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "CreateFU");
-
-            }
-
-            try
-            {
-                _forwardServices.GetPage3(patientIEId, cmpid.Value, fu_id, patientId);
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "CreateFU");
-
-            }
-
-            try
-            {
-                var iepage3 = _ieService.GetOnePage3(patientIEId);
-
-                var fupage3 = new tbl_fu_page3();
-
-                if (iepage3 != null)
-                    fupage3 = _mapper.Map<tbl_fu_page3>(iepage3);
-
-
-                fupage3.fu_id = fu_id;
-                fupage3.cmp_id = cmpid.Value;
-
-
-                _fuPage3services.Insert(fupage3);
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "CreateFU");
-                return View("Error");
-            }
-            try
-            {
-                _pocService.ForwardPOCIETOFU(patientIEId, fu_id);
-            }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "CreateFU");
-                return View("Error");
-            }
-
-            try
-            {
-                var pageOther = _ieService.GetOneOtherPage(patientIEId);
-                var fupageOther = _mapper.Map<tbl_fu_other>(pageOther);
-
-                if (fupageOther != null)
+                tbl_patient_fu objFU = new tbl_patient_fu()
                 {
-                    fupageOther.fu_id = fu_id;
+                    created_by = userid,
+                    doe = System.DateTime.Now,
+                    patientIE_ID = patientIEId,
+                    cmp_id = cmpid,
+                    created_date = System.DateTime.Now,
+                    is_active = true,
+                    patient_id = patientId,
+                    extra_comments = "",
+                    type = type,
+                    accident_type = ieData.accident_type,
+                    provider_id = ieData.provider_id
+
+                };
+                fu_id = _patientFUservices.Insert(objFU);
+
+                try
+                {
+                    _forwardServices.GetOnePage1(patientIEId, fu_id, cmpid.Value, patientId);
                 }
-                _fuOtherservices.Insert(fupageOther);
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
+                }
+
+                try
+                {
+                    _forwardServices.GetOnePage2(patientIEId, fu_id, cmpid.Value, patientId);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
+                }
+
+                try
+                {
+                    _forwardServices.GetOneNE(patientIEId, fu_id, cmpid.Value, patientId);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
+                }
+
+                try
+                {
+                    _forwardServices.GetOneOther(patientIEId, cmpid.Value, fu_id, patientId);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
+
+                }
+
+
+                try
+                {
+                    _forwardServices.GetPage3(patientIEId, cmpid.Value, fu_id, patientId);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
+
+                }
+
+                try
+                {
+                    var iepage3 = _ieService.GetOnePage3(patientIEId);
+
+                    var fupage3 = new tbl_fu_page3();
+
+                    if (iepage3 != null)
+                        fupage3 = _mapper.Map<tbl_fu_page3>(iepage3);
+
+
+                    fupage3.fu_id = fu_id;
+                    fupage3.cmp_id = cmpid.Value;
+
+
+                    _fuPage3services.Insert(fupage3);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
+                    return View("Error");
+                }
+                try
+                {
+                    _pocService.ForwardPOCIETOFU(patientIEId, fu_id);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
+                    return View("Error");
+                }
+
+                try
+                {
+                    var pageOther = _ieService.GetOneOtherPage(patientIEId);
+                    var fupageOther = _mapper.Map<tbl_fu_other>(pageOther);
+
+                    if (fupageOther != null)
+                    {
+                        fupageOther.fu_id = fu_id;
+                    }
+                    _fuOtherservices.Insert(fupageOther);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
+                }
             }
-            catch (Exception ex)
+            else
             {
-                SaveLog(ex, "CreateFU");
+                tbl_patient_fu objFU = new tbl_patient_fu()
+                {
+                    created_by = userid,
+                    doe = System.DateTime.Now,
+                    patientIE_ID = patientIEId,
+                    cmp_id = cmpid,
+                    created_date = System.DateTime.Now,
+                    is_active = true,
+                    patient_id = patientId,
+                    extra_comments = "",
+                    type = type,
+                    accident_type = fuData.accident_type,
+                    provider_id = fuData.provider_id
+
+                };
+                fu_id = _patientFUservices.Insert(objFU);
+
+                try
+                {
+                    _forwardServices.GetOnePage1(patientIEId, fu_id, cmpid.Value, patientId, fuData.id.Value);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
+                }
+
+                try
+                {
+                    _forwardServices.GetOnePage2(patientIEId, fu_id, cmpid.Value, patientId, fuData.id.Value);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
+                }
+
+                try
+                {
+                    _forwardServices.GetOneNE(patientIEId, fu_id, cmpid.Value, patientId, fuData.id.Value);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
+                }
+
+                try
+                {
+                    _forwardServices.GetOneOther(patientIEId, cmpid.Value, fu_id, patientId, fuData.id.Value);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
+
+                }
+
+
+                try
+                {
+                    _forwardServices.GetPage3(patientIEId, cmpid.Value, fu_id, patientId, fuData.id.Value);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
+
+                }
             }
 
             return RedirectToAction("Create", "FuVisit", new { patientIEId = patientIEId, patientFUId = fu_id, type = type });

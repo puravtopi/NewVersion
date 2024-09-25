@@ -1976,15 +1976,15 @@ namespace PainTrax.Web.Controllers
                     }
 
 
-                    body = body.Replace("#PastMedicalHistory", this.removePtag(page1DataIE.pmh));
-                    body = body.Replace("#PastSurgicalHistory", this.removePtag(page1DataIE.psh));
-                    body = body.Replace("#SocialHistory", this.removePtag(page1DataIE.social_history));
-                    body = body.Replace("#Allergies", this.removePtag(page1DataIE.allergies));
-                    body = body.Replace("#FamilyHistory", this.removePtag(page1DataIE.family_history));
+                    body = body.Replace("#PastMedicalHistory", this.removePtag(page1Data.pmh));
+                    body = body.Replace("#PastSurgicalHistory", this.removePtag(page1Data.psh));
+                    body = body.Replace("#SocialHistory", this.removePtag(page1Data.social_history));
+                    body = body.Replace("#Allergies", this.removePtag(page1Data.allergies));
+                    body = body.Replace("#FamilyHistory", this.removePtag(page1Data.family_history));
                     body = body.Replace("#Vital", this.removePtag(page1DataIE.vital));
                     body = body.Replace("#Diagnoses", this.removePtag(assessment));
                     body = body.Replace("#Occupation", this.removePtag(page1Data.occupation));
-                    body = body.Replace("#PastMedications", this.removePtag(page1DataIE.medication));
+                    body = body.Replace("#PastMedications", this.removePtag(page1Data.medication));
                     body = body.Replace("#DD", this.removePtag(page1Data.dd));
                     body = body.Replace("#WorkStatus", this.removePtag(page1Data.work_status));
                     // body = body.Replace("#IR", this.removePtag(page1Data.impairment_rating));

@@ -27,5 +27,7 @@ public class tbl_fu_page1{
 	public string? medication { get;set;}
 	public string? family_history { get;set;}
 	public string? social_history { get;set;}
+	public string? impairment_rating { get;set;}
+	public string? appt_reason { get;set;}
 
 }

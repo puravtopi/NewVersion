@@ -25,8 +25,8 @@ public class FUPage1Service : ParentService
     public void Insert(tbl_fu_page1 data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_fu_page1
-		(history,bodypart,cc,pe,rom,note,plan,assessment,dd,work_status,ie_id,daignosis_desc,daignosis_delimit,cmp_id,patient_id,occupation,fu_id,psh,pmh,allergies,medication,family_history,social_history)Values
-				(@history,@bodypart,@cc,@pe,@rom,@note,@plan,@assessment,@dd,@work_status,@ie_id,@daignosis_desc,@daignosis_delimit,@cmp_id,@patient_id,@occupation,@fu_id,@psh,@pmh,@allergies,@medication,@family_history,@social_history)", conn);
+		(history,bodypart,cc,pe,rom,note,plan,assessment,dd,work_status,ie_id,daignosis_desc,daignosis_delimit,cmp_id,patient_id,occupation,fu_id,psh,pmh,allergies,medication,family_history,social_history,appt_reason)Values
+				(@history,@bodypart,@cc,@pe,@rom,@note,@plan,@assessment,@dd,@work_status,@ie_id,@daignosis_desc,@daignosis_delimit,@cmp_id,@patient_id,@occupation,@fu_id,@psh,@pmh,@allergies,@medication,@family_history,@social_history,@appt_reason)", conn);
 
         cm.Parameters.AddWithValue("@bodypart", data.bodypart);
         cm.Parameters.AddWithValue("@cc", data.cc);
@@ -51,6 +51,8 @@ public class FUPage1Service : ParentService
         cm.Parameters.AddWithValue("@medication", data.medication);
         cm.Parameters.AddWithValue("@social_history", data.social_history);
         cm.Parameters.AddWithValue("@family_history", data.family_history);
+        cm.Parameters.AddWithValue("@appt_reason", data.appt_reason);
+        cm.Parameters.AddWithValue("@impairment_rating", data.impairment_rating);
         Execute(cm);
     }
     public void Update(tbl_fu_page1 data)
@@ -78,7 +80,8 @@ public class FUPage1Service : ParentService
         family_history=@family_history,
         social_history=@social_history,
         allergies=@allergies,
-
+        impairment_rating=@impairment_rating,
+        appt_reason=@appt_reason,
         pmh=@pmh 
         where id=@id", conn);
         cm.Parameters.AddWithValue("@id", data.id);
@@ -105,6 +108,8 @@ public class FUPage1Service : ParentService
         cm.Parameters.AddWithValue("@medication", data.medication);
         cm.Parameters.AddWithValue("@social_history", data.social_history);
         cm.Parameters.AddWithValue("@family_history", data.family_history);
+        cm.Parameters.AddWithValue("@appt_reason", data.appt_reason);
+        cm.Parameters.AddWithValue("@impairment_rating", data.impairment_rating);
         Execute(cm);
 
         cm = new MySqlCommand(@"UPDATE tbl_ie_page1 SET

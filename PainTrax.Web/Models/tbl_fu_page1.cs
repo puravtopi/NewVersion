@@ -29,5 +29,7 @@ public class tbl_fu_page1{
 	public string? social_history { get;set;}
 	public string? impairment_rating { get;set;}
 	public string? appt_reason { get;set;}
+	public string? vital { get;set;}
+	public string? poc_assesment { get;set;}
 
 }

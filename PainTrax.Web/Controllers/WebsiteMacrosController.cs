@@ -132,7 +132,7 @@ namespace PainTrax.Web.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                string cnd ="and cmp_id="+ cmpid + " and (t.key like '%" + searchValue + "%' or t.type like '%" + searchValue + "%')";
+                string cnd =" and cmp_id="+ cmpid + " and (t.key like '%" + searchValue + "%' or t.type like '%" + searchValue + "%')";
                 var Data = _services.GetAll(cnd);
 
                 //Sorting
@@ -314,7 +314,10 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
-                var data = _services.GetAll(); // Retrieve all attorneys from the database
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+                string cnd = " and cmp_id=" + cmpid;
+
+                var data = _services.GetAll(cnd); // Retrieve all attorneys from the database
 
                 // Create a new DataTable
                 DataTable dt = new DataTable();

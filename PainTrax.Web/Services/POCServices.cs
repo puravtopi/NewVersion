@@ -83,10 +83,6 @@ namespace PainTrax.Web.Services
         {
             try
             {
-
-
-
-
                 DataTable dt = new DataTable();
                 MySqlCommand cm = new MySqlCommand("CALL sp_GetAllProcedures_FU('" + bodyParts + "','" + potion + "'," + patientFUID + "," + cmp_id + ")", conn);
 

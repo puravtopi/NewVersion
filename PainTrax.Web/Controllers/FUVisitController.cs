@@ -1156,7 +1156,7 @@ namespace PainTrax.Web.Controllers
                                 {
                                     if (column.ColumnName == "bodypart")
                                     {
-                                        html.Append("<th scope=\"col\" style='height: 35px; background-color:yellow'>");
+                                        html.Append("<th scope=\"col\" style='height: 35px;min-width:130px;background-color:yellow'>");
                                         html.Append(ii.ToUpperInvariant());
                                         html.Append("</th>");
                                     }
@@ -1165,7 +1165,7 @@ namespace PainTrax.Web.Controllers
 
                                         if (column.ColumnName != "Followup")
                                         {
-                                            html.Append("<th scope=\"col\" style='height: 35px;'>");
+                                            html.Append("<th scope=\"col\" style='height: 35px;min-width:130px'>");
                                             html.Append(column.ColumnName);
                                             html.Append("</th>");
                                         }
@@ -1244,13 +1244,13 @@ namespace PainTrax.Web.Controllers
                                             if (row[10] != null)
                                                 if (Convert.ToInt32(row[10]) != 0)
                                                 {
-                                                    html.Append("<td>");
+                                                    html.Append("<td style='min-width:130px'>");
                                                     html.Append("<input type='text' class=\"form-control\"  onclick='PopupNE($(this));' data-LevelsDefault='" + row[31] + "' data-SidesDefault='" + row[32] + "'  data-toggle='tooltip' title='" + notify + "'  data-Sides='" + row[27] + "' data-Procedure_Detail_ID='" + row[30] + "' data-HasSides ='" + row[28] + "' data-PPID='" + row[10] + "' data-PatientIEID='" + row[24] + "' data-PatientFUID='" + row[25] + "' data-Level='" + row[13] + "' data-Medi='" + row[11] + "' data-Musc='" + row[12] + "' data-PID='" + row[0] + "' data-SubPID='" + row[23] + "' data-Body='" + row[8] + "'data-ReqPos='" + row[19] + "' data-Bodyid='" + row[7] + "' data-Position='Request' data-HasLevel='" + row[4] + "' data-Pos='" + row[3] + "' data-Muscle='" + row[5] + "' data-Subcode='" + row[6] + "' data-InhouseProc='" + row[2] + "'  data-Medication='" + row[9] + "'  data-Date='" + date1 + "'  class='ProcText' id='" + row[0] + "_R_" + row[1] + "_" + row[2] + "' value='" + date1 + "' />");
                                                     html.Append("</td>");
                                                 }
                                                 else
                                                 {
-                                                    html.Append("<td >");
+                                                    html.Append("<td style='min-width:130px;'>");
                                                     html.Append("<input type='text' class=\"form-control\" onclick='Popup($(this));' data-LevelsDefault='" + row[31] + "' data-SidesDefault='" + row[32] + "'  data-toggle='tooltip' title='" + notify + "'  data-Sides='" + row[27] + "' data-Procedure_Detail_ID='" + row[30] + "' data-HasSides ='" + row[28] + "' data-PPID='" + row[10] + "' data-PatientIEID='" + row[24] + "' data-PatientFUID='" + row[25] + "' data-Level='" + row[13] + "' data-Medi='" + row[11] + "' data-Musc='" + row[12] + "' data-PID='" + row[0] + "' data-SubPID='" + row[23] + "' data-Body='" + row[8] + "' data-Bodyid='" + row[7] + "' data-Position='Request' data-HasLevel='" + row[4] + "' data-Pos='" + row[3] + "' data-Muscle='" + row[5] + "' data-Subcode='" + row[6] + "' data-InhouseProc='" + row[2] + "'  data-Medication='" + row[9] + "'  data-Date='" + date1 + "'  class='ProcText' id='" + row[0] + "_R_" + row[1] + "_" + row[2] + "' value='' />");
                                                     html.Append("</td>");
                                                 }
@@ -1279,13 +1279,13 @@ namespace PainTrax.Web.Controllers
                                             {
                                                 if (Convert.ToInt32(row[10]) != 0)
                                                 {
-                                                    html.Append("<td >");
+                                                    html.Append("<td style='min-width:130px'>");
                                                     html.Append("<input type='text' class='ProcText form-control' onclick='PopupNE($(this));' data-LevelsDefault='" + row[31] + "' data-SidesDefault='" + row[32] + "' data-toggle='tooltip' title='" + notify + "' data-Procedure_Detail_ID='" + row[30] + "' data-Sides='" + row[27] + "' data-HasSides ='" + row[28] + "' data-PPID='" + row[10] + "' data-PatientIEID='" + row[24] + "' data-PatientFUID='" + row[25] + "' data-Level='" + row[13] + "' data-Medi='" + row[11] + "' data-Musc='" + row[12] + "' data-PID='" + row[0] + "'data-ReqPos='" + row[20] + "'data-SubPID='" + row[23] + "' data-Body='" + row[8] + "' data-Bodyid='" + row[7] + "' data-Position='Schedule' data-HasLevel='" + row[4] + "' data-Pos='" + row[3] + "' data-Muscle='" + row[5] + "' data-Subcode='" + row[6] + "' data-InhouseProc='" + row[2] + "'  data-Medication='" + row[9] + "'  data-Date='" + date1 + "' data-MCode='" + row[1] + "'   id='" + row[0] + "_S_" + row[1] + "_" + row[2] + "' value='" + date1 + "' />");
                                                     html.Append("</td>");
                                                 }
                                                 else
                                                 {
-                                                    html.Append("<td >");
+                                                    html.Append("<td style='min-width:130px'>");
                                                     html.Append("<input type='text' class='ProcText form-control' onclick='Popup($(this));' data-LevelsDefault='" + row[31] + "' data-SidesDefault='" + row[32] + "' data-toggle='tooltip' title='" + notify + "' data-Procedure_Detail_ID='" + row[30] + "' data-Sides='" + row[27] + "' data-HasSides ='" + row[28] + "' data-PPID='" + row[10] + "' data-PatientIEID='" + row[24] + "' data-PatientFUID='" + row[25] + "' data-Level='" + row[13] + "' data-Medi='" + row[11] + "' data-Musc='" + row[12] + "' data-PID='" + row[0] + "' data-SubPID='" + row[23] + "' data-Body='" + row[8] + "' data-Bodyid='" + row[7] + "' data-Position='Schedule' data-HasLevel='" + row[4] + "' data-Pos='" + row[3] + "' data-Muscle='" + row[5] + "' data-Subcode='" + row[6] + "' data-InhouseProc='" + row[2] + "'  data-Medication='" + row[9] + "'  data-Date='" + date1 + "' data-MCode='" + row[1] + "'   id='" + row[0] + "_S_" + row[1] + "_" + row[2] + "' value='' />");
                                                     html.Append("</td>");
                                                 }
@@ -1315,13 +1315,13 @@ namespace PainTrax.Web.Controllers
                                             if (row[10] != null)
                                                 if (Convert.ToInt32(row[10]) != 0)
                                                 {
-                                                    html.Append("<td>");
+                                                    html.Append("<td style='min-width:130px'>");
                                                     html.Append("<input type='text' class='form-control dateval' onclick='PopupNE($(this));' data-LevelsDefault='" + row[31] + "' data-SidesDefault='" + row[32] + "' data-toggle='tooltip' title='" + notify + "' data-Procedure_Detail_ID='" + row[30] + "' data-Sides='" + row[27] + "' data-HasSides ='" + row[28] + "' data-PPID='" + row[10] + "' data-PatientIEID='" + row[24] + "' data-PatientFUID='" + row[25] + "'data-PID='" + row[0] + "'data-ReqPos='" + row[22] + "' data-Level='" + row[13] + "' data-Medi='" + row[11] + "' data-Musc='" + row[12] + "' data-SubPID='" + row[23] + "' data-Body='" + row[8] + "' data-Bodyid='" + row[7] + "' data-Position='Execute' data-HasLevel='" + row[4] + "' data-Pos='" + row[3] + "' data-Muscle='" + row[5] + "' data-Subcode='" + row[6] + "' data-InhouseProc='" + row[2] + "' data-Medication='" + row[9] + "' data-SignPath='" + row[33] + "'    data-Date='" + date1 + "' data-MCode='" + row[1] + "'   class='ProcText' id='" + row[0] + "_E_" + row[1] + "_" + row[2] + "' value='" + date1 + "' />");
                                                     html.Append("</td>");
                                                 }
                                                 else
                                                 {
-                                                    html.Append("<td>");
+                                                    html.Append("<td style='min-width:130px'>");
                                                     html.Append("<input type='text' class='form-control' onclick='Popup($(this));' data-LevelsDefault='" + row[31] + "' data-SidesDefault='" + row[32] + "' data-toggle='tooltip' title='" + notify + "' data-Procedure_Detail_ID='" + row[30] + "' data-Sides='" + row[27] + "' data-HasSides ='" + row[28] + "' data-PPID='" + row[10] + "' data-PatientIEID='" + row[24] + "' data-PatientFUID='" + row[25] + "' data-PID='" + row[0] + "' data-Level='" + row[13] + "' data-Medi='" + row[11] + "' data-Musc='" + row[12] + "' data-SubPID='" + row[23] + "' data-Body='" + row[8] + "' data-Bodyid='" + row[7] + "' data-Position='Execute' data-HasLevel='" + row[4] + "' data-Pos='" + row[3] + "' data-Muscle='" + row[5] + "' data-Subcode='" + row[6] + "' data-InhouseProc='" + row[2] + "' data-Medication='" + row[9] + "'  data-Date='" + date1 + "' data-CF='" + row[34] + "' data-MCode='" + row[1] + "'     class='ProcText' id='" + row[0] + "_E_" + row[1] + "_" + row[2] + "' value='' />");
                                                     html.Append("</td>");
                                                 }
@@ -1361,13 +1361,13 @@ namespace PainTrax.Web.Controllers
                                          }*/
                                         else if (column.ColumnName == "count")
                                         {
-                                            html.Append("<td>");
+                                            html.Append("<td style='min-width:130px'>");
                                             html.Append("<input type='button' class='btn btn-warning btn-sm' style='margin-left:25px' onclick='CountPopup($(this));' data-Div='" + ii + "_counttable' data-Procedure_Detail_ID='" + row[30] + "' data-PatientIEID='" + row[24] + "' data-PID='" + row[0] + "' value='" + row[26] + "'  />");
                                             html.Append("</td>");
                                         }
                                         else if (column.ColumnName == "MCODE")
                                         {
-                                            html.Append("<td  data-bs-toggle='tooltip' data-bs-placement='top'  title='" + row["mcode_desc"] + "' style='text-align:center; background-color:#3de33d'>");
+                                            html.Append("<td  data-bs-toggle='tooltip' data-bs-placement='top'  title='" + row["mcode_desc"] + "' style='text-align:center; background-color:#3de33d;min-width:130px'>");
                                             html.Append(row[column.ColumnName]);
                                             html.Append("</td>");
                                         }
@@ -1951,6 +1951,7 @@ namespace PainTrax.Web.Controllers
                 var page1Data = _fuPage1services.GetOne(fuid);
                 if (page1Data != null)
                 {
+                    body = body.Replace("#Reason", string.IsNullOrEmpty(page1Data.appt_reason) ? "" : this.removePtag(page1Data.appt_reason));
                     body = body.Replace("#CC", string.IsNullOrEmpty(page1Data.cc) ? "" : this.removePtag(page1Data.cc));
                     body = body.Replace("#PE", string.IsNullOrEmpty(page1Data.pe) ? "" : this.removePtag(page1Data.pe));
                     body = body.Replace("#history", string.IsNullOrEmpty(page1Data.history) ? "" : this.removePtag(page1Data.history));
@@ -1981,13 +1982,13 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#SocialHistory", this.removePtag(page1Data.social_history));
                     body = body.Replace("#Allergies", this.removePtag(page1Data.allergies));
                     body = body.Replace("#FamilyHistory", this.removePtag(page1Data.family_history));
-                    body = body.Replace("#Vital", this.removePtag(page1DataIE.vital));
+                    body = body.Replace("#Vital", this.removePtag(page1Data.vital));
                     body = body.Replace("#Diagnoses", this.removePtag(assessment));
                     body = body.Replace("#Occupation", this.removePtag(page1Data.occupation));
                     body = body.Replace("#PastMedications", this.removePtag(page1Data.medication));
                     body = body.Replace("#DD", this.removePtag(page1Data.dd));
                     body = body.Replace("#WorkStatus", this.removePtag(page1Data.work_status));
-                    // body = body.Replace("#IR", this.removePtag(page1Data.impairment_rating));
+                    body = body.Replace("#IR", this.removePtag(page1Data.impairment_rating));
 
                 }
                 else
@@ -2003,6 +2004,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#PastSurgicalHistory", "");
                     body = body.Replace("#SocialHistory", "");
                     body = body.Replace("#PastMedicalHistory", "");
+                    body = body.Replace("#IR", "");
                 }
 
                 //last line 
@@ -2018,6 +2020,7 @@ namespace PainTrax.Web.Controllers
                 {
 
                     body = body.Replace("#Sen_Exm", this.removePtag(pageNEData.sensory));
+                    body = body.Replace("#SE", this.removePtag(pageNEData.sensory));
 
                     body = body.Replace("#MMST", this.removePtag(pageNEData.manual_muscle_strength_testing));
 
@@ -2029,6 +2032,7 @@ namespace PainTrax.Web.Controllers
                 else
                 {
                     body = body.Replace("#DTR", "");
+                    body = body.Replace("#SE", "");
                     body = body.Replace("#NE", "");
                     body = body.Replace("#MMST", "");
                     body = body.Replace("#Sen_Exm", "");
@@ -2065,6 +2069,7 @@ namespace PainTrax.Web.Controllers
 
 
                     string fup_duration = "";
+
                     if (!string.IsNullOrEmpty(pageOtherData.followup_duration))
                         fup_duration = pageOtherData.followup_duration;
                     else if (pageOtherData.followup_date.HasValue)
@@ -2072,6 +2077,7 @@ namespace PainTrax.Web.Controllers
 
 
                     body = body.Replace("#FollowUp", this.removePtag(fup_duration));
+                    body = body.Replace("#fup", this.removePtag(fup_duration));
                 }
                 else
                 {
@@ -2081,10 +2087,40 @@ namespace PainTrax.Web.Controllers
 
                 //POC printing
 
-                var strPOC = this.getPOC(fuid);
+                var dataPOC = this.getPOC(fuid);
 
 
-                body = body.Replace("#Plan", this.removePtag(strPOC));
+
+                body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
+
+                body = body.Replace("#ReflexExam", "");
+                string injectionHtml = dataPOC.strInjectionDesc;
+                //string injectionHtml = "<h2>Injection Test</h2>";
+
+                //string SessionDiffPage = HttpContext.Session.GetString(SessionKeys.SessionPageBreak);
+                string SessionDiffDoc = HttpContext.Session.GetString(SessionKeys.SessionInjectionAsSeparateBlock);
+
+                if (SessionDiffDoc != "true")
+                {
+
+                    if (HttpContext.Session.GetString(SessionKeys.SessionPageBreak) == "true")
+                    {
+                        // Create HTML with a page break before the injection section
+                        string pageBreakHtml = "<div style='page-break-before: always;'>";
+                        pageBreakHtml += injectionHtml;
+                        pageBreakHtml += "</div>";
+
+                        body = body.Replace("#injection", pageBreakHtml);
+                    }
+                    else
+                    {
+                        body = body.Replace("#injection", injectionHtml);
+                    }
+                }
+                else
+                {
+                    body = body.Replace("#injection", "");
+                }
 
 
                 body = body.Replace("#ReflexExam", "");
@@ -2094,9 +2130,19 @@ namespace PainTrax.Web.Controllers
 
 
                 if (string.IsNullOrEmpty(strDiagnostic))
-                    strDiagnostic = "None Reviewed";
+                {
+                    if (HttpContext.Session.GetString(SessionKeys.SessionIsDaignosis) == "true")
+                    {
+                        strDiagnostic = HttpContext.Session.GetString(SessionKeys.SessionDaignosisNotFoundStatment);
+                    }
+                }
                 else
-                    strDiagnostic = strDiagnostic + "<br/><br/>The above diagnostic studies were reviewed.";
+                {
+                    if (HttpContext.Session.GetString(SessionKeys.SessionIsDaignosis) == "true")
+                    {
+                        strDiagnostic = strDiagnostic + "<br/><br/>" + HttpContext.Session.GetString(SessionKeys.SessionDaignosisFoundStatment); ;
+                    }
+                }
 
 
                 body = body.Replace("#Diagnostic", this.removePtag(strDiagnostic));
@@ -2118,6 +2164,56 @@ namespace PainTrax.Web.Controllers
                 ViewBag.ieId = patientData.id;
                 ViewBag.fuId = fuid;
                 ViewBag.locId = patientData.location_id;
+
+
+                string signName = "";
+                int signUserId = 0;
+
+                int? providorId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
+
+                if (patientData.provider_id != null)
+                {
+                    signUserId = patientData.provider_id.Value;
+                }
+                else if (providorId != null)
+                {
+                    signUserId = providorId.Value;
+                }
+
+                if (signUserId > 0)
+                {
+                    tbl_users _user = new tbl_users()
+                    {
+                        Id = signUserId
+                    };
+                    var userData = _userService.GetOne(_user);
+                    signName = userData.signature;
+
+                    if (!string.IsNullOrEmpty(signName))
+                    {
+                        string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
+                        //string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
+                        string base64Image = ImageToBase64(Environment.WebRootPath + signatureUrl);
+                        body = body.Replace("#Sign", $" <img src='data:image/jpg;base64,{base64Image}' alt='My Image' />");
+                        // body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
+                    }
+                    else
+                        body = body.Replace("#Sign", "");
+
+                    body = body.Replace("#ProviderName", userData.providername);
+                    body = body.Replace("#AssProviderName", userData.assistant_providername);
+                }
+                else
+                    body = body.Replace("#Sign", "");
+
+
+                if (SessionDiffDoc == "true")
+                {
+                    body += "<br><br><!--Diff Doc-->";
+                    body += injectionHtml;
+                }
+
+
                 ViewBag.content = body;
 
             }
@@ -2127,6 +2223,15 @@ namespace PainTrax.Web.Controllers
             }
             return View();
         }
+
+        #region Image to Base64
+        public string ImageToBase64(string imagePath)
+        {
+            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+            string base64String = Convert.ToBase64String(imageBytes);
+            return base64String;
+        }
+        #endregion
 
         [HttpPost]
         public IActionResult DownloadPDF(String htmlContent, string ieId)
@@ -2352,19 +2457,23 @@ namespace PainTrax.Web.Controllers
             }
             return returnStr;
         }
-        private string getPOC(int PatientFU_ID)
+
+        private pocDetails getPOC(int PatientFU_ID)
         {
             DataTable dsPOC = _pocService.GetPOCFU(PatientFU_ID);
 
-            //var data = _pocService.GetPOCSummary(PatientIE_ID);
+
 
             string strPoc = "<ol>";
+            string inject_desc = "";
             if (dsPOC != null && dsPOC.Rows.Count > 0)
             {
+
                 for (int i = 0; i < dsPOC.Rows.Count; i++)
                 {
                     if (!string.IsNullOrEmpty(dsPOC.Rows[i]["Heading"].ToString()))
                     {
+
                         //if (i != dsPOC.Tables[0].Rows.Count - 1)
                         //    strPoc = strPoc + "<b style='text-transform:uppercase'>" + dsPOC.Tables[0].Rows[i]["Heading"].ToString().TrimEnd(':') + ": </b>" + dsPOC.Tables[0].Rows[i]["PDesc"].ToString() + "<br/><br/>";
                         //else
@@ -2392,11 +2501,27 @@ namespace PainTrax.Web.Controllers
                             heading = heading.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
                         }
 
+                        if (dsPOC.Rows[i]["pn"].ToString() == "1")
+                        {
+                            if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
+                            {
+                                inject_desc = inject_desc + "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
+                                inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
+                                inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+                            }
+                        }
                         strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + dsPOC.Rows[i]["PDesc"].ToString() + "</li>";
                     }
                 }
             }
-            return strPoc + "</ol>";
+
+            pocDetails pocDetails = new pocDetails()
+            {
+                strInjectionDesc = inject_desc,
+                strPoc = strPoc
+            };
+
+            return pocDetails;
         }
 
         private string getDiagnostic(int id)

@@ -25,7 +25,7 @@ namespace PainTrax.Web.Controllers
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
         private IConfiguration Configuration;
 
-        public DesignationController(IMapper mapper, ILogger<tbl_designation> logger,Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, IConfiguration configuration)
+        public DesignationController(IMapper mapper, ILogger<tbl_designation> logger, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, IConfiguration configuration)
         {
             _logger = logger;
             _mapper = mapper;
@@ -34,7 +34,7 @@ namespace PainTrax.Web.Controllers
         }
 
         public IActionResult Index()
-        {           
+        {
             return View();
         }
 
@@ -45,7 +45,7 @@ namespace PainTrax.Web.Controllers
             {
                 ViewBag.isError = false;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Create");
             }
@@ -57,7 +57,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Create(tbl_designation model)
         {
             try
-            {               
+            {
                 int result = 0;
                 if (ModelState.IsValid)
                 {
@@ -78,7 +78,7 @@ namespace PainTrax.Web.Controllers
                     ViewBag.isError = false;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Create");
             }
@@ -94,7 +94,7 @@ namespace PainTrax.Web.Controllers
                 obj.id = id;
                 data = _services.GetOne(obj);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Edit");
             }
@@ -110,9 +110,9 @@ namespace PainTrax.Web.Controllers
                 model.updateddate = System.DateTime.Now;
                 _services.Update(model);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                SaveLog(ex,"Edit");
+                SaveLog(ex, "Edit");
             }
             return RedirectToAction("Index");
         }
@@ -125,7 +125,7 @@ namespace PainTrax.Web.Controllers
                 obj.id = id;
                 _services.Delete(obj);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "Delete");
             }
@@ -143,7 +143,7 @@ namespace PainTrax.Web.Controllers
                 // Paging Length 10,20
                 var length = Request.Form["length"].FirstOrDefault();
                 // Sort Column Name
-                var sortColumn =Request.Form["order[0][column]"].FirstOrDefault();
+                var sortColumn = Request.Form["order[0][column]"].FirstOrDefault();
                 // Sort Column Direction ( asc ,desc)
                 var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
                 // Search Value from (Search box)
@@ -157,7 +157,7 @@ namespace PainTrax.Web.Controllers
                 var Data = _services.GetAll(cnd);
 
                 //Sorting
-                if(!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
+                if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
                 {
                     var property = typeof(tbl_designation).GetProperties()[Convert.ToInt32(sortColumn)];
                     if (sortColumnDirection.ToUpper() == "ASC")
@@ -262,7 +262,7 @@ namespace PainTrax.Web.Controllers
             }
             return RedirectToAction("Index");
         }
-      
+
         [HttpGet]
         public ActionResult DownloadDocument()
         {
@@ -279,7 +279,10 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
-                var data = _services.GetAll(); // Retrieve all attorneys from the database
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+                string cnd = " and cmp_id=" + cmpid;
+
+                var data = _services.GetAll(cnd); // Retrieve all attorneys from the database
 
                 // Create a new DataTable
                 DataTable dt = new DataTable();
@@ -363,7 +366,7 @@ namespace PainTrax.Web.Controllers
                 CreatedBy = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId),
                 Message = msg
             };
-            new LogService().Insert(logdata);            
+            new LogService().Insert(logdata);
         }
         #endregion
     }

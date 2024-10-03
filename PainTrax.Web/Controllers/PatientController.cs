@@ -363,7 +363,10 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
-                var data = _services.GetAll(); // Retrieve all attorneys from the database
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+                string cnd = " and cmp_id=" + cmpid;
+
+                var data = _services.GetAll(cnd); // Retrieve all attorneys from the database
 
                 // Create a new DataTable
                 DataTable dt = new DataTable();

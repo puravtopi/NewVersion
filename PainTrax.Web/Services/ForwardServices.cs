@@ -176,7 +176,7 @@ namespace PainTrax.Web.Services
             return fu_ne;
         }
 
-        public tbl_fu_other? GetOneOther(int ie_id, int fu_id, int cmp_id, int patient_id, int lfu_id = 0)
+        public tbl_fu_other? GetOneOther(int ie_id,  int cmp_id, int fu_id, int patient_id, int lfu_id = 0)
         {
             PatientIEService service = new PatientIEService();
            
@@ -214,7 +214,7 @@ namespace PainTrax.Web.Services
             return fu_other;
         }
 
-        public tbl_fu_page3? GetPage3(int ie_id, int fu_id, int cmp_id, int patient_id, int lfu_id = 0)
+        public tbl_fu_page3? GetPage3(int ie_id, int cmp_id, int fu_id, int patient_id, int lfu_id = 0)
         {
             PatientIEService service = new PatientIEService();
           

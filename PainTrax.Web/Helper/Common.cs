@@ -523,7 +523,7 @@ namespace PainTrax.Web.Helper
                 new SelectListItem{ Text="CE", Value = "cc",Selected=false },
                 new SelectListItem{ Text="PE", Value = "pe",Selected=false },
                 new SelectListItem{ Text="Assessment", Value = "assessment",Selected=false },
-                new SelectListItem{ Text="Plan", Value = "plan",Selected=false },
+                new SelectListItem{ Text="Po Plan", Value = "plan",Selected=false },
                 new SelectListItem{ Text="Occupation", Value = "occupation",Selected=false },
                 new SelectListItem{ Text="Degree of Disability", Value = "dd",Selected=false },
                 new SelectListItem{ Text="Work Status", Value = "work_status",Selected=false },
@@ -532,7 +532,12 @@ namespace PainTrax.Web.Helper
                 new SelectListItem{ Text="Allergies", Value = "allergies",Selected=false },
                 new SelectListItem{ Text="Medication", Value = "medication",Selected=false },
                 new SelectListItem{ Text="Family History", Value = "family_history",Selected=false },
-                new SelectListItem{ Text="Social History", Value = "social_history",Selected=false }
+                new SelectListItem{ Text="Social History", Value = "social_history",Selected=false },
+                new SelectListItem{ Text="Impairment Rating", Value = "impairment_rating",Selected=false },
+                new SelectListItem{ Text="Reason", Value = "appt_reason",Selected=false },
+                new SelectListItem{ Text="Vital", Value = "vital",Selected=false },
+                new SelectListItem{ Text="POC assessment", Value = "poc_assesment",Selected=false }
+               
 
 
                           };

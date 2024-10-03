@@ -76,7 +76,7 @@ namespace PainTrax.Web.Services
         public int InsertPage1FU(tbl_fu_page1 data)
         {
 
-            var obj = this.GetOne(data.fu_id.Value);
+            var obj = this.GetOneFU(data.fu_id.Value);
 
             if (obj == null)
             {

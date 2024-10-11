@@ -220,49 +220,59 @@ namespace PainTrax.Web.Controllers
             {
                 if (postedFile != null && postedFile.Length > 0)
                 {
-                    DataTable dt = this.Read2007Xlsx(postedFile);
+                    //DataTable dt = this.Read2007Xlsx(postedFile);
+                    //DataTable dt = this.Read2007Xlsx(patient);
+                    DataTable dt = new DataTable();
+                    using (var stream = new MemoryStream())
+                    {
+                        postedFile.CopyToAsync(stream);
+                        stream.Position = 0;
+
+                        // Convert uploaded Excel to DataTable
+                        dt = ReadExcelToDataTable(stream);
+                    }
                     int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                     int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
 
                     for (int i = 0; i < dt.Rows.Count; i++)
-                    {                        
-                        tbl_procedures obj = new tbl_procedures()
-                        {
-                            cmp_id = cmpid,
-                            position = dt.Rows[i]["Position"].ToString(),
-                            display_order = string.IsNullOrEmpty(dt.Rows[i]["DisplayOrder"].ToString()) ? 0 : Convert.ToInt16(dt.Rows[i]["DisplayOrder"].ToString()),
-                            hasmuscle = dt.Rows[i]["Muscle"].ToString(),
-                            hassubprocedure = dt.Rows[i]["SubProcedure"].ToString(),
-                            pedesc = dt.Rows[i]["R_PEDesc"].ToString(),
-                            pdesc = dt.Rows[i]["R_PDesc"].ToString(),
-                            s_ccdesc = dt.Rows[i]["S_CCDesc"].ToString(),
-                            s_adesc = dt.Rows[i]["S_ADesc"].ToString(),
-                            e_heading = dt.Rows[i]["E_Heading"].ToString(),
-                            e_pedesc = dt.Rows[i]["E_PEDesc"].ToString(),
-                            e_pdesc = dt.Rows[i]["E_PDesc"].ToString(),
-                            sidesdefault = dt.Rows[i]["SidesDefault"].ToString(),
-                            inhouseprocbit = ConvertToBoolean(dt.Rows[i]["InHouseProcbit"]),
-                            sides = ConvertToBoolean(dt.Rows[i]["sides"]), 
-                            haslevel = ConvertToBoolean(dt.Rows[i]["haslevel"]),
-                            cf = ConvertToBoolean(dt.Rows[i]["cf"]),
-                            pn = ConvertToBoolean(dt.Rows[i]["pn"]),
-                            inout = ConvertToBoolean(dt.Rows[i]["inout"]),
-                            bodypart = dt.Rows[i]["BodyPart"].ToString(),
-                            heading = dt.Rows[i]["Heading"].ToString(),
-                            hasmedication = dt.Rows[i]["HasMedication"].ToString(),
-                            ccdesc = dt.Rows[i]["CCDesc"].ToString(),
-                            adesc = dt.Rows[i]["ADesc"].ToString(),
-                            s_heading = dt.Rows[i]["S_Heading"].ToString(),
-                            s_pedesc = dt.Rows[i]["S_PEDesc"].ToString(),
-                            e_ccdesc = dt.Rows[i]["E_CCDesc"].ToString(),
-                            e_adesc = dt.Rows[i]["E_ADesc"].ToString(),
-                            levelsdefault = dt.Rows[i]["LevelsDefault"].ToString(),
-                            mcode = dt.Rows[i]["MCode"].ToString(),
-                            mcode_desc = dt.Rows[i]["MCodeDesc"].ToString(),
-                        };
+                    {
+                        tbl_procedures obj = new tbl_procedures();
+
+                        obj.cmp_id = cmpid;
+                        obj.position = dt.Rows[i]["Position"].ToString();
+                        obj.display_order = string.IsNullOrEmpty(dt.Rows[i]["DO"].ToString()) ? 0 : Convert.ToInt16(dt.Rows[i]["DO"].ToString());
+                        obj.hasmuscle = dt.Rows[i]["Muscle"].ToString();
+                        obj.hassubprocedure = dt.Rows[i]["SubProcedure"].ToString();
+                        obj.pedesc = dt.Rows[i]["R_PEDesc"].ToString().Replace("'s", "");
+                        obj.pdesc = dt.Rows[i]["R_PDesc"].ToString().Replace("'s", "");
+                        obj.s_ccdesc = dt.Rows[i]["S_CCDesc"].ToString().Replace("'s", "");
+                        obj.s_adesc = dt.Rows[i]["S_ADesc"].ToString().Replace("'s", "");
+                        obj.e_heading = dt.Rows[i]["E_Heading"].ToString().Replace("'s", "");
+                        obj.e_pedesc = dt.Rows[i]["E_PEDesc"].ToString().Replace("'s", "");
+                        obj.e_pdesc = dt.Rows[i]["E_PDesc"].ToString().Replace("'s", "");
+                        obj.sidesdefault = dt.Rows[i]["SidesDefault"].ToString();
+                        obj.inhouseprocbit = ConvertToBoolean(dt.Rows[i]["InHouseProcbit"]);
+                        obj.sides = ConvertToBoolean(dt.Rows[i]["sides"]);
+                        obj.haslevel = ConvertToBoolean(dt.Rows[i]["haslevel"]);
+                        obj.cf = ConvertToBoolean(dt.Rows[i]["cf"]);
+                        obj.pn = ConvertToBoolean(dt.Rows[i]["pn"]);
+                        obj.inout = ConvertToBoolean(dt.Rows[i]["inout"]);
+                        obj.bodypart = dt.Rows[i]["BodyPart"].ToString();
+                        obj.heading = dt.Rows[i]["Heading"].ToString();
+                        obj.hasmedication = dt.Rows[i]["HasMedication"].ToString();
+                        obj.ccdesc = dt.Rows[i]["CCDesc"].ToString().Replace("'s", "");
+                        obj.adesc = dt.Rows[i]["ADesc"].ToString().Replace("'s", "");
+                        obj.s_heading = dt.Rows[i]["S_Heading"].ToString();
+                        obj.s_pedesc = dt.Rows[i]["S_PEDesc"].ToString().Replace("'s", "");
+                        obj.e_ccdesc = dt.Rows[i]["E_CCDesc"].ToString().Replace("'s", "");
+                        obj.e_adesc = dt.Rows[i]["E_ADesc"].ToString().Replace("'s", "");
+                        obj.levelsdefault = dt.Rows[i]["LevelsDefault"].ToString();
+                        obj.mcode = dt.Rows[i]["MCode"].ToString();
+                        obj.mcode_desc = dt.Rows[i]["MCodeDesc"].ToString();
+
 
                         _services.Insert(obj);
-                        
+
 
                     }
                 }
@@ -282,65 +292,65 @@ namespace PainTrax.Web.Controllers
             return val == "1" || val == "true" || val == "yes";
         }
 
-        public DataTable Read2007Xlsx(IFormFile postedFile)
-        {
-            DataTable dt = new DataTable();
-            try
-            {
-                if (postedFile != null && postedFile.Length > 0)
-                {
-                    // Read the uploaded Excel file using Open XML
-                    using (Stream stream = postedFile.OpenReadStream())
-                    {
+        //public DataTable Read2007Xlsx(IFormFile postedFile)
+        //{
+        //    DataTable dt = new DataTable();
+        //    try
+        //    {
+        //        if (postedFile != null && postedFile.Length > 0)
+        //        {
+        //            // Read the uploaded Excel file using Open XML
+        //            using (Stream stream = postedFile.OpenReadStream())
+        //            {
 
-                        using (SpreadsheetDocument spreadSheetDocument = SpreadsheetDocument.Open(stream, false))
-                        {
-                            WorkbookPart workbookPart = spreadSheetDocument.WorkbookPart;
-                            IEnumerable<Sheet> sheets = spreadSheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
-                            string relationshipId = sheets.First().Id.Value;
-                            WorksheetPart worksheetPart = (WorksheetPart)spreadSheetDocument.WorkbookPart.GetPartById(relationshipId);
-                            Worksheet workSheet = worksheetPart.Worksheet;
-                            SheetData sheetData = workSheet.GetFirstChild<SheetData>();
-                            IEnumerable<Row> rows = sheetData.Descendants<Row>();
-                            foreach (Cell cell in rows.ElementAt(0))
-                            {
-                                dt.Columns.Add(GetCellValue(spreadSheetDocument, cell));
-                            }
-                            foreach (Row row in rows) //this will also include your header row...
-                            {
-                                DataRow tempRow = dt.NewRow();
-                                int columnIndex = 0;
-                                foreach (Cell cell in row.Descendants<Cell>())
-                                {
-                                    // Gets the column index of the cell with data
-                                    int cellColumnIndex = (int)GetColumnIndexFromName(GetColumnName(cell.CellReference));
-                                    cellColumnIndex--; //zero based index
-                                    if (columnIndex < cellColumnIndex)
-                                    {
-                                        do
-                                        {
-                                            tempRow[columnIndex] = ""; //Insert blank data here;
-                                            columnIndex++;
-                                        }
-                                        while (columnIndex < cellColumnIndex);
-                                    }//end if block
-                                    tempRow[columnIndex] = GetCellValue(spreadSheetDocument, cell);
-                                    columnIndex++;
-                                }//end inner foreach loop
-                                dt.Rows.Add(tempRow);
-                            }//end outer foreach loop
-                        }//end using block
-                        dt.Rows.RemoveAt(0); //...so i'm taking it out here.
-                    }
-                }
-            }//end try
-            catch (Exception ex)
-            {
-                SaveLog(ex, "Read2007Xlsx");
-            }
+        //                using (SpreadsheetDocument spreadSheetDocument = SpreadsheetDocument.Open(stream, false))
+        //                {
+        //                    WorkbookPart workbookPart = spreadSheetDocument.WorkbookPart;
+        //                    IEnumerable<Sheet> sheets = spreadSheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
+        //                    string relationshipId = sheets.First().Id.Value;
+        //                    WorksheetPart worksheetPart = (WorksheetPart)spreadSheetDocument.WorkbookPart.GetPartById(relationshipId);
+        //                    Worksheet workSheet = worksheetPart.Worksheet;
+        //                    SheetData sheetData = workSheet.GetFirstChild<SheetData>();
+        //                    IEnumerable<Row> rows = sheetData.Descendants<Row>();
+        //                    foreach (Cell cell in rows.ElementAt(0))
+        //                    {
+        //                        dt.Columns.Add(GetCellValue(spreadSheetDocument, cell));
+        //                    }
+        //                    foreach (Row row in rows) //this will also include your header row...
+        //                    {
+        //                        DataRow tempRow = dt.NewRow();
+        //                        int columnIndex = 0;
+        //                        foreach (Cell cell in row.Descendants<Cell>())
+        //                        {
+        //                            // Gets the column index of the cell with data
+        //                            int cellColumnIndex = (int)GetColumnIndexFromName(GetColumnName(cell.CellReference));
+        //                            cellColumnIndex--; //zero based index
+        //                            if (columnIndex < cellColumnIndex)
+        //                            {
+        //                                do
+        //                                {
+        //                                    tempRow[columnIndex] = ""; //Insert blank data here;
+        //                                    columnIndex++;
+        //                                }
+        //                                while (columnIndex < cellColumnIndex);
+        //                            }//end if block
+        //                            tempRow[columnIndex] = GetCellValue(spreadSheetDocument, cell);
+        //                            columnIndex++;
+        //                        }//end inner foreach loop
+        //                        dt.Rows.Add(tempRow);
+        //                    }//end outer foreach loop
+        //                }//end using block
+        //                dt.Rows.RemoveAt(0); //...so i'm taking it out here.
+        //            }
+        //        }
+        //    }//end try
+        //    catch (Exception ex)
+        //    {
+        //        SaveLog(ex, "Read2007Xlsx");
+        //    }
 
-            return dt;
-        }//end Read2007Xlsx method        
+        //    return dt;
+        //}//end Read2007Xlsx method        
         public static string GetColumnName(string cellReference)
         {
             // Create a regular expression to match the column name portion of the cell name.
@@ -362,23 +372,23 @@ namespace PainTrax.Web.Controllers
             return number;
         } //end GetColumnIndexFromName method
 
-        public static string GetCellValue(SpreadsheetDocument document, Cell cell)
-        {
-            SharedStringTablePart stringTablePart = document.WorkbookPart.SharedStringTablePart;
-            if (cell.CellValue == null)
-            {
-                return "";
-            }
-            string value = cell.CellValue.InnerXml;
-            if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
-            {
-                return stringTablePart.SharedStringTable.ChildElements[Int32.Parse(value)].InnerText;
-            }
-            else
-            {
-                return value;
-            }
-        }//end GetCellValue method
+        //public static string GetCellValue(SpreadsheetDocument document, Cell cell)
+        //{
+        //    SharedStringTablePart stringTablePart = document.WorkbookPart.SharedStringTablePart;
+        //    if (cell.CellValue == null)
+        //    {
+        //        return "";
+        //    }
+        //    string value = cell.CellValue.InnerXml;
+        //    if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
+        //    {
+        //        return stringTablePart.SharedStringTable.ChildElements[Int32.Parse(value)].InnerText;
+        //    }
+        //    else
+        //    {
+        //        return value;
+        //    }
+        //}//end GetCellValue method
 
         [HttpGet]
         public ActionResult DownloadDocument()
@@ -559,9 +569,9 @@ namespace PainTrax.Web.Controllers
                 {
                     var clonedProcedure = new tbl_procedures
                     {
-                        bodypart = originalProcedure.bodypart ,
-                        mcode = originalProcedure.mcode ,
-                        heading = originalProcedure.heading ,
+                        bodypart = originalProcedure.bodypart,
+                        mcode = originalProcedure.mcode,
+                        heading = originalProcedure.heading,
                         cmp_id = originalProcedure.cmp_id,
                         position = originalProcedure.position,
                         display_order = originalProcedure.display_order,
@@ -580,7 +590,7 @@ namespace PainTrax.Web.Controllers
                         haslevel = originalProcedure.haslevel,
                         cf = originalProcedure.cf,
                         pn = originalProcedure.pn,
-                        inout = originalProcedure.inout,                       
+                        inout = originalProcedure.inout,
                         hasmedication = originalProcedure.hasmedication,
                         ccdesc = originalProcedure.ccdesc,
                         adesc = originalProcedure.adesc,
@@ -588,13 +598,13 @@ namespace PainTrax.Web.Controllers
                         s_pedesc = originalProcedure.s_pedesc,
                         e_ccdesc = originalProcedure.e_ccdesc,
                         e_adesc = originalProcedure.e_adesc,
-                        levelsdefault = originalProcedure.levelsdefault,                       
+                        levelsdefault = originalProcedure.levelsdefault,
                         mcode_desc = originalProcedure.mcode_desc,
                         upload_template = originalProcedure.upload_template
                     };
 
                     _services.Insert(clonedProcedure);
-                    return Json(new { success = true ,message="Procedure clone successfully"});
+                    return Json(new { success = true, message = "Procedure clone successfully" });
                 }
                 else
                 {
@@ -629,6 +639,167 @@ namespace PainTrax.Web.Controllers
                 Message = msg
             };
             new LogService().Insert(logdata);
+        }
+
+        private DataTable ReadExcelToDataTable(Stream stream)
+        {
+            DataTable dataTable = new DataTable();
+
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(stream, false))
+            {
+                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                Sheets sheets = workbookPart.Workbook.Sheets;
+
+                // Get the first sheet
+                Sheet sheet = sheets.Elements<Sheet>().FirstOrDefault();
+
+                if (sheet == null)
+                {
+                    throw new Exception("No sheet found in the Excel file.");
+                }
+
+                // Get the WorksheetPart based on the sheet's relationship ID
+                WorksheetPart worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id);
+
+                SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().FirstOrDefault();
+
+                bool isFirstRow = true;
+                foreach (Row row in sheetData.Elements<Row>())
+                {
+                    DataRow dataRow = dataTable.NewRow();
+
+
+                    int columnIndex = 0;
+
+                    /*                   foreach (Cell cell in row.Elements<Cell>())
+                                       {
+                                           Console.WriteLine(cell.Count());
+                                           string cellValue = GetCellValue(spreadsheetDocument, cell);
+
+                                           if (isFirstRow)
+                                           {
+                                               // Use the first row to add columns to the DataTable
+                                               dataTable.Columns.Add(cellValue);
+                                           }
+                                           else
+                                           {
+                                               // Clean HTML tags and add data to the DataTable
+                                               string cleanCellValue = cellValue; //System.Text.RegularExpressions.Regex.Replace(cellValue, "<.*?>", string.Empty);
+                                               dataRow[columnIndex] = cleanCellValue;
+                                           }
+                                           columnIndex++;
+                                       }
+
+                                       if (!isFirstRow)
+                                       {
+                                           dataTable.Rows.Add(dataRow);
+                                       }
+                                       isFirstRow = false;
+
+                    */
+
+                    int currentColumnIndex = 0;
+                    int previousColumnIndex = -1;
+
+                    foreach (Cell cell in row.Elements<Cell>())
+                    {
+                        // Get the column index from the cell reference (e.g., A1, B1)
+                        string cellReference = cell.CellReference?.Value;
+                        int cellColumnIndex = GetColumnIndexFromCellReference(cellReference);
+
+                        // Check for missing cells by comparing current cell index with previous one
+                        if (cellColumnIndex - previousColumnIndex > 1)
+                        {
+                            // Fill missing columns with null
+                            int missingCells = cellColumnIndex - previousColumnIndex - 1;
+                            for (int i = 0; i < missingCells; i++)
+                            {
+                                if (isFirstRow)
+                                {
+                                    // Add placeholder column headers for missing columns
+                                    dataTable.Columns.Add($"Column {currentColumnIndex + 1}");
+                                }
+                                else
+                                {
+                                    // Add null for missing cells in the data row
+                                    dataRow[currentColumnIndex] = DBNull.Value;
+                                }
+                                currentColumnIndex++;
+                            }
+                        }
+
+                        // Process current cell value
+                        string cellValue = GetCellValue(spreadsheetDocument, cell);
+
+                        if (isFirstRow)
+                        {
+                            // Add the column header for non-empty cells
+                            dataTable.Columns.Add(cellValue ?? $"Column {currentColumnIndex + 1}");
+                        }
+                        else
+                        {
+                            // Clean HTML tags and add data to the DataTable
+                            string cleanCellValue = System.Text.RegularExpressions.Regex.Replace(cellValue, "<.*?>", string.Empty);
+                            dataRow[currentColumnIndex] = string.IsNullOrEmpty(cleanCellValue) ? DBNull.Value : cleanCellValue;
+                        }
+
+                        previousColumnIndex = cellColumnIndex;
+                        currentColumnIndex++;
+                    }
+
+                    // Fill any remaining columns with nulls if the row is shorter than the header
+                    while (currentColumnIndex < dataTable.Columns.Count)
+                    {
+                        dataRow[currentColumnIndex] = DBNull.Value;
+                        currentColumnIndex++;
+                    }
+
+                    if (!isFirstRow)
+                    {
+                        dataTable.Rows.Add(dataRow);
+                    }
+
+                    isFirstRow = false;
+
+                }
+            }
+
+            return dataTable;
+        }
+
+        private int GetColumnIndexFromCellReference(string cellReference)
+        {
+            if (string.IsNullOrEmpty(cellReference))
+            {
+                return -1;
+            }
+
+            // Extract the column part (e.g., "A" from "A1")
+            string columnPart = new string(cellReference.Where(c => char.IsLetter(c)).ToArray());
+
+            int columnIndex = 0;
+            foreach (char c in columnPart)
+            {
+                columnIndex = (columnIndex * 26) + (c - 'A' + 1);
+            }
+
+            return columnIndex - 1; // Zero-based index
+        }
+        private string GetCellValue(SpreadsheetDocument doc, Cell cell)
+        {
+            if (cell == null)
+                return "";
+
+            string value = cell.InnerText;
+
+            if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
+            {
+                var stringTable = doc.WorkbookPart.SharedStringTablePart.SharedStringTable;
+                value = stringTable.ChildElements[int.Parse(value)].InnerText;
+            }
+
+
+            return value;
         }
         #endregion
     }

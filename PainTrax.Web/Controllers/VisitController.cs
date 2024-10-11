@@ -2244,7 +2244,7 @@ namespace PainTrax.Web.Controllers
                     //  body = body.Replace("#address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                     body = body.Replace("#loc", locData[0].location);
                     body = body.Replace("#Location", locData[0].location);
-                    body = body.Replace("#Nameofpractice", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : "Dr. " + locData[0].nameofpractice);
+                    body = body.Replace("#Nameofpractice", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
                     body = body.Replace("#Phone", locData[0].telephone);
                     //body = body.Replace("#Location", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                 }
@@ -2300,6 +2300,8 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#DD", string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd);
                     body = body.Replace("#WorkStatus", string.IsNullOrEmpty(page1Data.work_status) ? "" : page1Data.work_status);
                     body = body.Replace("#POPlan", string.IsNullOrEmpty(page1Data.plan) ? "" : page1Data.plan);
+                    body = body.Replace("#fn", patientData.fname);
+                    body = body.Replace("#ln", patientData.lname);
 
 
 
@@ -2850,7 +2852,7 @@ namespace PainTrax.Web.Controllers
                             heading = heading.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
                         }
 
-                        if (dsPOC.Rows[i]["pn"].ToString() == "1")
+                        if (dsPOC.Rows[i]["pn"].ToString() == "1" && dsPOC.Rows[i]["Executed"] != DBNull.Value)
                         {
                             if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
                             {

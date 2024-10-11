@@ -194,7 +194,7 @@ namespace PainTrax.Web.Controllers
                           
             var data = _services.GetOneTemplate(id);
 
-            ViewBag.template = data.content;
+            //ViewBag.template = data.content;
 
             return View(data);
 

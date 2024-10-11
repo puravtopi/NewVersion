@@ -203,7 +203,7 @@ namespace PainTrax.Web.Controllers
 
                 if (!String.IsNullOrEmpty(searchValue))
                 {
-                    cnd = " and (fname like '%" + searchValue + "%' or lname like '%" + searchValue + "%' or emailid like '%" + searchValue + "%' or fullname like '%" + searchValue + "%' Or ";
+                    cnd += " and (fname like '%" + searchValue + "%' or lname like '%" + searchValue + "%' or emailid like '%" + searchValue + "%' or fullname like '%" + searchValue + "%' Or ";
                     cnd += " uname like '%" + searchValue + "%' or address like '%" + searchValue + "%'  )";
                 }
 
@@ -212,15 +212,15 @@ namespace PainTrax.Web.Controllers
 
                 if (designation == "Provider")
                 {
-                    cnd = " and desig_name in ('Provider','Staff')";
+                    cnd += " and desig_name in ('Provider','Staff')";
                 }
                 else if (designation == "Client Admin")
                 {
-                    cnd = " and desig_name in ('Provider','Staff','Client Admin')";
+                    cnd += " and desig_name in ('Provider','Staff','Client Admin')";
                 }
                 else if (designation == "Admin")
                 {
-                    cnd = " and desig_name in ('Provider','Staff','Client Admin','Admin')";
+                    cnd += " and desig_name in ('Provider','Staff','Client Admin','Admin')";
                 }
 
                 var Data = _services.GetAll(cnd);

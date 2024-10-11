@@ -328,6 +328,7 @@ namespace PainTrax.Web.Controllers
                                 ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
                                 cmp_id = cmpid,
                                 patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
+                                fu_id = Convert.ToInt32(dt.Rows[i]["Patient_fu_id"].ToString()),
                             };
 
                             _patientimportservice.InsertPage2FU(obj2);

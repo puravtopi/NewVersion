@@ -36,7 +36,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Index()
         {
 
-           
+         
 
             //TblCompany tbl = new TblCompany()
             //{

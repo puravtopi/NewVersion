@@ -17,7 +17,7 @@ public class PatientIEService : ParentService
         if (!string.IsNullOrEmpty(query))
             query = query + cnd;
 
-        query = query + " order by id desc ";
+        query = query + " order by id desc limit 500";
 
         List<vm_patient_ie> dataList = ConvertDataTable<vm_patient_ie>(GetData(query));
         return dataList;

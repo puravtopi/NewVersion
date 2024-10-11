@@ -183,7 +183,7 @@ impairment_rating=@impairment_rating,appt_reason=@appt_reason,
         public int InsertPage2FU(tbl_fu_page2 data)
         {
 
-            var obj = this.GetPage2OneFU(data.ie_id.Value);
+            var obj = this.GetPage2OneFU(data.fu_id.Value);
 
             if (obj == null)
             {

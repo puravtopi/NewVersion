@@ -74,9 +74,7 @@ namespace PainTrax.Web.Services
                 }
             }
             else
-            {
-
-              
+            {             
                 var lfu = _fuPage1services.GetOne(lfu_id);
 
                 if (fu_Page1 == null)
@@ -118,21 +116,21 @@ namespace PainTrax.Web.Services
                     fu_Page2.patient_id = patient_id;
                     _fuPage2services.Insert(fu_Page2);
                 }
-                else
+              
+            }
+            else
+            {
+                var lfu = _fuPage2services.GetOne(lfu_id);
+
+                if (fu_Page2 == null)
                 {
-
-                    var lfu = _fuPage2services.GetOne(lfu_id);
-
-                    if (fu_Page2 == null)
-                    {
-                        fu_Page2 = new tbl_fu_page2();
-                        CopyProperties(lfu, fu_Page2, cmp_id, "page2");
-                        fu_Page2.ie_id = ie_id;
-                        fu_Page2.fu_id = fu_id;
-                        fu_Page2.cmp_id = cmp_id;
-                        fu_Page2.patient_id = patient_id;
-                        _fuPage2services.Insert(fu_Page2);
-                    }
+                    fu_Page2 = new tbl_fu_page2();
+                    CopyProperties(lfu, fu_Page2, cmp_id, "page2");
+                    fu_Page2.ie_id = ie_id;
+                    fu_Page2.fu_id = fu_id;
+                    fu_Page2.cmp_id = cmp_id;
+                    fu_Page2.patient_id = patient_id;
+                    _fuPage2services.Insert(fu_Page2);
                 }
             }
             return fu_Page2;

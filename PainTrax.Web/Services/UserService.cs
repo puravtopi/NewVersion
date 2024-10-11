@@ -174,10 +174,10 @@ namespace PainTrax.Web.Services
             return providers;
         }
 
-      /*  public void PasswordEncrypt()
+        public void PasswordEncrypt()
         {
             DataTable dt = new DataTable();
-            MySqlCommand cm = new MySqlCommand("select * from tbl_users", conn);
+            MySqlCommand cm = new MySqlCommand("select * from tbl_users where cmp_id=10", conn);
 
             var datalist = ConvertDataTable<tbl_users>(GetData(cm));
 
@@ -188,7 +188,7 @@ namespace PainTrax.Web.Services
                 cm = new MySqlCommand("update  tbl_users set password='" + encryPass + "' where id=" + item.Id, conn);
                 Execute(cm);
             }
-        }*/
+        }
 
     }
 }

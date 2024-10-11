@@ -15,7 +15,7 @@ using GroupDocs.Viewer.Options;
 
 namespace PainTrax.Web.Controllers
 {
-   
+
     public class ImportDocController : Controller
     {
         private readonly ILogger<FormsController> _logger;
@@ -35,28 +35,29 @@ namespace PainTrax.Web.Controllers
             //TempData.Keep("Data");
             return View();
         }
-        public void UpdateId( ref DataRow datarow,string name,string dob,string filename,string doctype="IE",string doe="")
+        public void UpdateId(ref DataRow datarow, string name, string dob, string filename, string doctype = "IE", string doe = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
             string pid = "0";
             string bdate = "";
             string adate = "";
             try
-            { 
-                string filenameonly= Path.GetFileNameWithoutExtension(filename);
-                adate = DateTime.ParseExact((filenameonly.Substring(filenameonly.Length - 6)).ToString().Trim(), "MMddyy", null).ToString("yyyy-MM-dd");
-            }  catch  (Exception ex )
             {
-                
+                string filenameonly = Path.GetFileNameWithoutExtension(filename);
+                adate = DateTime.ParseExact((filenameonly.Substring(filenameonly.Length - 6)).ToString().Trim(), "MMddyy", null).ToString("yyyy-MM-dd");
+            }
+            catch (Exception ex)
+            {
+
             }
 
-            if (dob.ToString() != "" )
+            if (dob.ToString() != "")
                 bdate = DateTime.ParseExact(dob.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");
             string[] fullname = name.ToString().Trim().Split(' ');
             DataTable dt = new DataTable();
             if (fullname.Length > 1)
             {
-                if (doctype =="IE")
+                if (doctype == "IE")
                 {
                     dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and dob='{bdate}' and doa='{adate}' and cmp_id={cmpid}");
                     if (dt.Rows.Count > 0)
@@ -70,7 +71,7 @@ namespace PainTrax.Web.Controllers
                     string edate = "";
                     if (doe.ToString() != "")
                         edate = DateTime.ParseExact(doe.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");
-//                    dt = _pareentservices.GetData($"select * from vm_patient_fu where  fname='{fullname[0]}' and lname='{fullname[1]}'  and DATE(doe)='{edate}' and cmp_id={cmpid}");
+                    //                    dt = _pareentservices.GetData($"select * from vm_patient_fu where  fname='{fullname[0]}' and lname='{fullname[1]}'  and DATE(doe)='{edate}' and cmp_id={cmpid}");
 
                     dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{edate}'  and DATE(vm_patient_fu.doa)= '{adate}' and vm_patient_ie.cmp_id = {cmpid}");
                     if (dt.Rows.Count > 0)
@@ -135,7 +136,7 @@ namespace PainTrax.Web.Controllers
                         {
                             file.CopyTo(stream);
                         }
-                        DataRow row=  ConvertDocxToHtml(Path.Combine(downloadFolder, "temp" + Path.GetExtension(file.FileName).ToLower()),dataTable,file.FileName);
+                        DataRow row = ConvertDocxToHtml(Path.Combine(downloadFolder, "temp" + Path.GetExtension(file.FileName).ToLower()), dataTable, file.FileName);
                         dataTable.Rows.Add(row);
 
                         message += $"<span class='text-primary'>{file.FileName} File Processed Successfully<span><br>";
@@ -215,8 +216,8 @@ namespace PainTrax.Web.Controllers
                 return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "IEs.xlsx");
             }
             //return RedirectToAction("Index");
-        
-        
+
+
         }
 
         [HttpPost]
@@ -350,13 +351,13 @@ namespace PainTrax.Web.Controllers
         }
 
 
-       
+
 
         [HttpPost]
         public ActionResult ImportData(string folderName, IFormFile file)
         {
 
-            
+
             TempData["Message"] = TempData["Data"];
             return RedirectToAction("Index");
         }
@@ -378,7 +379,7 @@ namespace PainTrax.Web.Controllers
             return paragraphText.ToString();
         }
 
-        DataRow ConvertDocxToHtml(string docxFilePath,DataTable dataTable,string filename)
+        DataRow ConvertDocxToHtml(string docxFilePath, DataTable dataTable, string filename)
         {
             using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(docxFilePath, false))
             {
@@ -452,7 +453,7 @@ namespace PainTrax.Web.Controllers
                         {
                             html.Append($"<p>{paragraphText}</p>");
                             // history.Append($"<p>{paragraphText}</p>");
-                           // history.Append(paragraphText);
+                            // history.Append(paragraphText);
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
@@ -1183,8 +1184,8 @@ namespace PainTrax.Web.Controllers
 
                 html.Append("</body></html>");
                 DataRow datarow = dataTable.NewRow();
-                UpdateId(ref datarow, name.ToString(), "", filename,"FU",doe.ToString());
-                datarow["DOA"] = DateTime.ParseExact(doa.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");  
+                UpdateId(ref datarow, name.ToString(), "", filename, "FU", doe.ToString());
+                datarow["DOA"] = DateTime.ParseExact(doa.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");
                 datarow["DOE"] = DateTime.ParseExact(doe.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");
                 datarow["DO1E"] = DateTime.ParseExact(doie.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");
                 datarow["CC"] = cc.ToString().Trim();
@@ -1238,7 +1239,7 @@ namespace PainTrax.Web.Controllers
             dataTable.Columns.Add("Physical Exam", typeof(string));
             dataTable.Columns.Add("Diagnostics", typeof(string));
             dataTable.Columns.Add("Diagnoses", typeof(string));
-            dataTable.Columns.Add("Plan", typeof(string));            
+            dataTable.Columns.Add("Plan", typeof(string));
             dataTable.Columns.Add("Care", typeof(string));
             dataTable.Columns.Add("Precautions", typeof(string));
             dataTable.Columns.Add("Follow up", typeof(string));
@@ -1346,7 +1347,7 @@ namespace PainTrax.Web.Controllers
         public ActionResult IPMCUploadFileFU(List<IFormFile> files)
         {
             DataTable dataTable = new DataTable();
-            
+
             dataTable.Columns.Add("Patient_id", typeof(string));
             dataTable.Columns.Add("Patient_ie_id", typeof(string));
             dataTable.Columns.Add("Patient_fu_id", typeof(string));
@@ -1530,13 +1531,13 @@ namespace PainTrax.Web.Controllers
                         string paragraphText = GetParagraphText(paragraph);
                         if (paragraphText.StartsWith("RE:"))
                         {
-                            html.Append($"<p>{paragraphText}</p>");                            
+                            html.Append($"<p>{paragraphText}</p>");
                             name.Append(paragraphText.Substring(("RE:".Length)).Trim());
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                           // foundcurmedications = false;
+                            // foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1545,13 +1546,13 @@ namespace PainTrax.Web.Controllers
 
                         if (paragraphText.StartsWith("DOB:"))
                         {
-                            html.Append($"<p>{paragraphText}</p>");                            
-                            dob.Append(paragraphText.Substring(("DOB:".Length)).Trim ());
+                            html.Append($"<p>{paragraphText}</p>");
+                            dob.Append(paragraphText.Substring(("DOB:".Length)).Trim());
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                         //   foundcurmedications = false;
+                            //   foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1559,13 +1560,13 @@ namespace PainTrax.Web.Controllers
                         }
                         if (paragraphText.StartsWith("DOI:"))
                         {
-                            html.Append($"<p>{paragraphText}</p>");                            
+                            html.Append($"<p>{paragraphText}</p>");
                             doa.Append(paragraphText.Substring(("DOI:".Length)).Trim());
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                         //   foundcurmedications = false;
+                            //   foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1579,7 +1580,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                         //   foundcurmedications = false;
+                            //   foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1594,7 +1595,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                           // foundcurmedications = false;
+                            // foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1607,7 +1608,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                          //  foundcurmedications = false;
+                            //  foundcurmedications = false;
                             foundhistory = false;
                             foundreason = true;
                             founddiagnosticstudies = false;
@@ -1621,7 +1622,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                          //  foundcurmedications = false;
+                            //  foundcurmedications = false;
                             foundhistory = true;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1634,7 +1635,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                         //   foundcurmedications = false;
+                            //   foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1649,7 +1650,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                         //   foundcurmedications = false;
+                            //   foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1664,7 +1665,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                          //  foundcurmedications = false;
+                            //  foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1679,7 +1680,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                          //  foundcurmedications = false;
+                            //  foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1694,7 +1695,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                         //   foundcurmedications = false;
+                            //   foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1709,7 +1710,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                         //   foundcurmedications = false;
+                            //   foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1724,7 +1725,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                         //   foundcurmedications = false;
+                            //   foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1739,7 +1740,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                          //  foundcurmedications = false;
+                            //  foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1755,7 +1756,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                         //   foundcurmedications = false;
+                            //   foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1770,7 +1771,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                         //   foundcurmedications = false;
+                            //   foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1786,24 +1787,24 @@ namespace PainTrax.Web.Controllers
                             foundpe = true;
                             founddiagnoses = false;
                             foundplan = false;
-                        //    foundcurmedications = false;
+                            //    foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
                             continue;
                         }
-                       
+
 
                         if (paragraphText.StartsWith("DIAGNOSTIC STUDIES:"))
                         {
                             html.Append($"<p>{paragraphText}</p>");
-                            
-                            
+
+
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                        //    foundcurmedications = false;
+                            //    foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = true;
@@ -1817,7 +1818,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = true;
                             foundplan = false;
-                       //     foundcurmedications = false;
+                            //     foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1831,7 +1832,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = true;
-                        //    foundcurmedications = false;
+                            //    foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1840,12 +1841,12 @@ namespace PainTrax.Web.Controllers
 
                         if (paragraphText.StartsWith("Medications:"))
                         {
-                            html.Append($"<p>{paragraphText}</p>");                            
+                            html.Append($"<p>{paragraphText}</p>");
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                        //    foundcurmedications = true;
+                            //    foundcurmedications = true;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1853,13 +1854,13 @@ namespace PainTrax.Web.Controllers
                         }
                         if (paragraphText.StartsWith("CARE:"))
                         {
-                            html.Append($"<p>{paragraphText}</p>");                            
+                            html.Append($"<p>{paragraphText}</p>");
                             care.Append(paragraphText.Substring(("CARE:".Length)));
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                        //    foundcurmedications = false;
+                            //    foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1867,13 +1868,13 @@ namespace PainTrax.Web.Controllers
                         }
                         if (paragraphText.StartsWith("GOALS:"))
                         {
-                            html.Append($"<p>{paragraphText}</p>");                            
+                            html.Append($"<p>{paragraphText}</p>");
                             goals.Append(paragraphText.Substring(("GOALS:".Length)));
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                        //    foundcurmedications = false;
+                            //    foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1888,7 +1889,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                         //   foundcurmedications = false;
+                            //   foundcurmedications = false;
                             foundhistory = false;
                             founddiagnosticstudies = false;
                             continue;
@@ -1902,7 +1903,7 @@ namespace PainTrax.Web.Controllers
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
-                         //   foundcurmedications = false;
+                            //   foundcurmedications = false;
                             foundhistory = false;
                             foundreason = false;
                             founddiagnosticstudies = false;
@@ -1935,17 +1936,17 @@ namespace PainTrax.Web.Controllers
                             html.Append($"<p>{paragraphText}</p>");
                             plan.Append($"<p>{paragraphText}</p>");
                         }
-                       // if (foundcurmedications)
-                      //  {
-                      //      html.Append($"<p>{paragraphText}</p>");
-                      //      curmedications.Append($"<p>{paragraphText}</p>");
-                     //   }
-                        if(foundreason)
+                        // if (foundcurmedications)
+                        //  {
+                        //      html.Append($"<p>{paragraphText}</p>");
+                        //      curmedications.Append($"<p>{paragraphText}</p>");
+                        //   }
+                        if (foundreason)
                         {
                             html.Append($"<p>{paragraphText}</p>");
                             reason.Append($"<p>{paragraphText}</p>");
                         }
-                        if(founddiagnosticstudies) 
+                        if (founddiagnosticstudies)
                         {
                             html.Append($"<p>{paragraphText}</p>");
                             diagnosticstudies.Append($"<p>{paragraphText}</p>");
@@ -1975,7 +1976,9 @@ namespace PainTrax.Web.Controllers
                 DataTable dt = new DataTable();
                 if (fullname.Length > 1)
                 {
-                    dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and dob='{bdate}' and doa='{adate}' and cmp_id={cmpid}");
+                    //      dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and dob='{bdate}' and doa='{adate}' and cmp_id={cmpid}");
+                    dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and   doe='{sdate}' and cmp_id={cmpid}");
+
                     if (dt.Rows.Count > 0)
                     {
                         datarow["Patient_id"] = dt.Rows[0]["patient_id"];
@@ -1987,7 +1990,7 @@ namespace PainTrax.Web.Controllers
                 datarow["MName"] = fullname.Length > 2 && !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
                 datarow["DOA"] = adate;
                 datarow["DOB"] = bdate;
-                datarow["DOS"] = sdate;                
+                datarow["DOS"] = sdate;
                 datarow["Name"] = name.ToString().Trim();
                 datarow["Location"] = location.ToString().Trim();
                 datarow["Reason"] = reason.ToString().Trim();
@@ -2002,11 +2005,11 @@ namespace PainTrax.Web.Controllers
                 datarow["Social History"] = socialhistory.ToString().Trim();
                 datarow["Occupation"] = occupation.ToString().Trim();
                 datarow["Tylenol"] = tylenol.ToString().Trim();
-                datarow["Physical Exam"] = pe.ToString().Trim();                
+                datarow["Physical Exam"] = pe.ToString().Trim();
                 datarow["Diagnostics"] = diagnosticstudies.ToString().Trim();
                 datarow["Diagnoses"] = diagnoses.ToString().Trim();
                 datarow["Plan"] = plan.ToString().Trim();
-             //   datarow["Current Medications"] = curmedications.ToString().Trim();
+                //   datarow["Current Medications"] = curmedications.ToString().Trim();
                 datarow["Care"] = care.ToString().Trim();
                 datarow["Precautions"] = precautions.ToString().Trim();
                 datarow["Follow up"] = followup.ToString().Trim();
@@ -2025,7 +2028,7 @@ namespace PainTrax.Web.Controllers
                 StringBuilder name = new StringBuilder();
                 StringBuilder dob = new StringBuilder();
                 StringBuilder doa = new StringBuilder();
-                StringBuilder dos = new StringBuilder();                
+                StringBuilder dos = new StringBuilder();
                 StringBuilder location = new StringBuilder();
                 StringBuilder reason = new StringBuilder();
                 StringBuilder history = new StringBuilder();
@@ -2084,7 +2087,7 @@ namespace PainTrax.Web.Controllers
                         if (paragraphText.StartsWith("DOB:"))
                         {
                             html.Append($"<p>{paragraphText}</p>");
-                            if(dob.Length==0)
+                            if (dob.Length == 0)
                                 dob.Append(paragraphText.Substring(("DOB:".Length)).Trim());
                             foundcc = false;
                             foundpe = false;
@@ -2512,8 +2515,8 @@ namespace PainTrax.Web.Controllers
 
                 string[] fullname = name.ToString().Trim().Split(' ');
                 DataTable dt = new DataTable();
-                 if (fullname.Length > 1)
-                 {
+                if (fullname.Length > 1)
+                {
                     dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{sdate}'  and DATE(vm_patient_fu.doa)= '{adate}' and vm_patient_ie.cmp_id = {cmpid}");
                     if (dt.Rows.Count > 0)
                     {

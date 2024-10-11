@@ -450,8 +450,12 @@
             $('#PositionValue').show();
             $('#Positionlbl').show();
 
-            $("#pocdate").val(new Date().toLocaleDateString('en-CA'));
+            var dos = $('#dos').val();
 
+            if(dos!='' && dos!=undefined)
+                $("#pocdate").val(new Date(dos).toLocaleDateString('en-CA'));
+                else
+                $("#pocdate").val(new Date().toLocaleDateString('en-CA'));
 
             var url = '@Url.Action("GetSubCodeFromDB", "Visit")?ProcedureId=' + t[0].dataset.pid;
 

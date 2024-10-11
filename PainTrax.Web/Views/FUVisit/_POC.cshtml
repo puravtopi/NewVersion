@@ -472,7 +472,13 @@
             $('#Medication').html('');
             $('#Level').html('');
 
-            $('#pocdate').html($('#dov').val());
+             var dos = $('#dov').val();
+
+            if (dos != '' && dos != undefined)
+                $("#pocdate").val(new Date(dos).toLocaleDateString('en-CA'));
+            else
+                $("#pocdate").val(new Date().toLocaleDateString('en-CA'));
+
             $('#PositionValue').val(t[0].dataset.pos);
             $('#PositionValue').show();
             $('#Positionlbl').show();

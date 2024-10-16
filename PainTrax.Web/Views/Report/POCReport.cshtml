@@ -131,9 +131,16 @@
                                                 @{
                                                     if (item.scheduled != null)
                                                     {
-                                                                    <button class="btn btn-warning" type="button" onclick="fnTransToRescheduledSingle(@item.procedureDetail_id)">Reschedule</button>
+                                                        <button class="btn btn-warning" type="button" onclick="fnTransToRescheduledSingle(@item.procedureDetail_id)">Reschedule</button>
+                                                    }
+
+                                                    if (item.executed != null)
+                                                    {
+                                                        <a onclick="DownloadPdf( @item.id ,'@item.fname ', ' @item.lname ' )"><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Download"></i></a>
                                                     }
                                                 }
+
+
                                             </td>
                                         </tr>
 
@@ -163,7 +170,7 @@
 
     var isShow = '@ViewBag.ShowTransfer';
 
-    if (isShow == 'True') { 
+    if (isShow == 'True') {
         fnScheduled();
     }
 
@@ -277,6 +284,31 @@
     function fnReset() {
         $('#frmPOC').trigger("reset");
         $("#frmPOC")[0].reset();
-        window.location = '@Url.Action("POCReport","Report")';
+        window.location = '@Url.Action("POCReport", "Report")';
+    }
+    function DownloadPdf(id, fname, lname) {
+        var downloadurl = '@Url.Action("GeneratePdf", "Forms")';
+       // debugger;
+        console.log("Forms/PT FORM.pdf");
+        downloadurl = downloadurl + '?pdffile=' + "Forms/PT FORM.pdf" + '&id=' + id;
+        fetch(downloadurl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                console.log(response);
+                return response.blob();
+            })
+            .then(blob => {
+                // Handle the Excel file data here
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = lname.trim() + ", " + fname.trim() + "_" + "Forms/PT FORM.pdf".split('/').pop();
+                link.click();
+            })
+            .catch(error => {
+                console.error('Error downloading Excel file:', error);
+            });
+
     }
 </script>

@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using System.IO.Compression;
+using System.Linq;
 
 namespace PainTrax.Web.Controllers
 {
@@ -480,6 +481,17 @@ namespace PainTrax.Web.Controllers
                         obj.Page3.goal = _defaultdata.goal;
                         obj.Page3.care = _defaultdata.care;
                     }
+
+                    obj.Page3.diagcervialbulge_study = "MRI";
+                    obj.Page3.diagthoracicbulge_study = "MRI";
+                    obj.Page3.diaglumberbulge_study = "MRI";
+                    obj.Page3.diagleftshoulder_study = "MRI";
+                    obj.Page3.diagrightshoulder_study = "MRI";
+                    obj.Page3.diagleftknee_study = "MRI";
+                    obj.Page3.diagrightknee_study = "MRI";
+
+
+
                     obj.Other.listTreatmentMaster = _data;
 
                     var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
@@ -2202,6 +2214,7 @@ namespace PainTrax.Web.Controllers
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 string body = string.Empty;
                 string bodypart = "";
+                string printbody = "<body style='font-size:12px;font-family:'Times New Roman', Times,serif'>";
                 //using streamreader for reading my htmltemplate   
 
                 var templateData = _printService.GetTemplate(cmpid, "IE");
@@ -2600,20 +2613,63 @@ namespace PainTrax.Web.Controllers
         }
         #endregion
         #region private method
+        //public MemoryStream ConvertHtmlToWord(string htmlContent)
+        //{
+        //    MemoryStream memoryStream = new MemoryStream();
+        //    using (WordprocessingDocument doc = WordprocessingDocument.Create(memoryStream, WordprocessingDocumentType.Document))
+        //    {
+        //        MainDocumentPart mainPart = doc.AddMainDocumentPart();
+        //        mainPart.Document = new Document();
+        //        Body body = mainPart.Document.AppendChild(new Body());
+        //        HtmlConverter converter = new HtmlConverter(mainPart);
+        //        var generatedBody = converter.Parse(htmlContent);
+        //        body.Append(generatedBody);
+        //    }
+        //    return memoryStream;
+        //}
+
         public MemoryStream ConvertHtmlToWord(string htmlContent)
         {
             MemoryStream memoryStream = new MemoryStream();
             using (WordprocessingDocument doc = WordprocessingDocument.Create(memoryStream, WordprocessingDocumentType.Document))
             {
+                // Create the MainDocumentPart
                 MainDocumentPart mainPart = doc.AddMainDocumentPart();
                 mainPart.Document = new Document();
                 Body body = mainPart.Document.AppendChild(new Body());
+
+                // Define the font and size
+                RunProperties runProperties = new RunProperties();
+                RunFonts runFonts = new RunFonts() { Ascii = "Times New Roman" };
+                FontSize fontSize = new FontSize() { Val = "24" }; // Font size 12 (in half-point format)
+
+                // Apply the font settings to the RunProperties
+                runProperties.Append(runFonts);
+                runProperties.Append(fontSize);
+
+                // Parse the HTML content and append it to the document
                 HtmlConverter converter = new HtmlConverter(mainPart);
-                var generatedBody = converter.Parse(htmlContent);
-                body.Append(generatedBody);
+                IList<OpenXmlCompositeElement> generatedBody = converter.Parse(htmlContent);
+
+                // Iterate over the parsed elements and apply RunProperties
+                foreach (var element in generatedBody)
+                {
+                    foreach (var run in element.Descendants<Run>()) // Find all Run elements in the element
+                    {
+                        run.PrependChild(runProperties.CloneNode(true)); // Apply the font properties to each Run
+                    }
+
+                    // Append each element to the body
+                    body.Append(element.CloneNode(true));
+                }
+
+                // Save the changes
+                mainPart.Document.Save();
             }
             return memoryStream;
         }
+
+
 
         [HttpPost]
         public IActionResult DownloadWord(string htmlContent, int ieId, int id)
@@ -2646,10 +2702,37 @@ namespace PainTrax.Web.Controllers
                     mainPart.Document = new Document();
                     Body body = mainPart.Document.AppendChild(new Body());
 
-                    // Convert HTML to OpenXML and add to the body
+
+                    // Define the font and size
+                    RunProperties runProperties = new RunProperties();
+                    RunFonts runFonts = new RunFonts() { Ascii = "Times New Roman" };
+                    FontSize fontSize = new FontSize() { Val = "24" }; // Font size 12 (in half-point format)
+
+                    // Apply the font settings to the RunProperties
+                    runProperties.Append(runFonts);
+                    runProperties.Append(fontSize);
+
+                    // Parse the HTML content and append it to the document
                     HtmlConverter converter = new HtmlConverter(mainPart);
-                    var generatedBody = converter.Parse(htmlContent);
-                    body.Append(generatedBody);
+                    IList<OpenXmlCompositeElement> generatedBody = converter.Parse(htmlContent);
+
+                    // Iterate over the parsed elements and apply RunProperties
+                    foreach (var element in generatedBody)
+                    {
+                        foreach (var run in element.Descendants<Run>()) // Find all Run elements in the element
+                        {
+                            run.PrependChild(runProperties.CloneNode(true)); // Apply the font properties to each Run
+                        }
+
+                        // Append each element to the body
+                        body.Append(element.CloneNode(true));
+                    }
+
+
+                    // Convert HTML to OpenXML and add to the body
+                    //HtmlConverter converter = new HtmlConverter(mainPart);
+                    //var generatedBody = converter.Parse(htmlContent);
+                    //body.Append(generatedBody);
 
 
                     var header = new Header(new Paragraph(new Run(new Text("Header Test"))));

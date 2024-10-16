@@ -188,23 +188,24 @@ impairment_rating=@impairment_rating,appt_reason=@appt_reason,
             if (obj == null)
             {
                 MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_fu_page2
-		(ros,aod,ie_id,patient_id,cmp_id)Values
-				(@ros,@aod,@ie_id,@patient_id,@cmp_id);select @@identity;", conn);
+		(ros,aod,ie_id,patient_id,cmp_id,fu_id)Values
+				(@ros,@aod,@ie_id,@patient_id,@cmp_id,@fu_id);select @@identity;", conn);
                 cm.Parameters.AddWithValue("@ros", data.ros);
                 cm.Parameters.AddWithValue("@aod", data.aod);
                 cm.Parameters.AddWithValue("@ie_id", data.ie_id);
                 cm.Parameters.AddWithValue("@patient_id", data.patient_id);
                 cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+                cm.Parameters.AddWithValue("@fu_id", data.fu_id);
                 var result = ExecuteScalar(cm);
                 return result;
             }
             else
             {
                 MySqlCommand cm = new MySqlCommand(@"update tbl_fu_page2 set
-		ros=@ros,aod=@aod where ie_id=@ie_id;select 1;", conn);
+		ros=@ros,aod=@aod where fu_id=@fu_id;select 1;", conn);
                 cm.Parameters.AddWithValue("@ros", data.ros);
                 cm.Parameters.AddWithValue("@aod", data.aod);
-                cm.Parameters.AddWithValue("@ie_id", data.ie_id);
+                cm.Parameters.AddWithValue("@fu_id", data.fu_id);
 
                 var result = ExecuteScalar(cm);
                 return result;

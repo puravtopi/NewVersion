@@ -1918,13 +1918,13 @@ namespace PainTrax.Web.Controllers
 
                 if (locData != null && locData.Count > 0)
                 {
-                    body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : "Dr. " + locData[0].nameofpractice);
+                    body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
                     body = body.Replace("#address", locData[0].address);
                     body = body.Replace("#Address", locData[0].address);
                     //  body = body.Replace("#address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                     body = body.Replace("#loc", locData[0].location);
                     body = body.Replace("#Location", locData[0].location);
-                    body = body.Replace("#Nameofpractice", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : "Dr. " + locData[0].nameofpractice);
+                    body = body.Replace("#Nameofpractice", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice :  locData[0].nameofpractice);
                     body = body.Replace("#Phone", locData[0].telephone);
                 }
 
@@ -2271,10 +2271,36 @@ namespace PainTrax.Web.Controllers
                     mainPart.Document = new Document();
                     Body body = mainPart.Document.AppendChild(new Body());
 
-                    // Convert HTML to OpenXML and add to the body
+
+                    // Define the font and size
+                    RunProperties runProperties = new RunProperties();
+                    RunFonts runFonts = new RunFonts() { Ascii = "Times New Roman" };
+                    FontSize fontSize = new FontSize() { Val = "24" }; // Font size 12 (in half-point format)
+
+                    // Apply the font settings to the RunProperties
+                    runProperties.Append(runFonts);
+                    runProperties.Append(fontSize);
+
+                    // Parse the HTML content and append it to the document
                     HtmlConverter converter = new HtmlConverter(mainPart);
-                    var generatedBody = converter.Parse(htmlContent);
-                    body.Append(generatedBody);
+                    IList<OpenXmlCompositeElement> generatedBody = converter.Parse(htmlContent);
+
+                    // Iterate over the parsed elements and apply RunProperties
+                    foreach (var element in generatedBody)
+                    {
+                        foreach (var run in element.Descendants<Run>()) // Find all Run elements in the element
+                        {
+                            run.PrependChild(runProperties.CloneNode(true)); // Apply the font properties to each Run
+                        }
+
+                        // Append each element to the body
+                        body.Append(element.CloneNode(true));
+                    }
+
+                    // Convert HTML to OpenXML and add to the body
+                    //HtmlConverter converter = new HtmlConverter(mainPart);
+                    //var generatedBody = converter.Parse(htmlContent);
+                    //body.Append(generatedBody);
 
 
                     var header = new Header(new Paragraph(new Run(new Text("Header Test"))));

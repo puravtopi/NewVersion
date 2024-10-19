@@ -2235,7 +2235,7 @@ namespace PainTrax.Web.Controllers
 
                     body = body.Replace("#doi", Common.commonDate(patientData.doa));
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
-                    body = body.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
+                    body = body.Replace("#gender", gender);
                     body = body.Replace("#dos", Common.commonDate(patientData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
 
 
@@ -2315,6 +2315,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#POPlan", string.IsNullOrEmpty(page1Data.plan) ? "" : page1Data.plan);
                     body = body.Replace("#fn", patientData.fname);
                     body = body.Replace("#ln", patientData.lname);
+                    body = body.Replace("#gender", Common.GetMrMrsFromSex(patientData.gender));
 
 
 
@@ -2749,7 +2750,10 @@ namespace PainTrax.Web.Controllers
 
                 var patientData = _ieService.GetOnebyPatientId(ieId);
 
-                docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + ".docx";
+                if (patientData.doa == null)
+                    docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + ".docx";
+                else
+                    docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
 
                 patientName = patientData.lname + ", " + patientData.fname;
 

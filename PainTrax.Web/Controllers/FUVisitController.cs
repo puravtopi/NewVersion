@@ -2318,7 +2318,10 @@ namespace PainTrax.Web.Controllers
                 var patientData = _ieService.GetOnebyPatientId(ieId);
                 var fuData = _patientFuservices.GetOne(fuId);
 
-                docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
+                if (patientData.doa == null)
+                    docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
+                else
+                    docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") +"_"+ Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
 
                 string subPath = "Report/" + cmpid; // Your code goes here
 

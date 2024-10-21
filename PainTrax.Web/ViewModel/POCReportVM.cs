@@ -20,7 +20,7 @@ namespace PainTrax.Web.ViewModel
         public string cmpname { get; set; }
         public string allergies { get; set; }
         public string note { get; set; }
-
+        
         public string casetype { get; set; }
         public string location { get; set; }
         public string vaccinated { get; set; }
@@ -33,7 +33,7 @@ namespace PainTrax.Web.ViewModel
 
         public List<POCReportVM> lstPOCReport { get; set; }
 
-        public int? locationid { get; set; }
+        public int? locationid { get; set; } 
         public int? mcodeid { get; set; }
 
         public bool _requested { get; set; }

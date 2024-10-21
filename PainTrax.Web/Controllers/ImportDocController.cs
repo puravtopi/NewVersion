@@ -1247,6 +1247,7 @@ namespace PainTrax.Web.Controllers
 
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
             var downloadFolder = Path.Combine(_environment.WebRootPath);
+            StringBuilder errfile = new StringBuilder();
             if (files != null)
             {
                 string message = "";
@@ -1259,8 +1260,12 @@ namespace PainTrax.Web.Controllers
                         {
                             file.CopyTo(stream);
                         }
-                        DataRow row = IPMCConvertDocxToHtml(Path.Combine(downloadFolder, "temp" + Path.GetExtension(file.FileName).ToLower()), dataTable, file.FileName);
-                        dataTable.Rows.Add(row);
+                        try
+                        {
+                            DataRow row = IPMCConvertDocxToHtml(Path.Combine(downloadFolder, "temp" + Path.GetExtension(file.FileName).ToLower()), dataTable, file.FileName);
+                            dataTable.Rows.Add(row);
+                        }
+                        catch { errfile.Append(file.FileName); }
 
                         message += $"<span class='text-primary'>{file.FileName} File Processed Successfully<span><br>";
                     }
@@ -1300,6 +1305,8 @@ namespace PainTrax.Web.Controllers
                         Name = "Sheet1"
                     };
                     sheets.Append(sheet);
+
+
                     SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
                     // Add some data to the worksheet
                     // Create header row from DataTable column names
@@ -1331,7 +1338,33 @@ namespace PainTrax.Web.Controllers
                         sheetData.AppendChild(newRow);
                     }
 
-                    // Save the workbook
+                    if (errfile.Length > 0)
+                    {
+                        WorksheetPart worksheetPart2 = workbookPart.AddNewPart<WorksheetPart>();
+                        SheetData sheetData2 = new SheetData();
+                        worksheetPart2.Worksheet = new Worksheet(sheetData2);
+
+                        // Append Sheet2 to the workbook
+                        Sheet sheet2 = new Sheet()
+                        {
+                            Id = document.WorkbookPart.GetIdOfPart(worksheetPart2),
+                            SheetId = 2,
+                            Name = "ErrorSheet"
+                        };
+                        sheets.Append(sheet2);
+                        string[] lines = errfile.ToString().Split("\n");
+                        foreach (var line in lines)
+                        {
+                            Row row = new Row();
+                            Cell cell = new Cell
+                            {
+                                DataType = CellValues.String,
+                                CellValue = new CellValue(line)
+                            };
+                            row.AppendChild(cell);
+                            sheetData2.AppendChild(row);
+                        }
+                    }
                     workbookPart.Workbook.Save();
                 }
 
@@ -1382,6 +1415,7 @@ namespace PainTrax.Web.Controllers
 
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
             var downloadFolder = Path.Combine(_environment.WebRootPath);
+            StringBuilder errfile = new StringBuilder();
             if (files != null)
             {
                 string message = "";
@@ -1394,8 +1428,12 @@ namespace PainTrax.Web.Controllers
                         {
                             file.CopyTo(stream);
                         }
-                        DataRow row = IPMCConvertDocxToHtmlFU(Path.Combine(downloadFolder, "temp" + Path.GetExtension(file.FileName).ToLower()), dataTable, file.FileName);
-                        dataTable.Rows.Add(row);
+                        try
+                        {
+                            DataRow row = IPMCConvertDocxToHtmlFU(Path.Combine(downloadFolder, "temp" + Path.GetExtension(file.FileName).ToLower()), dataTable, file.FileName);
+                            dataTable.Rows.Add(row);
+                        }
+                        catch { errfile.Append(file.FileName); }
 
                         message += $"<span class='text-primary'>{file.FileName} File Processed Successfully<span><br>";
                     }
@@ -1466,6 +1504,33 @@ namespace PainTrax.Web.Controllers
                         sheetData.AppendChild(newRow);
                     }
 
+                    if (errfile.Length > 0)
+                    {
+                        WorksheetPart worksheetPart2 = workbookPart.AddNewPart<WorksheetPart>();
+                        SheetData sheetData2 = new SheetData();
+                        worksheetPart2.Worksheet = new Worksheet(sheetData2);
+
+                        // Append Sheet2 to the workbook
+                        Sheet sheet2 = new Sheet()
+                        {
+                            Id = document.WorkbookPart.GetIdOfPart(worksheetPart2),
+                            SheetId = 2,
+                            Name = "ErrorSheet"
+                        };
+                        sheets.Append(sheet2);
+                        string[] lines = errfile.ToString().Split("\n");
+                        foreach (var line in lines)
+                        {
+                            Row row = new Row();
+                            Cell cell = new Cell
+                            {
+                                DataType = CellValues.String,
+                                CellValue = new CellValue(line)
+                            };
+                            row.AppendChild(cell);
+                            sheetData2.AppendChild(row);
+                        }
+                    }
                     // Save the workbook
                     workbookPart.Workbook.Save();
                 }
@@ -1547,7 +1612,8 @@ namespace PainTrax.Web.Controllers
                         if (paragraphText.StartsWith("DOB:"))
                         {
                             html.Append($"<p>{paragraphText}</p>");
-                            dob.Append(paragraphText.Substring(("DOB:".Length)).Trim());
+                            if (dob.ToString().Length == 0)
+                                dob.Append(paragraphText.Substring(("DOB:".Length)).Trim());
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
@@ -1561,7 +1627,8 @@ namespace PainTrax.Web.Controllers
                         if (paragraphText.StartsWith("DOI:"))
                         {
                             html.Append($"<p>{paragraphText}</p>");
-                            doa.Append(paragraphText.Substring(("DOI:".Length)).Trim());
+                            if (doa.ToString().Length == 0)
+                                doa.Append(paragraphText.Substring(("DOI:".Length)).Trim());
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
@@ -1575,7 +1642,8 @@ namespace PainTrax.Web.Controllers
                         if (paragraphText.StartsWith("DOS:"))
                         {
                             html.Append($"<p>{paragraphText}</p>");
-                            dos.Append(paragraphText.Substring(("DOS:".Length)).Trim());
+                            if (dos.ToString().Length == 0)
+                                dos.Append(paragraphText.Substring(("DOS:".Length)).Trim());
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
@@ -1963,28 +2031,40 @@ namespace PainTrax.Web.Controllers
                 string adate = "";
                 string sdate = "";
 
-                if (doa.ToString() != "")
-                    adate = DateTime.ParseExact(doa.ToString().Trim(), "MM/dd/yyyy", null).ToString("yyyy-MM-dd");
+                try
+                {
+                    if (doa.ToString() != "")
+                        adate = DateTime.ParseExact(doa.ToString().Trim(), "MM/dd/yyyy", null).ToString("yyyy-MM-dd");
+                }
+                catch (Exception ex) { }
 
-                if (dob.ToString() != "")
-                    bdate = DateTime.ParseExact(dob.ToString().Trim(), "MM/dd/yyyy", null).ToString("yyyy-MM-dd");
+                try
+                {
+                    if (dob.ToString() != "")
+                        bdate = DateTime.ParseExact(dob.ToString().Trim(), "MM/dd/yyyy", null).ToString("yyyy-MM-dd");
+                }
+                catch (Exception ex) { }
 
-                if (dos.ToString() != "")
-                    sdate = DateTime.ParseExact(dos.ToString().Trim(), "MM/dd/yyyy", null).ToString("yyyy-MM-dd");
+                try
+                {
+                    if (dos.ToString() != "")
+                        sdate = DateTime.ParseExact(dos.ToString().Trim(), "MM/dd/yyyy", null).ToString("yyyy-MM-dd");
+                }
+                catch (Exception ex) { }
 
                 string[] fullname = name.ToString().Trim().Split(' ');
                 DataTable dt = new DataTable();
                 if (fullname.Length > 1)
                 {
-                    //      dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and dob='{bdate}' and doa='{adate}' and cmp_id={cmpid}");
+                    //                 dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and dob='{bdate}' and doa='{adate}' and cmp_id={cmpid}");
                     dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and   doe='{sdate}' and cmp_id={cmpid}");
-
                     if (dt.Rows.Count > 0)
                     {
                         datarow["Patient_id"] = dt.Rows[0]["patient_id"];
                         try { datarow["Patient_ie_id"] = dt.Rows[0]["id"]; } catch { }
                     }
                 }
+
                 datarow["FName"] = fullname.Length > 0 ? fullname[0].ToString().Trim() : "";
                 datarow["LName"] = fullname.Length > 1 ? fullname[1].ToString().Trim() : "";
                 datarow["MName"] = fullname.Length > 2 && !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
@@ -2102,7 +2182,8 @@ namespace PainTrax.Web.Controllers
                         if (paragraphText.StartsWith("DOI:"))
                         {
                             html.Append($"<p>{paragraphText}</p>");
-                            doa.Append(paragraphText.Substring(("DOI:".Length)).Trim());
+                            if (doa.Length == 0)
+                                doa.Append(paragraphText.Substring(("DOI:".Length)).Trim());
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
@@ -2116,7 +2197,8 @@ namespace PainTrax.Web.Controllers
                         if (paragraphText.StartsWith("DOS:"))
                         {
                             html.Append($"<p>{paragraphText}</p>");
-                            dos.Append(paragraphText.Substring(("DOS:".Length)).Trim());
+                            if (dos.Length == 0)
+                                dos.Append(paragraphText.Substring(("DOS:".Length)).Trim());
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
@@ -2503,21 +2585,34 @@ namespace PainTrax.Web.Controllers
                 string bdate = "";
                 string adate = "";
                 string sdate = "";
+                try
+                {
+                    if (doa.ToString() != "")
+                        adate = DateTime.ParseExact(doa.ToString().Trim(), "MM/dd/yyyy", null).ToString("yyyy-MM-dd");
+                }
+                catch { }
 
-                if (doa.ToString() != "")
-                    adate = DateTime.ParseExact(doa.ToString().Trim(), "MM/dd/yyyy", null).ToString("yyyy-MM-dd");
+                try
+                {
+                    if (dob.ToString() != "")
+                        bdate = DateTime.ParseExact(dob.ToString().Trim(), "MM/dd/yyyy", null).ToString("yyyy-MM-dd");
+                }
+                catch { }
 
-                if (dob.ToString() != "")
-                    bdate = DateTime.ParseExact(dob.ToString().Trim(), "MM/dd/yyyy", null).ToString("yyyy-MM-dd");
-
-                if (dos.ToString() != "")
-                    sdate = DateTime.ParseExact(dos.ToString().Trim(), "MM/dd/yyyy", null).ToString("yyyy-MM-dd");
+                try
+                {
+                    if (dos.ToString() != "")
+                        sdate = DateTime.ParseExact(dos.ToString().Trim(), "MM/dd/yyyy", null).ToString("yyyy-MM-dd");
+                }
+                catch { }
 
                 string[] fullname = name.ToString().Trim().Split(' ');
                 DataTable dt = new DataTable();
                 if (fullname.Length > 1)
                 {
-                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{sdate}'  and DATE(vm_patient_fu.doa)= '{adate}' and vm_patient_ie.cmp_id = {cmpid}");
+                    //                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{sdate}'  and DATE(vm_patient_fu.doa)= '{adate}' and vm_patient_ie.cmp_id = {cmpid}");
+                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{sdate}'   and vm_patient_ie.cmp_id = {cmpid}");
+
                     if (dt.Rows.Count > 0)
                     {
                         datarow["Patient_id"] = dt.Rows[0]["patient_id"];

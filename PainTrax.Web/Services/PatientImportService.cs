@@ -124,7 +124,7 @@ impairment_rating=@impairment_rating,appt_reason=@appt_reason,
                 cm.Parameters.AddWithValue("@impairment_rating", data.impairment_rating);
 
                 var result = ExecuteScalar(cm);
-                return result;
+                 return result;
             }
         }
 

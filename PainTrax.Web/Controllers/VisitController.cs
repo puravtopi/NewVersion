@@ -2219,6 +2219,7 @@ namespace PainTrax.Web.Controllers
 
                 var templateData = _printService.GetTemplate(cmpid, "IE");
                 var gender = "";
+                var sex = "";
 
                 body = templateData.content;
 
@@ -2226,6 +2227,7 @@ namespace PainTrax.Web.Controllers
 
                 if (patientData != null)
                 {
+                    sex = Common.GetGenderFromSex(patientData.gender);
                     gender = Common.GetMrMrsFromSex(patientData.gender);
                     //body = body.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
                     body = body.Replace("#patientname", gender + " " + patientData.lname + ", " + patientData.fname + " " + patientData.mname);
@@ -2316,6 +2318,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#fn", patientData.fname);
                     body = body.Replace("#ln", patientData.lname);
                     body = body.Replace("#gender", Common.GetMrMrsFromSex(patientData.gender));
+                    body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
 
 
 

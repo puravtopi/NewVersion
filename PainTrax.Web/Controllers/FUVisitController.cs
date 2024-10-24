@@ -1906,6 +1906,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#location", patientData.location);
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
                     body = body.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
+                    body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
 
 
                     // body = body.Replace("#CT", System.Enum.GetName(typeof(CaseType), Convert.ToInt32(patientData.compensation)));

@@ -2486,7 +2486,8 @@ namespace PainTrax.Web.Controllers
                 body = body.Replace("#location", patientData.location);
                 body = body.Replace("#dob", Common.commonDate(patientData.dob));
                 body = body.Replace("#name", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
-
+                body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
+                body = body.Replace("#gender", Common.GetMrMrsFromSex(patientData.gender));
 
                 var strDiagnostic = this.getDiagnostic(id);
 

@@ -2161,6 +2161,8 @@ namespace PainTrax.Web.Controllers
                 }
 
                 body = body.Replace("#LastNote", "");
+                body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
+                body = body.Replace("#gender", Common.GetMrMrsFromSex(patientData.gender));
 
                 ViewBag.ieId = patientData.id;
                 ViewBag.fuId = fuid;

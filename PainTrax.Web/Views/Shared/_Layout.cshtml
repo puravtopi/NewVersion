@@ -319,12 +319,12 @@
                                     <i class="bi bi-person"></i>
                                     <span>My Profile</span>
                                 </a>
-                            </li> 
+                            </li>
                             @* <li class="nav-item">
-                                <a class="nav-link" asp-action="Edit" asp-controller="User">
-                                    <i class="bi bi-person"></i>
-                                    <span>MyProfile</span>
-                                </a>
+                            <a class="nav-link" asp-action="Edit" asp-controller="User">
+                            <i class="bi bi-person"></i>
+                            <span>MyProfile</span>
+                            </a>
                             </li> *@
                             <li>
                                 <hr class="dropdown-divider">
@@ -498,7 +498,7 @@
                                 </a>
                             </li>
                         }
-                        
+
                         if (pageAccess.ToLower().Contains("map pdf"))
                         {
                             <li>
@@ -569,7 +569,7 @@
 
                             </li>
                         }
-                        
+
                     }
                 </ul>
             </li><!-- End Components Nav -->
@@ -590,7 +590,7 @@
             </li>
 
 
-            <li class="nav-item" >
+            <li class="nav-item">
                 <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
                     <i class="bi bi-bar-chart"></i><span>Reports</span><i class="bi bi-chevron-down ms-auto"></i>
                 </a>
@@ -598,6 +598,11 @@
                     <li>
                         <a class="nav-link collapsed" asp-action="POCReport" asp-controller="Report">
                             <i class="bi bi-circle"></i><span>POC Report</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link collapsed" asp-action="MDTImportReport" asp-controller="Report">
+                            <i class="bi bi-circle"></i><span>MDT Import Report</span>
                         </a>
                     </li>
                     <li>
@@ -615,6 +620,7 @@
                             <i class="bi bi-circle"></i><span>Daily Count Report</span>
                         </a>
                     </li>
+
                 </ul>
             </li><!-- End Charts Nav -->
 

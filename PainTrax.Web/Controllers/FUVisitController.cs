@@ -212,7 +212,7 @@ namespace PainTrax.Web.Controllers
                             for (int i = 0; i < page1Data.bodypart.Split(',').Length; i++)
                             {
                                 var linkbody = page1Data.bodypart.Split(',')[i].Replace(" ", "_");
-                                daignoLink += "<a href=# onclick=openDaignoModel('" + linkbody + "')>" + page1Data.bodypart.Split(',')[i] + "</a>&nbsp;";
+                                daignoLink += "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + page1Data.bodypart.Split(',')[i] + "</a>&nbsp;";
                             }
 
                         }
@@ -1120,7 +1120,8 @@ namespace PainTrax.Web.Controllers
                         iinew = ii;
                     }
                     int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-                    var x = _pocService.GetAllProceduresFU(iinew.Trim(), patientFUId, potion, cmpid.Value);
+                    //var x = _pocService.GetAllProceduresFU(iinew.Trim(), patientFUId, potion, cmpid.Value); //commented by moulick as all poc required so specific visit wise poc cancled. 
+                    var x = _pocService.GetAllProcedures(iinew.Trim(), patientIEId, potion, cmpid.Value);
                     //var x = _pocService.GetAllProcedures(iinew.Trim(), patientIEId, potion);
 
                     if (x != null)
@@ -1959,6 +1960,11 @@ namespace PainTrax.Web.Controllers
 
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(page1Data.bodypart) ? "" : page1Data.bodypart.ToLower());
                     body = body.Replace("#POPlan", string.IsNullOrEmpty(page1Data.plan) ? "" : page1Data.plan);
+ body = body.Replace("#fn", patientData.fname);
+ body = body.Replace("#ln", patientData.lname);
+ body = body.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
+ body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
+ body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
 
                     string bodypart = "";
 
@@ -2088,7 +2094,8 @@ namespace PainTrax.Web.Controllers
 
                 //POC printing
 
-                var dataPOC = this.getPOC(fuid);
+                 var dataPOC = this.getPOCPrint(fuid);
+                //var dataPOC = this.getPOC(ieid);
 
 
 
@@ -2496,7 +2503,7 @@ namespace PainTrax.Web.Controllers
 
 
 
-            string strPoc = "<ol>";
+            string strPoc = "";
             string inject_desc = "";
             if (dsPOC != null && dsPOC.Rows.Count > 0)
             {
@@ -2520,17 +2527,20 @@ namespace PainTrax.Web.Controllers
 
                         if (heading.ToLower().Contains("(side)"))
                         {
+                            heading = heading.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
                             heading = heading.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
                         }
 
                         if (heading.ToLower().Contains("(levels)"))
                         {
                             heading = heading.Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                            heading = heading.Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
                         }
 
                         if (heading.ToLower().Contains("(level)"))
                         {
                             heading = heading.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                            heading = heading.Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
                         }
 
                         if (dsPOC.Rows[i]["pn"].ToString() == "1")
@@ -2550,7 +2560,76 @@ namespace PainTrax.Web.Controllers
             pocDetails pocDetails = new pocDetails()
             {
                 strInjectionDesc = inject_desc,
-                strPoc = strPoc
+                strPoc = strPoc != "" ? "<ol>" + strPoc + "</ol>" : "",
+            };
+
+            return pocDetails;
+        }
+
+        private pocDetails getPOCPrint(int PatientFU_ID)
+        {
+            DataTable dsPOC = _pocService.GetPOCFUPrint(PatientFU_ID);
+
+
+
+            string strPoc = "";
+            string inject_desc = "";
+            if (dsPOC != null && dsPOC.Rows.Count > 0)
+            {
+
+                for (int i = 0; i < dsPOC.Rows.Count; i++)
+                {
+                    if (!string.IsNullOrEmpty(dsPOC.Rows[i]["Heading"].ToString()))
+                    {
+
+                        //if (i != dsPOC.Tables[0].Rows.Count - 1)
+                        //    strPoc = strPoc + "<b style='text-transform:uppercase'>" + dsPOC.Tables[0].Rows[i]["Heading"].ToString().TrimEnd(':') + ": </b>" + dsPOC.Tables[0].Rows[i]["PDesc"].ToString() + "<br/><br/>";
+                        //else
+
+                        //if (dsPOC.Tables[0].Rows[i]["Executed"] != DBNull.Value)
+                        //{
+                        //    this.generatePNReport(bodypart, dsPOC.Tables[0].Rows[i]["MCODE"].ToString(), ViewState["name"].ToString(),
+                        //        ViewState["dob"].ToString(), ViewState["location"].ToString(), "", dsPOC.Tables[0].Rows[i]["Level"].ToString(), "", "", ViewState["doe"].ToString(), PatientIE_ID);
+                        //}
+
+                        string heading = dsPOC.Rows[i]["Heading"].ToString();
+
+                        if (heading.ToLower().Contains("(side)"))
+                        {
+                            heading = heading.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
+                            heading = heading.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                        }
+
+                        if (heading.ToLower().Contains("(levels)"))
+                        {
+                            heading = heading.Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                            heading = heading.Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
+                        }
+
+                        if (heading.ToLower().Contains("(level)"))
+                        {
+                            heading = heading.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                            heading = heading.Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
+                        }
+
+                        if (dsPOC.Rows[i]["pn"].ToString() == "1")
+                        {
+                            if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
+                            {
+                                inject_desc = inject_desc + "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
+                                inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
+                                inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+                            }
+                        }
+                        strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + dsPOC.Rows[i]["PDesc"].ToString() + "</li>";
+                    }
+                }
+            }
+
+            pocDetails pocDetails = new pocDetails()
+            {
+                strInjectionDesc = inject_desc,
+                strPoc = strPoc != "" ? "<ol>" + strPoc + "</ol>" : "",
             };
 
             return pocDetails;

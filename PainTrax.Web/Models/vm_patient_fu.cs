@@ -6,7 +6,8 @@ public class vm_patient_fu{
     public int? id {get;set;}
 	public int? patient_id {get;set;}
 	public int? patientFU { get;set;}
-	public int? location_id {get;set;}
+    public int? patientIE_ID { get; set; }
+    public int? location_id {get;set;}
     public int? provider_id { get; set; }
     public int? attorney_id {get;set;}
 	public int? primary_ins_cmp_id {get;set;}

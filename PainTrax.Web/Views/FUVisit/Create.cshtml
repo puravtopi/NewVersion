@@ -1359,7 +1359,8 @@
     }
 
     function fnShowPOCSummary() {
-        var url = '@Url.Action("POCSummary", "FUVisit")?patientFUId=' + $("#hdFUId").val();
+         // var url = '@Url.Action("POCSummary", "FUVisit")?patientFUId=' + $("#hdFUId").val();
+        var url = '@Url.Action("POCSummary", "FUVisit")?patientFUId=' + $("#hdIEId").val();
 
         $.ajax({
             type: "Post",

@@ -323,7 +323,7 @@ namespace PainTrax.Web.Controllers
                             for (int i = 0; i < page1Data.bodypart.Split(',').Length; i++)
                             {
                                 var linkbody = page1Data.bodypart.Split(',')[i].Replace(" ", "_");
-                                daignoLink += "<a href=# onclick=openDaignoModel('" + linkbody + "')>" + page1Data.bodypart.Split(',')[i] + "</a><br/>";
+                                daignoLink += "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + page1Data.bodypart.Split(',')[i] + "</a><br/>";
                             }
 
                         }
@@ -2146,11 +2146,11 @@ namespace PainTrax.Web.Controllers
 
 
         [HttpPost]
-        public IActionResult DeleteIE(int ieId)
+        public IActionResult DeleteIE(int ieId, int pId)
         {
             try
             {
-                _ieService.Delete(ieId);
+                _ieService.Delete(ieId, pId);
             }
             catch (Exception ex)
             {
@@ -2906,7 +2906,7 @@ namespace PainTrax.Web.Controllers
 
 
 
-            string strPoc = "<ol>";
+            string strPoc = "";
             string inject_desc = "";
             if (dsPOC != null && dsPOC.Rows.Count > 0)
             {
@@ -2930,17 +2930,20 @@ namespace PainTrax.Web.Controllers
 
                         if (heading.ToLower().Contains("(side)"))
                         {
+                            heading = heading.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
                             heading = heading.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
                         }
 
                         if (heading.ToLower().Contains("(levels)"))
                         {
                             heading = heading.Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                            heading = heading.Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
                         }
 
                         if (heading.ToLower().Contains("(level)"))
                         {
                             heading = heading.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                            heading = heading.Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
                         }
 
                         if (dsPOC.Rows[i]["pn"].ToString() == "1" && dsPOC.Rows[i]["Executed"] != DBNull.Value)
@@ -2960,7 +2963,7 @@ namespace PainTrax.Web.Controllers
             pocDetails pocDetails = new pocDetails()
             {
                 strInjectionDesc = inject_desc,
-                strPoc = strPoc
+                strPoc = strPoc != "" ? "<ol>" + strPoc + "</ol>" : "",
             };
 
             return pocDetails;

@@ -518,7 +518,7 @@
 
             var linkbody = item.replace(" ", "_");
 
-            daig = "<a href=# onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>";
+            daig = "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>";
 
             $('#divdaigo').append(daig);
         }
@@ -542,7 +542,7 @@
             if (item != '') {
                 var linkbody = item.replace(" ", "_");
 
-                daig = daig + "<a href=# onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>";
+                daig = daig + "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>";
             }
         });
 

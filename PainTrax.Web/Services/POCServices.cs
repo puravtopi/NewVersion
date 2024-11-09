@@ -264,6 +264,23 @@ namespace PainTrax.Web.Services
             }
         }
 
+        public DataTable GetPOCFUPrint(int PatientFUID)
+        {
+            try
+            {
+
+                MySqlCommand cm = new MySqlCommand("CALL sp_GetPOC_FU_Print(" + PatientFUID + ")", conn);
+
+                var datalist = (GetData(cm));
+                return datalist;
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public List<POCSumarryVM> GetExecutedPOCIE(int PatientIEID)
         {
             try

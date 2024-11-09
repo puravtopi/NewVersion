@@ -42,7 +42,7 @@
     });
 
     function fnRefresh() {
-        var url = '@ViewBag.url';
+        var url = '@ViewBag.url'.replace('amp;', '');
 
         window.location = url;
     }

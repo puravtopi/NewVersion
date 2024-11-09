@@ -202,11 +202,12 @@ public class PatientIEService : ParentService
         Execute(cm);
     }
 
-    public void Delete(int id)
+    public void Delete(int id,int pid)
     {
         MySqlCommand cm = new MySqlCommand(@"DELETE FROM tbl_patient_ie
-		where id=@id", conn);
+		where id=@id;DELETE from tbl_patient where id=@pid;", conn);
         cm.Parameters.AddWithValue("@id", id);
+        cm.Parameters.AddWithValue("@pid", pid);
         Execute(cm);
     }
     #endregion

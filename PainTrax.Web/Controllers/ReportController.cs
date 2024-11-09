@@ -7,6 +7,10 @@ using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using PainTrax.Web.ViewModel;
 using System.Data;
+using static PainTrax.Web.Helper.EnumHelper;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using DocumentFormat.OpenXml.Bibliography;
+using System.Reflection;
 
 namespace PainTrax.Web.Controllers
 {
@@ -19,6 +23,7 @@ namespace PainTrax.Web.Controllers
         private readonly ProSXServices _servicesProSX = new ProSXServices();
         private readonly IVFRServices _servicesIVFR = new IVFRServices();
         private readonly DailyCountServices _servicesDailyCount = new DailyCountServices();
+        private readonly MDTImportServices _servicesMDTImport = new MDTImportServices();
         private readonly Common _commonservices = new Common();
 
         public ReportController(ILogger<ReportController> logger)
@@ -178,7 +183,7 @@ namespace PainTrax.Web.Controllers
                     new DataColumn("Allergies", typeof(string)),
                     new DataColumn("Requested", typeof(string)),
                     new DataColumn("Scheduled", typeof(string)),
-                    new DataColumn("Executed", typeof(string)),                   
+                    new DataColumn("Executed", typeof(string)),
                     new DataColumn("Note", typeof(string)),                   
                                     
                    // new DataColumn("PhoneNo", typeof(string)),                                   
@@ -187,7 +192,7 @@ namespace PainTrax.Web.Controllers
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var user in data)
                 {
-                    dt.Rows.Add(user.name, user.gender, user.casetype, user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.phone, user.location, user.cmpname, user.primary_claim_no, user.primary_policy_no, user.mc,user.allergies, user.requested == null ? "" : user.requested.Value.ToShortDateString(), user.scheduled == null ? "" : user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString(),user.note);
+                    dt.Rows.Add(user.name, user.gender, user.casetype, user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.phone, user.location, user.cmpname, user.primary_claim_no, user.primary_policy_no, user.mc, user.allergies, user.requested == null ? "" : user.requested.Value.ToShortDateString(), user.scheduled == null ? "" : user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString(), user.note);
                 }
 
                 // Create a new Excel file
@@ -619,5 +624,131 @@ namespace PainTrax.Web.Controllers
                 return Content("Error: " + ex.Message);
             }
         }
+
+
+        [HttpGet]
+        public IActionResult MDTImportReport()
+        {
+
+            var objPro = new MDTImportReportVM();
+            objPro.lstMDTImportReport = new List<MDTImportReportVM>();
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+            //objPro._executed = false;
+            //objPro._requested = false;
+            //objPro._scheduled = false;
+
+            return View(objPro);
+        }
+        [HttpPost]
+        public IActionResult MDTImportReport(DateTime? fdate, DateTime? tdate)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+            string query = " pm.cmp_id=" + cmpid.ToString();
+
+            string _query = "";
+
+            if (fdate != null && tdate != null)
+            {
+
+
+                _query = "'" + fdate.Value.ToString("yyyy/MM/dd") + "' and '" + tdate.Value.ToString("yyyy/MM/dd") + "' and " + query;
+
+            }
+
+            var data = _servicesMDTImport.GeMDTImportReport(_query);
+            var objPOC = new MDTImportReportVM();
+            objPOC.lstMDTImportReport = data;
+            TempData["MDTImportquery"] = _query;
+
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+            return View(objPOC);
+
+        }
+
+        public IActionResult ExportToMDTImport()
+        {
+            try
+            {
+                string query = TempData["MDTImportquery"].ToString();
+                var data = _servicesMDTImport.GeMDTImportReport(query);
+
+                // Create a new DataTable
+                DataTable dt = new DataTable();
+                // Add columns to the DataTable
+                dt.Columns.AddRange(new DataColumn[]
+                {
+                    new DataColumn("DOE", typeof(string)),
+                    new DataColumn("PatientIE_ID", typeof(string)),
+                    new DataColumn("lname", typeof(string)),
+                    new DataColumn("fname", typeof(string)),
+
+                    new DataColumn("mname", typeof(string)),
+                    new DataColumn("gender", typeof(string)),
+                    new DataColumn("dob", typeof(string)),
+                    new DataColumn("address", typeof(string)),
+                    new DataColumn("city", typeof(string)),
+                    new DataColumn("state", typeof(string)),
+                    new DataColumn("zip", typeof(string)),
+                    new DataColumn("home_ph", typeof(string)),
+
+                    new DataColumn("mobile", typeof(string)),
+                    new DataColumn("location", typeof(string))
+
+                });
+
+                // Populate the DataTable with data from the list of attorneys
+                foreach (var cnt in data)
+                {
+                    dt.Rows.Add(cnt.doe, cnt.PatientIE_ID, cnt.lname, cnt.fname, cnt.mname, cnt.gender, cnt.dob, cnt.address, cnt.city, cnt.state, cnt.zip, cnt.home_ph, cnt.mobile, cnt.location);
+                }
+
+                // Create a new Excel file
+                var memoryStream = new MemoryStream();
+                using (var document = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook))
+                {
+                    var workbookPart = document.AddWorkbookPart();
+                    workbookPart.Workbook = new Workbook();
+
+                    var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                    var sheetData = new SheetData();
+                    worksheetPart.Worksheet = new Worksheet(sheetData);
+
+                    var sheets = document.WorkbookPart.Workbook.AppendChild(new Sheets());
+                    var sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Users" };
+                    sheets.Append(sheet);
+
+                    var headerRow = new Row();
+                    foreach (DataColumn column in dt.Columns)
+                    {
+                        var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName) };
+                        headerRow.AppendChild(cell);
+                    }
+                    sheetData.AppendChild(headerRow);
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        var newRow = new Row();
+                        foreach (var value in row.ItemArray)
+                        {
+                            var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
+                            newRow.AppendChild(cell);
+                        }
+                        sheetData.AppendChild(newRow);
+                    }
+                }
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "MDT Import Report.xlsx");
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                return Content("Error: " + ex.Message);
+            }
+        }
+
     }
 }

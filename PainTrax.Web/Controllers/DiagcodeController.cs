@@ -169,7 +169,16 @@ namespace PainTrax.Web.Controllers
             {
                 if (postedFile != null && postedFile.Length > 0)
                 {
-                    DataTable dt = this.Read2007Xlsx(postedFile);
+                    //DataTable dt = this.Read2007Xlsx(patient);
+                    DataTable dt = new DataTable();
+                    using (var stream = new MemoryStream())
+                    {
+                        postedFile.CopyToAsync(stream);
+                        stream.Position = 0;
+
+                        // Convert uploaded Excel to DataTable
+                        dt = ReadExcelToDataTable(stream);
+                    }
                     int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                     int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
 
@@ -431,6 +440,66 @@ namespace PainTrax.Web.Controllers
 
             // Return the file. A byte array can also be used instead of a stream
             return File(fs, "application/octet-stream", "DiagCodes.xlsx");
+        }
+
+
+
+        private DataTable ReadExcelToDataTable(Stream stream)
+        {
+            DataTable dataTable = new DataTable();
+
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(stream, false))
+            {
+                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                Sheets sheets = workbookPart.Workbook.Sheets;
+
+                // Get the first sheet
+                Sheet sheet = sheets.Elements<Sheet>().FirstOrDefault();
+
+                if (sheet == null)
+                {
+                    throw new Exception("No sheet found in the Excel file.");
+                }
+
+                // Get the WorksheetPart based on the sheet's relationship ID
+                WorksheetPart worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id);
+
+                SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().FirstOrDefault();
+
+                bool isFirstRow = true;
+                foreach (Row row in sheetData.Elements<Row>())
+                {
+                    DataRow dataRow = dataTable.NewRow();
+
+                    int columnIndex = 0;
+                    foreach (Cell cell in row.Elements<Cell>())
+                    {
+                        string cellValue = GetCellValue(spreadsheetDocument, cell);
+
+                        if (isFirstRow)
+                        {
+                            // Use the first row to add columns to the DataTable
+                            dataTable.Columns.Add(cellValue);
+                        }
+                        else
+                        {
+                            // Clean HTML tags and add data to the DataTable
+                            //string cleanCellValue = System.Text.RegularExpressions.Regex.Replace(cellValue, "<.*?>", string.Empty);
+                            string cleanCellValue = cellValue;
+                            dataRow[columnIndex] = cleanCellValue;
+                        }
+                        columnIndex++;
+                    }
+
+                    if (!isFirstRow)
+                    {
+                        dataTable.Rows.Add(dataRow);
+                    }
+                    isFirstRow = false;
+                }
+            }
+
+            return dataTable;
         }
         #endregion
     }

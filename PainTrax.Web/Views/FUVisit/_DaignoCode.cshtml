@@ -59,9 +59,43 @@
 
 
 <script>
+    // $("#btnDaignoCode").click(function () {
+
+    //     var daignoCodeDetails = "<ol>";
+
+
+    //     var myContentDaignosis = ckAssessment.getData();
+
+
+    //     $("#tblDiagnoCode input[type=checkbox]:checked").each(function () {
+
+
+    //         var row = $(this).closest("tr")[0];
+
+    //         if (myContentDaignosis.indexOf(row.cells[1].innerHTML) < 0) {
+
+    //             // daignoCodeDetails += "<li>" + row.cells[1].innerHTML;
+    //             // daignoCodeDetails += " - " + row.cells[2].firstChild.value;
+    //             // daignoCodeDetails += "</li>";
+
+    //             daignoCodeDetails += "<li>" + row.cells[2].firstChild.value;
+    //             daignoCodeDetails += " - " + row.cells[1].innerHTML;
+    //             daignoCodeDetails += "</li>";
+    //         }
+    //     });
+    //     var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ol>";
+
+    //     ckAssessment.data.set(htmlDaignosis);
+
+    //     $('#daignoCodeModal').modal('hide');
+    //     return false;
+    // });
+
+
     $("#btnDaignoCode").click(function () {
 
-        var daignoCodeDetails = "<ol>";
+        //var daignoCodeDetails = "<ul style='list-style-type: none;'>";
+        var daignoCodeDetails = "";
 
 
         var myContentDaignosis = ckAssessment.getData();
@@ -69,22 +103,24 @@
 
         $("#tblDiagnoCode input[type=checkbox]:checked").each(function () {
 
-
+            debugger
             var row = $(this).closest("tr")[0];
 
-            if (myContentDaignosis.indexOf(row.cells[1].innerHTML) < 0) {
+            if (myContentDaignosis.indexOf(row.cells[2].firstChild.value) < 0) {
 
                 // daignoCodeDetails += "<li>" + row.cells[1].innerHTML;
                 // daignoCodeDetails += " - " + row.cells[2].firstChild.value;
                 // daignoCodeDetails += "</li>";
 
-                daignoCodeDetails += "<li>" + row.cells[2].firstChild.value;
+                daignoCodeDetails += "<p>" + row.cells[2].firstChild.value;
                 daignoCodeDetails += " - " + row.cells[1].innerHTML;
-                daignoCodeDetails += "</li>";
+                daignoCodeDetails += "</p>";
             }
         });
-        var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ol>";
 
+
+        // var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ul>";
+        var htmlDaignosis = myContentDaignosis + daignoCodeDetails;
         ckAssessment.data.set(htmlDaignosis);
 
         $('#daignoCodeModal').modal('hide');

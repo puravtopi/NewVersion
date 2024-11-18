@@ -66,7 +66,8 @@
 
     $("#btnDaignoCode").click(function () {
 
-        var daignoCodeDetails = "<ol>";
+        //var daignoCodeDetails = "<ul style='list-style-type: none;'>";
+        var daignoCodeDetails = "";
 
 
         var myContentDaignosis = ckAssessment.getData();
@@ -83,14 +84,15 @@
             // daignoCodeDetails += " - " + row.cells[2].firstChild.value;
             // daignoCodeDetails += "</li>";
 
-            daignoCodeDetails += "<li>" + row.cells[2].firstChild.value;
+            daignoCodeDetails += "<p>" + row.cells[2].firstChild.value;
             daignoCodeDetails += " - " + row.cells[1].innerHTML;
-            daignoCodeDetails += "</li>";
+            daignoCodeDetails += "</p>";
              }
         });
 
 
-        var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ol>";
+       // var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ul>";
+        var htmlDaignosis = myContentDaignosis + daignoCodeDetails ;
         ckAssessment.data.set(htmlDaignosis);
 
         $('#daignoCodeModal').modal('hide');

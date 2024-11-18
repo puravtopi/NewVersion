@@ -550,7 +550,8 @@ namespace PainTrax.Web.Controllers
                     obj.NE = new tbl_ie_ne();
                     obj.Comment = new tbl_ie_comment();
                     obj.Other = new tbl_ie_other();
-                    obj.Other.followup_duration = "2 weeks.";
+                    obj.Other.followup_duration = "2-4 weeks.";
+                    obj.Page3.gait = "Guarded";
 
                     var _data = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
 

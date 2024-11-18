@@ -1296,7 +1296,8 @@
             contentType: "application/json; charset=utf-8",
             dataType: "html",
             success: function (output) {
-                ;
+                debugger
+
                 $('#' + t[0].dataset.div).html('');
                 $('#' + t[0].dataset.div).append(output);
                 tableTransform($('#countbl'));

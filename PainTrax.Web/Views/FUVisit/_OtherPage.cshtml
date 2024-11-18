@@ -84,9 +84,9 @@
             </label>
             <div class="col-sm-4">
                 <section class="dropdown">
-                    <input type="text" asp-for="followup_duration" class="form-control" style="width:88%"  onchange="txtMe(this)" />
+                    <input type="text" asp-for="followup_duration" class="form-control" style="width:88%" onchange="txtMe(this)" />
                     <select id="ddl_followup_duration" class="form-select" onchange="this.previousElementSibling.value = this.value; this.previousElementSibling.focus();selectVal('followup_duration', this.value)">
-                        <option selected="selected">2-4 weeks.</option>
+                        <option>2-4 weeks.</option>
                         <option>4-6 weeks.</option>
                         <option>6-8 weeks.</option>
                     </select>

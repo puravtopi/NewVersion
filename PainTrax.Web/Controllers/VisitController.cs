@@ -242,6 +242,7 @@ namespace PainTrax.Web.Controllers
                         obj.accidentType = ieData.accidentType;
                         obj.state = ieData.state;
                         patientId = ieData.patientId.Value;
+                        HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, patientId);
 
                     }
 
@@ -639,6 +640,8 @@ namespace PainTrax.Web.Controllers
                 {
                     patientId = _patientservices.Insert(objPatient);
                 }
+
+                HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, patientId);
                 var query = "";
                 List<tbl_inscos> insdata = new List<tbl_inscos>();
                 tbl_inscos objInscos = new tbl_inscos();
@@ -3006,17 +3009,17 @@ namespace PainTrax.Web.Controllers
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
                 var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
-                restheaderPart.Header = new Header(new Paragraph(new Run(new Text(patientName))));
+                restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
                 if (cmpid == 7)
                 {
                     if (!string.IsNullOrEmpty(dos))
                     {
                         string _dos = Common.commonDate(Convert.ToDateTime(dos), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
-                        restheaderPart.Header.AppendChild(new Paragraph(new Run(new Text(_dos))));
+                        restheaderPart.Header = CreateHeaderWithPageNumber(patientName, _dos);
                     }
                 }
 
-                restheaderPart.Header.AppendChild(new Paragraph(new Run(new Text("Page"), new SimpleField() { Instruction = "PAGE" })));
+
 
                 //  restheaderPart.Header = new Header(new Paragraph("Purav\nSandip"));
                 string restId = mainPart.GetIdOfPart(restheaderPart);
@@ -3034,6 +3037,59 @@ namespace PainTrax.Web.Controllers
                 }
             }
         }
+
+        public Header CreateHeaderWithPageNumber(string text1, string text2)
+        {
+            if (text2 != "")
+            {
+                return new Header(
+                    new Paragraph(
+                        new Run(
+                            new Text(text1) // First line
+                        ),
+                        new Break(), // Line break
+                        new Run(
+                            new Text(text2) // Second line
+                        ),
+                        new Break(), // Another line break if needed
+                        new Run(
+                            new Text("Page ") // Static "Page " text
+                        ),
+                        new Run(
+                            new SimpleField() // Dynamic page number field
+                            {
+                                Instruction = "PAGE", // Specifies the field type
+                            }
+                        )
+                    )
+                );
+            }
+            else
+            {
+                return new Header(
+                   new Paragraph(
+                       new Run(
+                           new Text(text1) // First line
+                       ),
+                       new Break(), // Line break
+
+                       new Run(
+                           new Text("Page ") // Static "Page " text
+                       ),
+                       new Run(
+                           new SimpleField() // Dynamic page number field
+                           {
+                               Instruction = "PAGE", // Specifies the field type
+                           }
+                       )
+                   )
+               );
+            }
+        }
+
+
+
+
         private void SaveLog(Exception ex, string actionname)
         {
             var msg = "";
@@ -3643,6 +3699,89 @@ namespace PainTrax.Web.Controllers
                 return "";
             }
             return "";
+        }
+
+
+        [HttpPost]
+        public IActionResult ImportDocumentsData(string selectedParent, IFormFile[] postedFile)
+        {
+            string PatientID = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId).ToString();
+            string FolderPath = "";
+            bool folderExists = false;
+            try
+            {
+                string SelectedFolder = selectedParent.Replace('"', ' ').Trim();
+                if (postedFile != null && postedFile.Length > 0)
+                {
+                    foreach (var file in postedFile)
+                    {
+                        // Get the file name from the browser
+                        var fileName = System.IO.Path.GetFileName(file.FileName);
+
+
+                        // Get file path to be uploaded
+
+                        FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", SelectedFolder, PatientID);
+
+
+                        folderExists = Directory.Exists(FolderPath);
+                        if (!folderExists)
+                            Directory.CreateDirectory(FolderPath);
+
+                        var filePath = Path.Combine(FolderPath, fileName);
+
+                        // Check If file with same name exists and delete it
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            System.IO.File.Delete(filePath);
+                        }
+
+                        // Create a new local file and copy contents of uploaded file
+                        using (var localFile = System.IO.File.OpenWrite(filePath))
+                        using (var uploadedFile = file.OpenReadStream())
+                        {
+                            uploadedFile.CopyTo(localFile);
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "List");
+            }
+
+            FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments");
+            folderExists = Directory.Exists(FolderPath);
+            if (!folderExists)
+                Directory.CreateDirectory(FolderPath);
+
+            string[] dirs = Directory.GetDirectories(FolderPath, "*", SearchOption.TopDirectoryOnly);
+
+            List<TreeViewNode> nodes = new List<TreeViewNode>();
+
+            int i = 0;
+            foreach (var item in dirs)
+            {
+                i++;
+                string FolderName = System.IO.Path.GetFileName(item);
+                var FolderPathFile = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", FolderName.ToString(), PatientID.ToString());
+                int j = 0;
+
+                bool folderExistsNew = Directory.Exists(FolderPathFile);
+                if (!folderExistsNew)
+                    Directory.CreateDirectory(FolderPathFile);
+
+                foreach (var item1 in Directory.GetFiles(FolderPathFile))
+                {
+                    j++;
+                    nodes.Add(new TreeViewNode { id = j.ToString() + "-" + i.ToString() + "~" + FolderName.ToString() + "$" + System.IO.Path.GetFileName(item1), parent = i.ToString(), text = System.IO.Path.GetFileName(item1) });
+                }
+
+                nodes.Add(new TreeViewNode { id = i.ToString(), parent = "#", text = FolderName.ToString() + "(" + j + ")" });
+            }
+
+            return Json(new { updatedJson = JsonConvert.SerializeObject(nodes, Formatting.Indented) });
         }
     }
 

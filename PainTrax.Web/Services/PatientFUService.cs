@@ -101,4 +101,19 @@ public class PatientFUService : ParentService
         Execute(cm);
     }
 
+    public int UpdatePage1Plan(int id, string plan)
+    {
+        MySqlCommand cm = new MySqlCommand(@"update tbl_fu_page1 set
+		plan=@plan
+
+        where fu_id=@id
+				 ;select 1;", conn);
+
+        cm.Parameters.AddWithValue("@id", id);
+        cm.Parameters.AddWithValue("@plan", plan);
+
+        var result = ExecuteScalar(cm);
+        return result;
+    }
+
 }

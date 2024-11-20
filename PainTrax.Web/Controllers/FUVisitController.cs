@@ -52,6 +52,7 @@ namespace PainTrax.Web.Controllers
         private IMapper _mapper;
         private readonly ReferringPhysicianService _physicianService = new ReferringPhysicianService();
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
+        string SessionDiffDoc = "true";
 
         public FUVisitController(ILogger<VisitController> logger, IMapper mapper, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
         {
@@ -1544,6 +1545,15 @@ namespace PainTrax.Web.Controllers
                         result = _pocService.SaveProcedureDetails(data);
                         break;
                 }
+
+
+                int fu_id = Convert.ToInt32(model.PatientFuID);
+                var pocData = this.getPOCPrint(fu_id);
+
+                if (pocData != null)
+                {
+                    _patientFuservices.UpdatePage1Plan(fu_id, pocData.strPoc);
+                }
             }
             catch (Exception ex)
             {
@@ -1880,6 +1890,7 @@ namespace PainTrax.Web.Controllers
 
             try
             {
+                string plan = "";
                 ViewBag.url = HttpContext.Request.GetEncodedUrl();
 
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
@@ -1966,7 +1977,7 @@ namespace PainTrax.Web.Controllers
  body = body.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
  body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
  body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
-
+                    plan = string.IsNullOrEmpty(page1Data.plan) ? "" : page1Data.plan;
                     string bodypart = "";
 
                     if (!string.IsNullOrEmpty(page1Data.bodypart))
@@ -2096,11 +2107,17 @@ namespace PainTrax.Web.Controllers
                 //POC printing
 
                  var dataPOC = this.getPOCPrint(fuid);
+
+                if (string.IsNullOrEmpty(plan))
+                    body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
+                else
+                    body = body.Replace("#Plan", this.removePtag(plan));
+
                 //var dataPOC = this.getPOC(ieid);
 
 
 
-                body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
+                //body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
 
                 body = body.Replace("#ReflexExam", "");
                 string injectionHtml = dataPOC.strInjectionDesc;
@@ -2267,7 +2284,18 @@ namespace PainTrax.Web.Controllers
         public IActionResult DownloadWord(string htmlContent, int ieId, int fuId)
         {
             //  string htmlContent = "<p>This is a <strong>sample</strong> HTML content.</p>";
-            string filePath = "", docName = "";
+            string filePath = "", docName = "", patientName = "", injDocName = "", dos = "";
+            string[] splitContent;
+            string injHtmlContent = "";
+            if (SessionDiffDoc == "true")
+            {
+
+                splitContent = htmlContent.Split(new string[] { "<!--Diff Doc-->" }, StringSplitOptions.None);
+                htmlContent = splitContent[0];
+                if (splitContent.Length > 1)
+                    injHtmlContent = splitContent[1];
+
+            }
             // Create a new DOCX package
             using (MemoryStream memStream = new MemoryStream())
             {
@@ -2334,6 +2362,10 @@ namespace PainTrax.Web.Controllers
                 else
                     docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") +"_"+ Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
 
+                patientName = patientData.lname + ", " + patientData.fname;
+
+                dos = patientData.doe == null ? "" : patientData.doe.Value.ToShortDateString();
+
                 string subPath = "Report/" + cmpid; // Your code goes here
 
                 bool exists = System.IO.Directory.Exists(subPath);
@@ -2349,13 +2381,71 @@ namespace PainTrax.Web.Controllers
 
                     memStream.WriteTo(fileStream);
                 }
+                injDocName = subPath + "/" + patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(patientData.doe).Replace("/", "") + "_injection.docx";
+                System.IO.File.Delete(injDocName);
+                injHtmlContent = Regex.Replace(injHtmlContent, @"</ol>", string.Empty, RegexOptions.IgnoreCase);
+                injHtmlContent = injHtmlContent.Trim();
+
+                if (injHtmlContent != "")
+                {
+
+                    MemoryStream injMemStream = ConvertHtmlToWord(injHtmlContent);
+                    // injDocName = subPath + "/"+ patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_injection.docx";
+                    using (FileStream fileStream = new FileStream(injDocName, FileMode.Create))
+                    {
+
+                        injMemStream.WriteTo(fileStream);
+                    }
+                }
             }
 
-            return Json(new { filePath = filePath, fileName = docName });
+
+            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos, injFileName = injDocName });
+        }
+
+        public MemoryStream ConvertHtmlToWord(string htmlContent)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            using (WordprocessingDocument doc = WordprocessingDocument.Create(memoryStream, WordprocessingDocumentType.Document))
+            {
+                // Create the MainDocumentPart
+                MainDocumentPart mainPart = doc.AddMainDocumentPart();
+                mainPart.Document = new Document();
+                Body body = mainPart.Document.AppendChild(new Body());
+
+                // Define the font and size
+                RunProperties runProperties = new RunProperties();
+                RunFonts runFonts = new RunFonts() { Ascii = "Times New Roman" };
+                FontSize fontSize = new FontSize() { Val = "24" }; // Font size 12 (in half-point format)
+
+                // Apply the font settings to the RunProperties
+                runProperties.Append(runFonts);
+                runProperties.Append(fontSize);
+
+                // Parse the HTML content and append it to the document
+                HtmlConverter converter = new HtmlConverter(mainPart);
+                IList<OpenXmlCompositeElement> generatedBody = converter.Parse(htmlContent);
+
+                // Iterate over the parsed elements and apply RunProperties
+                foreach (var element in generatedBody)
+                {
+                    foreach (var run in element.Descendants<Run>()) // Find all Run elements in the element
+                    {
+                        run.PrependChild(runProperties.CloneNode(true)); // Apply the font properties to each Run
+                    }
+
+                    // Append each element to the body
+                    body.Append(element.CloneNode(true));
+                }
+
+                // Save the changes
+                mainPart.Document.Save();
+            }
+            return memoryStream;
         }
 
         [HttpGet]
-        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0)
+        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "", string dos = "", string injFileName = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
@@ -2369,7 +2459,7 @@ namespace PainTrax.Web.Controllers
 
 
                     string filepathTo = filePath;
-                    AddHeaderFromTo(filepathFrom, filepathTo);
+                    AddHeaderFromTo(filepathFrom, filepathTo,patientName,dos);
                 }
             }
             byte[] data = System.IO.File.ReadAllBytes(filePath);
@@ -2377,7 +2467,54 @@ namespace PainTrax.Web.Controllers
 
         }
 
-        public static void AddHeaderFromTo(string filepathFrom, string filepathTo)
+        //public static void AddHeaderFromTo(string filepathFrom, string filepathTo)
+        //{
+        //    // Replace header in target document with header of source document.
+        //    using (WordprocessingDocument
+        //        wdDoc = WordprocessingDocument.Open(filepathTo, true))
+        //    {
+        //        MainDocumentPart mainPart = wdDoc.MainDocumentPart;
+
+        //        // Delete the existing header part.
+        //        mainPart.DeleteParts(mainPart.HeaderParts);
+
+        //        // Create a new header part.
+        //        DocumentFormat.OpenXml.Packaging.HeaderPart headerPart =
+        //    mainPart.AddNewPart<HeaderPart>();
+
+        //        // Get Id of the headerPart.
+        //        string rId = mainPart.GetIdOfPart(headerPart);
+
+        //        // Feed target headerPart with source headerPart.
+        //        using (WordprocessingDocument wdDocSource =
+        //            WordprocessingDocument.Open(filepathFrom, true))
+        //        {
+        //            DocumentFormat.OpenXml.Packaging.HeaderPart firstHeader =
+        //    wdDocSource.MainDocumentPart.HeaderParts.FirstOrDefault();
+
+        //            wdDocSource.MainDocumentPart.HeaderParts.FirstOrDefault();
+
+        //            if (firstHeader != null)
+        //            {
+        //                headerPart.FeedData(firstHeader.GetStream());
+        //            }
+        //        }
+
+        //        // Get SectionProperties and Replace HeaderReference with new Id.
+        //        IEnumerable<DocumentFormat.OpenXml.Wordprocessing.SectionProperties> sectPrs =
+        //    mainPart.Document.Body.Elements<SectionProperties>();
+        //        foreach (var sectPr in sectPrs)
+        //        {
+        //            // Delete existing references to headers.
+        //            sectPr.RemoveAllChildren<HeaderReference>();
+
+        //            // Create the new header reference node.
+        //            sectPr.PrependChild<HeaderReference>(new HeaderReference() { Id = rId });
+        //        }
+        //    }
+        //}
+
+        public void AddHeaderFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "")
         {
             // Replace header in target document with header of source document.
             using (WordprocessingDocument
@@ -2410,6 +2547,23 @@ namespace PainTrax.Web.Controllers
                     }
                 }
 
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+                var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
+                restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
+                if (cmpid == 7)
+                {
+                    if (!string.IsNullOrEmpty(dos))
+                    {
+                        string _dos = Common.commonDate(Convert.ToDateTime(dos), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
+                        restheaderPart.Header = CreateHeaderWithPageNumber(patientName, _dos);
+                    }
+                }
+
+
+
+                //  restheaderPart.Header = new Header(new Paragraph("Purav\nSandip"));
+                string restId = mainPart.GetIdOfPart(restheaderPart);
                 // Get SectionProperties and Replace HeaderReference with new Id.
                 IEnumerable<DocumentFormat.OpenXml.Wordprocessing.SectionProperties> sectPrs =
             mainPart.Document.Body.Elements<SectionProperties>();
@@ -2417,10 +2571,59 @@ namespace PainTrax.Web.Controllers
                 {
                     // Delete existing references to headers.
                     sectPr.RemoveAllChildren<HeaderReference>();
-
+                    sectPr.Append(new TitlePage());
                     // Create the new header reference node.
-                    sectPr.PrependChild<HeaderReference>(new HeaderReference() { Id = rId });
+                    sectPr.PrependChild<HeaderReference>(new HeaderReference() { Type = HeaderFooterValues.First, Id = rId });
+                    sectPr.PrependChild<HeaderReference>(new HeaderReference() { Type = HeaderFooterValues.Default, Id = restId });
                 }
+            }
+        }
+        public Header CreateHeaderWithPageNumber(string text1, string text2)
+        {
+            if (text2 != "")
+            {
+                return new Header(
+                    new Paragraph(
+                        new Run(
+                            new Text(text1) // First line
+                        ),
+                        new Break(), // Line break
+                        new Run(
+                            new Text(text2) // Second line
+                        ),
+                        new Break(), // Another line break if needed
+                        new Run(
+                            new Text("Page ") // Static "Page " text
+                        ),
+                        new Run(
+                            new SimpleField() // Dynamic page number field
+                            {
+                                Instruction = "PAGE", // Specifies the field type
+                            }
+                        )
+                    )
+                );
+            }
+            else
+            {
+                return new Header(
+                   new Paragraph(
+                       new Run(
+                           new Text(text1) // First line
+                       ),
+                       new Break(), // Line break
+
+                       new Run(
+                           new Text("Page ") // Static "Page " text
+                       ),
+                       new Run(
+                           new SimpleField() // Dynamic page number field
+                           {
+                               Instruction = "PAGE", // Specifies the field type
+                           }
+                       )
+                   )
+               );
             }
         }
 

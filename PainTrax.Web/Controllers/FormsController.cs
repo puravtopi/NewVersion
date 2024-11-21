@@ -275,7 +275,7 @@ namespace PainTrax.Web.Controllers
             }
 
         }
-        public IActionResult GeneratePdf(string pdffile, string id, string txt_date = "", string txt_surgery = "", string txt_docName = "", string txt_MCode_Proc = "", string txtProcedureCode = "")
+        public IActionResult GeneratePdf(string pdffile, string id, string txt_date = "", string txt_surgery = "", string txt_docName = "", string txt_MCode_Proc = "", string txtProcedureCode = "", string txt_diagnosis = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
             Dictionary<string, string> controls = new Dictionary<string, string>();
@@ -287,6 +287,7 @@ namespace PainTrax.Web.Controllers
                 if (txt_docName != null && txt_docName.Trim() != "") controls.Add("txt_docName", txt_docName);
                 if (txt_MCode_Proc != null && txt_MCode_Proc.Trim() != "") controls.Add("txt_MCode_Proc", txt_MCode_Proc);
                 if (txtProcedureCode != null && txtProcedureCode.Trim() != "") controls.Add("txtProcedureCode", txtProcedureCode);
+                if (txt_diagnosis != null && txt_diagnosis.Trim() != "") controls.Add("txt_diagnosis", txt_diagnosis);
 
             }
             catch (Exception ex)
@@ -376,6 +377,7 @@ namespace PainTrax.Web.Controllers
 
             return File(pdfBytes, "application/pdf");
         }
+
         public IActionResult DisplayColumns()
         {
 

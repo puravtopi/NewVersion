@@ -88,9 +88,9 @@
                         <div class="col-sm-4">
                             <select id="Side" class="form-control">
                                 <option value=" ">--Select--</option>
-                                <option value="Left">Left</option>
-                                <option value="Right">Right</option>
-                                <option value="Bilateral">Bilateral</option>
+                                <option value="Left">LEFT</option>
+                                <option value="Right">RIGHT</option>
+                                <option value="Bilateral">BILATERAL</option>
                             </select>
                         </div>
                     </div>
@@ -340,7 +340,7 @@
         if (!this.value) {
             $('.dateval').blur();
             $('.dateval').datepicker("hide")
-            if (confirm('Do u want to delete?')) {
+            if (confirm('Do you want to delete?')) {
                 ;
                 var ProcedureDetailIDfordelete = $('#ProcedureDetailId').val();
                 if (ProcedureDetailIDfordelete == undefined) { ProcedureDetailIDfordelete = 0 }
@@ -357,6 +357,7 @@
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     success: function () {
+                        debugger
                         $('#SelectPopup').modal('hide');
                         location.reload();
                     },
@@ -1098,7 +1099,8 @@
     function RemoveProc() {
 
         var ProcedureDetailIDfordelete = $('#ProcedureDetailId').val();
-        var url = '@Url.Action("Delete", "Visit")?ProcedureDetailID=' + ProcedureDetailIDfordelete;
+      
+        var url = '@Url.Action("Delete", "Visit")?ProcedureDetailID=' + ProcedureDetailIDfordelete + '&IeId=' + $("#hdIEId").val();
 
         if (confirm('Do u want to delete?')) {
             ;
@@ -1111,10 +1113,15 @@
                 contentType: "application/json;charset=utf-8",
                 dataType: "json",
                 success: function (data) {
-                    if (data) {
+                    // if (data) {
                         $('#SelectPopup').modal('hide');
+                        $('.modal-backdrop').remove();
+                        $('body').css('overflow', 'auto');
+                        ckPlan.data.set(data);
                         fnReLoadPOC();
-                    }
+                        
+                        
+                    // }
                 },
                 failure: function (response) {
                     alert("Invalid Details...")
@@ -1252,11 +1259,12 @@
             contentType: "application/x-www-form-urlencoded",
             success: function (data, status, xhr) {
 
-                if (data == "1") {
+               
                     $('#SelectPopup').modal('hide');
                     fnReLoadPOC();
                     fnShowPOCSummary();
-                }
+                    ckPlan.data.set(data);
+                
 
             },
             failure: function (response) {

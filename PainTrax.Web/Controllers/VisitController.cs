@@ -1864,12 +1864,13 @@ namespace PainTrax.Web.Controllers
                 }
 
                 int ie_id = Convert.ToInt32(model.PatientIEID);
-                var pocData = this.getPOC(ie_id);
+                var pocData = this.UpdatePOCPlan(ie_id);
 
                 if (pocData != null)
                 {
                     _ieService.UpdatePage1Plan(ie_id, pocData.strPoc);
                 }
+                return Json(pocData.strPoc);
             }
             catch (Exception ex)
             {
@@ -2142,10 +2143,18 @@ namespace PainTrax.Web.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Delete(int ProcedureDetailID)
+        public IActionResult Delete(int ProcedureDetailID,int IeId)
         {
+         
+           
             var data = _pocService.RemoveProcedureCountDetails(ProcedureDetailID);
-            return Json(data);
+            var pocData = this.UpdatePOCPlan(IeId);
+
+            if (pocData != null)
+            {
+                _ieService.UpdatePage1Plan(IeId, pocData.strPoc);
+            }
+            return Json(pocData.strPoc);
         }
 
 
@@ -2949,6 +2958,47 @@ namespace PainTrax.Web.Controllers
                             heading = heading.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
                             heading = heading.Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
                         }
+
+                        if (dsPOC.Rows[i]["pn"].ToString() == "1" && dsPOC.Rows[i]["Executed"] != DBNull.Value)
+                        {
+                            if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
+                            {
+                                inject_desc = inject_desc + "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
+                                inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
+                                inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+                            }
+                        }
+                        strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + dsPOC.Rows[i]["PDesc"].ToString() + "</li>";
+                    }
+                }
+            }
+
+            pocDetails pocDetails = new pocDetails()
+            {
+                strInjectionDesc = inject_desc,
+                strPoc = strPoc != "" ? "<ol>" + strPoc + "</ol>" : "",
+            };
+
+            return pocDetails;
+        }
+
+        private pocDetails UpdatePOCPlan(int PatientIE_ID)
+        {
+            DataTable dsPOC = _pocService.GetPOCIENew(PatientIE_ID);
+
+            string strPoc = "";
+            string inject_desc = "";
+            if (dsPOC != null && dsPOC.Rows.Count > 0)
+            {
+
+                for (int i = 0; i < dsPOC.Rows.Count; i++)
+                {
+                    if (!string.IsNullOrEmpty(dsPOC.Rows[i]["Heading"].ToString()))
+                    {
+
+                       
+                        string heading = dsPOC.Rows[i]["Heading"].ToString();
+
 
                         if (dsPOC.Rows[i]["pn"].ToString() == "1" && dsPOC.Rows[i]["Executed"] != DBNull.Value)
                         {

@@ -1548,12 +1548,13 @@ namespace PainTrax.Web.Controllers
 
 
                 int fu_id = Convert.ToInt32(model.PatientFuID);
-                var pocData = this.getPOCPrint(fu_id);
+                var pocData = this.UpdatePOCPlan(fu_id);
 
                 if (pocData != null)
                 {
                     _patientFuservices.UpdatePage1Plan(fu_id, pocData.strPoc);
                 }
+                return Json(pocData.strPoc);
             }
             catch (Exception ex)
             {
@@ -1786,10 +1787,17 @@ namespace PainTrax.Web.Controllers
             return html.ToString();
         }
         [HttpPost]
-        public IActionResult Delete(int ProcedureDetailID)
+        public IActionResult Delete(int ProcedureDetailID,int fu_id)
         {
             var data = _pocService.RemoveProcedureCountDetails(ProcedureDetailID);
-            return Json(data);
+          
+            var pocData = this.UpdatePOCPlan(fu_id);
+
+            if (pocData != null)
+            {
+                _patientFuservices.UpdatePage1Plan(fu_id, pocData.strPoc);
+            }
+            return Json(pocData.strPoc);
         }
 
         [HttpPost]
@@ -1918,7 +1926,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#dos", Common.commonDate(fuData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
                     body = body.Replace("#location", patientData.location);
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
-                    body = body.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
+                    body = body.Replace("#gender", gender);
                     body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
 
 
@@ -2815,6 +2823,59 @@ namespace PainTrax.Web.Controllers
                             heading = heading.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
                             heading = heading.Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
                         }
+
+                        if (dsPOC.Rows[i]["pn"].ToString() == "1")
+                        {
+                            if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
+                            {
+                                inject_desc = inject_desc + "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
+                                inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
+                                inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+                            }
+                        }
+                        strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + dsPOC.Rows[i]["PDesc"].ToString() + "</li>";
+                    }
+                }
+            }
+
+            pocDetails pocDetails = new pocDetails()
+            {
+                strInjectionDesc = inject_desc,
+                strPoc = strPoc != "" ? "<ol>" + strPoc + "</ol>" : "",
+            };
+
+            return pocDetails;
+        }
+
+        private pocDetails UpdatePOCPlan(int PatientFU_ID)
+        {
+            DataTable dsPOC = _pocService.GetPOCFUPrint(PatientFU_ID);
+
+
+
+            string strPoc = "";
+            string inject_desc = "";
+            if (dsPOC != null && dsPOC.Rows.Count > 0)
+            {
+
+                for (int i = 0; i < dsPOC.Rows.Count; i++)
+                {
+                    if (!string.IsNullOrEmpty(dsPOC.Rows[i]["Heading"].ToString()))
+                    {
+
+                        //if (i != dsPOC.Tables[0].Rows.Count - 1)
+                        //    strPoc = strPoc + "<b style='text-transform:uppercase'>" + dsPOC.Tables[0].Rows[i]["Heading"].ToString().TrimEnd(':') + ": </b>" + dsPOC.Tables[0].Rows[i]["PDesc"].ToString() + "<br/><br/>";
+                        //else
+
+                        //if (dsPOC.Tables[0].Rows[i]["Executed"] != DBNull.Value)
+                        //{
+                        //    this.generatePNReport(bodypart, dsPOC.Tables[0].Rows[i]["MCODE"].ToString(), ViewState["name"].ToString(),
+                        //        ViewState["dob"].ToString(), ViewState["location"].ToString(), "", dsPOC.Tables[0].Rows[i]["Level"].ToString(), "", "", ViewState["doe"].ToString(), PatientIE_ID);
+                        //}
+
+                        string heading = dsPOC.Rows[i]["Heading"].ToString();
+
+                       
 
                         if (dsPOC.Rows[i]["pn"].ToString() == "1")
                         {

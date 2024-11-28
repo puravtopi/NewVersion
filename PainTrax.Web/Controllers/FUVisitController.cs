@@ -1976,15 +1976,24 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#Reason", string.IsNullOrEmpty(page1Data.appt_reason) ? "" : this.removePtag(page1Data.appt_reason));
                     body = body.Replace("#CC", string.IsNullOrEmpty(page1Data.cc) ? "" : this.removePtag(page1Data.cc));
                     body = body.Replace("#PE", string.IsNullOrEmpty(page1Data.pe) ? "" : this.removePtag(page1Data.pe));
-                    body = body.Replace("#history", string.IsNullOrEmpty(page1Data.history) ? "" : this.removePtag(page1Data.history));
+                    var history = string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history;
 
-                    body = body.Replace("#bodypart", string.IsNullOrEmpty(page1Data.bodypart) ? "" : page1Data.bodypart.ToLower());
+
+                    history = history.Replace("#dos", Common.commonDate(patientData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
+                    history = history.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
+                    //  history.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
+                    history = history.Replace("#patientname", gender + " " + patientData.lname + " " + patientData.fname + " " + patientData.lname);
+                    history = history.Replace("#accidenttype", patientData.accidentType);
+
+                    body = body.Replace("#history", history);
+                    body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
+                    body = body.Replace("#DD", string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd);
+                    body = body.Replace("#WorkStatus", string.IsNullOrEmpty(page1Data.work_status) ? "" : page1Data.work_status);
                     body = body.Replace("#POPlan", string.IsNullOrEmpty(page1Data.plan) ? "" : page1Data.plan);
- body = body.Replace("#fn", patientData.fname);
- body = body.Replace("#ln", patientData.lname);
- body = body.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
- body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
- body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
+                    body = body.Replace("#fn", patientData.fname);
+                    body = body.Replace("#ln", patientData.lname);
+                    body = body.Replace("#gender", Common.GetMrMrsFromSex(patientData.gender));
+                    body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
                     plan = string.IsNullOrEmpty(page1Data.plan) ? "" : page1Data.plan;
                     string bodypart = "";
 
@@ -2002,7 +2011,7 @@ namespace PainTrax.Web.Controllers
                             assessment = page1Data.assessment.Replace("#PC", "");
                         assessment = assessment.Replace("#accidenttype", fuData.accident_type);
                     }
-
+                    body = body.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
 
                     body = body.Replace("#PastMedicalHistory", this.removePtag(page1Data.pmh));
                     body = body.Replace("#PastSurgicalHistory", this.removePtag(page1Data.psh));
@@ -2016,6 +2025,8 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#DD", this.removePtag(page1Data.dd));
                     body = body.Replace("#WorkStatus", this.removePtag(page1Data.work_status));
                     body = body.Replace("#IR", this.removePtag(page1Data.impairment_rating));
+                    body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
+                    body = body.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
 
                 }
                 else

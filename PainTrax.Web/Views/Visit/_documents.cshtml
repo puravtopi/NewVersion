@@ -112,8 +112,9 @@
 
                 //parentid = data.instance.get_node(data.selected[0]).children[lineNo];
                 console.log(data.instance.get_node(data.selected[0]).children[i]);
-                var lineNo = i;
-                var markup = "<tr><td>" + lineNo + "</td>";//document id
+                var lineNo = i+1;
+                 var markup = "<tr><td>" + lineNo + "</td>";//document id
+                //var markup += '<td><input type="checkbox" class="file-checkbox" value="' + parentid + "~" + fileName + '"></td>'; // Checkbox
                 markup += "<td>" + data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1] + "</td>";//docment name
                 markup += "<td> ";
                 var fileName = data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1];

@@ -69,6 +69,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 <script type="text/javascript">
+
     $(function () {
         debugger
         $('#jstree').on('changed.jstree', function (e, data) {
@@ -79,7 +80,7 @@
             var downloadurl = '@Url.Action("Download", "Patientdocument")';
             var deleteurl = '@Url.Action("DeleteDoc", "Patientdocument")';
 
-          
+
             for (i = 0, j = data.selected.length; i < j; i++) {
 
                 //Fetch the Id.
@@ -112,9 +113,8 @@
 
                 //parentid = data.instance.get_node(data.selected[0]).children[lineNo];
                 console.log(data.instance.get_node(data.selected[0]).children[i]);
-                var lineNo = i+1;
-                 var markup = "<tr><td>" + lineNo + "</td>";//document id
-                //var markup += '<td><input type="checkbox" class="file-checkbox" value="' + parentid + "~" + fileName + '"></td>'; // Checkbox
+                var lineNo = i;
+                var markup = "<tr><td>" + (lineNo +1) + "</td>";//document id
                 markup += "<td>" + data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1] + "</td>";//docment name
                 markup += "<td> ";
                 var fileName = data.instance.get_node(data.selected[0]).children[lineNo].split('$')[1];
@@ -146,13 +146,14 @@
                     "variant": "large"
                 },
                 "data": @Html.Raw(Model.doc_json)
-                                                                                                                                                                                                                                                },
+                                                                                                                                                                                                                                                    },
             "checkbox": {
                 "keep_selected_style": false
             },
             "plugins": ["wholerow", "conditionalselect"]
         });
     });
+
     function ViewDocument(file) {
         $("#loader").fadeIn();
         var data = { FileName: file };
@@ -172,9 +173,10 @@
     }
     function fnImportDocuments() {
         var formData = new FormData($('#uploadForm')[0]);
-
+        var url = '@Url.Action("ImportDocumentsData", "Visit")';
+      
         $.ajax({
-            url: '/Visit/ImportDocumentsData',
+            url: url,
             type: 'POST',
             data: formData,
             processData: false, // Prevent jQuery from automatically transforming the data into a query string

@@ -230,10 +230,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <table>
-                                                <tr>
-
-                                                    <td style="width:58%">
+                                           
                                                         <label>At the time of the accident, did you have direct impact on any body part?</label>
 
                                                         <input class="form-check-input" asp-for="isactive" type="checkbox" />
@@ -245,15 +242,14 @@
                                                             No
                                                         </label>
 
-                                                    </td>
-                                                    <td style="width:40%">
-                                                        <label>If yes, which body part?</label>
+                                                    
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                           <label>If yes, which body part?</label>
 
-                                                        <input type="text" style="width:50%">
-                                                    </td>
-
-                                                </tr>
-                                            </table>
+                                           <input type="text" style="width:50%">             
                                         </td>
                                     </tr>
                                         <tr>
@@ -472,7 +468,7 @@
 
                                                     </td>
                                                     <td style="width:40%">
-                                                        <label>Have you been involved in an accident in the past?</label>
+                                                        <label>Did you completely recover?</label>
 
                                                         <input class="form-check-input" asp-for="isactive" type="checkbox" />
                                                         <label class="form-check-label" for="isactive">
@@ -2746,7 +2742,7 @@
                                                         </label>
                                                         <input class="form-check-input" asp-for="isactive" type="checkbox" />
                                                         <label class="form-check-label" for="isactive">
-                                                            bilateral paraspinal muscles
+                                                            bilateral 
                                                         </label>
 
                                                     </td>
@@ -2776,11 +2772,10 @@
 
                                     </tr>
                                     <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
+                                        
+                                            <td>
 
-                                                    <td style="width:50%">
+                                                   
                                                         <label>Lumbar spine: Tender</label>
 
                                                         <input class="form-check-input" asp-for="isactive" type="checkbox" />
@@ -2796,8 +2791,14 @@
                                                             bilateral paravertebral muscles
                                                         </label>
 
-                                                    </td>
-                                                    <td style="width:50%">
+                                                   
+                                                
+                                        </td>
+
+
+                                    </tr>
+                                    <tr>
+                                         <td>
                                                         <label>Trigger points</label>
 
                                                         <input class="form-check-input" asp-for="isactive" type="checkbox" />
@@ -2822,13 +2823,6 @@
                                                         </label>
 
                                                     </td>
-
-
-
-                                                </tr>
-                                            </table>
-                                        </td>
-
                                     </tr>
                                     <tr>
                                         <td>
@@ -4520,8 +4514,9 @@
                                     <tr>
                                        <td>
                                             <label style="font-weight: bold;"> 15.FollowUp</label>
+                                            <input type="text" asp-for="nameofpractice" style="width:25%">
                                             <label> weeks/months/p.r.n.</label>
-                                            <input type="text" asp-for="nameofpractice" style="width:50%">
+                                            
 
                                             </td>
                                     </tr>

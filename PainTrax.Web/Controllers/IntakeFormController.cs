@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
@@ -20,12 +21,12 @@ namespace PainTrax.Web.Controllers
         }
         public IActionResult Create()
         {
-            IntakeForm obj = new IntakeForm();
+            IntakeForm obj = new IntakeForm();            
             return View(obj);
         }
         [HttpPost]
         public IActionResult Create(IntakeForm model)
-        {
+        {          
 
 
             

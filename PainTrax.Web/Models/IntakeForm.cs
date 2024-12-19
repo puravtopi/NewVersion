@@ -69,12 +69,15 @@ namespace PainTrax.Web.Models
         public string? symptoms_of_accident { get; set; }
 
         //4.ADL ( Activities of daily living )
-        public string? personal_hygiene { get; set; }
-        public string? eating_independently { get; set; }
-        public string? Shop_for_food { get; set; }
-        public string? walking { get; set; }
-        public string? cooking { get; set; }
-        public string? sleeping { get; set; }
+        //public string? personal_hygiene { get; set; }
+        //public string? eating_independently { get; set; }
+        //public string? Shop_for_food { get; set; }
+        //public string? walking { get; set; }
+        //public string? cooking { get; set; }
+        //public string? sleeping { get; set; }
+        public string? able_to_perform { get; set; }
+        public string? not_able_to_perform { get; set; }
+        public string? difficluty_to_perform { get; set; }
 
         // 5.How would you describe your pain?
 
@@ -101,8 +104,10 @@ namespace PainTrax.Web.Models
         public string? describe_rightknee { get; set; }
         public string? txt_describe_rightknee { get; set; }
         public string? other_describe_part { get; set; }
+        public string? other_describe_part_value { get; set; }
         public string? txt_other_describe_part { get; set; }
         public string? other_describe_part_1 { get; set; }
+        public string? other_describe_part_1_value { get; set; }
         public string? txt_other_describe_part_1 { get; set; }
 
         //6.What relieves your pain?
@@ -146,11 +151,11 @@ namespace PainTrax.Web.Models
 
         ////9.Neuro. Exam
         public string? dtrs_two_excepts_biceps_L { get; set; }
-        public string? dtrs_two_excepts_biceps_R { get; set; }
+        //public string? dtrs_two_excepts_biceps_R { get; set; }
         public string? triceps_L { get; set; }
-        public string? triceps_R { get; set; }
+        //public string? triceps_R { get; set; }
         public string? brachioradialis_L { get; set; }
-        public string? brachioradialis_R { get; set; }
+        //public string? brachioradialis_R { get; set; }
         public string? sensory { get; set; }
         public string? upper_ext_normal { get; set; }
         public string? except { get; set; }

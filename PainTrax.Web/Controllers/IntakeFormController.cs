@@ -20,8 +20,17 @@ namespace PainTrax.Web.Controllers
         }
         public IActionResult Create()
         {
-            tbl_locations obj = new tbl_locations();
+            IntakeForm obj = new IntakeForm();
             return View(obj);
+        }
+        [HttpPost]
+        public IActionResult Create(IntakeForm model)
+        {
+
+
+            
+
+            return RedirectToAction("Create", "IntakeForm");
         }
     }
 }

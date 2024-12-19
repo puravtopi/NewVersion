@@ -696,7 +696,7 @@ namespace PainTrax.Web.Models
         public string? followup { get; set; }
 
 
-
+        public int? Cmp_Id { get; set; }
 
 
 

@@ -2835,7 +2835,7 @@ namespace PainTrax.Web.Controllers
                             heading = heading.Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
                         }
 
-                        if (dsPOC.Rows[i]["pn"].ToString() == "1")
+                        if (dsPOC.Rows[i]["pn"].ToString() == "1" && dsPOC.Rows[i]["Executed"] != DBNull.Value)
                         {
                             if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
                             {

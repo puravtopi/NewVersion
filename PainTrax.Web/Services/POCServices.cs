@@ -386,7 +386,7 @@ namespace PainTrax.Web.Services
         public List<POCReportVM> GetPOCReport(string cnd)
         {
             string query = "SELECT pm.id,replace(pm.lname, ' ','') AS lname,replace(pm.fname, ' ','') AS fname, tp.ProcedureDetail_ID,CONCAT(pm.lname,', ',pm.fname)as 'Name',CASE when pm.MC=1 THEN 'Yes' ELSE 'No' END as MC," +
-            "ie.Compensation AS 'CaseType' ,ie.doa,pm.dob,pm.mobile AS Phone,ie.primary_policy_no,ie.primary_claim_no,ins.cmpname," +
+            "ie.Compensation AS 'CaseType' ,ie.doa,pm.dob,pm.mobile AS Phone,ie.primary_policy_no,ie.primary_claim_no,ins.cmpname,tp.sides,tp.level," +
             "lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE ," +
             "tp.Requested,p1.allergies,p1.note," +
             "tp.Executed," +

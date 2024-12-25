@@ -26,12 +26,16 @@
                                                     <td style="width:10%">
                                                         <label>Visit Type</label>
                                                        
-                                                        <select name="visit_type" id="visit_type" asp-for="visit_type" style="width:40%"></select>
+                                                        <select name="visit_type" id="visit_type" asp-for="visit_type" style="width:40%">
+                                                            <option value="Initial Visit">Initial Visit</option>
+                                                            <option value="FU Visit">FU Visit</option>
+                                                        </select>
                                                     </td>
                                                     <td style="width:20%">
                                                         <label>Location</label>
                                                        
-                                                        <select name="location_id" id="location_id" asp-for="location_id" style="width:90%"></select>
+                                                        <select name="location_id" id="location_id" asp-for="location_id" style="width:90%" asp-items="@ViewBag.locList"></select>
+                                                        
                                                     </td>
                                                     <td style="width:20%">
                                                         <label>Last Name:</label>
@@ -107,11 +111,11 @@
                                                     <td style="width:10%">
                                                         <label>Handedness:</label>
 
-                                                        <input asp-for="handedness_R" type="radio" value="R" />
+                                                        <input asp-for="handedness" type="radio" value="R" />
                                                         <label >
                                                             R
                                                         </label>
-                                                        <input asp-for="handedness_R" type="radio" value="L" />
+                                                        <input asp-for="handedness" type="radio" value="L" />
                                                         <label >
                                                             L
                                                         </label>
@@ -136,11 +140,11 @@
                                                     <td style="width:16%">
                                                         <label>StillWorking?</label>
 
-                                                        <input asp-for="still_working_yes" type="radio" value="yes"/>
+                                                        <input asp-for="still_working" type="radio" value="yes"/>
                                                         <label>
                                                             Yes
                                                         </label>
-                                                        <input asp-for="still_working_yes" type="radio" value="no" />
+                                                        <input asp-for="still_working" type="radio" value="no" />
                                                         <label>
                                                             No
                                                         </label>
@@ -228,11 +232,11 @@
 
                                             <label>At the time of the accident, did you have direct impact on any body part?</label>
 
-                                            <input  asp-for="direct_impact_on_bodypart_yes" type="radio" value="Yes" />
+                                            <input  asp-for="direct_impact_on_bodypart" type="radio" value="Yes" />
                                             <label>
                                                 Yes
                                             </label>
-                                            <input asp-for="direct_impact_on_bodypart_yes" type="radio" value="No" />
+                                            <input asp-for="direct_impact_on_bodypart" type="radio" value="No" />
                                             <label >
                                                 No
                                             </label>
@@ -255,11 +259,11 @@
                                                     <td style="width:30%">
                                                         <label>Did you lose consiousness?</label>
 
-                                                        <input asp-for="loss_consciousness_yes" type="radio" value="Yes"/>
+                                                        <input asp-for="loss_consciousness" type="radio" value="Yes"/>
                                                         <label>
                                                             Yes
                                                         </label>
-                                                        <input asp-for="loss_consciousness_yes" type="radio" value="No" />
+                                                        <input asp-for="loss_consciousness" type="radio" value="No" />
                                                         <label>
                                                             No
                                                         </label>
@@ -282,11 +286,11 @@
                                                     <td style="width:30%">
                                                         <label>Did you go to the hospital?</label>
 
-                                                        <input asp-for="did_go_to_the_hospital_yes" type="radio" value="Yes" />
+                                                        <input asp-for="did_go_to_the_hospital" type="radio" value="Yes" />
                                                         <label>
                                                             Yes
                                                         </label>
-                                                        <input asp-for="did_go_to_the_hospital_yes" type="radio" value="No"/>
+                                                        <input asp-for="did_go_to_the_hospital" type="radio" value="No"/>
                                                         <label>
                                                             No
                                                         </label>
@@ -308,11 +312,11 @@
                                                     <td style="width:30%">
                                                         <label>Did you go the same day?</label>
 
-                                                        <input asp-for="go_to_the_sameday_yes" type="radio" value="Yes"/>
+                                                        <input asp-for="go_to_the_sameday" type="radio" value="Yes"/>
                                                         <label>
                                                             Yes
                                                         </label>
-                                                        <input asp-for="go_to_the_sameday_yes" type="radio" value="No" />
+                                                        <input asp-for="go_to_the_sameday" type="radio" value="No" />
                                                         <label>
                                                             No
                                                         </label>
@@ -365,11 +369,11 @@
                                                     <td style="width:40%">
                                                         <label>In the hospital did they did any test?</label>
 
-                                                        <input asp-for="did_they_did_any_test_yes" type="radio" value="Yes"/>
+                                                        <input asp-for="did_they_did_any_test" type="radio" value="Yes"/>
                                                         <label for="isactive">
                                                             Yes
                                                         </label>
-                                                        <input asp-for="did_they_did_any_test_yes" type="radio" value="No" />
+                                                        <input asp-for="did_they_did_any_test" type="radio" value="No" />
                                                         <label for="isactive">
                                                             No
                                                         </label>
@@ -528,11 +532,11 @@
                                                     <td style="width:30%">
                                                         <label>Have you ever had any surgeries ?</label>
 
-                                                        <input asp-for="had_any_surgeries_yes" type="radio" value="Yes" />
+                                                        <input asp-for="had_any_surgeries" type="radio" value="Yes" />
                                                         <label for="isactive">
                                                             Yes
                                                         </label>
-                                                        <input asp-for="had_any_surgeries_yes" type="radio" value="No" />
+                                                        <input asp-for="had_any_surgeries" type="radio" value="No" />
                                                         <label for="isactive">
                                                             No
                                                         </label>
@@ -569,11 +573,11 @@
                                                     <td style="width:30%">
                                                         <label>Are you taking any medications ?</label>
 
-                                                        <input asp-for="taking_medications_surgery_yes" type="radio" value="Yes" />
+                                                        <input asp-for="taking_medications_surgery" type="radio" value="Yes" />
                                                         <label for="isactive">
                                                             Yes
                                                         </label>
-                                                        <input asp-for="taking_medications_surgery_yes" type="radio" value="No" />
+                                                        <input asp-for="taking_medications_surgery" type="radio" value="No" />
                                                         <label for="isactive">
                                                             No
                                                         </label>
@@ -597,11 +601,11 @@
                                                     <td style="width:30%">
                                                         <label>ALLERGIES?</label>
 
-                                                        <input asp-for="allergies_yes" type="radio" value="Yes"/>
+                                                        <input asp-for="allergies" type="radio" value="Yes"/>
                                                         <label for="isactive">
                                                             Yes
                                                         </label>
-                                                        <input asp-for="allergies_yes" type="radio" value="No" />
+                                                        <input asp-for="allergies" type="radio" value="No" />
                                                         <label for="isactive">
                                                             No
                                                         </label>
@@ -634,11 +638,11 @@
                                                     <td style="width:40%">
                                                         <label>Social History</label>
                                                         <label>Smoke</label>
-                                                        <input asp-for="smoke_yes" type="radio" value="Yes" />
+                                                        <input asp-for="smoke" type="radio" value="Yes" />
                                                         <label for="isactive">
                                                             Yes
                                                         </label>
-                                                        <input asp-for="smoke_yes" type="radio" value="No" />
+                                                        <input asp-for="smoke" type="radio" value="No" />
                                                         <label for="isactive">
                                                             No
                                                         </label>
@@ -648,11 +652,11 @@
                                                     <td style="width:30%">
 
                                                         <label>Marijuana</label>
-                                                        <input asp-for="marijuana_yes" type="radio" value="Yes" />
+                                                        <input asp-for="marijuana" type="radio" value="Yes" />
                                                         <label for="isactive">
                                                             Yes
                                                         </label>
-                                                        <input asp-for="marijuana_yes" type="radio" value="No"/>
+                                                        <input asp-for="marijuana" type="radio" value="No"/>
                                                         <label for="isactive">
                                                             No
                                                         </label>
@@ -662,11 +666,11 @@
                                                     <td style="width:30%">
 
                                                         <label>Alcohol</label>
-                                                        <input asp-for="alcohol_yes" type="radio" value="Yes" />
+                                                        <input asp-for="alcohol" type="radio" value="Yes" />
                                                         <label for="isactive">
                                                             Yes
                                                         </label>
-                                                        <input asp-for="alcohol_yes" type="radio" value="No" />
+                                                        <input asp-for="alcohol" type="radio" value="No" />
                                                         <label for="isactive">
                                                             No
                                                         </label>
@@ -686,11 +690,11 @@
                                                     <td style="width:25%">
                                                         <label>Physical Therapy</label>
 
-                                                        <input asp-for="physical_therapy_yes" type="radio" value="Yes" />
+                                                        <input asp-for="physical_therapy" type="radio" value="Yes" />
                                                         <label for="isactive">
                                                             Yes
                                                         </label>
-                                                        <input asp-for="physical_therapy_yes" type="radio" value="No"/>
+                                                        <input asp-for="physical_therapy" type="radio" value="No" />
                                                         <label for="isactive">
                                                             No
                                                         </label>
@@ -705,11 +709,11 @@
                                                     <td style="width:25%">
                                                         <label>Chiropractic</label>
 
-                                                        <input asp-for="chiropractic_yes" type="radio" value="Yes" />
+                                                        <input asp-for="chiropractic" type="radio" value="Yes" />
                                                         <label for="isactive">
                                                             Yes
                                                         </label>
-                                                        <input asp-for="chiropractic_yes" type="radio" value="No"/>
+                                                        <input asp-for="chiropractic" type="radio" value="No"/>
                                                         <label for="isactive">
                                                             No
                                                         </label>
@@ -806,45 +810,45 @@
                                                 </tr>
                                                 <tr>
                                                     <td>personal hygiene, grooming, dressing, toileting</td>
-                                                    <td align="center"><input class="form-check-input" asp-for="personal_able_to_perform" type="checkbox" /></td>
-                                                    <td align="center"><input class="form-check-input" asp-for="personal_not_able_to_perform" type="checkbox" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_personal" type="radio" value="Able to perform" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_personal" type="radio" value="Unable to perform" /></td>
 
-                                                    <td align="center"><input class="form-check-input" asp-for="personal_difficluty_to_perform" type="checkbox" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_personal" type="radio" value="preforms with difficulty/requires extra time" /></td>
                                                 </tr>
                                                 <tr>
                                                     <td>eating independently</td>
-                                                    <td align="center"><input class="form-check-input" asp-for="eating_able_to_perform" type="checkbox" /></td>
-                                                    <td align="center"> <input class="form-check-input" asp-for="eating_not_able_to_perform" type="checkbox" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_eating" type="radio" value="Able to perform" /></td>
+                                                    <td align="center"> <input class="form-check-input" asp-for="adl_eating" type="radio" value="Unable to perform" /></td>
 
-                                                    <td align="center"><input class="form-check-input" asp-for="eating_difficluty_to_perform" type="checkbox" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_eating" type="radio" value="preforms with difficulty/requires extra time" /></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Shop for food</td>
-                                                    <td align="center"><input class="form-check-input" asp-for="Shop_for_food_able_to_perform" type="checkbox" /></td>
-                                                    <td align="center"><input class="form-check-input" asp-for="Shop_for_food_not_able_to_perform" type="checkbox" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_Shop_for_food"  type="radio" value="Able to perform" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_Shop_for_food" type="radio" value="Unable to perform" /></td>
 
-                                                    <td align="center"><input class="form-check-input" asp-for="Shop_for_food_difficluty_to_perform" type="checkbox" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_Shop_for_food" type="radio" value="preforms with difficulty/requires extra time" /></td>
                                                 </tr>
                                                 <tr>
                                                     <td>walking, transferring, ambulating</td>
-                                                    <td align="center"><input class="form-check-input" asp-for="walking_able_to_perform" type="checkbox" /></td>
-                                                    <td align="center"><input class="form-check-input" asp-for="walking_not_able_to_perform" type="checkbox" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_walking" type="radio" value="Able to perform" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_walking" type="radio" value="Unable to perform" /></td>
 
-                                                    <td align="center"><input class="form-check-input" asp-for="walking_difficluty_to_perform" type="checkbox" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_walking" type="radio" value="preforms with difficulty/requires extra time" /></td>
                                                 </tr>
                                                 <tr>
                                                     <td>cook, clean, maintain households</td>
-                                                    <td align="center"><input class="form-check-input" asp-for="cooking_able_to_perform" type="checkbox" /></td>
-                                                    <td align="center"><input class="form-check-input" asp-for="cooking_not_able_to_perform" type="checkbox" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_cooking" type="radio" value="Able to perform" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_cooking" type="radio" value="Unable to perform" /></td>
 
-                                                    <td align="center"><input class="form-check-input" asp-for="cooking_difficluty_to_perform" type="checkbox" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_cooking" type="radio" value="preforms with difficulty/requires extra time" /></td>
                                                 </tr>
                                                 <tr>
                                                     <td>Sleeping</td>
-                                                    <td align="center"><input class="form-check-input" asp-for="sleeping_able_to_perform" type="checkbox" /></td>
-                                                    <td align="center"><input class="form-check-input" asp-for="sleeping_not_able_to_perform" type="checkbox" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_sleeping"  type="radio" value="Able to perform" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_sleeping" type="radio" value="Unable to perform"/></td>
 
-                                                    <td align="center"><input class="form-check-input" asp-for="sleeping_difficluty_to_perform" type="checkbox" /></td>
+                                                    <td align="center"><input class="form-check-input" asp-for="adl_sleeping" type="radio" value="preforms with difficulty/requires extra time" /></td>
 
                                                 </tr>
                                             </table>

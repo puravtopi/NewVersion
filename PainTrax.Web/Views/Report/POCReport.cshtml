@@ -100,6 +100,8 @@
                                     <th scope="col" id="MCODE" onclick="sortTable(5);">MCODE</th>
                                     <th scope="col" id="Phone" onclick="sortTable(6);">Phone</th>
                                     <th scope="col" id="Location" onclick="sortTable(7);">Location</th>
+                                    <th scope="col" id="Location" onclick="sortTable(8);">Side</th>
+                                    <th scope="col" id="Location" onclick="sortTable(9);">Level</th>
                                     <th scope="col">Requested</th>
                                     <th scope="col">Schedule</th>
                                     <th scope="col">Executed</th>
@@ -124,6 +126,8 @@
                                             <td>@item.mcode</td>
                                             <td>@item.phone</td>
                                             <td>@item.location</td>
+                                            <td>@item.sides</td>
+                                            <td>@item.level</td>
                                             <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
                                             <td><label id="lblsche">@(item.scheduled == null ? "" : item.scheduled.Value.ToString("MM/dd/yyyy"))</label></td>
                                             <td><label id="lblexe">@(item.executed == null ? "" : item.executed.Value.ToString("MM/dd/yyyy"))</label></td>

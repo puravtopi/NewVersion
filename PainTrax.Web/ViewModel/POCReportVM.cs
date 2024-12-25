@@ -25,6 +25,8 @@ namespace PainTrax.Web.ViewModel
         public string location { get; set; }
         public string vaccinated { get; set; }
         public string mcode { get; set; }
+        public string sides { get; set; }
+        public string level { get; set; }
         public DateTime? requested { get; set; }
         public DateTime? executed { get; set; }
         public DateTime? scheduled { get; set; }

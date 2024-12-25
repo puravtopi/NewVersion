@@ -8,7 +8,7 @@ namespace PainTrax.Web.Models
         public string? location_id { get; set; }
         public string? l_name { get; set; }
         public string? f_name { get; set; }
-        public string CaseType { get; set; } 
+        public string CaseType { get; set; }
         //public string? case_type_WC { get; set; }
         //public string? case_type_Lien { get; set; }
         public DateTime? dob { get; set; }
@@ -18,10 +18,10 @@ namespace PainTrax.Web.Models
         public int? age { get; set; }
         public string? gender { get; set; }
         //public string? female { get; set; }
-        public string? handedness_R { get; set; }
+        public string? handedness { get; set; }
         //public string? handedness_L { get; set; }
         public string? occupation { get; set; }
-        public string? still_working_yes { get; set; }
+        public string? still_working { get; set; }
         //public string? still_working_no { get; set; }
         public string? txt_still_working { get; set; }
         public string? degree_of_disability { get; set; }
@@ -34,24 +34,26 @@ namespace PainTrax.Web.Models
         public string? description_of_the_accident { get; set; }
 
         //3.History given by patient
-        public string? direct_impact_on_bodypart_yes { get; set; }
+        public string? direct_impact_on_bodypart { get; set; }
         //public string? direct_impact_on_bodypart_no { get; set; }
         public string? if_yes_which_bodypart { get; set; }
-        public string? loss_consciousness_yes { get; set; }
+        public string? loss_consciousness { get; set; }
         //public string? loss_consciousness_no { get; set; }
         public string? if_yes_how_long { get; set; }
-        public string? did_go_to_the_hospital_yes { get; set; }
+        public string? did_go_to_the_hospital { get; set; }
         //public string? did_go_to_the_hospital_no { get; set; }
         public string? if_yes_which_hospital { get; set; }
-        public string? go_to_the_sameday_yes { get; set; }
+        public string? go_to_the_sameday { get; set; }
         //public string? go_to_the_sameday_no { get; set; }
         public string? if_no_how_many_days_later { get; set; }
         public string? rdo_ambulance { get; set; }
         //public string? rdo_taxi { get; set; }
         //public string? rdo_family_friend { get; set; }
         //public string? rdo_alone { get; set; }
-        public string? did_they_did_any_test_yes { get; set; }
+        public string? did_they_did_any_test { get; set; }
         //public string? did_they_did_any_test_no { get; set; }
+
+        public string? what_test { get; set; }
         public string? what_tests_xray { get; set; }
         public string? what_tests_ct { get; set; }
         public string? what_tests_mri { get; set; }
@@ -65,35 +67,37 @@ namespace PainTrax.Web.Models
         public string? bodyparts_injured_inaccident { get; set; }
         public string? completly_recovered_yes { get; set; }
         //public string? completly_recovered_no { get; set; }
+        public string? any_medical_conditions { get; set; }
         public string? any_medical_conditions_Diabeties { get; set; }
         public string? any_medical_conditions_bp { get; set; }
         public string? any_medical_conditions_ashthma { get; set; }
         public string? any_medical_conditions_heart { get; set; }
         public string? any_medical_conditions_none { get; set; }
         public string? medical_conditions_others { get; set; }
-        public string? had_any_surgeries_yes { get; set; }
+        public string? had_any_surgeries { get; set; }
         //public string? had_any_surgeries_no { get; set; }
         public string? had_any_surgeries_when { get; set; }
         public string? type_of_surgery { get; set; }
-        public string? taking_medications_surgery_yes { get; set; }
-       // public string? taking_medications_surgery_no { get; set; }
+        public string? taking_medications_surgery { get; set; }
+        // public string? taking_medications_surgery_no { get; set; }
         public string? what_medications_surgery { get; set; }
-        public string? allergies_yes { get; set; }
-       // public string? allergies_no { get; set; }
+        public string? allergies { get; set; }
+        // public string? allergies_no { get; set; }
         public string? what_allergies { get; set; }
         public string? family_history { get; set; }
-        public string? smoke_yes { get; set; }
+        public string? smoke { get; set; }
         //public string? smoke_no { get; set; }
         public string? txt_smoke { get; set; }
-        public string? marijuana_yes { get; set; }
+        public string? marijuana { get; set; }
         //public string? marijuana_no { get; set; }
         public string? txt_marijuana { get; set; }
-        public string? alcohol_yes { get; set; }
+        public string? alcohol { get; set; }
         public string? txt_alcohol { get; set; }
-        public string? physical_therapy_yes { get; set; }
+        public string? social_history { get; set; }
+        public string? physical_therapy { get; set; }
         //public string? physical_therapy_no { get; set; }
         public string? txt_physical_therapy { get; set; }
-        public string? chiropractic_yes { get; set; }
+        public string? chiropractic { get; set; }
         //public string? chiropractic_no { get; set; }
         public string? txt_chiropractic { get; set; }
         public string? symptoms_of_accident_Headaches { get; set; }
@@ -109,7 +113,7 @@ namespace PainTrax.Web.Models
         public string? symptoms_of_accident_Sleep_issues { get; set; }
         public string? symptoms_of_accident_Anxiety { get; set; }
 
-
+        public string? symptoms_since_accident { get; set; } 
         //4.ADL ( Activities of daily living )
         //public string? personal_hygiene { get; set; }
         //public string? eating_independently { get; set; }
@@ -117,25 +121,13 @@ namespace PainTrax.Web.Models
         //public string? walking { get; set; }
         //public string? cooking { get; set; }
         //public string? sleeping { get; set; }
-        public string? personal_able_to_perform { get; set; }
-        public string? personal_not_able_to_perform { get; set; }
-        public string? personal_difficluty_to_perform { get; set; }
-        public string? eating_able_to_perform { get; set; }
-        public string? eating_not_able_to_perform { get; set; }
-        public string? eating_difficluty_to_perform { get; set; }
-        public string? Shop_for_food_able_to_perform { get; set; }
-        public string? Shop_for_food_not_able_to_perform { get; set; }
-        public string? Shop_for_food_difficluty_to_perform { get; set; }
-        public string? walking_able_to_perform { get; set; }
-        public string? walking_not_able_to_perform { get; set; }
-        public string? walking_difficluty_to_perform { get; set; }
-        public string? cooking_able_to_perform { get; set; }
-        public string? cooking_not_able_to_perform { get; set; }
-        public string? cooking_difficluty_to_perform { get; set; }
-        public string? sleeping_able_to_perform { get; set; }
-        public string? sleeping_not_able_to_perform { get; set; }
-        public string? sleeping_difficluty_to_perform { get; set; }
-
+        public string? adl_personal { get; set; }
+        public string? adl_eating { get; set; }
+        public string? adl_Shop_for_food { get; set; }
+        public string? adl_walking { get; set; }
+        public string? adl_cooking { get; set; }
+        public string? adl_sleeping{ get; set; }
+     
         // 5.How would you describe your pain?
 
         public string? txt_describe_neck { get; set; }
@@ -148,8 +140,11 @@ namespace PainTrax.Web.Models
         public string? describe_neck_Pulsating { get; set; }
         public string? describe_neck_Dull { get; set; }
         public string? describe_neck_Achy { get; set; }
+
+        public string? cc_neck { get; set; } 
+
         public string? neck_pain_radiates_L { get; set; }
-       // public string? neck_pain_radiates_R { get; set; }
+        // public string? neck_pain_radiates_R { get; set; }
         public string? neck_pain_bodypart_arm { get; set; }
         public string? neck_pain_bodypart_forearm { get; set; }
         public string? neck_pain_bodypart_hand { get; set; }
@@ -170,6 +165,8 @@ namespace PainTrax.Web.Models
         public string? describe_midback_Shooting { get; set; }
         public string? describe_midback_Throbbing { get; set; }
 
+        public string? cc_midback { get; set; }
+
         public string? describe_midback_Pulsating { get; set; }
         public string? describe_midback_Dull { get; set; }
         public string? describe_midback_Achy { get; set; }
@@ -183,6 +180,9 @@ namespace PainTrax.Web.Models
         public string? describe_lowback_Pulsating { get; set; }
         public string? describe_lowback_Dull { get; set; }
         public string? describe_lowback_Achy { get; set; }
+
+        public string? cc_lowback { get; set; }
+
         public string? lowback_pain_radiates_L { get; set; }
         //public string? lowback_pain_radiates_R { get; set; }
         public string? lowback_pain_bodypart_hip { get; set; }
@@ -214,6 +214,8 @@ namespace PainTrax.Web.Models
         public string? txt_describe_leftshoulder_Dull { get; set; }
         public string? txt_describe_leftshoulder_Achy { get; set; }
 
+        public string? cc_l_shoulder { get; set; }
+
         public string? describe_rightshoulder { get; set; }
         public string? txt_describe_rightshoulder_Constant { get; set; }
         public string? txt_describe_rightshoulder_Intermittent { get; set; }
@@ -225,6 +227,10 @@ namespace PainTrax.Web.Models
         public string? txt_describe_rightshoulder_Dull { get; set; }
 
         public string? txt_describe_rightshoulder_Achy { get; set; }
+
+
+        public string? cc_r_shoulder { get; set; }
+
         public string? describe_leftknee { get; set; }
         public string? txt_describe_leftknee_Constant { get; set; }
         public string? txt_describe_leftknee_Intermittent { get; set; }
@@ -233,6 +239,8 @@ namespace PainTrax.Web.Models
         public string? txt_describe_leftknee_Shooting { get; set; }
         public string? txt_describe_leftknee_Throbbing { get; set; }
         public string? txt_describe_leftknee_Pulsating { get; set; }
+
+        public string? cc_l_knee { get; set; }
 
         public string? txt_describe_leftknee_Dull { get; set; }
         public string? txt_describe_leftknee_Achy { get; set; }
@@ -247,6 +255,8 @@ namespace PainTrax.Web.Models
 
         public string? txt_describe_rightknee_Dull { get; set; }
         public string? txt_describe_rightknee_Achy { get; set; }
+
+        public string? cc_r_knee { get; set; }
         public string? txt_other_describe_part_Constant { get; set; }
         public string? txt_other_describe_part_Intermittent { get; set; }
         public string? txt_other_describe_part_Sharp { get; set; }
@@ -367,10 +377,10 @@ namespace PainTrax.Web.Models
         public string? spurlings_bilaterally_reproducing { get; set; }
         public string? txt_spurlings { get; set; }
         public string? tinels_positive { get; set; }
-       // public string? tinels_negative { get; set; }
+        // public string? tinels_negative { get; set; }
         public string? tinels_bilaterally { get; set; }
         public string? tinels_bilaterally_right { get; set; }
-        public string? tinels_bilaterally_left { get; set; }       
+        public string? tinels_bilaterally_left { get; set; }
         public string? phalens_positive { get; set; }
         //public string? phalens_negative { get; set; }
         public string? phalens_bilaterally { get; set; }
@@ -387,9 +397,9 @@ namespace PainTrax.Web.Models
 
         ////9.Neuro. Exam
         public string? dtrs_two_excepts_biceps_L { get; set; }
-       // public string? dtrs_two_excepts_biceps_R { get; set; }
+        // public string? dtrs_two_excepts_biceps_R { get; set; }
         public string? triceps_L { get; set; }
-       // public string? triceps_R { get; set; }
+        // public string? triceps_R { get; set; }
         public string? brachioradialis_L { get; set; }
         public string? brachioradialis_R { get; set; }
         public string? sensory_Normal { get; set; }
@@ -437,14 +447,14 @@ namespace PainTrax.Web.Models
         public string? slr_bilaterally_right { get; set; }
         public string? slr_bilaterally_left { get; set; }
         public string? neuro_facet_positive { get; set; }
-       // public string? neuro_facet_negative { get; set; }
+        // public string? neuro_facet_negative { get; set; }
         public string? neuro_facet_bilaterally { get; set; }
         public string? neuro_facet_bilaterally_right { get; set; }
         public string? neuro_facet_bilaterally_left { get; set; }
         public string? dtrs_two_except_pattler_L { get; set; }
         //public string? dtrs_two_except_pattler_R { get; set; }
         public string? achilles_L { get; set; }
-       // public string? achilles_R { get; set; }
+        // public string? achilles_R { get; set; }
         public string? planter_L { get; set; }
         //public string? planter_R { get; set; }
         public string? sensory_1_Normal { get; set; }
@@ -461,7 +471,7 @@ namespace PainTrax.Web.Models
         public string? lower_ext_normal { get; set; }
         public string? except_1_mild { get; set; }
         //public string? except_1_moderate { get; set; }
-       // public string? except_1_severe { get; set; }
+        // public string? except_1_severe { get; set; }
         public string? weakness_1_flexors { get; set; }
         //public string? weakness_1_extensors { get; set; }
         public string? ls_swelling_positive { get; set; }
@@ -473,7 +483,7 @@ namespace PainTrax.Web.Models
         public string? ls_masses_positive { get; set; }
         //public string? ls_masses_negative { get; set; }
         public string? ls_tenderness_positive { get; set; }
-       // public string? ls_tenderness_negative { get; set; }
+        // public string? ls_tenderness_negative { get; set; }
         public string? ls_acjoint { get; set; }
         public string? ls_scapula { get; set; }
         public string? ls_anterior { get; set; }
@@ -497,9 +507,9 @@ namespace PainTrax.Web.Models
         public string? ls_with_pain_1 { get; set; }
         public string? ls_with_pain_1_discomfort { get; set; }
         public string? ls_hawkins_positive { get; set; }
-       // public string? ls_hawkins_negative { get; set; }
+        // public string? ls_hawkins_negative { get; set; }
         public string? ls_o_brien_test_positive { get; set; }
-       // public string? ls_o_brien_test_negative { get; set; }
+        // public string? ls_o_brien_test_negative { get; set; }
         public string? ls_impegement_positive { get; set; }
         //public string? ls_impegement_negative { get; set; }
         public string? ls_drop_arm_positive { get; set; }
@@ -511,19 +521,19 @@ namespace PainTrax.Web.Models
         public string? rs_swelling_positive { get; set; }
         //public string? rs_swelling_negative { get; set; }
         public string? rs_echymosis_positive { get; set; }
-       // public string? rs_echymosis_negative { get; set; }
+        // public string? rs_echymosis_negative { get; set; }
         public string? rs_deformity_positive { get; set; }
-       // public string? rs_deformity_negative { get; set; }
+        // public string? rs_deformity_negative { get; set; }
         public string? rs_masses_positive { get; set; }
-       // public string? rs_masses_negative { get; set; }
+        // public string? rs_masses_negative { get; set; }
         public string? rs_tenderness_positive { get; set; }
-       // public string? rs_tenderness_negative { get; set; }
+        // public string? rs_tenderness_negative { get; set; }
         public string? rs_acjoint { get; set; }
         public string? rs_acjoint_scapula { get; set; }
         public string? rs_acjoint_anterior { get; set; }
         public string? rs_acjoint_supraspinatus { get; set; }
         public string? rs_acjoint_trapezius { get; set; }
-        
+
 
         public string? rs_abd_oneeighty_L { get; set; }
         public string? rs_abd_oneeighty_R { get; set; }
@@ -540,33 +550,33 @@ namespace PainTrax.Web.Models
         public string? rs_int_rot_seventy_L { get; set; }
         public string? rs_int_rot_seventy_R { get; set; }
         public string? rs_with_pain_1 { get; set; }
-       // public string? rs_with_pain_1_discomfort { get; set; }
+        // public string? rs_with_pain_1_discomfort { get; set; }
         public string? rs_hawkins_positive { get; set; }
-       // public string? rs_hawkins_negative { get; set; }
+        // public string? rs_hawkins_negative { get; set; }
         public string? rs_o_brien_test_positive { get; set; }
-       // public string? rs_o_brien_test_negative { get; set; }
+        // public string? rs_o_brien_test_negative { get; set; }
         public string? rs_impegement_positive { get; set; }
-      //  public string? rs_impegement_negative { get; set; }
+        //  public string? rs_impegement_negative { get; set; }
         public string? rs_drop_arm_positive { get; set; }
-       // public string? rs_drop_arm_negative { get; set; }
+        // public string? rs_drop_arm_negative { get; set; }
         public string? rs_cross_over_positive { get; set; }
         //public string? rs_cross_over_negative { get; set; }
         public string? rs_empty_can_positive { get; set; }
-       // public string? rs_empty_can_negative { get; set; }
+        // public string? rs_empty_can_negative { get; set; }
         public string? lk_swelling_positive { get; set; }
-       // public string? lk_swelling_negative { get; set; }
+        // public string? lk_swelling_negative { get; set; }
         public string? lk_echymosis_positive { get; set; }
-       // public string? lk_echymosis_negative { get; set; }
+        // public string? lk_echymosis_negative { get; set; }
         public string? lk_deformity_positive { get; set; }
         //public string? lk_deformity_negative { get; set; }
         public string? lk_masses_positive { get; set; }
-       // public string? lk_masses_negative { get; set; }
+        // public string? lk_masses_negative { get; set; }
         public string? lk_effusion_positive { get; set; }
-       // public string? lk_effusion_negative { get; set; }
+        // public string? lk_effusion_negative { get; set; }
         public string? lk_crepitus_positive { get; set; }
-       // public string? lk_crepitus_negative { get; set; }
+        // public string? lk_crepitus_negative { get; set; }
         public string? lk_tenderness_positive { get; set; }
-       // public string? lk_tenderness_negative { get; set; }
+        // public string? lk_tenderness_negative { get; set; }
         public string? lk_metal_joint_line { get; set; }
         public string? lk_lateral_joint_line { get; set; }
         public string? lk_patellar_tendon { get; set; }
@@ -577,31 +587,31 @@ namespace PainTrax.Web.Models
         public string? lk_with_pain { get; set; }
         //public string? lk_with_pain_discomfort { get; set; }
         public string? lk_mcmurray_positive { get; set; }
-       // public string? lk_mcmurray_negative { get; set; }
+        // public string? lk_mcmurray_negative { get; set; }
         public string? lk_anterior_positive { get; set; }
-       // public string? lk_anterior_negative { get; set; }
+        // public string? lk_anterior_negative { get; set; }
         public string? lk_lachman_positive { get; set; }
-       // public string? lk_lachman_negative { get; set; }
+        // public string? lk_lachman_negative { get; set; }
         public string? lk_posterior_positive { get; set; }
         //public string? lk_posterior_negative { get; set; }
         public string? lk_valgus_positive { get; set; }
         //public string? lk_valgus_negative { get; set; }
         public string? lk_varus_positive { get; set; }
-      //  public string? lk_varus_negative { get; set; }
+        //  public string? lk_varus_negative { get; set; }
         public string? rk_swelling_positive { get; set; }
-       // public string? rk_swelling_negative { get; set; }
+        // public string? rk_swelling_negative { get; set; }
         public string? rk_echymosis_positive { get; set; }
-       // public string? rk_echymosis_negative { get; set; }
+        // public string? rk_echymosis_negative { get; set; }
         public string? rk_deformity_positive { get; set; }
-       // public string? rk_deformity_negative { get; set; }
+        // public string? rk_deformity_negative { get; set; }
         public string? rk_masses_positive { get; set; }
-       // public string? rk_masses_negative { get; set; }
+        // public string? rk_masses_negative { get; set; }
         public string? rk_effusion_positive { get; set; }
-       // public string? rk_effusion_negative { get; set; }
+        // public string? rk_effusion_negative { get; set; }
         public string? rk_crepitus_positive { get; set; }
-      //  public string? rk_crepitus_negative { get; set; }
+        //  public string? rk_crepitus_negative { get; set; }
         public string? rk_tenderness_positive { get; set; }
-       // public string? rk_tenderness_negative { get; set; }
+        // public string? rk_tenderness_negative { get; set; }
         public string? rk_metal_joint_line { get; set; }
         public string? rk_lateral_joint_line { get; set; }
         public string? rk_patellar_joint_line { get; set; }
@@ -612,18 +622,18 @@ namespace PainTrax.Web.Models
         public string? rk_with_pain { get; set; }
         //public string? rk_with_pain_discomfort { get; set; }
         public string? rk_mcmurray_poitive { get; set; }
-       // public string? rk_mcmurray_negative { get; set; }
+        // public string? rk_mcmurray_negative { get; set; }
         public string? rk_anterior_poitive { get; set; }
-       // public string? rk_anterior_negative { get; set; }
+        // public string? rk_anterior_negative { get; set; }
         public string? rk_lachman_poitive { get; set; }
-       // public string? rk_lachman_negative { get; set; }
+        // public string? rk_lachman_negative { get; set; }
         public string? rk_posterior_poitive { get; set; }
-       // public string? rk_posterior_negative { get; set; }
+        // public string? rk_posterior_negative { get; set; }
         public string? rk_valgus_poitive { get; set; }
-       // public string? rk_valgus_negative { get; set; }
+        // public string? rk_valgus_negative { get; set; }
         public string? rk_varus_poitive { get; set; }
         //public string? rk_varus_negative { get; set; }
-        public string? neuro_others { get; set; }        
+        public string? neuro_others { get; set; }
         //10.DIAGNOSES: 
         public string? diagonosis { get; set; }
 
@@ -647,7 +657,7 @@ namespace PainTrax.Web.Models
         public string? refferal_Psychologist { get; set; }
         public string? refferal_Physiatrist { get; set; }
         public string? refferal_NeuroLogist { get; set; }
-        public string? refferal_other_1 { get; set; }       
+        public string? refferal_other_1 { get; set; }
 
         public string? refferal_other { get; set; }
         public string? request_schedule_Discectomy { get; set; }
@@ -676,7 +686,7 @@ namespace PainTrax.Web.Models
         public string? dme_dispenced_L3916 { get; set; }
         public string? dme_dispenced_L0456 { get; set; }
         public string? dme_dispenced_L0480 { get; set; }
-        public string? dme_dispenced_E0762 { get; set; }       
+        public string? dme_dispenced_E0762 { get; set; }
 
 
         //13.DME Meadowbrook Medical Supplies (other provider)

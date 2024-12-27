@@ -113,7 +113,7 @@ namespace PainTrax.Web.Models
         public string? symptoms_of_accident_Sleep_issues { get; set; }
         public string? symptoms_of_accident_Anxiety { get; set; }
 
-        public string? symptoms_since_accident { get; set; } 
+        public string? symptoms_since_accident { get; set; }
         //4.ADL ( Activities of daily living )
         //public string? personal_hygiene { get; set; }
         //public string? eating_independently { get; set; }
@@ -126,8 +126,8 @@ namespace PainTrax.Web.Models
         public string? adl_Shop_for_food { get; set; }
         public string? adl_walking { get; set; }
         public string? adl_cooking { get; set; }
-        public string? adl_sleeping{ get; set; }
-     
+        public string? adl_sleeping { get; set; }
+
         // 5.How would you describe your pain?
 
         public string? txt_describe_neck { get; set; }
@@ -141,10 +141,10 @@ namespace PainTrax.Web.Models
         public string? describe_neck_Dull { get; set; }
         public string? describe_neck_Achy { get; set; }
 
-        public string? cc_neck { get; set; } 
+        public string? cc_neck { get; set; }
 
         public string? neck_pain_radiates_L { get; set; }
-        // public string? neck_pain_radiates_R { get; set; }
+        public string? neck_pain_radiates_R { get; set; }
         public string? neck_pain_bodypart_arm { get; set; }
         public string? neck_pain_bodypart_forearm { get; set; }
         public string? neck_pain_bodypart_hand { get; set; }

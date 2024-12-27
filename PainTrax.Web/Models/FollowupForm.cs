@@ -616,6 +616,7 @@ namespace PainTrax.Web.Models
         public string? procedure_done_today_Diagnostic { get; set; }
         public string? procedure_done_today_Intraarticular { get; set; }
         public string? increase_rightknee_pain_getoutofcar { get; set; }
+        public string? proc_done_today { get; set; }
         //15.Followup:
         public string? followup { get; set; }
         //16.Notes:

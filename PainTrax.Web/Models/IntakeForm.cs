@@ -29,6 +29,7 @@ namespace PainTrax.Web.Models
         public DateTime? return_to_work { get; set; }
         public int? weight { get; set; }
         public int? height { get; set; }
+        public int? temperature { get; set; }
 
         // 2.Description of the accident
         public string? description_of_the_accident { get; set; }
@@ -711,7 +712,7 @@ namespace PainTrax.Web.Models
         public string? procedure_done_today_Diagnostic { get; set; }
         public string? procedure_done_today_Intraarticular { get; set; }
 
-
+        public string? proc_done_today { get; set; }
         //15.Followup:
         public string? followup { get; set; }
 

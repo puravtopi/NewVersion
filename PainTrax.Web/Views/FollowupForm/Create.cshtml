@@ -104,7 +104,7 @@
                       <table style="width:100%">
                         <tr>
                           <td style="width:50%">
-                            <label>Covered body parts:</label>
+                                                        <label style="font-weight: bold;">Covered body parts:</label>
                             <input type="text" id="covered_body_parts" asp-for="covered_body_parts" style="width:65%">
                           </td>
                           <td style="width:50%">
@@ -117,7 +117,7 @@
                   </tr>
                   <tr>
                     <td style="width:100%">
-                      <label>Degree Of Disability:</label>
+                                            <label style="font-weight: bold;">Degree Of Disability:</label>
                       <input class="form-check-input" asp-for="dod_Partial" type="checkbox" />
                       <label class="form-check-label" for="isactive"> Partial </label>
                       <input class="form-check-input" asp-for="dod_twentyfive" type="checkbox" />
@@ -134,7 +134,7 @@
                   </tr>
                   <tr>
                     <td style="width:100%">
-                      <label>Work Status:</label>
+                      <label style="font-weight: bold;">Work Status:</label>
                       <input class="form-check-input" asp-for="ws_able_to_work" type="checkbox" />
                       <label class="form-check-label" for="isactive"> Able to go back to work </label>
                       <input class="form-check-input" asp-for="ws_working" type="checkbox" />
@@ -147,7 +147,7 @@
                   </tr>
                   <tr>
                     <td>
-                      <label>The patient is s/p:</label>
+                                            <label style="font-weight: bold;">The patient is s/p:</label>
                       <input type="text" id="patient_s_p" asp-for="patient_s_p" style="width:70%">
                     </td>
                   </tr>
@@ -191,7 +191,7 @@
                   </tr>
                   <tr>
                     <td>
-                      <label> Patient’s symptoms</label>
+                      <label style="font-weight: bold;"> Patient’s symptoms</label>
                       <input asp-for="patient_symptoms_have" type="radio" value="have" />
                       <label> have </label>
                       <input asp-for="patient_symptoms_have" value="nothave" type="radio" />
@@ -200,7 +200,7 @@
                   </tr>
                   <tr>
                     <td style="width:100%">
-                      <label>Pt. is doing:</label>
+                                            <label style="font-weight: bold;">Pt. is doing:</label>
                       <input class="form-check-input" asp-for="pt_doing_PT" type="checkbox" />
                       <label class="form-check-label" for="isactive"> PT </label>
                       <input class="form-check-input" asp-for="pt_doing_Chiro" type="checkbox" />
@@ -738,7 +738,7 @@
                                     <tr>
 
                                         <td style="width:100%">
-                                            <label>Mid-Back::</label>
+                                            <label>Mid-Back:</label>
 
                                             <input class="form-check-input" asp-for="increase_midback_pain_sitting" type="checkbox" />
                                             <label class="form-check-label" for="isactive">
@@ -1259,10 +1259,12 @@
                                         <td style="width:100%">
 
                                             <label>DTRs 2+</label>
+                                            &nbsp;
+                                            <label>excepts Biceps</label>
 
                                             <input asp-for="dtrs_two_excepts_biceps_L" type="radio" value="exceptsBicepsL" />
                                             <label for="isactive">
-                                                excepts Biceps L
+                                                 L
                                             </label>
 
                                             <input asp-for="dtrs_two_excepts_biceps_L" type="radio" value="exceptsBicepsR" />
@@ -1271,15 +1273,19 @@
                                             </label>
                                             <input asp-for="triceps_L" type="radio" value="TricepsL" />
                                             <label for="isactive">
-                                                Triceps L
+                                                  &nbsp;
+                                            <label>Triceps</label>
+                                                 L
                                             </label>
                                             <input asp-for="triceps_L" type="radio" value="TricepsR" />
                                             <label for="isactive">
                                                 R
                                             </label>
+                                             &nbsp;
+                                            <label>Brachioradialis</label>
                                             <input asp-for="brachioradialis_L" type="radio" value="BrachioradialisL" />
                                             <label for="isactive">
-                                                Brachioradialis L
+                                                 L
                                             </label>
                                             <input asp-for="brachioradialis_L" type="radio" value="BrachioradialisR" />
                                             <label for="isactive">
@@ -1624,27 +1630,33 @@
                                         <td style="width:100%">
                                           
                                             <label>DTRs 2+</label>
+                                            &nbsp;
+                                            <label>except Patellar</label>
 
                                             <input asp-for="dtrs_two_except_pattler_L" type="radio" value="exceptPatellarL" />
                                             <label for="isactive">
-                                                except Patellar L
+                                                 L
                                             </label>
 
                                             <input asp-for="dtrs_two_except_pattler_L" type="radio" value="exceptPatellarR" />
                                             <label for="isactive">
                                                 R
                                             </label>
+                                             &nbsp;
+                                            <label>Achilles</label>
                                             <input asp-for="achilles_L" type="radio" value="AchillesL" />
                                             <label for="isactive">
-                                                Achilles L
+                                                 L
                                             </label>
                                             <input asp-for="achilles_L" type="radio" value="AchillesR" />
                                             <label for="isactive">
                                                 R
                                             </label>
+                                              &nbsp;
+                                            <label>Plantar-Tibialis</label>
                                             <input asp-for="planter_L" type="radio" value="PlantarTibialisL" />
                                             <label for="isactive">
-                                                Plantar-Tibialis L
+                                                 L
                                             </label>
                                             <input asp-for="planter_L" type="radio" value="PlantarTibialisR" />
                                             <label for="isactive">
@@ -2767,7 +2779,7 @@
                                         <td style="width:100%">
                                             <label style="font-weight: bold;"> RECOMMENDATIONS(Assessment and Plan):</label>
                                             <br />
-                                            <label class="form-check-label" for="isactive">
+                                            <label style="font-weight: bold;">
                                                 Diag. Test Referral(Please Specify);
                                             </label>
 
@@ -2793,7 +2805,7 @@
                                     <tr>
                                         <td style="width:100%">
 
-                                            <label class="form-check-label" for="isactive">
+                                            <label style="font-weight: bold;">
                                                 Providers Seen:
                                             </label>
 
@@ -2833,7 +2845,7 @@
                                     <tr>
                                         <td style="width:100%">
 
-                                            <label class="form-check-label" for="isactive">
+                                            <label style="font-weight: bold;">
                                                 Referral:
                                             </label>
 
@@ -2877,7 +2889,7 @@
                                     <tr>
                                         <td style="width:100%">
 
-                                            <label class="form-check-label" for="isactive">
+                                            <label style="font-weight: bold;">
                                                 Request/Schedule
                                             </label>
 
@@ -2934,7 +2946,7 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <label>Rx Meds / Refill:</label>
+                                            <label style="font-weight: bold;">Rx Meds / Refill:</label>
                                             <input type="text" id="Rx_Meds_Refill" asp-for="Rx_Meds_Refill" style="width:100%">
                                         </td>
                                     </tr>
@@ -3209,6 +3221,7 @@
                                             <label class="form-check-label" for="isactive">
                                                 Intra-articular injection:
                                             </label>
+                                             <input type="text" asp-for="proc_done_today" style="width:25%">
                                         </td>
                                     </tr>
                                 </table>
@@ -3217,7 +3230,7 @@
                                     <tr>
                                         <td>
                                             <label style="font-weight: bold;"> Follow Up visit:</label>
-                                            <input type="text" asp-for="followup" style="width:25%">
+                                            <input type="text" asp-for="followup" style="width:5%">
                                             <label> weeks/months/p.r.n.</label>
 
 

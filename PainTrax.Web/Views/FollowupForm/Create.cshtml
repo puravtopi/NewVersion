@@ -1,1439 +1,668 @@
-﻿@model PainTrax.Web.Models.IntakeForm
+﻿@model PainTrax.Web.Models.FollowupForm 
 <main id="main" class="main">
-    <div class="pagetitle">
-        <h1>Intake Form
+  <div class="pagetitle">
+    <h1>Intake Form
             <input style="float:right" type="button" class="btn btn-primary" value="Back" onclick="@("window.location.href='" + @Url.Action("GetProvider", "Home") + "'");" />
-        </h1>
-    </div>
-    <!-- End Page Title -->
-    <section class="section">
-        <div class="row">
-            <div>
-                <div class="card">
-                    <div class="card-body">
-                        <form asp-action="Create" asp-controller="IntakeForm" id="frmIntake">
+    </h1>
+  </div>
+  <!-- End Page Title -->
+  <section class="section">
+    <div class="row">
+      <div>
+        <div class="card">
+          <div class="card-body">
+            <form asp-action="Create" asp-controller="FollowupForm" id="frmFollowup">
+              <br />
+              <div>
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                  <tr>
+                    <td>
+                      <label style="font-weight: bold;">FOLLOW-UP</label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table style="width:100%">
+                        <tr>
+                          <td style="width:9%">
+                            <label>Visit Type</label>
+                            <select name="visit_type" id="visit_type" asp-for="visit_type" style="width:32%"></select>
+                          </td>
+                          <td style="width:20%">
+                            <label>Location</label>
+                            <select name="location_name" id="location_name" asp-for="location_name" style="width:70%"></select>
+                          </td>
+                          <td style="width:20%">
+                            <label>Last Name:</label>
+                            <input type="text" id="l_name" asp-for="l_name" style="width:67%">
+                          </td>
+                          <td style="width:20%">
+                            <label>First Name:</label>
+                            <input type="text" id="f_name" asp-for="f_name" style="width:67%">
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table>
+                        <tr>
+                          <td style="width:10%">
+                            <label>DOB:</label>
+                            <input type="date" id="dob" asp-for="dob" style="width:50">
+                          </td>
+                          <td style="width:10%">
+                            <label>DOA:</label>
+                            <input type="date" id="doa" asp-for="doa" style="width:50">
+                          </td>
+                          <td style="width:10%">
+                            <label>DOV:</label>
+                            <input type="date" id="dov" asp-for="dov" style="width:50">
+                          </td>
+                          <td style="width:10%">
+                            <label>Sex:</label>
+                            <input asp-for="gender" type="radio" value="F" />
+                            <label> F </label>
+                            <input asp-for="gender" value="M" type="radio" />
+                            <label> M </label>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                  <tr>
+                    <td>
+                      <table style="width:100%">
+                        <tr>
+                          <td style="width:100%">
+                            <label style="font-weight: bold;"> Body parts evaluated:</label>
+                            <input class="form-check-input" asp-for="body_parts_neck" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Neck </label>
+                            <input class="form-check-input" asp-for="body_parts_midback" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Mid-Back </label>
+                            <input class="form-check-input" asp-for="body_parts_lowback" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Low-Back </label>
+                            <input class="form-check-input" asp-for="body_parts_shoulder" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Shoulder </label>
+                            <input class="form-check-input" asp-for="body_parts_knee" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Knee </label>
+                          </td>
+                        </tr>
+                      </table>
+                  <tr>
+                    <td>
+                      <label> Others</label>
+                      <textarea style="width:100%" id="bodyparts_others" asp-for="body_parts_others"></textarea>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table style="width:100%">
+                        <tr>
+                          <td style="width:50%">
+                            <label>Covered body parts:</label>
+                            <input type="text" id="covered_body_parts" asp-for="covered_body_parts" style="width:65%">
+                          </td>
+                          <td style="width:50%">
+                            <label>Amended to the case:</label>
+                            <input type="text" id="amended_to_the_case" asp-for="amended_to_the_case" style="width:60%">
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width:100%">
+                      <label>Degree Of Disability:</label>
+                      <input class="form-check-input" asp-for="dod_Partial" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> Partial </label>
+                      <input class="form-check-input" asp-for="dod_twentyfive" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> 25% </label>
+                      <input class="form-check-input" asp-for="dod_fifty" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> 50% </label>
+                      <input class="form-check-input" asp-for="dod_seventyfive" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> 75% </label>
+                      <input class="form-check-input" asp-for="dod_hundred" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> 100% </label>
+                      <input class="form-check-input" asp-for="dod_none" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> None </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width:100%">
+                      <label>Work Status:</label>
+                      <input class="form-check-input" asp-for="ws_able_to_work" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> Able to go back to work </label>
+                      <input class="form-check-input" asp-for="ws_working" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> Working </label>
+                      <input class="form-check-input" asp-for="ws_not_working" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> Not Working </label>
+                      <input class="form-check-input" asp-for="ws_partial_working" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> Partially Working </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label>The patient is s/p:</label>
+                      <input type="text" id="patient_s_p" asp-for="patient_s_p" style="width:70%">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label>The patient reported</label>
+                      <input type="text" id="period_reported_to" asp-for="period_reported_to" style="width:10%">
+                      <label>%symptoms improvement that lasted a period of</label>
+                      <input type="text" id="lasted_a_period_of" asp-for="lasted_a_period_of" style="width:10%">
+                      <input asp-for="daysorweeks" type="radio" value="days" />
+                      <label> days </label>
+                      <input asp-for="daysorweeks" value="weeks" type="radio" />
+                      <label> weeks </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label>During that</label>
+                      <input type="text" id="during_period_reported_to" asp-for="during_period_reported_to" style="width:10%">
+                      <input asp-for="during_daysorweeks" type="radio" value="days" />
+                      <label> days </label>
+                      <input asp-for="during_daysorweeks" value="weeks" type="radio" />
+                      <label> weeks </label>
+                      <label>period patient reported:</label>
+                      <input type="text" id="period_patient_reported" asp-for="period_patient_reported" style="width:44%">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label>Radicular symptoms had improved by greater than</label>
+                      <input type="text" id="radicular_symptoms" asp-for="radicular_symptoms" style="width:10%">
+                      <label>%</label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label> There was functional improvement in his/her ROM</label>
+                      <br />
+                      <textarea style="width:100%" id="functional_improvements" asp-for="functional_improvements"></textarea>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <label> Patient’s symptoms</label>
+                      <input asp-for="patient_symptoms_have" type="radio" value="have" />
+                      <label> have </label>
+                      <input asp-for="patient_symptoms_have" value="nothave" type="radio" />
+                      <label> have not returned to baseline. </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width:100%">
+                      <label>Pt. is doing:</label>
+                      <input class="form-check-input" asp-for="pt_doing_PT" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> PT </label>
+                      <input class="form-check-input" asp-for="pt_doing_Chiro" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> Chiro </label>
+                      <input class="form-check-input" asp-for="pt_doing_Acupuncture" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> Acupuncture </label>
+                      <input type="text" id="txt_pt_doing" asp-for="txt_pt_doing" style="width:10%">
+                      <label>for how many times/weeks</label>
+                    </td>
+                  </tr>
+                </table>
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                  <tr>
+                    <td>
+                      <table border="1">
+                        <tr>
+                          <td>
+                            <label style="font-weight: bold;">ADL(Activities of daily living):</label>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th></th>
+                          <th style="padding-left:10px;">Able to perform</th>
+                          <th style="padding-left:10px;">Unable to perform</th>
+                          <th style="padding-left:10px;">Difficulty to perform</th>
+                        </tr>
+                        <tr>
+                          <td>personal hygiene, grooming, dressing, toileting</td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="personal_able_to_perform" type="checkbox" />
+                          </td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="personal_not_able_to_perform" type="checkbox" />
+                          </td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="personal_difficluty_to_perform" type="checkbox" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>eating independently</td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="eating_able_to_perform" type="checkbox" />
+                          </td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="eating_not_able_to_perform" type="checkbox" />
+                          </td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="eating_difficluty_to_perform" type="checkbox" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Shop for food</td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="Shop_for_food_able_to_perform" type="checkbox" />
+                          </td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="Shop_for_food_not_able_to_perform" type="checkbox" />
+                          </td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="Shop_for_food_difficluty_to_perform" type="checkbox" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>walking, transferring, ambulating</td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="walking_able_to_perform" type="checkbox" />
+                          </td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="walking_not_able_to_perform" type="checkbox" />
+                          </td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="walking_difficluty_to_perform" type="checkbox" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>cook, clean, maintain households</td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="cooking_able_to_perform" type="checkbox" />
+                          </td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="cooking_not_able_to_perform" type="checkbox" />
+                          </td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="cooking_difficluty_to_perform" type="checkbox" />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Sleeping</td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="sleeping_able_to_perform" type="checkbox" />
+                          </td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="sleeping_not_able_to_perform" type="checkbox" />
+                          </td>
+                          <td align="center">
+                            <input class="form-check-input" asp-for="sleeping_difficluty_to_perform" type="checkbox" />
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+                
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                  <tr>
+                    <td>
+                      <label style="font-weight: bold;"> Medication:</label>
+                      <textarea style="width:100%" asp-for="txt_medication"></textarea>
+                    </td>
+                  </tr>
+                </table>
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                  <tr>
+                    <td>
+                      <label style="font-weight: bold;"> Providers seen:</label>
+                      <textarea style="width:100%" asp-for="txt_provider_seen"></textarea>
+                    </td>
+                  </tr>
+                </table>
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                  <tr>
+                    <td>
+                      <table style="width:100%">
+                        <tr>
+                          <td style="width:100%">
+                            <label style="font-weight: bold;"> How do you describe your pain?</label>
                             <br />
-                            <div>
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
-                                    <tr>
-                                       <td>
-                                            <label style="font-weight: bold;">INITIAL EVALUATION INTAKE SHEET</label>
-                                            </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-                                                  
-                                                    <td style="width:10%">
-                                                        <label>Visit Type</label>
-                                                       
-                                                        <select name="visit_type" id="visit_type" asp-for="visit_type" style="width:100%">
-                                                            <option value="Initial Visit">Initial Visit</option>
-                                                            <option value="FU Visit">FU Visit</option>
-                                                        </select>
-                                                    </td>
-                                                    <td style="width:20%">
-                                                        <label>Location</label>
-                                                       
-                                                        <select name="location_id" id="location_id" asp-for="location_id" style="width:90%" asp-items="@ViewBag.locList"></select>
-                                                        
-                                                    </td>
-                                                    <td style="width:20%">
-                                                        <label>Last Name:</label>
-                                                        
-                                                        <input type="text" id="l_name" asp-for="l_name" style="width:95%">
-                                                    </td>
-                                                    <td style="width:20%">
-                                                        <label>First Name:</label>
-                                                        <input type="text" id="f_name" asp-for="f_name" style="width:95%">
-                                                    </td>
-                                                   
-                                                    <td style="width:20%">
-                                                             <label>Case Type:</label>
-                                                        <br />
-                                                        <input asp-for="CaseType" value="NF" type="radio" selected />
-                                                        <label>NF</label>
-                                                        <input asp-for="CaseType" value="WC" type="radio" />
-                                                        <label>WC</label>
-                                                        <input asp-for="CaseType" value="Lien" type="radio" />
-                                                        <label>Lien</label>                                                        
-                                                    </td> 
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table>
-                                                <tr>
-                                                    <td style="width:10%">
-                                                        <label>DOB:</label>
-                                                        <br />
-                                                        <input type="date" id="dob" asp-for="dob" style="width:80%">
-                                                    </td>
-                                                    <td style="width:10%">
-                                                        <label>DOA:</label>
-                                                        <br />
-                                                        <input type="date" id="doa" asp-for="doa" style="width:80%">
-                                                    </td>
-                                                    <td style="width:10%">
-                                                        <label>DOV:</label>
-                                                        <br />
-                                                        <input type="date" id="dov" asp-for="dov" style="width:80%">
-                                                    </td>
-                                                    <td style="width:25%">
-                                                        <table>
-                                                            <tr>
-                                                                <td style="width:15%">
-                                                                    <label>WCB:</label>
-                                                                    <br />
-                                                                    <input type="text" id="wcb" asp-for="wcb" style="width:80%">
-                                                                </td>
-                                                                <td style="width:10%">
-                                                                    <label>Age:</label>
-                                                                    <br />
-                                                                    <input type="text" id="age" asp-for="age" style="width:45%">
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </td>
-                                                    <td style="width:10%">
-                                                        <label>Sex:</label>
-                                                        <br />
-                                                        <input asp-for="gender" type="radio" value="F" />
-                                                        <label>
-                                                            F
-                                                        </label>
-                                                        <input asp-for="gender" value="M" type="radio" />
-                                                        <label>
-                                                            M
-                                                        </label>
-                                                    </td>
-                                                    <td style="width:10%">
-                                                        <label>Handedness:</label>
-
-                                                        <input asp-for="handedness" type="radio" value="R" />
-                                                        <label >
-                                                            R
-                                                        </label>
-                                                        <input asp-for="handedness" type="radio" value="L" />
-                                                        <label >
-                                                            L
-                                                        </label>
-
-                                                    </td>
-                                                  
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%"> 
-                                                <tr>
-                                                    
-                                                   
-                                                    <td style="width:20%">
-                                                        <label>Occupation:</label>
-                                                       
-                                                        <input type="text" id="occupation" asp-for="occupation" style="width:60%">
-                                                    </td>
-                                                    <td style="width:16%">
-                                                        <label>StillWorking?</label>
-
-                                                        <input asp-for="still_working" type="radio" value="yes"/>
-                                                        <label>
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="still_working" type="radio" value="no" />
-                                                        <label>
-                                                            No
-                                                        </label>
-                                                        <input type="text" id="txt_still_working" asp-for="txt_still_working" style="width:20%">
-
-                                                    </td>
-                                                    <td style="width:24%">
-                                                        <label>Degree of Disability:</label>
-
-                                                        <input type="text" id="degree_of_disability" asp-for="degree_of_disability" style="width:50%">
-                                                        
-
-                                                    </td>
-                                                    
-                                                    
-                                                </tr>
-                                            </table>
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-
-
-                                                    
-                                                    <td style="width:20%">
-                                                        <label>Last day you worked:</label>
-                                                        <input type="date" id="last_day_worked" asp-for="last_day_worked" style="width:50%">
-                                                       
-                                                    </td>
-                                                    <td style="width:20%">
-                                                        <label>Date you returned to work:</label>
-
-                                                        <input type="date" id="return_to_work" asp-for="return_to_work" style="width:50%">
-                                                    </td>
-                                                    <td style="width:4%">
-                                                        <label>Vitals:</label>
-                                                    </td>
-                                                    <td style="width:12%">
-                                                        <label>Weight: ( lbs):</label>
-
-                                                        <input type="text"  id="weight" asp-for="weight" style="width:29%">
-
-                                                    </td>
-                                                    <td style="width:20%">
-                                                        <label>Height :(feet_Inches):</label>
-
-                                                        <input type="text" id="height" asp-for="height" style="width:20%">
-
-                                                    </td>
-
-                                                    
-
-                                                </tr>
-                                            </table>
-
-                                        </td>
-                                    </tr>
-                                     
-                                </table>
-                                <br />
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
-                                    <tr>
-                                        <td>
-                                            <label style="font-weight: bold;">Description of the accident:</label>
-                                            <textarea style="width:100%" id="description_of_the_accident" asp-for="description_of_the_accident"></textarea>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <br />
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
-                                    <tr>
-                                        <td>
-                                            <label style="font-weight: bold;"> History given by patient / interpreter</label>
-                                            <br />
-
-
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-
-                                            <label>At the time of the accident, did you have direct impact on any body part?</label>
-
-                                            <input  asp-for="direct_impact_on_bodypart" type="radio" value="Yes" />
-                                            <label>
-                                                Yes
-                                            </label>
-                                            <input asp-for="direct_impact_on_bodypart" type="radio" value="No" />
-                                            <label >
-                                                No
-                                            </label>
-
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <label>If yes, which body part?</label>
-
-                                            <input type="text" id="if_yes_which_bodypart" asp-for="if_yes_which_bodypart" style="width:50%">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table>
-                                                <tr>
-
-                                                    <td style="width:30%">
-                                                        <label>Did you lose consiousness?</label>
-
-                                                        <input asp-for="loss_consciousness" type="radio" value="Yes"/>
-                                                        <label>
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="loss_consciousness" type="radio" value="No" />
-                                                        <label>
-                                                            No
-                                                        </label>
-
-                                                    </td>
-                                                    <td style="width:40%">
-                                                        <label>If yes,then how long?</label>
-
-                                                        <input type="text" id="if_yes_how_long" asp-for="if_yes_how_long" style="width:50%">
-                                                    </td>
-
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table>
-                                                <tr>
-                                                    <td style="width:30%">
-                                                        <label>Did you go to the hospital?</label>
-
-                                                        <input asp-for="did_go_to_the_hospital" type="radio" value="Yes" />
-                                                        <label>
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="did_go_to_the_hospital" type="radio" value="No"/>
-                                                        <label>
-                                                            No
-                                                        </label>
-
-                                                    </td>
-                                                    <td style="width:40%">
-                                                        <label>If yes,which hospital?</label>
-
-                                                        <input type="text" id="if_yes_which_hospital" asp-for="if_yes_which_hospital" style="width:50%">
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table>
-                                                <tr>
-                                                    <td style="width:30%">
-                                                        <label>Did you go the same day?</label>
-
-                                                        <input asp-for="go_to_the_sameday" type="radio" value="Yes"/>
-                                                        <label>
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="go_to_the_sameday" type="radio" value="No" />
-                                                        <label>
-                                                            No
-                                                        </label>
-
-                                                    </td>
-                                                    <td style="width:40%">
-                                                        <label>If no, how many days later?</label>
-
-                                                        <input type="text" id="if_no_how_many_days_later" asp-for="if_no_how_many_days_later" style="width:50%">
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <td style="width:30%">
-                                                        <label>How did you go to the hospital?</label>
-
-                                                        <input asp-for="rdo_ambulance" type="radio" value="Ambulance" />
-                                                        <label for="isactive">
-                                                            Ambulance
-                                                        </label>
-                                                        <input asp-for="rdo_ambulance" type="radio" value="Taxi" />
-                                                        <label for="isactive">
-                                                            Taxi
-                                                        </label>
-                                                        <input asp-for="rdo_ambulance" type="radio" value="Family"/>
-                                                        <label for="isactive">
-                                                            Family/Friend
-                                                        </label>
-                                                        <input asp-for="rdo_ambulance" type="radio" value="Alone"/>
-                                                        <label for="isactive">
-                                                            Alone/yourself
-                                                        </label>
-
-                                                    </td>
-
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-
+                            <label>Neck</label>
+                            <input type="text" id="txt_describe_neck" asp-for="txt_describe_neck" style="width:3%">
+                            <label>/ 10</label> &nbsp; <input class="form-check-input" asp-for="describe_neck_Constant" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Constant </label>
+                            <input class="form-check-input" asp-for="describe_neck_Intermittent" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Intermittent </label>
+                            <input class="form-check-input" asp-for="describe_neck_Sharp" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Sharp </label>
+                            <input class="form-check-input" asp-for="describe_neck_Electric" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Electric </label>
+                            <input class="form-check-input" asp-for="describe_neck_Shooting" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Shooting </label>
+                            <input class="form-check-input" asp-for="describe_neck_Throbbing" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Throbbing </label>
+                            <input class="form-check-input" asp-for="describe_neck_Pulsating" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Pulsating </label>
+                            <input class="form-check-input" asp-for="describe_neck_Dull" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Dull </label>
+                            <input class="form-check-input" asp-for="describe_neck_Achy" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Achy </label>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width:100%">
+                      <table style="width:100%">
+                        <tr>
+                          <td>
+                            <label>Neck pain: Radiates To </label>
+                            <input class="form-check-input" asp-for="neck_pain_radiates_RUE" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> RUE </label>
+                            <input class="form-check-input" asp-for="neck_pain_radiates_LUE" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> LUE </label>
+                            <input class="form-check-input" asp-for="neck_pain_radiates_BUE" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> BUE </label> &nbsp; <label> With </label>
+                            <input class="form-check-input" asp-for="neck_pain_numbness" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> numbness </label>
+                            <input class="form-check-input" asp-for="neck_pain_tingling" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> tingling </label>
+                            <label> To </label>
+                            <input class="form-check-input" asp-for="neck_pain_bodypart_shoulder" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> shoulder </label>
+                            <input class="form-check-input" asp-for="neck_pain_bodypart_elbow" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> elbow </label>
+                            <input class="form-check-input" asp-for="neck_pain_bodypart_hand" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> hand </label>
+                            <input class="form-check-input" asp-for="neck_pain_bodypart_wrist" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> wrist </label>
+                            <input class="form-check-input" asp-for="neck_pain_bodypart_finger" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> fingers </label>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table style="width:100%">
+                        <tr>
+                          <td style="width:100%">
+                            <label>Midback</label>
+                            <input type="text" id="txt_describe_midback" asp-for="txt_describe_midback" style="width:3%">
+                            <label>/ 10</label> &nbsp; <input class="form-check-input" asp-for="describe_midback_Constant" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Constant </label>
+                            <input class="form-check-input" asp-for="describe_midback_Intermittent" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Intermittent </label>
+                            <input class="form-check-input" asp-for="describe_midback_Sharp" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Sharp </label>
+                            <input class="form-check-input" asp-for="describe_midback_Electric" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Electric </label>
+                            <input class="form-check-input" asp-for="describe_midback_Shooting" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Shooting </label>
+                            <input class="form-check-input" asp-for="describe_midback_Throbbing" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Throbbing </label>
+                            <input class="form-check-input" asp-for="describe_midback_Pulsating" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Pulsating </label>
+                            <input class="form-check-input" asp-for="describe_midback_Dull" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Dull </label>
+                            <input class="form-check-input" asp-for="describe_midback_Achy" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Achy </label>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table style="width:100%">
+                        <tr>
+                          <td style="width:100%">
+                            <label>Lowback</label>
+                            <input type="text" id="txt_describe_lowback" asp-for="txt_describe_lowback" style="width:3%">
+                            <label>/ 10</label> &nbsp; <input class="form-check-input" asp-for="describe_lowback_Constant" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Constant </label>
+                            <input class="form-check-input" asp-for="describe_lowback_Intermittent" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Intermittent </label>
+                            <input class="form-check-input" asp-for="describe_lowback_Sharp" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Sharp </label>
+                            <input class="form-check-input" asp-for="describe_lowback_Electric" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Electric </label>
+                            <input class="form-check-input" asp-for="describe_lowback_Shooting" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Shooting </label>
+                            <input class="form-check-input" asp-for="describe_lowback_Throbbing" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Throbbing </label>
+                            <input class="form-check-input" asp-for="describe_lowback_Pulsating" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Pulsating </label>
+                            <input class="form-check-input" asp-for="describe_lowback_Dull" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Dull </label>
+                            <input class="form-check-input" asp-for="describe_lowback_Achy" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Achy </label>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width:100%">
+                      <label>Low Back pain: Radiates To </label>
+                      <input class="form-check-input" asp-for="lowback_pain_radiates_RLE" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> RLE </label>
+                      <input class="form-check-input" asp-for="lowback_pain_radiates_LLE" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> LLE </label>
+                      <input class="form-check-input" asp-for="lowback_pain_radiates_BLE" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> BLE </label> &nbsp; <label> With </label>
+                      <input class="form-check-input" asp-for="lowback_pain_numbness" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> numbness </label>
+                      <input class="form-check-input" asp-for="lowback_pain_tingling" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> tingling </label>
+                      <label> To </label>
+                      <input class="form-check-input" asp-for="lowback_pain_bodypart_thigh" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> thigh </label>
+                      <input class="form-check-input" asp-for="lowback_pain_bodypart_knee" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> knee </label>
+                      <input class="form-check-input" asp-for="lowback_pain_bodypart_leg" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> leg </label>
+                      <input class="form-check-input" asp-for="lowback_pain_bodypart_ankle" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> ankle </label>
+                      <input class="form-check-input" asp-for="lowback_pain_bodypart_foot" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> foot </label>
+                      <input class="form-check-input" asp-for="lowback_pain_bodypart_toe" type="checkbox" />
+                      <label class="form-check-label" for="isactive"> toe </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table>
+                        <tr>
+                          <td style="width:100%">
+                            <label>Left Shoulder</label>
+                            <input type="text" id="describe_leftshoulder" asp-for="describe_leftshoulder" style="width:3%">
+                            <label>/ 10</label> &nbsp; <input class="form-check-input" asp-for="txt_describe_leftshoulder_Constant" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Constant </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftshoulder_Intermittent" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Intermittent </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftshoulder_Sharp" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Sharp </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftshoulder_Electric" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Electric </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftshoulder_Shooting" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Shooting </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftshoulder_Throbbing" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Throbbing </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftshoulder_Pulsating" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Pulsating </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftshoulder_Dull" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Dull </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftshoulder_Achy" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Achy </label>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table>
+                        <tr>
+                          <td style="width:100%">
+                            <label>Right Shoulder</label>
+                            <input type="text" id="describe_rightshoulder" style="width:3%">
+                            <label>/ 10</label> &nbsp; <input class="form-check-input" asp-for="txt_describe_rightshoulder_Constant" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Constant </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightshoulder_Intermittent" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Intermittent </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightshoulder_Sharp" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Sharp </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightshoulder_Electric" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Electric </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightshoulder_Shooting" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Shooting </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightshoulder_Throbbing" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Throbbing </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightshoulder_Pulsating" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Pulsating </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightshoulder_Dull" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Dull </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightshoulder_Achy" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Achy </label>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table>
+                        <tr>
+                          <td style="width:100%">
+                            <label>Left Knee</label>
+                            <input type="text" id="describe_leftknee" asp-for="describe_leftknee" style="width:3%">
+                            <label>/ 10</label> &nbsp; <input class="form-check-input" asp-for="txt_describe_leftknee_Constant" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Constant </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftknee_Intermittent" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Intermittent </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftknee_Sharp" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Sharp </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftknee_Electric" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Electric </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftknee_Shooting" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Shooting </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftknee_Throbbing" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Throbbing </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftknee_Pulsating" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Pulsating </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftknee_Dull" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Dull </label>
+                            <input class="form-check-input" asp-for="txt_describe_leftknee_Achy" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Achy </label>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table>
+                        <tr>
+                          <td style="width:100%">
+                            <label>Right Knee</label>
+                            <input type="text" id="describe_rightknee" asp-for="describe_rightknee" style="width:3%">
+                            <label>/ 10</label> &nbsp; <input class="form-check-input" asp-for="txt_describe_rightknee_Constant" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Constant </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightknee_Intermittent" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Intermittent </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightknee_Sharp" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Sharp </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightknee_Electric" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Electric </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightknee_Shooting" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Shooting </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightknee_Throbbing" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Throbbing </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightknee_Pulsating" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Pulsating </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightknee_Dull" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Dull </label>
+                            <input class="form-check-input" asp-for="txt_describe_rightknee_Achy" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Achy </label>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table>
+                        <tr>
+                          <td style="width:100%">
+                            <input type="text" id="txt_other_describe_part" asp-for="txt_other_describe_part" style="width:10%">
+                            <input type="text" id="other_describe_part_value" asp-for="other_describe_part_value" style="width:3%">
+                            <label>/ 10</label> &nbsp; <input class="form-check-input" asp-for="txt_other_describe_part_Constant" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Constant </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_Intermittent" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Intermittent </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_Sharp" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Sharp </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_Electric" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Electric </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_Shooting" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Shooting </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_Throbbing" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Throbbing </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_Pulsating" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Pulsating </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_Dull" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Dull </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_Achy" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Achy </label>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <table>
+                        <tr>
+                          <td style="width:100%">
+                            <input type="text" id="txt_other_describe_part_1" asp-for="txt_other_describe_part_1" style="width:10%">
+                            <input type="text" id="other_describe_part_1_value" asp-for="other_describe_part_1_value" style="width:3%">
+                            <label>/ 10</label> &nbsp; <input class="form-check-input" asp-for="txt_other_describe_part_1_Constant" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Constant </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_1_Intermittent" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Intermittent </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_1_Sharp" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Sharp </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_1_Electric" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Electric </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_1_Shooting" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Shooting </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_1_Throbbing" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Throbbing </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_1_Pulsating" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Pulsating </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_1_Dull" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Dull </label>
+                            <input class="form-check-input" asp-for="txt_other_describe_part_1_Achy" type="checkbox" />
+                            <label class="form-check-label" for="isactive"> Achy </label>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+                <br />
+               <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td>
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <td style="width:40%">
-                                                        <label>In the hospital did they did any test?</label>
-
-                                                        <input asp-for="did_they_did_any_test" type="radio" value="Yes"/>
-                                                        <label for="isactive">
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="did_they_did_any_test" type="radio" value="No" />
-                                                        <label for="isactive">
-                                                            No
-                                                        </label>
-
-                                                    </td>
-                                                    <td style="width:30%">
-                                                        <label>what tests?</label>
-
-                                                        <input class="form-check-input" asp-for="what_tests_xray" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            X-Rays
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="what_tests_ct" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            CT
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="what_tests_mri" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            MRI
-                                                        </label>
-                                                    </td>
-                                                    <td style="width:30%">
-                                                        <label>Body parts:</label>
-
-                                                        <input type="text" id="body_parts" asp-for="body_parts" style="width:60%">
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <td style="width:30%">
-                                                        <label>Where you prescribed any medication?</label>
-
-                                                        <input asp-for="prescribed_any_medication_yes" type="radio" value="Yes"/>
-                                                        <label for="isactive">
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="prescribed_any_medication_yes" type="radio" value="No" />
-                                                        <label for="isactive">
-                                                            No
-                                                        </label>
-
-                                                    </td>
-                                                    <td style="width:40%">
-                                                        <label>If yes,what medication?</label>
-
-                                                        <input type="text" id="body_parts" asp-for="body_parts" style="width:50%">
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <td style="width:45%">
-                                                        <label>Have you been involved in an accident in the past?</label>
-
-                                                        <input asp-for="involved_accident_past_yes" type="radio" value="Yes"/>
-                                                        <label for="isactive">
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="involved_accident_past_yes" type="radio" value="No"/>
-                                                        <label for="isactive">
-                                                            No
-                                                        </label>
-
-                                                    </td>
-                                                    <td style="width:40%">
-                                                        <label>When?</label>
-
-                                                        <input type="text" id="when_accident_past" asp-for="when_accident_past" style="width:50%">
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <td style="width:40%">
-                                                        <label>Body parts injured in that accident</label>
-
-                                                        <input type="text" id="bodyparts_injured_inaccident" asp-for="bodyparts_injured_inaccident" style="width:42%">
-
-                                                    </td>
-                                                    <td style="width:40%">
-                                                        <label>Did you completely recover?</label>
-
-                                                        <input asp-for="completly_recovered_yes" type="radio" value="Yes" />
-                                                        <label for="isactive">
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="completly_recovered_yes" type="radio" value="No" />
-                                                        <label for="isactive">
-                                                            No
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <td style="width:70%">
-                                                        <label>Any Medical conditions</label>
-
-                                                        <input class="form-check-input" asp-for="any_medical_conditions_Diabeties" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Diabeties
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="any_medical_conditions_bp" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            High BP
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="any_medical_conditions_ashthma" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Ashthma
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="any_medical_conditions_heart" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Heart Disease
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="any_medical_conditions_none" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            None
-                                                        </label>
-                                                    </td>
-                                                    <td style="width:25%">
-                                                        <label>Others</label>
-
-                                                        <input type="text" id="medical_conditions_others" asp-for="medical_conditions_others" style="width:60%">
-                                                    </td>
-                                                </tr>
-                                            </table>
-
-
-
-                                        </td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-
-                                                    <td style="width:30%">
-                                                        <label>Have you ever had any surgeries ?</label>
-
-                                                        <input asp-for="had_any_surgeries" type="radio" value="Yes" />
-                                                        <label for="isactive">
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="had_any_surgeries" type="radio" value="No" />
-                                                        <label for="isactive">
-                                                            No
-                                                        </label>
-
-                                                    </td>
-                                                    <td style="width:25%">
-                                                        <label>When?</label>
-
-                                                        <input type="text" id="had_any_surgeries_when" asp-for="had_any_surgeries_when" style="width:60%">
-                                                    </td>
-
-                                                </tr>
-                                            </table>
-
-
-
-                                        </td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td>
-
-                                            <label>Type of Surgery?</label>
-
-                                            <textarea style="width:100%" id="type_of_surgery" asp-for="type_of_surgery"></textarea>
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <td style="width:30%">
-                                                        <label>Are you taking any medications ?</label>
-
-                                                        <input asp-for="taking_medications_surgery" type="radio" value="Yes" />
-                                                        <label for="isactive">
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="taking_medications_surgery" type="radio" value="No" />
-                                                        <label for="isactive">
-                                                            No
-                                                        </label>
-
-                                                    </td>
-                                                    <td style="width:50%">
-
-                                                        <label>what medications?</label>
-
-                                                        <input type="text" id="what_medications_surgery" asp-for="what_medications_surgery" style="width:50%">
-
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <td style="width:30%">
-                                                        <label>ALLERGIES?</label>
-
-                                                        <input asp-for="allergies" type="radio" value="Yes"/>
-                                                        <label for="isactive">
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="allergies" type="radio" value="No" />
-                                                        <label for="isactive">
-                                                            No
-                                                        </label>
-
-                                                    </td>
-                                                    <td style="width:50%">
-
-                                                        <label>To what?</label>
-
-                                                        <input type="text" id="what_allergies" asp-for="what_allergies" style="width:50%">
-
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-
-                                            <label>Family History:</label>
-
-                                            <textarea style="width:100%" id="family_history" asp-for="family_history"></textarea>
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <td style="width:40%">
-                                                        <label>Social History</label>
-                                                        <label>Smoke</label>
-                                                        <input asp-for="smoke" type="radio" value="Yes" />
-                                                        <label for="isactive">
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="smoke" type="radio" value="No" />
-                                                        <label for="isactive">
-                                                            No
-                                                        </label>
-                                                        <input type="text" id="txt_smoke" asp-for="txt_smoke" style="width:30%">
-
-                                                    </td>
-                                                    <td style="width:30%">
-
-                                                        <label>Marijuana</label>
-                                                        <input asp-for="marijuana" type="radio" value="Yes" />
-                                                        <label for="isactive">
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="marijuana" type="radio" value="No"/>
-                                                        <label for="isactive">
-                                                            No
-                                                        </label>
-                                                        <input type="text" id="txt_marijuana" asp-for="txt_marijuana" style="width:36%">
-
-                                                    </td>
-                                                    <td style="width:30%">
-
-                                                        <label>Alcohol</label>
-                                                        <input asp-for="alcohol" type="radio" value="Yes" />
-                                                        <label for="isactive">
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="alcohol" type="radio" value="No" />
-                                                        <label for="isactive">
-                                                            No
-                                                        </label>
-                                                        <input type="text" id="txt_alcohol" asp-for="txt_alcohol" style="width:44%">
-
-                                                    </td>
-
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            <table>
-                                                <tr>
-                                                    <td style="width:25%">
-                                                        <label>Physical Therapy</label>
-
-                                                        <input asp-for="physical_therapy" type="radio" value="Yes" />
-                                                        <label for="isactive">
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="physical_therapy" type="radio" value="No" />
-                                                        <label for="isactive">
-                                                            No
-                                                        </label>
-
-                                                    </td>
-                                                    <td style="width:25%">
-                                                        <label>How Often?</label>
-
-                                                        <input type="text" id="txt_physical_therapy" asp-for="txt_physical_therapy" style="width:25%">
-                                                        <label>/ Weeks</label>
-                                                    </td>
-                                                    <td style="width:25%">
-                                                        <label>Chiropractic</label>
-
-                                                        <input asp-for="chiropractic" type="radio" value="Yes" />
-                                                        <label for="isactive">
-                                                            Yes
-                                                        </label>
-                                                        <input asp-for="chiropractic" type="radio" value="No"/>
-                                                        <label for="isactive">
-                                                            No
-                                                        </label>
-
-                                                    </td>
-                                                    <td style="width:25%">
-                                                        <label>When?</label>
-
-                                                        <input type="text" id="txt_chiropractic" asp-for="txt_chiropractic" style="width:25%">
-                                                        <label>/ Weeks</label>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-
-                                        <td style="width:100%">
-                                            <label>Symptoms since the accident:</label>
-
-                                            <input class="form-check-input" asp-for="symptoms_of_accident_Headaches" type="checkbox" />
-                                            <label class="form-check-label" for="isactive">
-                                                Headaches
-                                            </label>
-                                            <input class="form-check-input" asp-for="symptoms_of_accident_ChestPain" type="checkbox" />
-                                            <label class="form-check-label" for="isactive">
-                                                Chest Pain/Short of Breath
-                                            </label>
-                                            <input class="form-check-input" asp-for="symptoms_of_accident_Abdominal" type="checkbox" />
-                                            <label class="form-check-label" for="isactive">
-                                                Abdominal Pain
-                                            </label>
-                                            <input class="form-check-input" asp-for="symptoms_of_accident_Muscle" type="checkbox" />
-                                            <label class="form-check-label" for="isactive">
-                                                Muscle Spasms
-                                            </label>
-                                            <input class="form-check-input" asp-for="symptoms_of_accident_Dizziness" type="checkbox" />
-                                            <label class="form-check-label" for="isactive">
-                                                Dizziness
-                                            </label>
-                                            </br>
-                                            <input class="form-check-input" asp-for="symptoms_of_accident_Nausea" type="checkbox" />
-                                            <label class="form-check-label" for="isactive">
-                                                Nausea
-                                            </label>
-                                            <input class="form-check-input" asp-for="symptoms_of_accident_Ringing_in_ears" type="checkbox" />
-                                            <label class="form-check-label" for="isactive">
-                                                Ringing in Ears
-                                            </label>
-                                            <input class="form-check-input" asp-for="symptoms_of_accident_Bladder" type="checkbox" />
-                                            <label class="form-check-label" for="isactive">
-                                                Bladder Incontinence
-                                            </label>
-                                            <input class="form-check-input" asp-for="symptoms_of_accident_Bowel" type="checkbox" />
-                                            <label class="form-check-label" for="isactive">
-                                                Bowel Incontinence
-                                            </label>
-                                            <input class="form-check-input" asp-for="symptoms_of_accident_Seizure" type="checkbox" />
-                                            <label class="form-check-label" for="isactive">
-                                                Seizure
-                                            </label>
-                                            <input class="form-check-input" asp-for="symptoms_of_accident_Sleep_issues" type="checkbox" />
-                                            <label class="form-check-label" for="isactive">
-                                                Sleep Issues/Difficulty
-                                            </label>
-                                            <br />
-                                            <input class="form-check-input" asp-for="symptoms_of_accident_Anxiety" type="checkbox" />
-                                            <label class="form-check-label" for="isactive">
-                                                Anxiety/Depression
-                                            </label>
-
-                                        </td>
-
-                                    </tr>
-
-
-                                </table>
-                                <br />
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
-                                    <tr>
-                                        <td>
-                                            <table border="1">
-                                                <tr>
-                                                    <td>
-                                                        <label style="font-weight: bold;">ADL(Activities of daily living):</label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th></th>
-                                                    <th style="padding-left:10px;">Able to perform</th>
-                                                    <th style="padding-left:10px;">Unable to perform</th>
-                                                    <th style="padding-left:10px;">Difficulty to perform</th>
-                                                </tr>
-                                                <tr>
-                                                    <td>personal hygiene, grooming, dressing, toileting</td>
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_personal" type="radio" value="Able to perform" /></td>
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_personal" type="radio" value="Unable to perform" /></td>
-
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_personal" type="radio" value="preforms with difficulty/requires extra time" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>eating independently</td>
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_eating" type="radio" value="Able to perform" /></td>
-                                                    <td align="center"> <input class="form-check-input" asp-for="adl_eating" type="radio" value="Unable to perform" /></td>
-
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_eating" type="radio" value="preforms with difficulty/requires extra time" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Shop for food</td>
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_Shop_for_food"  type="radio" value="Able to perform" /></td>
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_Shop_for_food" type="radio" value="Unable to perform" /></td>
-
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_Shop_for_food" type="radio" value="preforms with difficulty/requires extra time" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>walking, transferring, ambulating</td>
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_walking" type="radio" value="Able to perform" /></td>
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_walking" type="radio" value="Unable to perform" /></td>
-
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_walking" type="radio" value="preforms with difficulty/requires extra time" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>cook, clean, maintain households</td>
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_cooking" type="radio" value="Able to perform" /></td>
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_cooking" type="radio" value="Unable to perform" /></td>
-
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_cooking" type="radio" value="preforms with difficulty/requires extra time" /></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Sleeping</td>
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_sleeping"  type="radio" value="Able to perform" /></td>
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_sleeping" type="radio" value="Unable to perform"/></td>
-
-                                                    <td align="center"><input class="form-check-input" asp-for="adl_sleeping" type="radio" value="preforms with difficulty/requires extra time" /></td>
-
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-
-
-
-                                </table>
-                                <br />
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <td style="width:100%">
-                                                        <label style="font-weight: bold;">How do you describe your pain?</label>
-                                                        <br />
-                                                        <label>Neck</label>
-                                                        <input type="text" id="txt_describe_neck" asp-for="txt_describe_neck" style="width:3%">
-                                                        <label>/ 10</label>
-                                                        &nbsp;
-                                                        <input class="form-check-input" asp-for="describe_neck_Constant" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Constant
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_neck_Intermittent" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Intermittent
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_neck_Sharp" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Sharp
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_neck_Electric" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Electric
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_neck_Shooting" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Shooting
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_neck_Throbbing" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Throbbing
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_neck_Pulsating" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Pulsating
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_neck_Dull" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Dull
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_neck_Achy" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Achy
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                            </table>
-
-
-
-                                        </td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td style="width:100%">
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <td>
-                                                        <label>Neck pain: Radiates To </label>
-                                                        <input class="form-check-input" asp-for="neck_pain_radiates_RUE" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive"> RUE </label>
-                                                        <input class="form-check-input" asp-for="neck_pain_radiates_LUE" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive"> LUE </label>
-                                                        <input class="form-check-input" asp-for="neck_pain_radiates_BUE" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive"> BUE </label> &nbsp; <label> With </label>
-                                                        <input class="form-check-input" asp-for="neck_pain_numbness" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive"> numbness </label>
-                                                        <input class="form-check-input" asp-for="neck_pain_tingling" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive"> tingling </label>
-                                                        <label> To </label>
-                                                        <input class="form-check-input" asp-for="neck_pain_bodypart_shoulder" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive"> shoulder </label>
-                                                        <input class="form-check-input" asp-for="neck_pain_bodypart_elbow" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive"> elbow </label>
-                                                        <input class="form-check-input" asp-for="neck_pain_bodypart_hand" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive"> hand </label>
-                                                        <input class="form-check-input" asp-for="neck_pain_bodypart_wrist" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive"> wrist </label>
-                                                        <input class="form-check-input" asp-for="neck_pain_bodypart_finger" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive"> fingers </label>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <td style="width:100%">
-
-                                                        <label>Midback</label>
-                                                        <input type="text" id="txt_describe_midback" asp-for="txt_describe_midback" style="width:3%">
-                                                        <label>/ 10</label>
-                                                        &nbsp;
-                                                        <input class="form-check-input" asp-for="describe_midback_Constant" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Constant
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_midback_Intermittent" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Intermittent
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_midback_Sharp" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Sharp
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_midback_Electric" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Electric
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_midback_Shooting" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Shooting
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_midback_Throbbing" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Throbbing
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_midback_Pulsating" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Pulsating
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_midback_Dull" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Dull
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_midback_Achy" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Achy
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                            </table>
-
-
-
-                                        </td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <td style="width:100%">
-
-                                                        <label>Lowback</label>
-                                                        <input type="text" id="txt_describe_lowback" asp-for="txt_describe_lowback" style="width:3%">
-                                                        <label>/ 10</label>
-                                                        &nbsp;
-                                                        <input class="form-check-input" asp-for="describe_lowback_Constant" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Constant
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_lowback_Intermittent" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Intermittent
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_lowback_Sharp" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Sharp
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_lowback_Electric" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Electric
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_lowback_Shooting" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Shooting
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_lowback_Throbbing" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Throbbing
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_lowback_Pulsating" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Pulsating
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_lowback_Dull" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Dull
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="describe_lowback_Achy" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Achy
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                            </table>
-
-
-
-                                        </td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td style="width:100%">
-                                            <label>Low Back pain: Radiates To </label>
-                                            <input class="form-check-input" asp-for="lowback_pain_radiates_RLE" type="checkbox" />
-                                            <label class="form-check-label" for="isactive"> RLE </label>
-                                            <input class="form-check-input" asp-for="lowback_pain_radiates_LLE" type="checkbox" />
-                                            <label class="form-check-label" for="isactive"> LLE </label>
-                                            <input class="form-check-input" asp-for="lowback_pain_radiates_BLE" type="checkbox" />
-                                            <label class="form-check-label" for="isactive"> BLE </label> &nbsp; <label> With </label>
-                                            <input class="form-check-input" asp-for="lowback_pain_numbness" type="checkbox" />
-                                            <label class="form-check-label" for="isactive"> numbness </label>
-                                            <input class="form-check-input" asp-for="lowback_pain_tingling" type="checkbox" />
-                                            <label class="form-check-label" for="isactive"> tingling </label>
-                                            <label> To </label>
-                                            <input class="form-check-input" asp-for="lowback_pain_bodypart_thigh" type="checkbox" />
-                                            <label class="form-check-label" for="isactive"> thigh </label>
-                                            <input class="form-check-input" asp-for="lowback_pain_bodypart_knee" type="checkbox" />
-                                            <label class="form-check-label" for="isactive"> knee </label>
-                                            <input class="form-check-input" asp-for="lowback_pain_bodypart_leg" type="checkbox" />
-                                            <label class="form-check-label" for="isactive"> leg </label>
-                                            <input class="form-check-input" asp-for="lowback_pain_bodypart_ankle" type="checkbox" />
-                                            <label class="form-check-label" for="isactive"> ankle </label>
-                                            <input class="form-check-input" asp-for="lowback_pain_bodypart_foot" type="checkbox" />
-                                            <label class="form-check-label" for="isactive"> foot </label>
-                                            <input class="form-check-input" asp-for="lowback_pain_bodypart_toe" type="checkbox" />
-                                            <label class="form-check-label" for="isactive"> toe </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table>
-                                                <tr>
-                                                    <td style="width:100%">
-
-                                                        <label>Left Shoulder</label>
-                                                        <input type="text" id="describe_leftshoulder" asp-for="describe_leftshoulder" style="width:3%">
-                                                        <label>/ 10</label>
-                                                        &nbsp;
-                                                        <input class="form-check-input" asp-for="txt_describe_leftshoulder_Constant" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Constant
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftshoulder_Intermittent" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Intermittent
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftshoulder_Sharp" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Sharp
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftshoulder_Electric" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Electric
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftshoulder_Shooting" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Shooting
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftshoulder_Throbbing" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Throbbing
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftshoulder_Pulsating" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Pulsating
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftshoulder_Dull" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Dull
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftshoulder_Achy" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Achy
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                            </table>
-
-
-
-                                        </td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table>
-                                                <tr>
-                                                    <td style="width:100%">
-
-                                                        <label>Right Shoulder</label>
-                                                        <input type="text" id="describe_rightshoulder" style="width:3%">
-                                                        <label>/ 10</label>
-                                                        &nbsp;
-                                                        <input class="form-check-input" asp-for="txt_describe_rightshoulder_Constant" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Constant
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightshoulder_Intermittent" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Intermittent
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightshoulder_Sharp" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Sharp
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightshoulder_Electric" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Electric
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightshoulder_Shooting" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Shooting
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightshoulder_Throbbing" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Throbbing
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightshoulder_Pulsating" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Pulsating
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightshoulder_Dull" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Dull
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightshoulder_Achy" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Achy
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                            </table>
-
-
-
-                                        </td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table>
-                                                <tr>
-                                                    <td style="width:100%">
-
-                                                        <label>Left Knee</label>
-                                                        <input type="text" id="describe_leftknee" asp-for="describe_leftknee" style="width:3%">
-                                                        <label>/ 10</label>
-                                                        &nbsp;
-                                                        <input class="form-check-input" asp-for="txt_describe_leftknee_Constant" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Constant
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftknee_Intermittent" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Intermittent
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftknee_Sharp" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Sharp
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftknee_Electric" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Electric
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftknee_Shooting" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Shooting
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftknee_Throbbing" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Throbbing
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftknee_Pulsating" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Pulsating
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftknee_Dull" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Dull
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_leftknee_Achy" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Achy
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                            </table>
-
-
-
-                                        </td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table>
-                                                <tr>
-                                                    <td style="width:100%">
-
-                                                        <label>Right Knee</label>
-                                                        <input type="text" id="describe_rightknee" asp-for="describe_rightknee" style="width:3%">
-                                                        <label>/ 10</label>
-                                                        &nbsp;
-                                                        <input class="form-check-input" asp-for="txt_describe_rightknee_Constant" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Constant
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightknee_Intermittent" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Intermittent
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightknee_Sharp" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Sharp
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightknee_Electric" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Electric
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightknee_Shooting" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Shooting
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightknee_Throbbing" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Throbbing
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightknee_Pulsating" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Pulsating
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightknee_Dull" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Dull
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_describe_rightknee_Achy" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Achy
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                            </table>
-
-
-
-                                        </td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table>
-                                                <tr>
-                                                    <td style="width:100%">
-
-                                                        <input type="text" id="txt_other_describe_part" asp-for="txt_other_describe_part" style="width:10%">
-                                                        <input type="text" id="other_describe_part_value" asp-for="other_describe_part_value" style="width:3%">
-                                                        <label>/ 10</label>
-                                                        &nbsp;
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_Constant" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Constant
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_Intermittent" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Intermittent
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_Sharp" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Sharp
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_Electric" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Electric
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_Shooting" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Shooting
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_Throbbing" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Throbbing
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_Pulsating" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Pulsating
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_Dull" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Dull
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_Achy" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Achy
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                            </table>
-
-
-
-                                        </td>
-
-
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <table>
-                                                <tr>
-                                                    <td style="width:100%">
-
-                                                        <input type="text" id="txt_other_describe_part_1" asp-for="txt_other_describe_part_1" style="width:10%">
-                                                        <input type="text" id="other_describe_part_1_value" asp-for="other_describe_part_1_value" style="width:3%">
-                                                        <label>/ 10</label>
-                                                        &nbsp;
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_1_Constant" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Constant
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_1_Intermittent" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Intermittent
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_1_Sharp" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Sharp
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_1_Electric" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Electric
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_1_Shooting" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Shooting
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_1_Throbbing" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Throbbing
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_1_Pulsating" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Pulsating
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_1_Dull" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Dull
-                                                        </label>
-                                                        <input class="form-check-input" asp-for="txt_other_describe_part_1_Achy" type="checkbox" />
-                                                        <label class="form-check-label" for="isactive">
-                                                            Achy
-                                                        </label>
-                                                    </td>
-                                                </tr>
-                                            </table>
-
-
-
-                                        </td>
-
-
-                                    </tr>
-
-                                </table>
-                                <br />
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
-                                    <tr>
-                                        <td>
-                                            <label style="font-weight: bold;">What relieves your pain?</label>
+                                            <label style="font-weight: bold;"> What relieves your pain?</label>
                                             <br />
                                         </td>
                                     </tr>
@@ -1465,8 +694,8 @@
 
                                     </tr>
                                 </table>
-                                <br />
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td>
                                             <label style="font-weight: bold;">What increases your pain?</label>
@@ -1719,9 +948,8 @@
 
                                     </tr>
                                 </table>
-                                <br />
-
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td>
                                             <label style="font-weight: bold;"> GAIT :</label>
@@ -1734,7 +962,7 @@
                                                 <tr>
 
                                                     <td>
-
+                                                       
 
                                                         <input asp-for="gait_Normal" type="radio" value="Normal" />
                                                         <label for="isactive">
@@ -1759,7 +987,7 @@
                                     <tr>
                                         <td>
                                             <label style="font-weight: bold;"> Cervical spine:</label>
-
+                                           
 
                                         </td>
                                     </tr>
@@ -1785,7 +1013,7 @@
                                                         </label>
                                                         <input class="form-check-input" asp-for="cervical_pain_paraspinal" type="checkbox" />
                                                         <label class="form-check-label" for="isactive">
-                                                            paraspinal muscles
+                                                           paraspinal muscles
                                                         </label>
                                                         <input class="form-check-input" asp-for="cervical_pain_trapezius" type="checkbox" />
                                                         <label class="form-check-label" for="isactive">
@@ -2148,11 +1376,11 @@
 
                                     </tr>
                                 </table>
-                                <br />
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td>
-                                            <label style="font-weight: bold;"> Thoracic spine:</label>
+                                            <label style="font-weight: bold;"> Thoracic spine:</label>                                            
 
                                         </td>
                                     </tr>
@@ -2161,47 +1389,47 @@
                                             <table style="width:100%">
                                                 <tr>
 
+                                                    
+                                                        <label>Tender</label>
 
-                                                    <label>Tender</label>
+                                                        <input class="form-check-input" asp-for="thoracic_right" type="checkbox" />
+                                                        <label form-check-label for="isactive">
+                                                            right
+                                                        </label>
+                                                        <input class="form-check-input" asp-for="thoracic_left" type="checkbox" />
+                                                        <label form-check-label for="isactive">
+                                                            left
+                                                        </label>
+                                                        <input class="form-check-input" asp-for="thoracic_bilateral" type="checkbox" />
+                                                        <label form-check-label for="isactive">
+                                                            bilateral
+                                                        </label>
+                                                        <input class="form-check-input" asp-for="thoracic_paraspinal_muscles" type="checkbox" />
+                                                        <label form-check-label for="isactive">
+                                                            paraspinal muscles
+                                                        </label>
+                                                        </tr>
+                                                        <tr>
+                                                        <label>Trigger points</label>
 
-                                                    <input class="form-check-input" asp-for="thoracic_right" type="checkbox" />
-                                                    <label form-check-label for="isactive">
-                                                        right
-                                                    </label>
-                                                    <input class="form-check-input" asp-for="thoracic_left" type="checkbox" />
-                                                    <label form-check-label for="isactive">
-                                                        left
-                                                    </label>
-                                                    <input class="form-check-input" asp-for="thoracic_bilateral" type="checkbox" />
-                                                    <label form-check-label for="isactive">
-                                                        bilateral
-                                                    </label>
-                                                    <input class="form-check-input" asp-for="thoracic_paraspinal_muscles" type="checkbox" />
-                                                    <label form-check-label for="isactive">
-                                                        paraspinal muscles
-                                                    </label>
-                                                </tr>
-                                                <tr>
-                                                    <label>Trigger points</label>
+                                                        <input class="form-check-input" asp-for="thoracic_trigger_points_right" type="checkbox" />
+                                                        <label form-check-label for="isactive">
+                                                            right
+                                                        </label>
+                                                        <input class="form-check-input" asp-for="thoracic_trigger_points_left" type="checkbox" />
+                                                        <label form-check-label for="isactive">
+                                                            left
+                                                        </label>
+                                                        <input class="form-check-input" asp-for="thoracic_trigger_points_bilateral" type="checkbox" />
+                                                        <label form-check-label for="isactive">
+                                                            bilateral 
+                                                        </label>
+                                                        <input class="form-check-input" asp-for="thoracic_trigger_points_paraspinals" type="checkbox" />
+                                                        <label form-check-label for="isactive">
+                                                            thoracic paraspinals.
+                                                        </label>
 
-                                                    <input class="form-check-input" asp-for="thoracic_trigger_points_right" type="checkbox" />
-                                                    <label form-check-label for="isactive">
-                                                        right
-                                                    </label>
-                                                    <input class="form-check-input" asp-for="thoracic_trigger_points_left" type="checkbox" />
-                                                    <label form-check-label for="isactive">
-                                                        left
-                                                    </label>
-                                                    <input class="form-check-input" asp-for="thoracic_trigger_points_bilateral" type="checkbox" />
-                                                    <label form-check-label for="isactive">
-                                                        bilateral
-                                                    </label>
-                                                    <input class="form-check-input" asp-for="thoracic_trigger_points_paraspinals" type="checkbox" />
-                                                    <label form-check-label for="isactive">
-                                                        thoracic paraspinals.
-                                                    </label>
-
-
+                                                    
 
 
 
@@ -2210,12 +1438,12 @@
                                         </td>
 
                                     </tr>
-                                </table>
+                                    </table>
                                 <br />
                                 <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td>
-                                            <label style="font-weight: bold;"> Lumbar spine:</label>
+                                            <label style="font-weight: bold;">Lumbar spine:</label>
 
                                         </td>
                                     </tr>
@@ -2394,7 +1622,7 @@
                                     </tr>
                                     <tr>
                                         <td style="width:100%">
-
+                                          
                                             <label>DTRs 2+</label>
 
                                             <input asp-for="dtrs_two_except_pattler_L" type="radio" value="exceptPatellarL" />
@@ -2513,23 +1741,23 @@
                                         </td>
 
                                     </tr>
-
+                                  
                                 </table>
                                 <br />
                                 <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td>
-                                            <label style="font-weight: bold;">Shoulder - Left:</label>
+                                            <label style="font-weight: bold;"> Shoulder - Left:</label>
 
 
-
+                                            
 
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="width:100%">
 
-
+                                           
 
 
                                             <input asp-for="ls_swelling_positive" type="radio" value="positive" />
@@ -2632,19 +1860,19 @@
 
                                                         <label>Abd (180) L </label>
                                                         <input type="text" id="ls_abd_oneeighty_L" asp-for="ls_abd_oneeighty_L" style="width:15%">
-
+                                                        
                                                     </td>
                                                     <td style="width:20%">
 
                                                         <label>Flex (180) L </label>
                                                         <input type="text" id="ls_flex_oneeighty_L" asp-for="ls_flex_oneeighty_L" style="width:15%">
-
+                                                       
                                                     </td>
                                                     <td style="width:20%">
 
                                                         <label>Add (30) L </label>
                                                         <input type="text" id="ls_add_thirty_L" asp-for="ls_add_thirty_L" style="width:15%">
-
+                                                       
                                                     </td>
 
                                                     <td style="width:18%">
@@ -2675,19 +1903,19 @@
 
                                                         <label>Ext (60) L </label>
                                                         <input type="text" id="ls_ext_sixty_L" asp-for="ls_ext_sixty_L" style="width:15%">
-
+                                                       
                                                     </td>
                                                     <td style="width:20%">
 
                                                         <label>Ext Rot (90) L </label>
                                                         <input type="text" id="ls_ext_rot_ninety_L" asp-for="ls_ext_rot_ninety_L" style="width:15%">
-
+                                                        
                                                     </td>
                                                     <td style="width:20%">
 
                                                         <label>Int Rot (70) L </label>
                                                         <input type="text" id="ls_int_rot_seventy_L" asp-for="ls_int_rot_seventy_L" style="width:15%">
-
+                                                       
                                                     </td>
 
                                                     <td style="width:18%">
@@ -2794,21 +2022,21 @@
                                 <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td>
-                                            <label style="font-weight: bold;"> Shoulder - Right:</label>
+                                            <label style="font-weight: bold;">Shoulder - Right:</label>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="width:100%">
 
+                                           
 
 
-
-                                            <input asp-for="rs_swelling_positive" type="radio" value="positive" />
+                                            <input asp-for="rs_swelling_positive" type="radio" value="positive"/>
                                             <label for="isactive">
                                                 +
                                             </label>
 
-                                            <input asp-for="rs_swelling_positive" type="radio" value="negative" />
+                                            <input asp-for="rs_swelling_positive" type="radio" value="negative"/>
                                             <label for="isactive">
                                                 -
                                             </label>
@@ -2816,12 +2044,12 @@
                                             &nbsp;
 
 
-                                            <input asp-for="rs_echymosis_positive" type="radio" value="positive" />
+                                            <input asp-for="rs_echymosis_positive" type="radio" value="positive"/>
                                             <label for="isactive">
                                                 +
                                             </label>
 
-                                            <input asp-for="rs_echymosis_positive" type="radio" value="negative" />
+                                            <input asp-for="rs_echymosis_positive" type="radio" value="negative"/>
                                             <label for="isactive">
                                                 -
                                             </label>
@@ -2833,31 +2061,31 @@
                                                 +
                                             </label>
 
-                                            <input asp-for="rs_deformity_positive" type="radio" value="negative" />
+                                            <input asp-for="rs_deformity_positive" type="radio" value="negative"/>
                                             <label for="isactive">
                                                 -
                                             </label>
                                             <label>  deformity</label>
                                             &nbsp;
 
-                                            <input asp-for="rs_masses_positive" type="radio" value="positive" />
+                                            <input asp-for="rs_masses_positive" type="radio" value="positive"/>
                                             <label for="isactive">
                                                 +
                                             </label>
 
-                                            <input asp-for="rs_masses_positive" type="radio" value="negative" />
+                                            <input asp-for="rs_masses_positive" type="radio" value="negative"/>
                                             <label for="isactive">
                                                 -
                                             </label>
                                             <label>  masses</label>
                                             &nbsp;
 
-                                            <input asp-for="rs_tenderness_positive" type="radio" value="positive" />
+                                            <input asp-for="rs_tenderness_positive" type="radio" value="positive"/>
                                             <label for="isactive">
                                                 +
                                             </label>
 
-                                            <input asp-for="rs_tenderness_positive" type="radio" value="negative" />
+                                            <input asp-for="rs_tenderness_positive" type="radio" value="negative"/>
                                             <label for="isactive">
                                                 -
                                             </label>
@@ -2901,19 +2129,19 @@
 
                                                     <td style="width:20%">
 
-
+                                                       
                                                         <label>Abd (180) R </label>
                                                         <input type="text" id="rs_abd_oneeighty_R" asp-for="rs_abd_oneeighty_R" style="width:15%">
                                                     </td>
                                                     <td style="width:20%">
 
-
+                                                        
                                                         <label>Flex (180) R </label>
                                                         <input type="text" id="rs_flex_oneeighty_R" asp-for="rs_flex_oneeighty_R" style="width:15%">
                                                     </td>
                                                     <td style="width:20%">
 
-
+                                                        
                                                         <label>Add (30) R </label>
                                                         <input type="text" id="rs_add_thirty_R" asp-for="rs_add_thirty_R" style="width:15%">
                                                     </td>
@@ -2921,7 +2149,7 @@
                                                     <td style="width:18%">
                                                         <label>With</label>
 
-                                                        <input asp-for="rs_with_pain" type="radio" value="Pain" />
+                                                        <input asp-for="rs_with_pain" type="radio" value="Pain"/>
                                                         <label for="isactive">
                                                             Pain
                                                         </label>
@@ -2944,7 +2172,7 @@
 
                                                     <td style="width:20%">
 
-
+                                                       
                                                         <label>Ext (60) R </label>
                                                         <input type="text" id="rs_ext_sixty_R" asp-for="rs_ext_sixty_R" style="width:15%">
                                                     </td>
@@ -2955,7 +2183,7 @@
                                                     </td>
                                                     <td style="width:20%">
 
-
+                                                        
                                                         <label>Int Rot (70) R </label>
                                                         <input type="text" id="rs_int_rot_seventy_R" asp-for="rs_int_rot_seventy_R" style="width:15%">
                                                     </td>
@@ -2963,11 +2191,11 @@
                                                     <td style="width:18%">
                                                         <label>With</label>
 
-                                                        <input asp-for="rs_with_pain_1" type="radio" value="Pain" />
+                                                        <input asp-for="rs_with_pain_1" type="radio" value="Pain"/>
                                                         <label class="form-check-label" for="isactive">
                                                             Pain
                                                         </label>
-                                                        <input asp-for="rs_with_pain_1" type="radio" value="discomfort" />
+                                                        <input asp-for="rs_with_pain_1" type="radio" value="discomfort"/>
                                                         <label class="form-check-label" for="isactive">
                                                             discomfort
                                                         </label>
@@ -2982,7 +2210,7 @@
                                         <td style="width:100%">
 
 
-                                            <input asp-for="rs_hawkins_positive" type="radio" value="positive" />
+                                            <input asp-for="rs_hawkins_positive" type="radio" value="positive"/>
                                             <label for="isactive">
                                                 +
                                             </label>
@@ -2995,60 +2223,60 @@
                                             &nbsp;
 
 
-                                            <input asp-for="rs_o_brien_test_positive" type="radio" value="positive" />
+                                            <input asp-for="rs_o_brien_test_positive" type="radio" value="positive"/>
                                             <label for="isactive">
                                                 +
                                             </label>
 
-                                            <input asp-for="rs_o_brien_test_positive" type="radio" value="negative" />
+                                            <input asp-for="rs_o_brien_test_positive" type="radio" value="negative"/>
                                             <label for="isactive">
                                                 -
                                             </label>
                                             <label> O'Brien test</label>
                                             &nbsp;
 
-                                            <input asp-for="rs_impegement_positive" type="radio" value="positive" />
+                                            <input asp-for="rs_impegement_positive" type="radio" value="positive"/>
                                             <label for="isactive">
                                                 +
                                             </label>
 
-                                            <input asp-for="rs_impegement_positive" type="radio" value="negative" />
+                                            <input asp-for="rs_impegement_positive" type="radio" value="negative"/>
                                             <label for="isactive">
                                                 -
                                             </label>
                                             <label>  impingement</label>
                                             &nbsp;
 
-                                            <input asp-for="rs_drop_arm_positive" type="radio" value="positive" />
+                                            <input asp-for="rs_drop_arm_positive" type="radio" value="positive"/>
                                             <label for="isactive">
                                                 +
                                             </label>
 
-                                            <input asp-for="rs_drop_arm_positive" type="radio" value="negative" />
+                                            <input asp-for="rs_drop_arm_positive" type="radio" value="negative"/>
                                             <label for="isactive">
                                                 -
                                             </label>
                                             <label>  drop arm</label>
                                             &nbsp;
 
-                                            <input asp-for="rs_cross_over_positive" type="radio" value="positive" />
+                                            <input asp-for="rs_cross_over_positive" type="radio" value="positive"/>
                                             <label for="isactive">
                                                 +
                                             </label>
 
-                                            <input asp-for="rs_cross_over_positive" type="radio" value="negative" />
+                                            <input asp-for="rs_cross_over_positive" type="radio" value="negative"/>
                                             <label for="isactive">
                                                 -
                                             </label>
                                             <label>  cross over</label>
                                             &nbsp;
 
-                                            <input asp-for="rs_empty_can_positive" type="radio" value="positive" />
+                                            <input asp-for="rs_empty_can_positive" type="radio" value="positive"/>
                                             <label for="isactive">
                                                 +
                                             </label>
 
-                                            <input asp-for="rs_empty_can_positive" type="radio" value="negative" />
+                                            <input asp-for="rs_empty_can_positive" type="radio" value="negative"/>
                                             <label for="isactive">
                                                 -
                                             </label>
@@ -3070,7 +2298,7 @@
                                     <tr>
                                         <td style="width:100%">
 
-
+                                            
 
 
                                             <input asp-for="lk_swelling_positive" type="radio" value="positive" />
@@ -3186,13 +2414,13 @@
 
                                                         <label>Flex (140) L </label>
                                                         <input type="text" id="lk_flex_oneforty_L" asp-for="lk_flex_oneforty_L" style="width:15%">
-
+                                                       
                                                     </td>
                                                     <td style="width:20%">
 
                                                         <label>Ext (0) L </label>
                                                         <input type="text" id="lk_ext_zero_L" asp-for="lk_ext_zero_L" style="width:15%">
-
+                                                       
                                                     </td>
 
 
@@ -3290,16 +2518,16 @@
                                         </td>
 
                                     </tr>
-                                </table>
-
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                                    </table>
+                                    
+                                     <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td>
                                             <label style="font-weight: bold;"> Right Knee:</label>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td style="width:100%">
+                                        <td style="width:100%">                                           
 
 
                                             <input asp-for="rk_swelling_positive" type="radio" value="positive" />
@@ -3413,13 +2641,13 @@
 
                                                     <td style="width:20%">
 
-
+                                                     
                                                         <label>Flex (140) R </label>
                                                         <input type="text" id="rk_flex_oneforty_R" asp-for="rk_flex_oneforty_R" style="width:15%">
                                                     </td>
                                                     <td style="width:20%">
 
-
+                                                        
                                                         <label>Ext (0) R </label>
                                                         <input type="text" id="rk_ext_zero_R" asp-for="rk_ext_zero_R" style="width:15%">
                                                     </td>
@@ -3519,12 +2747,12 @@
                                         </td>
 
                                     </tr>
-                                </table>
-                                <br />
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                                    </table>
+                                    <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td>
-                                            <label style="font-weight: bold;">DIAGNOSES:</label>
+                                            <label style="font-weight: bold;"> DIAGNOSES:</label>
 
 
                                             <textarea style="width:100%" asp-for="diagonosis"></textarea>
@@ -3532,11 +2760,12 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <br />
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                                
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td style="width:100%">
-                                            <label style="font-weight: bold;">RECOMMENDATIONS(Assessment and Plan):</label>
+                                            <label style="font-weight: bold;"> RECOMMENDATIONS(Assessment and Plan):</label>
                                             <br />
                                             <label class="form-check-label" for="isactive">
                                                 Diag. Test Referral(Please Specify);
@@ -3709,12 +2938,26 @@
                                             <input type="text" id="Rx_Meds_Refill" asp-for="Rx_Meds_Refill" style="width:100%">
                                         </td>
                                     </tr>
-                                </table>
-                                <br />
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td style="width:100%">
-                                            <label style="font-weight: bold;"> DME Dispensed at Today's office visit:</label>
+                                            <label>The following are consequential to the</label>
+                                            <input type="date" id="consequential" asp-for="consequential" style="width:50">
+                                          
+                                            <label>(DOA ) &nbsp; accident and should be amended to his case :</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <label>( List the body parts ) :</label>
+                                            <input type="text" id="list_body_parts" asp-for="list_body_parts" style="width:80%">
+                                        </td>
+                                    </tr>
+                                </table>
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                                    <tr>
+                                        <td style="width:100%">
+                                            <label style="font-weight: bold;">  DME Dispensed at Today's office visit:</label>
                                         </td>
                                     </tr>
                                     <tr>
@@ -3894,11 +3137,11 @@
 
                                     </tr>
                                 </table>
-                                <br />
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td style="width:100%">
-                                            <label style="font-weight: bold;">DME Meadowbrook Medical Supplies (other provider) -- please see attached sheet for your reference</label>
+                                            <label style="font-weight: bold;">  DME Meadowbrook Medical Supplies (other provider) -- please see attached sheet for your reference</label>
                                         </td>
                                     </tr>
                                     <tr>
@@ -3940,11 +3183,11 @@
 
                                     </tr>
                                 </table>
-                                <br />
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td style="width:100%">
-                                            <label style="font-weight: bold;">Procedure done today:</label>
+                                            <label style="font-weight: bold;">  Procedure done today:</label>
 
                                             <input class="form-check-input" asp-for="procedure_done_today_UTPI" type="checkbox" />
                                             <label class="form-check-label" for="isactive">
@@ -3969,11 +3212,11 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <br />
-                                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
                                     <tr>
                                         <td>
-                                            <label style="font-weight: bold;">FollowUp</label>
+                                            <label style="font-weight: bold;"> Follow Up visit:</label>
                                             <input type="text" asp-for="followup" style="width:25%">
                                             <label> weeks/months/p.r.n.</label>
 
@@ -3982,23 +3225,32 @@
                                     </tr>
 
                                 </table>
-                                <br />
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-5">
-                                    <label class="col-sm-2 col-form-label">&nbsp;</label>
-                                    <div class="col-sm-10">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                        <input type="button"  class="btn btn-primary" value="Cancel" onclick="@("window.location.href='" + @Url.Action("Create", "IntakeForm") + "'");" />
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                <br />
+                <table width="100%" style="background-color:#f6f9ff;border-color:lightgray;">
+                                    <tr>
+                                        <td>
+                                            <label style="font-weight: bold;"> Notes:</label>
+                                            <textarea style="width:100%" id="notes" asp-for="notes"></textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+              </div>
+              <br />
+              <div class="row mb-3">
+                <div class="col-lg-5">
+                  <label class="col-sm-2 col-form-label">&nbsp;</label>
+                  <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <input type="button" class="btn btn-primary" value="Cancel" onclick="@(" window.location.href='" + @Url.Action("Create", "FollowupForm") + "'");" />
+                  </div>
                 </div>
-            </div>
+              </div>
+            </form>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 </main>
 <!-- End #main -->
 @section Scripts {

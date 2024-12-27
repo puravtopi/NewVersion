@@ -75,7 +75,13 @@
                                     <label class="col-sm-2 col-form-label">&nbsp;</label>
                                     <div class="col-sm-10">
                                         <button type="submit" class="btn btn-primary">Next</button>
-                                        <input type="button"  class="btn btn-primary" value="Intake Form" onclick="@("window.location.href='" + @Url.Action("Create", "IntakeForm") + "'");" />
+                                        <label>Inake Forms</label>
+                                        <select id="intakeforms" onchange="javascript:location.href = this.value;" style="width:50%">
+                                            <option value="/IntakeForm/Create">IntakeForm IE</option>
+                                            <option value="/FollowupForm/Create">IntakeForm FU</option>
+                                            <option value="/Home/GetProvider" selected>--Select--</option>
+                                        </select>
+                                       
                                     </div>
                                 </div>
                             </div>

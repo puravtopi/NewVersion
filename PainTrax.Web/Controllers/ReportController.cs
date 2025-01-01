@@ -176,6 +176,8 @@ namespace PainTrax.Web.Controllers
                     new DataColumn("MCODE", typeof(string)),
                     new DataColumn("Phone", typeof(string)),
                     new DataColumn("Location", typeof(string)),
+                    new DataColumn("Side", typeof(string)),
+                    new DataColumn("Level", typeof(string)),
                     new DataColumn("Ins Co", typeof(string)),
                     new DataColumn("Claim Number", typeof(string)),
                     new DataColumn("Policy No", typeof(string)),
@@ -192,7 +194,7 @@ namespace PainTrax.Web.Controllers
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var user in data)
                 {
-                    dt.Rows.Add(user.name, user.gender, user.casetype, user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.phone, user.location, user.cmpname, user.primary_claim_no, user.primary_policy_no, user.mc, user.allergies, user.requested == null ? "" : user.requested.Value.ToShortDateString(), user.scheduled == null ? "" : user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString(), user.note);
+                    dt.Rows.Add(user.name, user.gender, user.casetype, user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.phone, user.location,user.sides,user.level, user.cmpname, user.primary_claim_no, user.primary_policy_no, user.mc, user.allergies, user.requested == null ? "" : user.requested.Value.ToShortDateString(), user.scheduled == null ? "" : user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString(), user.note);
                 }
 
                 // Create a new Excel file

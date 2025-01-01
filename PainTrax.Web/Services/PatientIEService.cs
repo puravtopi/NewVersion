@@ -299,16 +299,21 @@ poc_assesment=@poc_assesment
         return datalist;
     }
 
-    public int UpdatePage1Plan(int id,string plan)
+    public int UpdatePage1Plan(int id,string plan,string cc,string pe,string assessment)
     {
         MySqlCommand cm = new MySqlCommand(@"update tbl_ie_page1 set
-		plan=@plan
-
+		plan=@plan,
+        cc=@cc,
+        pe=@pe,
+        assessment=@assessment
         where ie_id=@id
 				 ;select 1;", conn);
        
         cm.Parameters.AddWithValue("@id", id);     
         cm.Parameters.AddWithValue("@plan",plan);
+        cm.Parameters.AddWithValue("@cc",cc);
+        cm.Parameters.AddWithValue("@pe",pe);
+        cm.Parameters.AddWithValue("@assessment", assessment);
       
         var result = ExecuteScalar(cm);
         return result;

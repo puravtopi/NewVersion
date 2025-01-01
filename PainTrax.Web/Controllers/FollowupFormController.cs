@@ -22,7 +22,8 @@ namespace PainTrax.Web.Controllers
         public IActionResult Create()
         {
             FollowupForm obj = new FollowupForm();
-            obj.dov = Convert.ToDateTime(System.DateTime.Now.ToString("MM/dd/yyyy"));
+           // obj.dov = Convert.ToDateTime(System.DateTime.Now.ToString("MM/dd/yyyy"));
+            obj.dov = Convert.ToDateTime(System.DateTime.Now.ToShortDateString());
             return View(obj);
         }
         [HttpPost]

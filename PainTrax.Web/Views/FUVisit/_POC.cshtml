@@ -1228,7 +1228,10 @@
                     $('#SelectPopup').modal('hide');
                     fnReLoadPOC();
                     fnShowPOCSummary();
-                ckPlan.data.set(data);
+                ckPlan.data.set(data.strPoc);
+                ckCC.data.set(data.strCCDesc);
+                ckPE.data.set(data.strPEDesc);
+                ckAssessment.data.set(data.strADesc);
 
             },
             failure: function (response) {

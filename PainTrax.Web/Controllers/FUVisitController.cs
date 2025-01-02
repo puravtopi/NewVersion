@@ -1473,7 +1473,7 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult SavePOC(ProcedureDetailsVMNew model)
+        public JsonResult SavePOC(ProcedureDetailsVMNew model)
         {
             string Req_Pos = ""; string Sch_Pos = ""; string Exe_Pos = ""; string FU_Pos = "", result = "0";
 
@@ -1552,9 +1552,31 @@ namespace PainTrax.Web.Controllers
 
                 if (pocData != null)
                 {
-                    _patientFuservices.UpdatePage1Plan(fu_id, pocData.strPoc);
+                    var obj = _fuPage1services.GetOne(fu_id);
+                    string strCCdesc = "", strPEdesc = "", strAdesc = "";
+                    if (obj != null)
+                    {
+                        if (!string.IsNullOrEmpty(pocData.strCCDesc))
+                            strCCdesc = obj.cc + "<p>" + pocData.strCCDesc + "</p>";
+                        else
+                            strCCdesc = obj.cc;
+
+                        if (!string.IsNullOrEmpty(pocData.strPEDesc))
+                            strPEdesc = obj.pe + "<p>" + pocData.strPEDesc + "</p>";
+                        else
+                            strPEdesc = obj.pe;
+
+                        if (!string.IsNullOrEmpty(pocData.strADesc))
+                            strAdesc = obj.assessment + "<p>" + pocData.strADesc + "</p>";
+                        else
+                            strAdesc = obj.assessment;
+                    }
+                    pocData.strADesc = strAdesc;
+                    pocData.strCCDesc = strCCdesc;
+                    pocData.strPEDesc = strPEdesc;
+                    _patientFuservices.UpdatePage1Plan(fu_id, pocData.strPoc,strCCdesc,strPEdesc,strAdesc);
                 }
-                return Json(pocData.strPoc);
+                return Json(pocData);
             }
             catch (Exception ex)
             {
@@ -1790,12 +1812,34 @@ namespace PainTrax.Web.Controllers
         public IActionResult Delete(int ProcedureDetailID,int fu_id)
         {
             var data = _pocService.RemoveProcedureCountDetails(ProcedureDetailID);
-          
+
             var pocData = this.UpdatePOCPlan(fu_id);
 
             if (pocData != null)
             {
-                _patientFuservices.UpdatePage1Plan(fu_id, pocData.strPoc);
+                var obj = _fuPage1services.GetOne(fu_id);
+                string strCCdesc = "", strPEdesc = "", strAdesc = "";
+                if (obj != null)
+                {
+                    if (!string.IsNullOrEmpty(pocData.strCCDesc))
+                        strCCdesc = obj.cc + "<p>" + pocData.strCCDesc + "</p>";
+                    else
+                        strCCdesc = obj.cc;
+
+                    if (!string.IsNullOrEmpty(pocData.strPEDesc))
+                        strPEdesc = obj.pe + "<p>" + pocData.strPEDesc + "</p>";
+                    else
+                        strPEdesc = obj.pe;
+
+                    if (!string.IsNullOrEmpty(pocData.strADesc))
+                        strAdesc = obj.assessment + "<p>" + pocData.strADesc + "</p>";
+                    else
+                        strAdesc = obj.assessment;
+                }
+                pocData.strADesc = strAdesc;
+                pocData.strCCDesc = strCCdesc;
+                pocData.strPEDesc = strPEdesc;
+                _patientFuservices.UpdatePage1Plan(fu_id, pocData.strPoc, strCCdesc, strPEdesc, strAdesc);
             }
             return Json(pocData.strPoc);
         }
@@ -2864,7 +2908,7 @@ namespace PainTrax.Web.Controllers
 
 
 
-            string strPoc = "";
+            string strPoc = "", pocDesc = "", ccdesc = "", pedesc = "", adesc = "";
             string inject_desc = "";
             if (dsPOC != null && dsPOC.Rows.Count > 0)
             {
@@ -2874,21 +2918,81 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(dsPOC.Rows[i]["Heading"].ToString()))
                     {
 
-                        //if (i != dsPOC.Tables[0].Rows.Count - 1)
-                        //    strPoc = strPoc + "<b style='text-transform:uppercase'>" + dsPOC.Tables[0].Rows[i]["Heading"].ToString().TrimEnd(':') + ": </b>" + dsPOC.Tables[0].Rows[i]["PDesc"].ToString() + "<br/><br/>";
-                        //else
-
-                        //if (dsPOC.Tables[0].Rows[i]["Executed"] != DBNull.Value)
-                        //{
-                        //    this.generatePNReport(bodypart, dsPOC.Tables[0].Rows[i]["MCODE"].ToString(), ViewState["name"].ToString(),
-                        //        ViewState["dob"].ToString(), ViewState["location"].ToString(), "", dsPOC.Tables[0].Rows[i]["Level"].ToString(), "", "", ViewState["doe"].ToString(), PatientIE_ID);
-                        //}
 
                         string heading = dsPOC.Rows[i]["Heading"].ToString();
+                        pocDesc = dsPOC.Rows[i]["PDesc"].ToString();
+                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
+                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
+                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
 
-                       
 
-                        if (dsPOC.Rows[i]["pn"].ToString() == "1")
+
+
+                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
+                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
+                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
+
+
+                        adesc = adesc + dsPOC.Rows[i]["ADesc"] == null ? "" : dsPOC.Rows[i]["ADesc"].ToString().Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
+                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
+                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
+
+
+
+
+
+                        if (heading.ToLower().Contains("(side)"))
+                        {
+                            heading = heading.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
+                            heading = heading.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+
+                        }
+
+                        if (pocDesc.ToLower().Contains("(side)"))
+                        {
+                            pocDesc = pocDesc.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
+                            pocDesc = pocDesc.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                        }
+
+                        if (heading.ToLower().Contains("(levels)"))
+                        {
+                            heading = heading.Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                            heading = heading.Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
+                        }
+
+                        if (pocDesc.ToLower().Contains("(levels)"))
+                        {
+                            pocDesc = pocDesc.Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                            pocDesc = pocDesc.Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                        }
+
+                        if (heading.ToLower().Contains("(level)"))
+                        {
+                            heading = heading.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                            heading = heading.Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
+
+                        }
+
+                        if (pocDesc.ToLower().Contains("(level)"))
+                        {
+                            pocDesc = pocDesc.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                            pocDesc = pocDesc.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                        }
+
+
+
+
+
+                        if (dsPOC.Rows[i]["pn"].ToString() == "1" && dsPOC.Rows[i]["Executed"] != DBNull.Value)
                         {
                             if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
                             {
@@ -2906,6 +3010,9 @@ namespace PainTrax.Web.Controllers
             {
                 strInjectionDesc = inject_desc,
                 strPoc = strPoc != "" ? "<ol>" + strPoc + "</ol>" : "",
+                strCCDesc = ccdesc,
+                strPEDesc = pedesc,
+                strADesc = adesc
             };
 
             return pocDetails;

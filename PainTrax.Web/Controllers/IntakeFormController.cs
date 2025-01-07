@@ -38,7 +38,7 @@ namespace PainTrax.Web.Controllers
                 cc_neck = "", cc_neck_radiates = "", cc_neck_tingling = "", cc_neck_increase = "", cc_midback = "", cc_midback_increase = "",
                 cc_lowback = "", cc_lowback_radiates = "", cc_lowback_tingling = "", cc_lowback_increase = "", cc_l_shoulder = "", cc_l_shoulder_increase = "",
                 cc_r_shoulder = "", cc_r_shoulder_increase = "", cc_l_knee = "", cc_l_knee_increase = "",
-                cc_r_knee = "", cc_r_knee_increase = "";
+                cc_r_knee = "", cc_r_knee_increase = "", cc_other_1 = "", cc_other_2 = "";
 
             if (!string.IsNullOrEmpty(model.what_tests_xray))
                 what_test = what_test + "," + model.what_tests_xray;
@@ -436,10 +436,6 @@ namespace PainTrax.Web.Controllers
                 model.cc_r_shoulder = model.cc_r_shoulder + " Pain increases by " + cc_r_shoulder_increase.TrimStart(',') + ".";
 
 
-
-
-
-
             if (!string.IsNullOrEmpty(model.describe_leftknee))
                 cc_l_knee = "The patient complains of left knee pain that is " + model.describe_leftknee + "/10, with 10 being the worst , which is ";
 
@@ -526,14 +522,66 @@ namespace PainTrax.Web.Controllers
             if (model.increase_rightknee_pain_getoutofcar == "true")
                 cc_r_knee_increase = cc_r_knee_increase + ",get out of car";
 
-
-
             if (!string.IsNullOrEmpty(cc_r_knee_increase))
                 model.cc_r_knee = model.cc_r_knee + " Pain increases by " + cc_r_knee_increase.TrimStart(',') + ".";
 
+            if (!string.IsNullOrEmpty(model.other_describe_part_value))
+                cc_other_1 = "The patient complains of " + model.txt_other_describe_part + " pain that is " + model.other_describe_part_value + "/10, with 10 being the worst , which is ";
 
 
+            if (model.txt_other_describe_part_Constant == "true")
+                cc_other_1 = cc_other_1 + ",Constant";
+            if (model.txt_other_describe_part_Intermittent == "true")
+                cc_other_1 = cc_other_1 + ",Intermittent";
+            if (model.txt_other_describe_part_Sharp == "true")
+                cc_other_1 = cc_other_1 + ",Sharp";
+            if (model.txt_other_describe_part_Electric == "true")
+                cc_other_1 = cc_other_1 + ",Electric";
+            if (model.txt_other_describe_part_Shooting == "true")
+                cc_other_1 = cc_other_1 + ",Shooting";
+            if (model.txt_other_describe_part_Throbbing == "true")
+                cc_other_1 = cc_other_1 + ",Throbbing";
+            if (model.txt_other_describe_part_Pulsating == "true")
+                cc_other_1 = cc_other_1 + ",Pulsating";
+            if (model.txt_other_describe_part_Dull == "true")
+                cc_other_1 = cc_other_1 + ",Dull";
+            if (model.txt_other_describe_part_Achy == "true")
+                cc_other_1 = cc_other_1 + ",Achy";
 
+            model.cc_other_1 = cc_other_1.TrimStart(',');
+
+
+            if (!string.IsNullOrEmpty(model.other_describe_part_1_value))
+                cc_other_2 = "The patient complains of " + model.txt_other_describe_part_1 + " pain that is " + model.other_describe_part_1_value + "/10, with 10 being the worst , which is ";
+
+
+            if (model.txt_other_describe_part_1_Constant == "true")
+                cc_other_2 = cc_other_2 + ",Constant";
+            if (model.txt_other_describe_part_1_Intermittent == "true")
+                cc_other_2 = cc_other_2 + ",Intermittent";
+            if (model.txt_other_describe_part_1_Sharp == "true")
+                cc_other_2 = cc_other_2 + ",Sharp";
+            if (model.txt_other_describe_part_1_Electric == "true")
+                cc_other_2 = cc_other_2 + ",Electric";
+            if (model.txt_other_describe_part_1_Shooting == "true")
+                cc_other_2 = cc_other_2 + ",Shooting";
+            if (model.txt_other_describe_part_1_Throbbing == "true")
+                cc_other_2 = cc_other_2 + ",Throbbing";
+            if (model.txt_other_describe_part_1_Pulsating == "true")
+                cc_other_2 = cc_other_2 + ",Pulsating";
+            if (model.txt_other_describe_part_1_Dull == "true")
+                cc_other_2 = cc_other_2 + ",Dull";
+            if (model.txt_other_describe_part_1_Achy == "true")
+                cc_other_2 = cc_other_2 + ",Achy";
+
+            model.cc_other_2 = cc_other_2.TrimStart(',');
+
+            //PE for Neck
+
+            string pe_neck = "";
+
+
+           
 
             return RedirectToAction("Create", "IntakeForm");
         }

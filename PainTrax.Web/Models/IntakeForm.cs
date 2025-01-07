@@ -271,6 +271,9 @@ namespace PainTrax.Web.Models
 
         public string? txt_other_describe_part_Dull { get; set; }
         public string? txt_other_describe_part_Achy { get; set; }
+
+        public string? cc_other_1 { get; set; }
+
         public string? other_describe_part_value { get; set; }
         public string? txt_other_describe_part { get; set; }
         public string? txt_other_describe_part_1_Constant { get; set; }
@@ -285,6 +288,8 @@ namespace PainTrax.Web.Models
         public string? txt_other_describe_part_1_Achy { get; set; }
         public string? other_describe_part_1_value { get; set; }
         public string? txt_other_describe_part_1 { get; set; }
+
+        public string? cc_other_2 { get; set; }
 
         //6.What relieves your pain?
 

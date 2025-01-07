@@ -1552,29 +1552,29 @@ namespace PainTrax.Web.Controllers
 
                 if (pocData != null)
                 {
-                    var obj = _fuPage1services.GetOne(fu_id);
-                    string strCCdesc = "", strPEdesc = "", strAdesc = "";
-                    if (obj != null)
-                    {
-                        if (!string.IsNullOrEmpty(pocData.strCCDesc))
-                            strCCdesc = obj.cc + "<p>" + pocData.strCCDesc + "</p>";
-                        else
-                            strCCdesc = obj.cc;
+                    //var obj = _fuPage1services.GetOne(fu_id);
+                    //string strCCdesc = "", strPEdesc = "", strAdesc = "";
+                    //if (obj != null)
+                    //{
+                    //    if (!string.IsNullOrEmpty(pocData.strCCDesc))
+                    //        strCCdesc = obj.cc + "<p>" + pocData.strCCDesc + "</p>";
+                    //    else
+                    //        strCCdesc = obj.cc;
 
-                        if (!string.IsNullOrEmpty(pocData.strPEDesc))
-                            strPEdesc = obj.pe + "<p>" + pocData.strPEDesc + "</p>";
-                        else
-                            strPEdesc = obj.pe;
+                    //    if (!string.IsNullOrEmpty(pocData.strPEDesc))
+                    //        strPEdesc = obj.pe + "<p>" + pocData.strPEDesc + "</p>";
+                    //    else
+                    //        strPEdesc = obj.pe;
 
-                        if (!string.IsNullOrEmpty(pocData.strADesc))
-                            strAdesc = obj.assessment + "<p>" + pocData.strADesc + "</p>";
-                        else
-                            strAdesc = obj.assessment;
-                    }
-                    pocData.strADesc = strAdesc;
-                    pocData.strCCDesc = strCCdesc;
-                    pocData.strPEDesc = strPEdesc;
-                    _patientFuservices.UpdatePage1Plan(fu_id, pocData.strPoc,strCCdesc,strPEdesc,strAdesc);
+                    //    if (!string.IsNullOrEmpty(pocData.strADesc))
+                    //        strAdesc = obj.assessment + "<p>" + pocData.strADesc + "</p>";
+                    //    else
+                    //        strAdesc = obj.assessment;
+                    //}
+                    //pocData.strADesc = strAdesc;
+                    //pocData.strCCDesc = strCCdesc;
+                    //pocData.strPEDesc = strPEdesc;
+                    _patientFuservices.UpdatePage1Plan(fu_id, pocData.strPoc);
                 }
                 return Json(pocData);
             }
@@ -1839,7 +1839,7 @@ namespace PainTrax.Web.Controllers
                 pocData.strADesc = strAdesc;
                 pocData.strCCDesc = strCCdesc;
                 pocData.strPEDesc = strPEdesc;
-                _patientFuservices.UpdatePage1Plan(fu_id, pocData.strPoc, strCCdesc, strPEdesc, strAdesc);
+                _patientFuservices.UpdatePage1Plan(fu_id, pocData.strPoc);
             }
             return Json(pocData.strPoc);
         }

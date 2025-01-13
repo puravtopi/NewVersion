@@ -187,8 +187,8 @@ namespace PainTrax.Web.Helper
             {
                 list.Add(new SelectListItem
                 {
-                    Text = item.state_name,
-                    Value = item.state_name
+                    Text = item.state_name + "-" + item.fullname,
+                    Value = item.state_name 
                 });
             }
 

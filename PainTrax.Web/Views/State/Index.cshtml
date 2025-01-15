@@ -31,7 +31,8 @@
                                 <tr>
                                    @* <th scope="col">Id</th> *@
                                     
-                                    <th scope="col">StateName</th>   
+                                    <th scope="col">StateName</th>
+                                <th scope="col">FullName</th>
                                     <th style="width:5%">Action</th>
                                 </tr>
                             </thead>
@@ -102,6 +103,7 @@
             "columns": [
                
                 { "data": "state_name", "state_name": "state_name", "autoWidth": true },
+                { "data": "fullname", "fullname": "fullname", "autoWidth": true },
                 {
                     "render": function (data, type, full, meta) {
                             var index = '<a href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'

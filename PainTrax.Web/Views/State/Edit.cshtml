@@ -41,6 +41,7 @@
                                             <input type="text" class="form-control" asp-for="state_name">
                                             <span asp-validation-for="state_name" class="text-danger"></span>
                                         </div>
+                                        
                                     </div>
                                     
 
@@ -51,7 +52,16 @@
                                             <a class="btn btn-primary" asp-action="Index" asp-controller="State">Back</a>
                                         </div>
                                     </div>
-                                </div>                               
+                                </div>
+                                <div class="col-lg-6">
+                                <div class="row mb-3">
+                                    <label class="col-md-4 col-lg-3 col-form-label">FullName</label>
+                                    <div class="col-md-8 col-lg-9">
+                                        <input type="text" class="form-control" asp-for="fullname">
+                                        <span asp-validation-for="fullname" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                </div>
                             </div>
                         </form>
                     </div>

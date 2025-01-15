@@ -1417,7 +1417,9 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
-                var injurbodyparts = _pocService.GetInjuredParts(patientIEId);
+
+                //var injurbodyparts = _pocService.GetInjuredParts(patientIEId);
+                var injurbodyparts = _pocService.GetInjuredPartsPOC(patientIEId);
 
                 if (injurbodyparts != null)
                     injurbodyparts = injurbodyparts.Append("Other").ToArray();

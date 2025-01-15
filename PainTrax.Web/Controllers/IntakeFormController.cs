@@ -17,6 +17,7 @@ namespace PainTrax.Web.Controllers
     public class IntakeFormController : Controller
     {
         private readonly Common _commonservices = new Common();
+        private readonly IntakeService service=new IntakeService();
         public IActionResult Index()
         {
             return View();
@@ -40,24 +41,24 @@ namespace PainTrax.Web.Controllers
                 cc_r_shoulder = "", cc_r_shoulder_increase = "", cc_l_knee = "", cc_l_knee_increase = "",
                 cc_r_knee = "", cc_r_knee_increase = "", cc_other_1 = "", cc_other_2 = "";
 
-            if (!string.IsNullOrEmpty(model.what_tests_xray))
+            if (model.what_tests_xray=="true")
                 what_test = what_test + "," + model.what_tests_xray;
-            if (!string.IsNullOrEmpty(model.what_tests_ct))
+            if (model.what_tests_ct=="true")
                 what_test = what_test + "," + model.what_tests_ct;
-            if (!string.IsNullOrEmpty(model.what_tests_mri))
+            if (model.what_tests_mri=="true")
                 what_test = what_test + "," + model.what_tests_mri;
 
             model.what_test = what_test.TrimStart(',');
 
-            if (!string.IsNullOrEmpty(model.any_medical_conditions_Diabeties))
+            if (model.any_medical_conditions_Diabeties=="true")
                 medical_condition = medical_condition + "," + model.any_medical_conditions_Diabeties;
-            if (!string.IsNullOrEmpty(model.any_medical_conditions_bp))
+            if (model.any_medical_conditions_bp=="true")
                 medical_condition = medical_condition + "," + model.any_medical_conditions_bp;
-            if (!string.IsNullOrEmpty(model.any_medical_conditions_ashthma))
+            if (model.any_medical_conditions_ashthma=="true")
                 medical_condition = medical_condition + "," + model.any_medical_conditions_ashthma;
-            if (!string.IsNullOrEmpty(model.any_medical_conditions_heart))
+            if (model.any_medical_conditions_heart=="true")
                 medical_condition = medical_condition + "," + model.any_medical_conditions_heart;
-            if (!string.IsNullOrEmpty(model.any_medical_conditions_none))
+            if (model.any_medical_conditions_none == "true")
                 medical_condition = medical_condition + "," + model.any_medical_conditions_none;
 
             model.any_medical_conditions = medical_condition.TrimStart(',');
@@ -581,7 +582,7 @@ namespace PainTrax.Web.Controllers
             string pe_neck = "";
 
 
-           
+            service.Insert(model);
 
             return RedirectToAction("Create", "IntakeForm");
         }

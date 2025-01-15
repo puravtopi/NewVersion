@@ -61,6 +61,56 @@ namespace PainTrax.Web.Services
             }
         }
 
+
+        public string[] GetInjuredPartsPOC(int patientIE)
+        {
+            try
+            {
+
+                string[] result = null;
+
+
+                DataTable dt = new DataTable();
+                MySqlCommand cm = new MySqlCommand("CALL sp_injur_body_parts(" + patientIE + ")", conn);
+
+                var datalist = GetData(cm);
+
+
+                if (datalist != null)
+                {
+                    if (datalist.Rows.Count > 0)
+                    {
+                        var bodypart = datalist.Rows[0][0].ToString();
+
+                        if (bodypart != null)
+                        {
+                            string[] val = bodypart.Split(',');
+
+                            result = val
+           .Select(s => new { Original = s, Normalized = NormalizeString(s) }) // Normalize strings
+           .GroupBy(x => x.Normalized) // Group by normalized value
+           .Select(g => g.First().Original) // Select the first original string from each group
+           .ToArray();
+                        }
+                    }
+                }
+
+
+                return result;
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        private string NormalizeString(string input)
+        {
+            return new string(input.Where(c => !char.IsWhiteSpace(c)).ToArray()) // Remove spaces
+                .ToLower(); // Convert to lowercase
+        }
+
         public System.Data.DataTable GetAllProcedures(string bodyParts, int patientIEID, string potion, int cmp_id)
         {
             try

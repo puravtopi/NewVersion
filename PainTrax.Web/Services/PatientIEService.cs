@@ -12,7 +12,7 @@ public class PatientIEService : ParentService
 
     public List<vm_patient_ie> GetAll(string cnd = "")
     {
-        string query = "select *,CASE WHEN (SELECT COUNT(*) FROM tbl_patient_fu WHERE tbl_patient_fu.patientIE_ID=vm_patient_ie.id)>0 then TRUE ELSE FALSE END AS isFU from vm_patient_ie where 1=1 ";
+        string query = "SELECT vm_patient_ie.*,CASE WHEN tbl_patient_fu_count.count > 0 THEN TRUE ELSE FALSE END AS isFU FROM vm_patient_ie LEFT JOIN (SELECT patientIE_ID, COUNT(*) AS count FROM tbl_patient_fu GROUP BY patientIE_ID) AS tbl_patient_fu_count ON vm_patient_ie.id = tbl_patient_fu_count.patientIE_ID where 1=1 ";
 
         if (!string.IsNullOrEmpty(query))
             query = query + cnd;

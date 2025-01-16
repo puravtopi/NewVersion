@@ -53,6 +53,7 @@ public class vm_patient_ie
     public string? zip { get; set; }
     public string? home_ph { get; set; }
     public string? mobile { get; set; }
+    public string? account_no { get; set; }
     public bool? vaccinated { get; set; }
 
 

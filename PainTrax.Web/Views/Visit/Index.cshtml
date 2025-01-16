@@ -30,9 +30,9 @@
                             @{
                                 if (HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionRoleAccess).Contains("Add Patient"))
                                 {
-                                    <div class="col-md-12 col-lg-12">
-                                        <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
-                                    </div>
+                                        <div class="col-md-12 col-lg-12">
+                                            <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
+                                        </div>
                                 }
                             }
                         </div>
@@ -46,6 +46,7 @@
                                         <th scope="col">LName</th>
                                         <th scope="col">DOB</th>
                                         <th scope="col">DOA</th>
+                                        <th scope="col">Account No</th>
                                         <th scope="col">DOS</th>
                                         <th scope="col">Case Type</th>
                                         <th scope="col">Location</th>
@@ -383,6 +384,7 @@
                             return (month.toString().length > 1 ? month : "0" + month) + "/" + formattedDate + "/" + date.getFullYear();
                         }
                     },
+                    { "data": "account_no", "autoWidth": true },
                     {
                         "data": "doe", "autoWidth": true,
                         "type": "date ",
@@ -420,7 +422,8 @@
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowPOCSummary(' + full.id + ',0)" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i><span>POC Summary</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + printurl + '/' + full.id + '" ><i class="bi bi-printer-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print" data-bs-original-title="Print"></i><span>Print</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnFuType(' + full.id + ',' + full.patient_id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Next Visit</span></a></li>';
-                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + full.id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li></ul></a>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + full.id + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li>';
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="DownloadPdf(' + full.patient_id + ',' + '\'' + full.fname + '\',' + '\'' + full.lname + '\')" href="#"  ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print Demo" data-bs-original-title="Print Demo "></i><span> Print Demo</span></a></li></ul></a>'; 
 
 
                             return index;
@@ -784,6 +787,40 @@
                 return dateFormatted;
             }
             return '';
+        }
+
+        /* New Function in Script*/
+        function DownloadPdf(id, fname, lname) {
+            var downloadurl = '@Url.Action("GeneratePdf", "Forms")';
+            //alert(fname);
+            var checkboxes = $('.pdfCheckbox');
+            var txt_date = '';
+            var txt_surgery = '';
+            var txt_docName = '';
+            var txt_MCode_Proc = '';
+            var txtProcedureCode = '';
+            // Loop through each checkbox element
+            downloadurl = downloadurl + '?pdffile=Demo.pdf&id=' + id + '&txt_date=' + txt_date + '&txt_surgery=' + txt_surgery + '&txt_docName=' + txt_docName + '&txt_MCode_Proc=' + txt_MCode_Proc + '&txtProcedureCode=' + txtProcedureCode;
+            fetch(downloadurl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    console.log(response);
+                    return response.blob();
+                })
+                .then(blob => {
+                    // Handle the Excel file data here
+
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = lname + "," + fname + "_Demo.pdf";
+                    link.click();
+                })
+                .catch(error => {
+                    console.error('Error downloading Excel file:', error);
+                });
+
         }
     </script>
 </main>

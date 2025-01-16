@@ -177,7 +177,7 @@ namespace PainTrax.Web.Services
         public void PasswordEncrypt()
         {
             DataTable dt = new DataTable();
-            MySqlCommand cm = new MySqlCommand("select * from tbl_users where cmp_id=10", conn);
+            MySqlCommand cm = new MySqlCommand("select * from tbl_users where cmp_id=13", conn);
 
             var datalist = ConvertDataTable<tbl_users>(GetData(cm));
 

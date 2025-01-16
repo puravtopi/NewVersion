@@ -74,7 +74,8 @@ namespace PainTrax.Web.Controllers
 
         public IActionResult Login()
         {
-            
+
+         
             if (Request.Cookies["LoginCookie"] != null)
             {
                 var savedLogin = JsonConvert.DeserializeObject<LoginVM>(Request.Cookies["LoginCookie"]);

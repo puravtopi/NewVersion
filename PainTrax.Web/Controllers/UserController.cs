@@ -220,7 +220,7 @@ namespace PainTrax.Web.Controllers
                 }
                 else if (designation == "Admin")
                 {
-                    cnd += " and desig_name in ('Provider','Staff','Client Admin','Admin')";
+                    cnd += " and desig_name in ('Provider','Staff','Client Admin','Admin','FD')";
                 }
 
                 var Data = _services.GetAll(cnd);
@@ -432,6 +432,22 @@ namespace PainTrax.Web.Controllers
             {
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 string cnd = " and cmp_id=" + cmpid;
+
+
+                var designation = HttpContext.Session.GetString(SessionKeys.SessionDesignation);
+
+                if (designation == "Provider")
+                {
+                    cnd += " and desig_name in ('Provider','Staff')";
+                }
+                else if (designation == "Client Admin")
+                {
+                    cnd += " and desig_name in ('Provider','Staff','Client Admin')";
+                }
+                else if (designation == "Admin")
+                {
+                    cnd += " and desig_name in ('Provider','Staff','Client Admin','Admin','FD')";
+                }
 
                 var data = _services.GetAll(cnd); // Retrieve all attorneys from the database
 

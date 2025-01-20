@@ -2351,6 +2351,12 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#Ros", "");
                 }
 
+                //GET POC 
+
+                //POC printing
+
+                var dataPOC = this.getPOC(id);
+
                 //CC printing
 
                 var page1Data = _ieService.GetOnePage1(id);
@@ -2369,11 +2375,22 @@ namespace PainTrax.Web.Controllers
                         body = body.Replace("#PC", "");
                     }
 
+                    string cc = "";
+                    string pe = "";
+
+                    cc = string.IsNullOrEmpty(page1Data.cc) ? "" : this.removePtag(page1Data.cc);
+                    pe = string.IsNullOrEmpty(page1Data.pe) ? "" : page1Data.pe;
+
+                    if (dataPOC != null)
+                    {
+                        cc = string.IsNullOrEmpty(dataPOC.strCCDesc) ? "" : cc + "<br/><br/>" + dataPOC.strCCDesc;
+                        pe = string.IsNullOrEmpty(dataPOC.strPEDesc) ? "" : pe + "<br/><br/>" + dataPOC.strPEDesc;
+                    }
 
 
                     body = body.Replace("#Reason", string.IsNullOrEmpty(page1Data.appt_reason) ? "" : this.removePtag(page1Data.appt_reason));
-                    body = body.Replace("#CC", string.IsNullOrEmpty(page1Data.cc) ? "" : this.removePtag(page1Data.cc));
-                    body = body.Replace("#PE", string.IsNullOrEmpty(page1Data.pe) ? "" : page1Data.pe);
+                    body = body.Replace("#CC", cc);
+                    body = body.Replace("#PE", pe);
 
                     var history = string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history;
 
@@ -2410,6 +2427,14 @@ namespace PainTrax.Web.Controllers
                             assessment = page1Data.assessment.Replace("#PC", "");
                         assessment = assessment.Replace("#accidenttype", patientData.accidentType);
                     }
+
+
+
+                    if (dataPOC != null)
+                    {
+                        assessment = string.IsNullOrEmpty(dataPOC.strADesc) ? "" : assessment + "<br/><br/>" + dataPOC.strADesc;
+                                           }
+
                     body = body.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
 
                     body = body.Replace("#PastMedicalHistory", this.removePtag(page1Data.pmh));
@@ -2523,9 +2548,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#Treatment", "");
                 }
 
-                //POC printing
-
-                var dataPOC = this.getPOC(id);
+               
 
 
                 if (string.IsNullOrEmpty(plan))

@@ -2033,8 +2033,8 @@ namespace PainTrax.Web.Controllers
 
                     if (pocData != null)
                     {
-                        cc = string.IsNullOrEmpty(pocData.strCCDesc) ? "" : cc + "<br/><br/>" + pocData.strCCDesc;
-                        pe = string.IsNullOrEmpty(pocData.strPEDesc) ? "" : pe + "<br/><br/>" + pocData.strPEDesc;
+                        cc = string.IsNullOrEmpty(pocData.strCCDesc) ? cc : cc + "<br/><br/>" + pocData.strCCDesc;
+                        pe = string.IsNullOrEmpty(pocData.strPEDesc) ? pe : pe + "<br/><br/>" + pocData.strPEDesc;
                     }
 
 
@@ -2079,7 +2079,7 @@ namespace PainTrax.Web.Controllers
 
                     if (pocData != null)
                     {
-                        assessment = string.IsNullOrEmpty(pocData.strADesc) ? "" : assessment + "<br/><br/>" + pocData.strADesc;
+                        assessment = string.IsNullOrEmpty(pocData.strADesc) ? assessment : assessment + "<br/><br/>" + pocData.strADesc;
                     }
 
                     body = body.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));

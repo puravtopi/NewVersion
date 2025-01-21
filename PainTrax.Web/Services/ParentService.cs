@@ -22,9 +22,9 @@ namespace PainTrax.Services
             //.Build();
             //conn = new MySqlConnection("Data Source=10.10.93.18;port=2109;Database=dbpaintrax_live;User ID=purav;Password=G0d$peed@123");
             //Live
-            //conn = new MySqlConnection("Data Source=10.10.93.20;port=3306;Database=dbpaintrax_live;User ID=purav;Password=amd@2006");
+            conn = new MySqlConnection("Data Source=10.10.93.20;port=3306;Database=dbpaintrax_live;User ID=purav;Password=amd@2006");
             //Local
-             conn = new MySqlConnection("Data Source=localhost;Database=dbpaintrax_live;User ID=root;Password=");
+            // conn = new MySqlConnection("Data Source=localhost;Database=dbpaintrax_live;User ID=root;Password=");
            
         }
 

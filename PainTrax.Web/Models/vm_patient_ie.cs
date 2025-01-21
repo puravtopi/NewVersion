@@ -3,7 +3,7 @@ namespace PainTrax.Web.Models;
 public class vm_patient_ie
 {
     internal string? casetype;
-
+   
     public string? fname { get; set; }
     public string? lname { get; set; }
     public DateTime? dob { get; set; }

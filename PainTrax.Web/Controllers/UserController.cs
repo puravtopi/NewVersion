@@ -111,6 +111,8 @@ namespace PainTrax.Web.Controllers
                 tbl_users obj = new tbl_users();
                 obj.Id = id;
                 data = _services.GetOne(obj);
+                
+                data.password = EncryptionHelper.Decrypt(data.password);
                 int? cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 ViewBag.dgList = _common.GetDesignation(cmp_id.Value);
                 ViewBag.gpList = _common.GetGroups(cmp_id.Value);
@@ -129,6 +131,7 @@ namespace PainTrax.Web.Controllers
             {
                 model.updatedby = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
                 model.updateddate = System.DateTime.Now;
+                model.password = EncryptionHelper.Encrypt(model.password);
                 if (signature != null)
                 {
                     string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/Sign", model.cmp_id.ToString());

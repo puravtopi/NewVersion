@@ -2856,7 +2856,13 @@ namespace PainTrax.Web.Controllers
                 var patientData = _ieService.GetOnebyPatientId(ieId);
 
                 if (patientData.doa == null)
+                { 
                     docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + ".docx";
+                }
+                else if(patientData.account_no != null)
+                {
+                    docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                }
                 else
                     docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
 

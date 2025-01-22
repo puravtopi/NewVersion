@@ -546,6 +546,7 @@ namespace PainTrax.Web.Controllers
                 if (userId.HasValue)
                 {
                     data = _services.GetOneById(userId.Value);
+                    data.password = EncryptionHelper.Decrypt(data.password);
                 }
                 else
                 {
@@ -568,6 +569,7 @@ namespace PainTrax.Web.Controllers
             {
                 model.updatedby = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
                 model.updateddate = System.DateTime.Now;
+                model.password = EncryptionHelper.Encrypt(model.password);
                 if (signature != null)
                 {
                     string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/Sign", model.cmp_id.ToString());

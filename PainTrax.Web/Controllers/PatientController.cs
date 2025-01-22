@@ -137,7 +137,7 @@ namespace PainTrax.Web.Controllers
                 string cnd = " and cmp_id=" + cmpid;
                 if (!String.IsNullOrEmpty(searchValue))
                 {
-                    cnd += " and (fname like '%" + searchValue + "%' or lname like '%" + searchValue + "%' or email like '%" + searchValue + "%' or mobile like '%" + searchValue + "%' Or ";
+                    cnd += " and (fname like '%" + searchValue + "%' or lname like '%" + searchValue + "%' or CONCAT(fname,' ',lname)  LIKE '%" + searchValue + "%' or CONCAT(lname,' ',fname)  LIKE '%" + searchValue + "%' or email like '%" + searchValue + "%' or mobile like '%" + searchValue + "%' Or ";
                     cnd += " dob like '%" + searchValue + "%')";
                 }
                 var Data = _services.GetAll(cnd);

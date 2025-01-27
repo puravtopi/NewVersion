@@ -3063,8 +3063,8 @@ namespace PainTrax.Web.Controllers
 
                         if (heading.ToLower().Contains("(side)"))
                         {
-                            heading = heading.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
-                            heading = heading.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                            heading = heading.Replace("(SIDE)",  dsPOC.Rows[i]["Sides"].ToString().ToUpper());
+                            heading = heading.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString().ToUpper());
 
                         }
 

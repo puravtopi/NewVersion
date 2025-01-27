@@ -16,15 +16,19 @@ namespace PainTrax.Services
 
         public ParentService()
         {
-            //IConfiguration myConfig = new ConfigurationBuilder()
-            //.SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            //.AddJsonFile("appSettings.json")
-            //.Build();
+            IConfiguration myConfig = new ConfigurationBuilder()
+            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+            .AddJsonFile("appSettings.json")
+            .Build();
+
+            var config = myConfig.GetSection("ConnectionStrings");
+
             //conn = new MySqlConnection("Data Source=10.10.93.18;port=2109;Database=dbpaintrax_live;User ID=purav;Password=G0d$peed@123");
             //Live
-            conn = new MySqlConnection("Data Source=10.10.93.20;port=3306;Database=dbpaintrax_live;User ID=purav;Password=amd@2006");
+            //conn = new MySqlConnection("Data Source=10.10.93.20;port=3306;Database=dbpaintrax_live;User ID=purav;Password=amd@2006");
             //Local
             // conn = new MySqlConnection("Data Source=localhost;Database=dbpaintrax_live;User ID=root;Password=");
+             conn = new MySqlConnection(config["MySQLConString"]);
            
         }
 

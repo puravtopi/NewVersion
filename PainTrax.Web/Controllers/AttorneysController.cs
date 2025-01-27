@@ -126,7 +126,7 @@ namespace PainTrax.Web.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                string cnd ="and cmp_id=" + cmpid + " and attorney like '%" + searchValue + "%' ";
+                string cnd ="and cmp_id=" + cmpid + " and attorney like '%" + searchValue + "%' and (attorney is not null and attorney<>'')";
 
                 var Data = _services.GetAll(cnd);
 

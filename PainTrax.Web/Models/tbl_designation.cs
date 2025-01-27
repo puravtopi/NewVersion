@@ -4,7 +4,7 @@ namespace PainTrax.Web.Models
 {
 	public class tbl_designation
 	{
-        [Required(ErrorMessage = "Please enter Designation code")]
+        //[Required(ErrorMessage = "Please enter Designation code")]
         public string? code { get; set; }
 
 		[Required(ErrorMessage = "Please enter Designation Name")]

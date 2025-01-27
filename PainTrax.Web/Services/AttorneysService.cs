@@ -17,8 +17,10 @@ namespace PainTrax.Web.Services
         {
             string query = "select * from tbl_attorneys where 1=1 ";
 
-            if (!string.IsNullOrEmpty(query))
+            if (!string.IsNullOrEmpty(cnd))
                 query = query + cnd;
+
+            query = query+" order by attorney";
 
             List<tbl_attorneys> dataList = ConvertDataTable<tbl_attorneys>(GetData(query));
             return dataList;

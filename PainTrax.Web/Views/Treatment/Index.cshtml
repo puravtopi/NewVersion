@@ -118,19 +118,50 @@
                 "columns": [
                     { "data": "id", "id": "id", "autoWidth": true },
                     { "data": "display_order", "display_order": "display_order", "autoWidth": true },
-                    {   
-                        "data": "treatment_details", 
-                        "treatment_details": "treatment_details",
-                        "autoWidth": false,
-                        "render": function (data, type, row) {                    
-                        var lines = [];
-                            for (var i = 0; i < data.length; i += 100) {
-                                lines.push(data.substr(i, 100));
-                            }
-                            var output = lines.join("<br/>");
-                            return output;
-                            }
-                    },
+                            {
+            "data": "treatment_details",
+            "render": function (data) {
+                // Split the data into words
+                var words = data.split(' ');
+
+                // Array to store lines of text
+                var lines = [];
+                var currentLine = '';
+
+                // Iterate through the words and add them to lines
+                words.forEach(function(word) {
+                    // Check if adding the current word exceeds 100 characters
+                    if (currentLine.length + word.length + 1 <= 100) {
+                        currentLine += (currentLine.length ? ' ' : '') + word;
+                    } else {
+                        lines.push(currentLine);  // Push the current line to the array
+                        currentLine = word;  // Start a new line with the current word
+                    }
+                });
+
+                // Add the last line if there's any remaining text
+                if (currentLine.length > 0) {
+                    lines.push(currentLine);
+                }
+
+                // Join lines with <br/> and return the result
+                var output = lines.join("<br/>");
+                return "<span>" + output + "</span>";
+            }
+        },
+                    // {   
+                    //     "data": "treatment_details", 
+                    //     "treatment_details": "treatment_details",
+                    //     "autoWidth": false,
+                    //     "render": function (data, type, row) {                    
+                    //     var lines = [];
+                    //         for (var i = 0; i < data.length; i += 100) {
+                    //             lines.push(data.substr(i, 100));
+                    //         }
+                    //         var output = lines.join("<br/>");
+                    //         return output;
+                    //         }
+                    // },
                     //{ "data": "treatment_details",
                     //  "render": function (value) {
 

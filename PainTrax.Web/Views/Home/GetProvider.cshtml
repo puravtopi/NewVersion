@@ -77,9 +77,9 @@
                                         <button type="submit" class="btn btn-primary">Next</button>
                                         <label>Intake Forms</label>
                                         <select id="intakeforms" onchange="javascript:location.href = this.value;" style="width:50%">
-                                            <option value="/IntakeForm/Create">IntakeForm IE</option>
-                                            <option value="/FollowupForm/Create">IntakeForm FU</option>
-                                            <option value="/Home/GetProvider" selected>--Select--</option>
+                                            <option value="@Url.Action("Create", "IntakeForm")">IntakeForm IE</option>
+                                            <option value="@Url.Action("Create", "FollowupForm")">IntakeForm FU</option>
+                                            <option value="#" selected>--Select--</option>
                                         </select>
                                        
                                     </div>

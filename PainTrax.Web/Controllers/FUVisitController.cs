@@ -2448,9 +2448,17 @@ namespace PainTrax.Web.Controllers
                 var fuData = _patientFuservices.GetOne(fuId);
 
                 if (patientData.doa == null)
+                {
                     docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
+                }
+                else if (patientData.account_no != null)
+                {
+                    docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                }
                 else
-                    docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") +"_"+ Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                {
+                    docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                }
 
                 patientName = patientData.lname + ", " + patientData.fname;
 

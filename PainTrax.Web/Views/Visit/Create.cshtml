@@ -1152,34 +1152,34 @@
                 }
             }
         }
-        else if (id === "bordered-profile") {
+        else if (id === "bordered-profile") {             
             fnPage1Save(t);
         }
-        else if (id === "bordered-contact") {
+        else if (id === "bordered-contact") {             
             fnPage2Save(t);
         }
-        else if (id === "bordered-ne") {
+        else if (id === "bordered-ne") {             
             fnNESave(t);
         }
-        else if (id === "bordered-p4") {
+        else if (id === "bordered-p4") {             
             fnPage3Save(t);
         }
-        else if (id === "bordered-other") {
+        else if (id === "bordered-other") {            
             fnOtherSave(t);
         }
-        else if (id === "bordered-poc") {
+        else if (id === "bordered-poc") {             
             $(t).tab('show');
 
         }
-        else if (id === "bordered-ps") {
+        else if (id === "bordered-ps") {             
 
 
             $(t).tab('show');
         }
-        else if (id === "bordered-doc") {
+        else if (id === "bordered-doc") {             
             $(t).tab('show');
         }
-        else if (id === "bordered-comments") {
+        else if (id === "bordered-comments") {             
             fnSaveComment(t);
         }
     });
@@ -1726,4 +1726,29 @@
     }
 
 
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabs = document.querySelectorAll('.nav-link');
+        const button = document.getElementById('printButtonSOAP');
+
+        // Function to show or hide button based on selected tab
+        function handleTabClick(e) {
+            const tabId = e.target.id;
+
+            if (tabId === 'home-tab') {
+                button.style.display = 'block'; // Show the button for specific tabs
+            } else {
+                button.style.display = 'none';  // Hide the button for others
+            }
+        }
+
+        // Add click event listener to each tab
+        tabs.forEach(tab => {
+            tab.addEventListener('click', handleTabClick);
+        });
+
+        // Initial check in case the page loads with an active tab
+        handleTabClick({ target: document.querySelector('.nav-link.active') });
+    });
 </script>

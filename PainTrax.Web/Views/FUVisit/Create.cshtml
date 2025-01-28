@@ -1149,6 +1149,12 @@
         e.preventDefault();
         var t = this;
 
+          var selectedTabId = $(this).attr('id');
+         if(selectedTabId==='home-tab')
+            $('#printButtonSOAP').show();
+        else
+              $('#printButtonSOAP').hide();
+
         if (id === "bordered-home") {
 
             if (isDetaildValid()) {

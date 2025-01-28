@@ -2373,6 +2373,7 @@ namespace PainTrax.Web.Controllers
         [HttpPost]
         public IActionResult DownloadWord(string htmlContent, int ieId, int fuId)
         {
+            htmlContent = htmlContent.Replace("<p>&nbsp;</p>", "");
             //  string htmlContent = "<p>This is a <strong>sample</strong> HTML content.</p>";
             string filePath = "", docName = "", patientName = "", injDocName = "", dos = "";
             string[] splitContent;

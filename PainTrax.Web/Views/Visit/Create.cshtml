@@ -997,7 +997,6 @@
     $(document).ready(function () {
 
 
-
         $(".msktxt").inputmask("999-999-9999");
         $("#ssn").inputmask("999-99-9999");
 
@@ -1012,7 +1011,7 @@
 
         }
         $('#locationid').change(function () {
-            debugger
+            
             var locationid = $(this).val();
             $.ajax({
                 url: '@Url.Action("GetPhysiciansByLocation", "Visit")',
@@ -1036,14 +1035,14 @@
         }
 
         $("#btnSaveAll").click(function () {
-            debugger;
+            ;
 
             // var id = $("#hd-active-tab").val();
             var id = $('.tab-content .active').attr('id');
 
 
             if (id === "bordered-home") {
-                debugger
+                
                 if (isDetaildValid()) {
 
                     if ($("#id").val() === "0") {
@@ -1105,18 +1104,26 @@
 
     $('#borderedTab a').on('click', function (e) {
 
-        debugger
+      
         var id = $('.tab-content .active').attr('id');
+       
         e.preventDefault();
         var t = this;
+
+         var selectedTabId = $(this).attr('id');
+         if(selectedTabId==='home-tab')
+            $('#printButtonSOAP').show();
+        else
+              $('#printButtonSOAP').hide();
+            
 
         $("#hd-active-tab").val(id);
 
         if (id === "bordered-home") {
 
             $('#printButton').hide();
-            $('#printButtonSOAP').show();
-            debugger
+          
+            
             if (isDetaildValid()) {
 
                 if ($("#id").val() === "0") {
@@ -1290,7 +1297,7 @@
                                 if (t !== null) {
                                     $(t).tab('show');
 
-                                    debugger
+                                    
                                     var age = calcAge($("#dob").val());
                                     var doi = $("#doa").val();
 
@@ -1304,7 +1311,7 @@
                                     if (dos != '') {
                                         dos = formatDate(dos);
                                     }
-                                    debugger
+                                    
 
                                     var gender = $("#gender option:selected").text().toLowerCase();
                                     var accidenttype = $("#accidentType option:selected").text().toLowerCase();
@@ -1346,7 +1353,7 @@
         });
     }
     function formatDate(inputDate) {
-        debugger
+        
         var date = inputDate.split('-');
 
         // Extract date components

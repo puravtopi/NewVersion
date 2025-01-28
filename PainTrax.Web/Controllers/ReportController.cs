@@ -23,6 +23,7 @@ namespace PainTrax.Web.Controllers
         private readonly ProSXServices _servicesProSX = new ProSXServices();
         private readonly IVFRServices _servicesIVFR = new IVFRServices();
         private readonly DailyCountServices _servicesDailyCount = new DailyCountServices();
+        private readonly PtsIEServices _servicesPtsIE = new PtsIEServices();
         private readonly MDTImportServices _servicesMDTImport = new MDTImportServices();
         private readonly Common _commonservices = new Common();
 
@@ -176,8 +177,6 @@ namespace PainTrax.Web.Controllers
                     new DataColumn("MCODE", typeof(string)),
                     new DataColumn("Phone", typeof(string)),
                     new DataColumn("Location", typeof(string)),
-                    new DataColumn("Side", typeof(string)),
-                    new DataColumn("Level", typeof(string)),
                     new DataColumn("Ins Co", typeof(string)),
                     new DataColumn("Claim Number", typeof(string)),
                     new DataColumn("Policy No", typeof(string)),
@@ -194,7 +193,7 @@ namespace PainTrax.Web.Controllers
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var user in data)
                 {
-                    dt.Rows.Add(user.name, user.gender, user.casetype, user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.phone, user.location,user.sides,user.level, user.cmpname, user.primary_claim_no, user.primary_policy_no, user.mc, user.allergies, user.requested == null ? "" : user.requested.Value.ToShortDateString(), user.scheduled == null ? "" : user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString(), user.note);
+                    dt.Rows.Add(user.name, user.gender, user.casetype, user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.phone, user.location, user.cmpname, user.primary_claim_no, user.primary_policy_no, user.mc, user.allergies, user.requested == null ? "" : user.requested.Value.ToShortDateString(), user.scheduled == null ? "" : user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString(), user.note);
                 }
 
                 // Create a new Excel file
@@ -744,6 +743,129 @@ namespace PainTrax.Web.Controllers
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "MDT Import Report.xlsx");
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                return Content("Error: " + ex.Message);
+            }
+        }
+
+
+
+
+        [HttpGet]
+        public IActionResult PtsIEReport()
+        {
+
+            var objPro = new PtsIEReportVM();
+            objPro.lstPtsIEReport = new List<PtsIEReportVM>();
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+            //objPro._executed = false;
+            //objPro._requested = false;
+            //objPro._scheduled = false;
+
+            return View(objPro);
+        }
+        [HttpPost]
+        public IActionResult PtsIEReport(DateTime? fdate, DateTime? tdate)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+            string _query = "";
+
+
+            if (fdate != null && tdate != null)
+            {
+
+
+                _query = "'" + fdate.Value.ToString("yyyy/MM/dd") + "' and '" + tdate.Value.ToString("yyyy/MM/dd") + "' and ie.cmp_id = " + cmpid.ToString();
+
+            }
+
+
+            var data = _servicesPtsIE.GetPtsIEReport(_query);
+            var objPOC = new PtsIEReportVM();
+            objPOC.lstPtsIEReport = data;
+            TempData["lstPtsIEReport"] = _query;
+
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+            return View(objPOC);
+
+        }
+
+        public IActionResult ExportToExcelPtsIE()
+        {
+            try
+            {
+                string query = TempData["lstPtsIEReport"].ToString();
+                var data = _servicesPtsIE.GetPtsIEReport(query);
+
+                // Create a new DataTable
+                DataTable dt = new DataTable();
+                // Add columns to the DataTable
+                dt.Columns.AddRange(new DataColumn[]
+                {
+
+                    new DataColumn("PName", typeof(string)),
+                    new DataColumn("mobile", typeof(string)),
+                    new DataColumn("location", typeof(string)),
+                    new DataColumn("CaseType", typeof(string)),
+                    new DataColumn("doe", typeof(string)),
+                    new DataColumn("doa", typeof(string)),
+                    new DataColumn("Ins", typeof(string)),
+                    new DataColumn("primary_policy_no", typeof(string)),
+                    new DataColumn("Attorney", typeof(string)),
+                    new DataColumn("LastVisit", typeof(string))
+
+
+                });
+
+                // Populate the DataTable with data from the list of attorneys
+                foreach (var cnt in data)
+                {
+                    dt.Rows.Add(cnt.PName, cnt.mobile, cnt.location, cnt.CaseType, cnt.doe, cnt.doa, cnt.Ins, cnt.primary_policy_no, cnt.Attorney, cnt.LastVisit);
+                }
+
+                // Create a new Excel file
+                var memoryStream = new MemoryStream();
+                using (var document = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook))
+                {
+                    var workbookPart = document.AddWorkbookPart();
+                    workbookPart.Workbook = new Workbook();
+
+                    var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                    var sheetData = new SheetData();
+                    worksheetPart.Worksheet = new Worksheet(sheetData);
+
+                    var sheets = document.WorkbookPart.Workbook.AppendChild(new Sheets());
+                    var sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Users" };
+                    sheets.Append(sheet);
+
+                    var headerRow = new Row();
+                    foreach (DataColumn column in dt.Columns)
+                    {
+                        var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName) };
+                        headerRow.AppendChild(cell);
+                    }
+                    sheetData.AppendChild(headerRow);
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        var newRow = new Row();
+                        foreach (var value in row.ItemArray)
+                        {
+                            var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
+                            newRow.AppendChild(cell);
+                        }
+                        sheetData.AppendChild(newRow);
+                    }
+                }
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Pts IE Report.xlsx");
             }
             catch (Exception ex)
             {

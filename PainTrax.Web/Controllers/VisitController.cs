@@ -2433,7 +2433,7 @@ namespace PainTrax.Web.Controllers
                     if (dataPOC != null)
                     {
                         assessment = string.IsNullOrEmpty(dataPOC.strADesc) ? assessment : assessment + "<br/><br/>" + dataPOC.strADesc;
-                                           }
+                    }
 
                     body = body.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
 
@@ -2548,7 +2548,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#Treatment", "");
                 }
 
-               
+
 
 
                 if (string.IsNullOrEmpty(plan))
@@ -2780,7 +2780,7 @@ namespace PainTrax.Web.Controllers
         [HttpPost]
         public IActionResult DownloadWord(string htmlContent, int ieId, int id)
         {
-
+            htmlContent = htmlContent.Replace("<p>&nbsp;</p>", "");
 
             string filePath = "", docName = "", patientName = "", injDocName = "", dos = "";
             string[] splitContent;
@@ -2856,10 +2856,10 @@ namespace PainTrax.Web.Controllers
                 var patientData = _ieService.GetOnebyPatientId(ieId);
 
                 if (patientData.doa == null)
-                { 
+                {
                     docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + ".docx";
                 }
-                else if(patientData.account_no != null)
+                else if (patientData.account_no != null)
                 {
                     docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
                 }
@@ -3063,8 +3063,8 @@ namespace PainTrax.Web.Controllers
 
                         if (heading.ToLower().Contains("(side)"))
                         {
-                            heading = heading.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
-                            heading = heading.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                            heading = heading.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString().ToUpper());
+                            heading = heading.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString().ToUpper());
 
                         }
 
@@ -3352,10 +3352,6 @@ namespace PainTrax.Web.Controllers
                );
             }
         }
-
-
-
-
         private void SaveLog(Exception ex, string actionname)
         {
             var msg = "";

@@ -410,7 +410,7 @@
                         }
                         if (pageAccess.ToLower().Contains("adjuster"))
                         {
-                            <li>
+                                     <li style="display:none">
                                 <a asp-action="Index" asp-controller="Adjuster">
                                     <i class="bi bi-circle"></i><span>Adjuster</span>
                                 </a>
@@ -484,7 +484,7 @@
                         }
                         if (pageAccess.ToLower().Contains("log"))
                         {
-                            <li>
+                            <li style="display:none">
                                 <a asp-action="Index" asp-controller="Log">
                                     <i class="bi bi-circle"></i><span>Log</span>
                                 </a>
@@ -501,7 +501,7 @@
 
                         if (pageAccess.ToLower().Contains("map pdf"))
                         {
-                            <li>
+                             <li style="display:none">
                                 <a asp-action="Index" asp-controller="MapPdf">
                                     <i class="bi bi-circle"></i><span>Map Pdf</span>
                                 </a>
@@ -582,8 +582,8 @@
                 </a>
             </li>
 
-            <li class="nav-item" style="display:none">
-                <a class="nav-link collapsed" href="users-profile.html">
+            <li class="nav-item">
+                <a class="nav-link collapsed" asp-action="Index" asp-controller="SignInSheet">
                     <i class="bi bi-person"></i>
                     <span>Sign-in Sheet</span>
                 </a>

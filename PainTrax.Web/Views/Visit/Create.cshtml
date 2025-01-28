@@ -118,7 +118,7 @@
                                         <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"></path>
                                     </svg>
                                 </button>
-                                <a id="printButtonSOAP" name="printButtonSOAP" onclick="DownloadPdf(@Model.id  ,'@Model.fname','@Model.lname')" href="#" class="btn btn-warning bi bi-printer" title="Print Demo" style="float:right;display:block"></a> &nbsp; &nbsp;
+                                <a id="printButtonSOAP" name="printButtonSOAP" onclick="DownloadPdf(@Model.patientid  ,'@Model.fname','@Model.lname')" href="#" class="btn btn-warning bi bi-printer" title="Print Demo" style="float:right;display:block"></a> &nbsp; &nbsp;
                             </div>
                             <div class="clearfix"></div>
                             <div class="col-md-12 col-sm-12">
@@ -997,7 +997,6 @@
     $(document).ready(function () {
 
 
-
         $(".msktxt").inputmask("999-999-9999");
         $("#ssn").inputmask("999-99-9999");
 
@@ -1012,7 +1011,7 @@
 
         }
         $('#locationid').change(function () {
-            debugger
+            
             var locationid = $(this).val();
             $.ajax({
                 url: '@Url.Action("GetPhysiciansByLocation", "Visit")',
@@ -1036,14 +1035,14 @@
         }
 
         $("#btnSaveAll").click(function () {
-            debugger;
+            ;
 
             // var id = $("#hd-active-tab").val();
             var id = $('.tab-content .active').attr('id');
 
 
             if (id === "bordered-home") {
-                debugger
+                
                 if (isDetaildValid()) {
 
                     if ($("#id").val() === "0") {
@@ -1105,18 +1104,26 @@
 
     $('#borderedTab a').on('click', function (e) {
 
-        debugger
+      
         var id = $('.tab-content .active').attr('id');
+       
         e.preventDefault();
         var t = this;
+
+         var selectedTabId = $(this).attr('id');
+         if(selectedTabId==='home-tab')
+            $('#printButtonSOAP').show();
+        else
+              $('#printButtonSOAP').hide();
+            
 
         $("#hd-active-tab").val(id);
 
         if (id === "bordered-home") {
 
             $('#printButton').hide();
-            $('#printButtonSOAP').show();
-            debugger
+          
+            
             if (isDetaildValid()) {
 
                 if ($("#id").val() === "0") {
@@ -1290,7 +1297,7 @@
                                 if (t !== null) {
                                     $(t).tab('show');
 
-                                    debugger
+                                    
                                     var age = calcAge($("#dob").val());
                                     var doi = $("#doa").val();
 
@@ -1304,7 +1311,7 @@
                                     if (dos != '') {
                                         dos = formatDate(dos);
                                     }
-                                    debugger
+                                    
 
                                     var gender = $("#gender option:selected").text().toLowerCase();
                                     var accidenttype = $("#accidentType option:selected").text().toLowerCase();
@@ -1346,7 +1353,7 @@
         });
     }
     function formatDate(inputDate) {
-        debugger
+        
         var date = inputDate.split('-');
 
         // Extract date components

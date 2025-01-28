@@ -2373,6 +2373,7 @@ namespace PainTrax.Web.Controllers
         [HttpPost]
         public IActionResult DownloadWord(string htmlContent, int ieId, int fuId)
         {
+            htmlContent = htmlContent.Replace("<p>&nbsp;</p>", "");
             //  string htmlContent = "<p>This is a <strong>sample</strong> HTML content.</p>";
             string filePath = "", docName = "", patientName = "", injDocName = "", dos = "";
             string[] splitContent;
@@ -2853,8 +2854,8 @@ namespace PainTrax.Web.Controllers
 
                         if (heading.ToLower().Contains("(side)"))
                         {
-                            heading = heading.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
-                            heading = heading.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                            heading = heading.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString().ToUpper());
+                            heading = heading.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString().ToUpper());
 
                         }
 

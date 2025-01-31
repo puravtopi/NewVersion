@@ -13,7 +13,18 @@ namespace PainTrax.Web.Controllers
         private readonly SettingsService _services = new SettingsService();
         private readonly ILogger<SettingsController> _logger;
         private readonly Common _commonservices = new Common();
+        private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
+        private IConfiguration Configuration;
         #endregion
+
+        public SettingsController(IMapper mapper, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment,
+                               ILogger<LocationController> logger, IConfiguration configuration)
+        {
+            _mapper = mapper;
+          
+            Environment = environment;
+            Configuration = configuration;
+        }
 
         public IActionResult Index()
         {
@@ -35,12 +46,35 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(tbl_settings model)
+        public IActionResult Index(tbl_settings model, IFormFile header_template)
         {
             try
             {
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 model.cmp_id = cmpid.Value;
+
+                if (header_template != null)
+                {
+                    string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/HeaderTemplate");
+                    if (!Directory.Exists(folderPath))
+                    {
+                        Directory.CreateDirectory(folderPath);
+                    }
+                    // Generate a unique filename 
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(header_template.FileName);
+                    string filePath = Path.Combine(folderPath, fileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        header_template.CopyTo(fileStream);
+                    }
+                    model.header_template = fileName;
+                }
+                else
+                {
+                    model.header_template = model.header_template_hidden;
+                }
+
                 _services.Update(model);
 
                 ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
@@ -51,6 +85,7 @@ namespace PainTrax.Web.Controllers
                 HttpContext.Session.SetString(SessionKeys.SessionDaignosisFoundStatment, model.foundStatment == null ? "" : model.foundStatment);
                 HttpContext.Session.SetString(SessionKeys.SessionDaignosisNotFoundStatment, model.notfoundStatment == null ? "" : model.notfoundStatment);
                 HttpContext.Session.SetString(SessionKeys.SessionInjectionAsSeparateBlock, model.injectionAsSeparateBlock.ToString().ToLower());
+                HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, model.header_template.ToString().ToLower());
                 return View(model);
             }
             catch (Exception ex)

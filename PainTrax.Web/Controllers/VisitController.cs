@@ -40,6 +40,7 @@ namespace PainTrax.Web.Controllers
         private readonly MacrosMasterService _macroService = new MacrosMasterService();
         private readonly TreatmentMasterService _treatmentService = new TreatmentMasterService();
         private readonly DiagcodesService _diagcodesService = new DiagcodesService();
+      
         private readonly POCServices _pocService = new POCServices();
         private readonly LocationsService _locService = new LocationsService();
         private readonly CaseTypeService _caseTypeService = new CaseTypeService();
@@ -2925,6 +2926,20 @@ namespace PainTrax.Web.Controllers
 
                     string filepathTo = filePath;
                     AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
+                }
+                else 
+                {
+                    try
+                    {
+                        string filepathFrom = Path.Combine(Environment.WebRootPath, "Uploads/HeaderTemplate") + "//" + HttpContext.Session.GetString(SessionKeys.SessionHeaderTemplate); ;
+
+
+                        string filepathTo = filePath;
+                        AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
                 }
             }
             byte[] data = System.IO.File.ReadAllBytes(filePath);

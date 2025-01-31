@@ -136,6 +136,7 @@ namespace PainTrax.Web.Controllers
                     obj.accidentType = fuData.accident_type;
                     obj.physicianid = fuData.physicianid;
                     obj.providerid = fuData.provider_id;
+                    obj.locationid = fuData.location_id == null ? ieData.location_id : fuData.location_id;
 
                     if (ieData.primary_ins_cmp_id != null)
                     {
@@ -828,7 +829,8 @@ namespace PainTrax.Web.Controllers
                     type = model.type,
                     accident_type = model.accidentType,
                     provider_id = model.providerid,
-                    physicianid = model.physicianid
+                    physicianid = model.physicianid,
+                    location_id = model.locationid
                 };
                 int fu_id = 0;
                 if (model.fu_id.Value > 0)

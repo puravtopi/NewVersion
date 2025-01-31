@@ -36,7 +36,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Index()
         {
 
-         
+
 
             //TblCompany tbl = new TblCompany()
             //{
@@ -75,7 +75,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Login()
         {
 
-         
+
             if (Request.Cookies["LoginCookie"] != null)
             {
                 var savedLogin = JsonConvert.DeserializeObject<LoginVM>(Request.Cookies["LoginCookie"]);
@@ -117,6 +117,7 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionDaignosisFoundStatment, setting.foundStatment == null ? "" : setting.foundStatment);
                         HttpContext.Session.SetString(SessionKeys.SessionDaignosisNotFoundStatment, setting.notfoundStatment == null ? "" : setting.notfoundStatment);
                         HttpContext.Session.SetString(SessionKeys.SessionInjectionAsSeparateBlock, setting.injectionAsSeparateBlock.ToString().ToLower());
+                        HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, string.IsNullOrEmpty(setting.header_template) ? "" : setting.header_template.ToString());
 
 
                     }
@@ -127,6 +128,9 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionDateFormat, "MM/dd/yyyy");
                         HttpContext.Session.SetString(SessionKeys.SessionPageBreak, "false");
                         HttpContext.Session.SetString(SessionKeys.SessionIsDaignosis, "false");
+                        HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, "");
+
+
                     }
 
 
@@ -139,7 +143,7 @@ namespace PainTrax.Web.Controllers
                     {
                         HttpContext.Session.SetString(SessionKeys.SessionPagesAccess, groupDetails.pages_name);
                         HttpContext.Session.SetString(SessionKeys.SessionRoleAccess, groupDetails.role_name);
-                        HttpContext.Session.SetString(SessionKeys.SessionFormsAccess, groupDetails.form_name==null?"": groupDetails.form_name);
+                        HttpContext.Session.SetString(SessionKeys.SessionFormsAccess, groupDetails.form_name == null ? "" : groupDetails.form_name);
                     }
 
 

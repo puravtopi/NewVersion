@@ -30,7 +30,7 @@ namespace PainTrax.Web.Services
         {
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_settings
 		(page_size,location,dateformat,cmp_id,pageBreakForInjection,injectionAsSeparateBlock)Values
-				(@page_size,@location,@dateformat,@cmp_id,@pageBreakForInjection,@injectionAsSeparateBlock,@isdaignosisshow,@foundStatment,@notfoundStatment)", conn);
+				(@page_size,@location,@dateformat,@cmp_id,@pageBreakForInjection,@injectionAsSeparateBlock,@isdaignosisshow,@foundStatment,@notfoundStatment,@header_template)", conn);
             cm.Parameters.AddWithValue("@page_size", data.page_size);
             cm.Parameters.AddWithValue("@location", data.location);
             cm.Parameters.AddWithValue("@dateformat",data.dateformat);
@@ -40,6 +40,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@isdaignosisshow", data.isdaignosisshow);
             cm.Parameters.AddWithValue("@foundStatment", data.foundStatment);
             cm.Parameters.AddWithValue("@notfoundStatment", data.notfoundStatment);
+            cm.Parameters.AddWithValue("@header_template", data.header_template);
             Execute(cm);
 
         }
@@ -53,6 +54,7 @@ namespace PainTrax.Web.Services
         injectionAsSeparateBlock=@injectionAsSeparateBlock,
 isdaignosisshow=@isdaignosisshow,
       foundStatment=@foundStatment,
+      header_template=@header_template,
 notfoundStatment=@notfoundStatment
 			where cmp_id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.cmp_id);
@@ -64,6 +66,7 @@ notfoundStatment=@notfoundStatment
             cm.Parameters.AddWithValue("@isdaignosisshow", data.isdaignosisshow);
             cm.Parameters.AddWithValue("@foundStatment", data.foundStatment);
             cm.Parameters.AddWithValue("@notfoundStatment", data.notfoundStatment);
+            cm.Parameters.AddWithValue("@header_template", data.header_template);
 
             Execute(cm);
         }

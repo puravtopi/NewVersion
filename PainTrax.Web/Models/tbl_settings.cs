@@ -12,5 +12,7 @@
         public bool isdaignosisshow { get; set; }
         public string foundStatment { get; set; }
         public string notfoundStatment { get; set; }
+        public string header_template { get; set; }
+        public string header_template_hidden { get; set; }
     }
 }

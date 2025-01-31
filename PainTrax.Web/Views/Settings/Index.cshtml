@@ -22,7 +22,7 @@
                         <h5 class="card-title">Manage Setting</h5>
 
                         <!-- General Form Elements -->
-                        <form asp-action="Index" asp-controller="Settings">
+                        <form asp-action="Index" asp-controller="Settings" enctype="multipart/form-data">
 
                             <input type="hidden" asp-for="id" />
 
@@ -96,6 +96,26 @@
                                         </div>
                                         <div class="col-md-1 col-lg-4">
                                             <textarea asp-for="notfoundStatment" class="form-control" placeholder="Not Found Statment"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label">Header Template</label>
+                                        <div class="col-md-8 col-lg-7">
+                                            <input type="file" class="form-control" name="header_template" accept=".docx,.doc,.dotx">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-5 col-form-label"></label>
+                                        <div class="col-md-8 col-lg-7">
+                                            @if (!string.IsNullOrEmpty(Model.header_template))
+                                            {
+                                                <a href="@Url.Content("~/Uploads/HeaderTemplate/" + Model.header_template)" target="_blank">@Model.header_template</a>
+                                            }
+                                            else
+                                            {
+                                                <span>No file uploaded</span>
+                                            }
+                                            <input type="hidden" id="header_template_hidden" name="header_template_hidden" value="@Model.header_template" />
                                         </div>
                                     </div>
                                     <div class="row mb-3">

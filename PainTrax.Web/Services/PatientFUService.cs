@@ -36,8 +36,8 @@ public class PatientFUService : ParentService
     public int Insert(tbl_patient_fu data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_patient_fu
-		(patient_id,provider_id,patientIE_ID,doe,created_date,created_by,updated_date,updated_by,is_active,cmp_id,extra_comments,type,accident_type,physicianid)Values
-				(@patient_id,@provider_id,@patientIE_ID,@doe,@created_date,@created_by,@updated_date,@updated_by,@is_active,@cmp_id,@extra_comments,@type,@accident_type,@physicianid);select @@identity;", conn);
+		(patient_id,provider_id,patientIE_ID,doe,created_date,created_by,updated_date,updated_by,is_active,cmp_id,extra_comments,type,accident_type,physicianid,location_id)Values
+				(@patient_id,@provider_id,@patientIE_ID,@doe,@created_date,@created_by,@updated_date,@updated_by,@is_active,@cmp_id,@extra_comments,@type,@accident_type,@physicianid,@location_id);select @@identity;", conn);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
         cm.Parameters.AddWithValue("@provider_id", data.provider_id);
 
@@ -53,6 +53,7 @@ public class PatientFUService : ParentService
         cm.Parameters.AddWithValue("@type", data.type);
         cm.Parameters.AddWithValue("@accident_type", data.accident_type);
         cm.Parameters.AddWithValue("@physicianid", data.physicianid);
+        cm.Parameters.AddWithValue("@location_id", data.location_id);
 
         var result = ExecuteScalar(cm);
         return result;
@@ -71,6 +72,7 @@ public class PatientFUService : ParentService
 		updated_by=@updated_by,
 		is_active=@is_active,
 		cmp_id=@cmp_id,
+		location_id=@location_id,
 		extra_comments=@extra_comments,
         accident_type=@accident_type,
         physicianid=@physicianid
@@ -91,6 +93,7 @@ public class PatientFUService : ParentService
         cm.Parameters.AddWithValue("@extra_comments", data.extra_comments);
         cm.Parameters.AddWithValue("@accident_type", data.accident_type);
         cm.Parameters.AddWithValue("@physicianid", data.physicianid);
+        cm.Parameters.AddWithValue("@location_id", data.location_id);
         Execute(cm);
     }
     public void Delete(int fuId)

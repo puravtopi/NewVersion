@@ -6,6 +6,7 @@ public class tbl_patient_fu{
 	public int? patient_id {get;set;}
 	public int? provider_id { get; set; }
 	public int? patientIE_ID {get;set;}
+	public int? location_id {get;set;}
 	public int? physicianid { get;set;}
 
     public DateTime? doe {get;set;}

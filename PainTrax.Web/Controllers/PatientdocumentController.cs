@@ -12,7 +12,9 @@ using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
+using System;
 using System.Data;
+using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
 using Xceed.Words.NET;
@@ -83,7 +85,7 @@ namespace PainTrax.Web.Controllers
             }
 
         }
-
+       
         [HttpPost]
         public ActionResult Index(string selectedItems)
         {
@@ -91,6 +93,62 @@ namespace PainTrax.Web.Controllers
             List<TreeViewNode> items = JsonConvert.DeserializeObject<List<TreeViewNode>>(selectedItems);
             return RedirectToAction("Index");
         }
+        public async Task<IActionResult> DownloadFilesAsZip(string filenames)
+        {
+            string selectedFolder = "";
+            if (string.IsNullOrEmpty(filenames))
+            {
+                return Content("No filenames provided.");
+            }
+
+            var fileList = filenames.Split(';').ToList();
+
+            // Create a memory stream to hold the ZIP file in memory
+            var memoryStream = new MemoryStream();
+
+            // Create a ZipArchive and use it to add files to the memory stream
+            using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, leaveOpen: true)) // Leave stream open
+            {
+                foreach (var filename in fileList)
+                {
+                    // Extract details about the file (you can adjust the parsing logic as needed)
+                    string patientID = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId)?.ToString();
+                    string split = filename.Split('~')[0];
+                    string split1 = filename.Split('~')[1];
+                    selectedFolder = split1.Split('$')[0];
+                    string fileNameNew = split1.Split('$')[1];
+
+                    var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", selectedFolder, patientID);
+                    var filePath = Path.Combine(folderPath, fileNameNew);
+
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        // Add the file to the ZIP archive
+                        var zipEntry = archive.CreateEntry(fileNameNew, CompressionLevel.Fastest);
+                        using (var entryStream = zipEntry.Open())
+                        using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                        {
+                            await fileStream.CopyToAsync(entryStream);
+                        }
+                    }
+                    else
+                    {
+                        // Return an error if any file does not exist
+                        return Content($"File not found: {filename}");
+                    }
+                }
+            }
+
+            // Set the position of the memory stream back to the beginning before returning it
+            memoryStream.Position = 0;
+
+            // Return the ZIP file as a FileResult
+            return File(memoryStream, "application/zip", "PatientDocuments" + ".zip");
+        }
+        
+
+       
+        
 
         public async Task<IActionResult> Download(string filename)
         {

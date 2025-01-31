@@ -28,14 +28,17 @@
                             {
                                 <iframe src="@Url.Action("GetFile", new { filename = ViewBag.Filename })#toolbar=0&navpanes=0&scrollbar=0" style="width: 100%; height: 600px; border: none;"></iframe>
                             }  
-                            else if (ViewBag.ContentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                            @* else if (ViewBag.ContentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
                             {
-                                <div>@Html.Raw(ViewBag.DocContent)</div>
-                            }
+                                string fileUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.PathBase}/Patientdocument/{ViewBag.Filename}";
+                                string googleDocsViewerUrl = $"https://docs.google.com/gview?url={fileUrl}&embedded=true";
+                                <iframe src="@googleDocsViewerUrl" style="width: 100%; height: 600px; border: none;"></iframe>
+                            } *@
                             else if (ViewBag.ContentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" ||
                             ViewBag.ContentType == "application/vnd.openxmlformats-officedocument.presentationml.presentation" ||
                             ViewBag.ContentType == "application/vnd.ms-excel" ||
-                            ViewBag.ContentType == "application/vnd.ms-powerpoint")
+                            ViewBag.ContentType == "application/vnd.ms-powerpoint" ||
+                            ViewBag.ContentType == "application / vnd.openxmlformats - officedocument.wordprocessingml.document")
                             {
                                 string fileUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.PathBase}/Patientdocument/GetFile?filename={ViewBag.Filename}";
                                 string googleDocsViewerUrl = $"https://docs.google.com/gview?url={fileUrl}&embedded=true";

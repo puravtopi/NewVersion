@@ -58,7 +58,7 @@
                                     <div class="row mb-3">
                                         <label class="col-md-4 col-lg-3 col-form-label">UserName</label>
                                         <div class="col-md-8 col-lg-9">
-                                            <input type="text" class="form-control" asp-for="uname" name="c_UserName" autocomplete="off">
+                                            <input type="text" class="form-control" asp-for="uname" autocomplete="off">
                                             <span asp-validation-for="uname" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -113,7 +113,7 @@
                                             <table>
                                                 <tr>
                                                     <td style="width: 95%;">
-                                                        <input type="password" class="form-control" asp-for="password" value="@Model.password" name="c_Password" autocomplete="new-password">
+                                                        <input type="password" class="form-control" asp-for="password" autocomplete="new-password">
                                                     </td>
                                                     <td>
                                                         <span id="togglePassword" class="toggle-password">

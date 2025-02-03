@@ -1,4 +1,9 @@
-﻿@model PainTrax.Web.ViewModel.VisitVM
+﻿<style>
+    .jstree-node.jstree-leaf .jstree-checkbox {
+        display: none !important;
+    }
+</style>
+@model PainTrax.Web.ViewModel.VisitVM
 <br />
 <div class="col-lg-12">
 
@@ -6,6 +11,7 @@
         <div id="jstree" style="width:80%">
         </div>
         <div class="col-md-12 col-lg-12">
+            <button id="downloadBtn" class="btn btn-primary" style="float:right;margin-left:10px;margin-bottom:10px;">Download selected Folders</button>
             <button class="btn btn-primary" style="float:right;margin-left:10px;margin-bottom:10px;" data-bs-toggle="modal" data-bs-target="#importModal">Add Documents</button>
         </div>
     </div>
@@ -42,6 +48,7 @@
                                 <div class="col-md-8 col-lg-9">
                                     selected folder <label id="selectedfolder" style="color:red">Please Select Folder to upload</label>
                                     <input type="file" multiple name="postedFile" id="postedFile" />
+                                    <p id="error-message" style="color: red; display: none;">Only image and PDF files are allowed!</p>
                                 </div>
                             </div>
                         </div>
@@ -72,7 +79,8 @@
 
     $(function () {
         debugger
-        $('#jstree').on('changed.jstree', function (e, data) {
+        $('#jstree').on('check_node.jstree', function (e, data) {
+            debugger;
             var i, j;
             var selectedItems = [];
             var parentid;
@@ -148,10 +156,57 @@
                 "data": @Html.Raw(Model.doc_json)
                                                                                                                                                                                                                                                     },
             "checkbox": {
-                "keep_selected_style": false
-            },
-            "plugins": ["wholerow", "conditionalselect"]
+                        "keep_selected_style": false,
+                        "three_state": false,  // Disable cascading select
+                    "tie_selection": false  // Disable cascading select on child nodes
+                    },
+
+                    "plugins": ["checkbox","wholerow", "conditionalselect"],
         });
+         // Download button click handler
+                $('#downloadBtn').click(function () {
+                    debugger;
+                    var selectedNodes = $('#jstree').jstree('get_checked',true);
+                     //var selectedNodes = $('#jstree').jstree('get_selected', true);
+
+                                          // Check if any nodes are selected
+            if (selectedNodes.length > 0){
+                var filenames = [];
+                 for (var i = 0; i < selectedNodes.length; i++) {
+                var node = selectedNodes[i];
+                console.log('Selected node:', node.text);  // Log the selected node's text
+
+
+                // Loop through each child of the current node
+                for (var j = 0; j < node.children.length; j++) {
+                    var childNode = node.children[j];  // Get the child node by ID
+
+                    filenames.push(childNode);
+                }
+            }
+                       var filenamesString = filenames.join(';');
+                       if(filenamesString == "")
+                       {
+                           alert("No files to download");
+                       }
+                       else
+                       {
+
+            // Construct the URL with the filenames string as a query parameter
+            var url = '@Url.Action("DownloadFilesAsZip", "Patientdocument")' + '?filenames=' + encodeURIComponent(filenamesString);
+
+            // Log the URL to the console to check if it's correct
+            console.log(url);
+
+            // Trigger the download by redirecting the browser to the URL
+            window.location.href = url;
+
+            }
+
+            } else {
+                alert("No files selected");
+            }
+                });
     });
 
     function ViewDocument(file) {
@@ -299,6 +354,28 @@
 
 </script>
 <script type="text/javascript">
+ 
+                document.getElementById('postedFile').addEventListener('change', function(event) {
+                  const files = event.target.files;
+                  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+                  let invalidFile = false;
+
+                  // Check if any selected file is invalid
+                  for (let i = 0; i < files.length; i++) {
+                    if (!allowedTypes.includes(files[i].type)) {
+                      invalidFile = true;
+                      break;
+                    }
+                  }
+
+                  // If an invalid file is found, show an error message and clear the input field
+                  if (invalidFile) {
+                    document.getElementById('error-message').style.display = 'block';
+                    event.target.value = ''; // Clear the input field
+                  } else {
+                    document.getElementById('error-message').style.display = 'none';
+                  }
+                });
 
 </script>
 @* "plugins": ["wholerow", "checkbox"] *@

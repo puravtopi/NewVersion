@@ -2325,7 +2325,8 @@ namespace PainTrax.Web.Controllers
                     else
                         body = body.Replace("#drName", "");
                     body = body.Replace("#address", locData[0].address);
-                    body = body.Replace("#Address", locData[0].address);
+                    //body = body.Replace("#Address", locData[0].address);
+                     body = body.Replace("#Address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                     //  body = body.Replace("#address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                     body = body.Replace("#loc", locData[0].location);
                     body = body.Replace("#Location", locData[0].location);
@@ -2397,9 +2398,9 @@ namespace PainTrax.Web.Controllers
 
 
                     history = history.Replace("#dos", Common.commonDate(patientData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
-                    history = history.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
+                    history = history.Replace("#doi", Common.commonDate(patientData.doa));
                     //  history.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
-                    history = history.Replace("#patientname", gender + " " + patientData.lname + " " + patientData.fname + " " + patientData.lname);
+                    history = history.Replace("#patientname", sex + " " + patientData.lname + " " + patientData.fname + " " + patientData.lname);
                     history = history.Replace("#accidenttype", patientData.accidentType);
 
                     body = body.Replace("#history", history);
@@ -2416,8 +2417,8 @@ namespace PainTrax.Web.Controllers
 
 
 
-                    body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : bodypart.ToLower());
-                    body = body.Replace("#bodypart", string.IsNullOrEmpty(page1Data.bodypart) ? "" : page1Data.bodypart.ToLower());
+                    body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" :(bodypart).ToString().Replace(",", ", "));
+                    body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",", ", "));
 
                     string assessment = "";
                     if (!string.IsNullOrEmpty(page1Data.assessment))

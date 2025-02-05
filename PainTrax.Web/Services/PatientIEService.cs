@@ -17,7 +17,7 @@ public class PatientIEService : ParentService
         if (!string.IsNullOrEmpty(query))
             query = query + cnd;
 
-        query = query + " order by id desc limit 500";
+        query = query + " order BY  COALESCE(updated_date, created_date) DESC limit 500";
 
         List<vm_patient_ie> dataList = ConvertDataTable<vm_patient_ie>(GetData(query));
         return dataList;
@@ -115,7 +115,7 @@ public class PatientIEService : ParentService
 		alert_note=@alert_note,
 		secondary_wcb_group=@secondary_wcb_group,
         updated_by=@updated_by,
-		updated_date=@updated_date,
+		updated_date=CURDATE(),
         accident_type=@accident_type,
         physicianid=@physicianid,
 		is_active=@is_active		where id=@id", conn);
@@ -141,7 +141,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@ins_note", data.ins_note);
         cm.Parameters.AddWithValue("@alert_note", data.alert_note);
         cm.Parameters.AddWithValue("@updated_by", data.updated_by);
-        cm.Parameters.AddWithValue("@updated_date", data.updated_date);
+       
         cm.Parameters.AddWithValue("@is_active", data.is_active);
         cm.Parameters.AddWithValue("@referring_physician", data.referring_physician);
         cm.Parameters.AddWithValue("@accident_type", data.accident_type);
@@ -153,7 +153,7 @@ public class PatientIEService : ParentService
     {
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient_ie SET
 		patient_id=@patient_id,
-		location_id=@location_id,
+		
 		attorney_id=@attorney_id,
 		primary_ins_cmp_id=@primary_ins_cmp_id,
 		secondary_ins_cmp_id=@secondary_ins_cmp_id,
@@ -176,7 +176,7 @@ public class PatientIEService : ParentService
 		is_active=@is_active		where id=@id", conn);
         cm.Parameters.AddWithValue("@id", data.id);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
-        cm.Parameters.AddWithValue("@location_id", data.location_id);
+       
         cm.Parameters.AddWithValue("@attorney_id", data.attorney_id);
         cm.Parameters.AddWithValue("@primary_ins_cmp_id", data.primary_ins_cmp_id);
         cm.Parameters.AddWithValue("@secondary_ins_cmp_id", data.secondary_ins_cmp_id);

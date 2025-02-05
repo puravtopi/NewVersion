@@ -3091,7 +3091,7 @@ namespace PainTrax.Web.Controllers
 
                         if (heading.ToLower().Contains("(levels)"))
                         {
-                            heading = heading.Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                            heading = heading.Replace("(levels)",dsPOC.Rows[i]["Level"].ToString());
                             heading = heading.Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
                         }
 

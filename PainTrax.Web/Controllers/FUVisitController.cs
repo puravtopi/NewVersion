@@ -786,7 +786,7 @@ namespace PainTrax.Web.Controllers
                     doa = model.doa,
                     emp_id = empId,
                     is_active = true,
-                    location_id = model.locationid,
+                 
                     provider_id = model.providerid,
                     patient_id = patientId,
                     primary_claim_no = model.prime_claim_no,
@@ -3037,8 +3037,8 @@ namespace PainTrax.Web.Controllers
 
                         if (heading.ToLower().Contains("(side)"))
                         {
-                            heading = heading.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
-                            heading = heading.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                            heading = heading.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString().ToUpper());
+                            heading = heading.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString().ToUpper());
 
                         }
 

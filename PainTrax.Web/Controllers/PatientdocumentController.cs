@@ -7,7 +7,9 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using MS.Services;
 using Newtonsoft.Json;
+using Optivem.Framework.Core.Domain;
 using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
@@ -18,6 +20,7 @@ using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
 using Xceed.Words.NET;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 
 
@@ -32,6 +35,7 @@ namespace PainTrax.Web.Controllers
         private IConfiguration Configuration;
         private string _outputPath;
         private string _storagePath;
+        private readonly PatientService _patientservices = new PatientService();
 
         public PatientdocumentController(IMapper mapper, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment,
                                 ILogger<PatientdocumentController> logger, IConfiguration configuration)
@@ -95,6 +99,8 @@ namespace PainTrax.Web.Controllers
         }
         public async Task<IActionResult> DownloadFilesAsZip(string filenames)
         {
+            string PatientID = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId).ToString();
+            var patientData = _patientservices.GetOne(Convert.ToInt32(PatientID));
             string selectedFolder = "";
             if (string.IsNullOrEmpty(filenames))
             {
@@ -143,7 +149,7 @@ namespace PainTrax.Web.Controllers
             memoryStream.Position = 0;
 
             // Return the ZIP file as a FileResult
-            return File(memoryStream, "application/zip", "PatientDocuments" + ".zip");
+            return File(memoryStream, "application/zip", patientData.fname + "_" +patientData.lname + ".zip");
         }
         
 

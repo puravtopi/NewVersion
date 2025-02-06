@@ -1989,8 +1989,8 @@ namespace PainTrax.Web.Controllers
                 {
                     body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
                     body = body.Replace("#address", locData[0].address);
-                    body = body.Replace("#Address", locData[0].address);
-                    //  body = body.Replace("#address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
+                    //body = body.Replace("#Address", locData[0].address);
+                    body = body.Replace("#Address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                     body = body.Replace("#loc", locData[0].location);
                     body = body.Replace("#Location", locData[0].location);
                     body = body.Replace("#Nameofpractice", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice :  locData[0].nameofpractice);
@@ -2067,6 +2067,7 @@ namespace PainTrax.Web.Controllers
                         bodypart = Common.ReplceCommowithAnd(page1Data.bodypart);
 
                     body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart) + " pain.");
+                    body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",", ", "));
 
                     string assessment = "";
                     if (!string.IsNullOrEmpty(page1Data.assessment))

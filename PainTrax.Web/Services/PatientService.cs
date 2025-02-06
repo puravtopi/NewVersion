@@ -118,7 +118,7 @@ public class PatientService : ParentService
       //  cm.Parameters.AddWithValue("@mc_details", data.mc_details);
         cm.Parameters.AddWithValue("@account_no", data.account_no);
        // cm.Parameters.AddWithValue("@physicianid", data.physicianid);
-        cm.Parameters.AddWithValue("@updatedate", data.updatedate);
+        cm.Parameters.AddWithValue("@updatedate", System.DateTime.Now);
         cm.Parameters.AddWithValue("@updatedby", data.updatedby);
 
         Execute(cm);

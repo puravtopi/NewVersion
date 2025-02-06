@@ -148,14 +148,14 @@
                                                             Location
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            <select asp-for="locationid" class="form-select" asp-items="@ViewBag.locList"></select>
+                                                            <select asp-for="locationid" class="form-select" asp-items="@ViewBag.locList" onchange="fnUpdateSidePanel();"></select>
                                                             <span id="error-locationid" style="display:none" class="errorSpan">Please Select Location.</span>
                                                         </div>
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
                                                             DOS.
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            <input type="date" asp-for="dov" class="form-control" />
+                                                            <input type="date" asp-for="dov" class="form-control" onchange="fnUpdateSidePanel();" />
                                                         </div>
                                                     </div>
                                                     <div class="row mb-3">
@@ -163,14 +163,14 @@
                                                             DOA.
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            <input type="date" asp-for="doa" class="form-control" />
+                                                            <input type="date" asp-for="doa" class="form-control" onchange="fnUpdateSidePanel();" />
                                                         </div>
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
                                                             Case Type
                                                         </label>
                                                         <div class="col-sm-4">
 
-                                                            <select asp-for="compensation" class="form-select" asp-items="@ViewBag.csList"></select>
+                                                            <select asp-for="compensation" class="form-select" asp-items="@ViewBag.csList" onchange="fnUpdateSidePanel();"></select>
                                                             <span id="error-casetype" style="display:none" class="errorSpan">Please Select CaseType.</span>
                                                         </div>
                                                     </div>
@@ -210,12 +210,12 @@
                                                     <div class="row mb-3">
                                                         <label for="inputText" class="col-sm-2 col-form-label">Last Name</label>
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control" asp-for="lname" onchange="fnCheckPatientNameOnly()">
+                                                            <input type="text" class="form-control" asp-for="lname" onchange="fnCheckPatientNameOnly();fnUpdateSidePanel()">
                                                             <span id="error-lname" style="display:none" class="errorSpan">Please Enter Last Name.</span>
                                                         </div>
                                                         <label for="inputText" class="col-sm-2 col-form-label">First Name</label>
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control" asp-for="fname" onchange="fnCheckPatientNameOnly()">
+                                                            <input type="text" class="form-control" asp-for="fname" onchange="fnCheckPatientNameOnly();fnUpdateSidePanel();">
                                                             <span id="error-fname" style="display:none" class="errorSpan">Please Enter First Name.</span>
                                                         </div>
 
@@ -223,11 +223,11 @@
                                                     <div class="row mb-3">
                                                         <label for="inputText" class="col-sm-2 col-form-label">MI</label>
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control" asp-for="mname" onchange="fnCheckPatientNameOnly()">
+                                                            <input type="text" class="form-control" asp-for="mname" onchange="fnCheckPatientNameOnly();fnUpdateSidePanel();">
                                                         </div>
                                                         <label for="inputText" class="col-sm-2 col-form-label">Sex</label>
                                                         <div class="col-sm-4">
-                                                            <select asp-for="gender" class="form-select" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Gender>()"></select>
+                                                            <select asp-for="gender" class="form-select" onchange="fnUpdateSidePanel();" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Gender>()"></select>
                                                         </div>
 
 
@@ -235,7 +235,7 @@
                                                     <div class="row mb-3">
                                                         <label for="inputText" class="col-sm-2 col-form-label">DOB</label>
                                                         <div class="col-sm-4">
-                                                            <input type="date" class="form-control" asp-for="dob">
+                                                            <input type="date" class="form-control" asp-for="dob" onchange="fnUpdateSidePanel();">
                                                             <span id="error-dob" style="display:none" class="errorSpan">Please Enter DOB.</span>
                                                         </div>
                                                         <label for="inputText" class="col-sm-2 col-form-label">Email</label>
@@ -684,7 +684,7 @@
                                 <label class="col-sm-4">
                                     <b> DOB</b>
                                 </label>
-                                <div class="col-sm-8" id="pdDOE">
+                                <div class="col-sm-8" id="pdDOB">
                                     @{
                                         var dob = Model.dob == null ? "" : Model.dob.Value.ToString("MM/dd/yyyy");
                                     }
@@ -697,7 +697,7 @@
                                 <label class="col-sm-4">
                                     <b> IE Date</b>
                                 </label>
-                                <div class="col-sm-8" id="pdDOE">
+                                <div class="col-sm-8">
                                     @{
                                         var doi = Model.doi == null ? "" : Model.doi.Value.ToString("MM/dd/yyyy");
                                     }
@@ -710,7 +710,7 @@
                                 <label class="col-sm-4">
                                     <b> DOS</b>
                                 </label>
-                                <div class="col-sm-8" id="pdDOE">
+                                <div class="col-sm-8" id="pdDOS">
                                     @{
                                         var doe = Model.dos == null ? "" : Model.dos.Value.ToString("MM/dd/yyyy");
                                     }
@@ -723,7 +723,7 @@
                                 <label class="col-sm-4">
                                     <b> Age</b>
                                 </label>
-                                <div class="col-sm-8" id="pdDOE">
+                                <div class="col-sm-8" id="pdAGE">
                                     @Model.age
 
                                 </div>
@@ -1378,6 +1378,53 @@
                 $("#pocsummary").html(data);
             }
         })
+    }
+
+    function fnUpdateSidePanel() {
+
+        var fullname = $("#lname").val() + ' ' + $("#fname").val();
+        $('#pdName').text(fullname);
+
+        $('#pdCT').text($("#compensation option:selected").text());
+        $('#pdLoc').text($("#locationid option:selected").text());
+        $('#pdDOS').text(fngetAGE($("#dov").val()));
+       
+        $('#pdDOA').text(fngetAGE($("#doa").val()));
+        $('#pdGender').text($("#gender option:selected").text());
+
+        var dob = $('#dob').val();
+        if (dob) {
+            var today = new Date();
+            var birthDate = new Date(dob);
+            var age = today.getFullYear() - birthDate.getFullYear();
+            var monthDiff = today.getMonth() - birthDate.getMonth();
+
+            // Adjust age if birthday hasn't occurred yet this year
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+
+            $('#pdAge').text(age);
+            $('#pdDOB').text(fngetAGE(dob));
+        }
+
+    }
+
+    function fngetAGE(inputDate) {
+        if (inputDate) {
+            var date = new Date(inputDate);
+
+            // Extract month, date, and year
+            var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+            var day = date.getDate().toString().padStart(2, '0');
+            var year = date.getFullYear();
+
+            // Format date as MM/dd/yyyy
+            var formattedDate = month + '/' + day + '/' + year;
+
+            return formattedDate;
+        }
+        return '';
     }
 
     function fnCheckPatientNameOnly() {

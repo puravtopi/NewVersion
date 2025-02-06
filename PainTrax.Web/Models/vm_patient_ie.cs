@@ -54,6 +54,7 @@ public class vm_patient_ie
     public string? home_ph { get; set; }
     public string? mobile { get; set; }
     public string? account_no { get; set; }
+    public string? strlocation { get; set; }
     public bool? vaccinated { get; set; }
 
 

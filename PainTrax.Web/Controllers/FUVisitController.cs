@@ -214,7 +214,7 @@ namespace PainTrax.Web.Controllers
                             for (int i = 0; i < page1Data.bodypart.Split(',').Length; i++)
                             {
                                 var linkbody = page1Data.bodypart.Split(',')[i].Replace(" ", "_");
-                                daignoLink += "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + page1Data.bodypart.Split(',')[i] + "</a>&nbsp;";
+                                daignoLink += "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + page1Data.bodypart.Split(',')[i] + "</a><br/>";
                             }
 
                         }
@@ -2438,12 +2438,12 @@ namespace PainTrax.Web.Controllers
 
                     var header = new Header(new Paragraph(new Run(new Text("Header Test"))));
                     HeaderReference headerReference = new HeaderReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(headerPart) };
-                    var footer = new Footer(new Paragraph(new Run(new Text("Page"), new SimpleField() { Instruction = "PAGE" })));
-                    FooterReference footerReference = new FooterReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(footerPart) };
+                    //var footer = new Footer(new Paragraph(new Run(new Text("Page"), new SimpleField() { Instruction = "PAGE" })));
+                    //FooterReference footerReference = new FooterReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(footerPart) };
 
                     headerPart.Header = header;
-                    footerPart.Footer = footer;
-                    mainPart.Document.Body.Append(new SectionProperties(headerReference, footerReference));
+
+                    mainPart.Document.Body.Append(new SectionProperties(headerReference));
 
                 }
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();

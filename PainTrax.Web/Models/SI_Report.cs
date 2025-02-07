@@ -9,6 +9,7 @@ namespace PainTrax.Web.Models
         public Int32 ieid { get; set; }
         public Int64 fuid { get; set; }
 
+        public string? name { get; set; }
         public string? fname { get; set; }
         public string? lname { get; set; }
         public string?  visitiefu { get; set; }

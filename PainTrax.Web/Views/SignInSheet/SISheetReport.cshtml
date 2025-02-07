@@ -31,18 +31,18 @@
                         <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th scope="col">Fname</th>
-                                    <th scope="col">Lname</th>
-                                    <th scope="col">visitiefu</th>
-                                    <th scope="col">FollowUpDate</th>
-                                    <th scope="col">Doa</th>
+                                    <th scope="col">Name - Acct#</th>
+                                    <th scope="col">Case Type</th>
+                                    <th scope="col">Visit Details</th>
+                                    @* <th scope="col">Doa</th> *@
+                                    <th scope="col">Proc FU Date</th>
+                                    <th scope="col">InHouse Proc</th>
                                     <th scope="col">Doe</th>
-                                    <th scope="col">casetype</th>
-                                    <th scope="col">location</th>
-                                    <th scope="col">Requested</th>
-                                    <th scope="col">Scheduled</th>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">Procedure Requested</th>
+                                    <th scope="col">Procedure Scheduled</th>
                                     <th scope="col">Alert</th>
-                                    <th scope="col">InHouse</th>
+                                    @* <th scope="col">Next Visit</th> *@
                                     @*   <th style="width:5%">Action</th> *@
                                 </tr>
                             </thead>
@@ -88,18 +88,18 @@
             },
             "columns": [
 
-                { "data": "fname", "fname": "fname", "autoWidth": true },
-                { "data": "lname", "lname": "lname", "autoWidth": true },
-                { "data": "visitiefu", "visitiefu": "visitiefu", "autoWidth": true },
-                { "data": "followupdate", "followupdate": "followupdate", "autoWidth": true },
-                { "data": "doa", "doa": "doa", "autoWidth": true },
-                { "data": "doe", "doe": "doe", "autoWidth": true },
+                { "data": "name", "name": "name", "autoWidth": true },
+                // { "data": "lname", "lname": "lname", "autoWidth": true },
                 { "data": "casetype", "casetype": "casetype", "autoWidth": true },
+                { "data": "visitiefu", "visitiefu": "visitiefu", "autoWidth": true },
+                // { "data": "doa", "doa": "doa", "autoWidth": true },
+                { "data": "followupdate", "followupdate": "followupdate", "autoWidth": true },
+                { "data": "inhouse", "inhouse": "inhouse", "autoWidth": true },
+                { "data": "doe", "doe": "doe", "autoWidth": true },
                 { "data": "location", "location": "location", "autoWidth": true },
                 { "data": "requested", "requested": "requested", "autoWidth": true },
                 { "data": "scheduled", "scheduled": "scheduled", "autoWidth": true },
-                { "data": "alert", "Alert": "Alert", "autoWidth": true },
-                { "data": "inhouse", "inhouse": "inhouse", "autoWidth": true },
+                { "data": "alert", "alert": "alert", "autoWidth": true },
             ]
         });
     }

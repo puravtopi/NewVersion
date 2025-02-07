@@ -31,7 +31,7 @@ namespace PainTrax.Web.Controllers
         private readonly AppProviderService _appProviderService = new AppProviderService();
         private readonly AppProviderRelService _appProviderRelService = new AppProviderRelService();
         private readonly MDTImportServices _servicesMDTImport = new MDTImportServices();
-
+        private readonly UserService _userService = new UserService();
 
 
         private readonly IMapper _mapper;
@@ -133,33 +133,77 @@ namespace PainTrax.Web.Controllers
                 // var data = _SIservice.GetPatientsSIDNL();
                 var data = _SIservice.GetPatientsSIDNL(HttpContext.Session.GetString(SessionKeys.Sessiondldoe), HttpContext.Session.GetString(SessionKeys.Sessiondldlloc), cmpid);
 
+
+                int? providorId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
+
+                string providerName = string.Empty;
+
+                tbl_users _user = new tbl_users()
+                {
+                    Id = providorId
+                };
+                if (providorId > 0)
+                {
+                    var userData = _userService.GetOne(_user);
+                    providerName = Convert.ToString(userData.providername);
+                }
+
+
                 // Create a new DataTable
                 DataTable dt = new DataTable();
                 // Add columns to the DataTable
+
+
                 dt.Columns.AddRange(new DataColumn[]
-                {
+                        {
                     //new DataColumn("ieid", typeof(string)),
                     //new DataColumn("fuid", typeof(string)),
-                    new DataColumn("fname", typeof(string)),
-                    new DataColumn("lname", typeof(string)),
-                    new DataColumn("visitiefu", typeof(string)),
-                    new DataColumn("followupdate", typeof(string)),
-                    new DataColumn("doa", typeof(string)),
-                    new DataColumn("doe", typeof(string)),
-                    new DataColumn("casetype", typeof(string)),
-                    new DataColumn("location", typeof(string)),
-                    new DataColumn("requested", typeof(string)),
-                    new DataColumn("scheduled", typeof(string)),
-                    new DataColumn("alert", typeof(string)),
-                    new DataColumn("inhouse", typeof(string))
+                    new DataColumn("Name - Acct#", typeof(string)),
+                    new DataColumn("Case Type", typeof(string)),
+                    //new DataColumn("lname", typeof(string)),
+                    new DataColumn("Visit Details", typeof(string)),
+                    new DataColumn("Proc FU Date", typeof(string)),
+                    //new DataColumn("doa", typeof(string)),
+                    new DataColumn("InHouse Proc", typeof(string)),
+                    new DataColumn("Doe", typeof(string)),
+                    new DataColumn("Location", typeof(string)),
+                    new DataColumn("Procedure Requested", typeof(string)),
+                    new DataColumn("Procedure Scheduled", typeof(string)),
+                    new DataColumn("Alert", typeof(string)),
+                    new DataColumn("Next Visit", typeof(string))
+
+                        });
+
+                // Populate the DataTable with data from the list of attorneys
+
+
+                foreach (var cnt in data)
+                {
+                    dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.followupdate, cnt.inhouse, cnt.doe, cnt.location, cnt.requested, cnt.scheduled, cnt.alert, string.Empty);
+                }
+
+                DataTable dt1 = new DataTable();
+
+                dt1.Columns.AddRange(new DataColumn[]
+                {
+
+                    new DataColumn(" ", typeof(string)),
+                    new DataColumn("  ", typeof(string)),
+                    new DataColumn("    ", typeof(string)),
+                    new DataColumn("     ", typeof(string)),
+                    new DataColumn("       ", typeof(string)),
+                    new DataColumn("        ", typeof(string)),
+                    new DataColumn("         ", typeof(string)),
+                    new DataColumn("          ", typeof(string)),
+                    new DataColumn("           ", typeof(string)),
+                    new DataColumn("            ", typeof(string)),
+                    new DataColumn("             ", typeof(string))
 
                 });
 
-                // Populate the DataTable with data from the list of attorneys
-                foreach (var cnt in data)
-                {
-                    dt.Rows.Add(cnt.fname, cnt.lname, cnt.visitiefu, cnt.followupdate, cnt.doa, cnt.doe, cnt.casetype, cnt.location, cnt.requested, cnt.scheduled, cnt.alert, cnt.inhouse);
-                }
+                dt1.Rows.Add("Date :", HttpContext.Session.GetString(SessionKeys.Sessiondldoe), string.Empty, string.Empty, "Location : ", string.Empty, string.Empty, "MA/Provider : ", providerName, string.Empty, string.Empty);
+                dt1.Rows.Add(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
+
 
                 // Create a new Excel file
                 var memoryStream = new MemoryStream();
@@ -173,8 +217,31 @@ namespace PainTrax.Web.Controllers
                     worksheetPart.Worksheet = new Worksheet(sheetData);
 
                     var sheets = document.WorkbookPart.Workbook.AppendChild(new Sheets());
-                    var sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Users" };
+                    var sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "SI Sheet" };
                     sheets.Append(sheet);
+
+
+
+                    var headerRow1 = new Row();
+                    foreach (DataColumn column in dt1.Columns)
+                    {
+                        var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName) };
+                        headerRow1.AppendChild(cell);
+                    }
+                    sheetData.AppendChild(headerRow1);
+
+                    foreach (DataRow row in dt1.Rows)
+                    {
+                        var newRow = new Row();
+                        foreach (var value in row.ItemArray)
+                        {
+                            var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
+                            newRow.AppendChild(cell);
+                        }
+                        sheetData.AppendChild(newRow);
+                    }
+
+
 
                     var headerRow = new Row();
                     foreach (DataColumn column in dt.Columns)
@@ -183,6 +250,10 @@ namespace PainTrax.Web.Controllers
                         headerRow.AppendChild(cell);
                     }
                     sheetData.AppendChild(headerRow);
+
+
+
+                    // sheetData.AppendChild(headerRow);
 
                     foreach (DataRow row in dt.Rows)
                     {

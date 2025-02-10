@@ -135,7 +135,7 @@
                     {
                         "render": function (data, type, full, meta) {
                             var index = '<a href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'
-                            index += '<a href="' + deleteurl + '/' + full.id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+                            index += '<a href="#" onclick="DeleteData(' + full.id + ')"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
                             return index;
                         }
                     }
@@ -148,9 +148,9 @@
         }
 
 
-        function DeleteData(CustomerID) {
+        function DeleteData(UserID) {
             if (confirm("Are you sure you want to delete ...?")) {
-                Delete(CustomerID);
+                Delete(UserID);
             }
             else {
                 return false;
@@ -158,10 +158,10 @@
         }
 
 
-        function Delete(CustomerID) {
-            var url = '@Url.Content("~/")' + "DemoGrid/Delete";
+        function Delete(UserID) {
+            var url = '@Url.Content("~/")' + "User/Delete";
 
-            $.post(url, { ID: CustomerID }, function (data) {
+            $.post(url, { ID: UserID }, function (data) {
                 if (data) {
                     oTable = $('#example').DataTable();
                     oTable.draw();

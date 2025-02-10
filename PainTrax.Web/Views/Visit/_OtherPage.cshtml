@@ -184,22 +184,54 @@
             }
         });
     }
-
-    function fnTreatmentDetails() {
-
+            function fnTreatmentDetails() {
         var strContent = '<ol>';
         var strIds = '', strDesc = '';
-        $('input[type=checkbox]').map(function (i, e) {
+
+        $('input[type=checkbox]').each(function (i, e) {
+            // Check if the checkbox is selected
             if (e.checked) {
-                strContent = strContent + '<li>' + $("#chk_" + e.id).val() + '</li>';
-                strIds = strIds + ',' + e.id;
+                var checkboxValue = $("#chk_" + e.id).val();
+
+                // Only append to strContent if checkboxValue is not undefined or empty
+                if (checkboxValue) {
+                    strContent += '<li>' + checkboxValue + '</li>';
+                    strIds += (strIds ? ',' : '') + e.id;  // Ensure no leading comma
+                    strDesc += (strDesc ? '^' : '') + checkboxValue;  // Ensure no leading ^ for first value
+                }
             }
-            strDesc = strDesc + '^' + $("#chk_" + e.id).val();
         });
 
-        quillTreatment.container.firstChild.innerHTML = strContent + '</ol>';
+        // Close the ordered list
+        strContent += '</ol>';
 
+        // If no valid checkboxes were selected, clear the content (optional)
+        if (strContent === '<ol></ol>') {
+            strContent = '';  // Or handle this case as needed
+        }
+
+        // Update the container with the generated content
+        quillTreatment.container.firstChild.innerHTML = strContent;
+
+        // Set hidden fields with the collected values
         $('#hidTreatmentIds').val(strIds);
         $('#hidTreatmentDesc').val(strDesc);
     }
+    // function fnTreatmentDetails() {
+    //     debugger;
+    //     var strContent = '<ol>';
+    //     var strIds = '', strDesc = '';
+    //     $('input[type=checkbox]').map(function (i, e) {
+    //         if (e.checked) {
+    //             strContent = strContent + '<li>' + $("#chk_" + e.id).val() + '</li>';
+    //             strIds = strIds + ',' + e.id;
+    //         }
+    //         strDesc = strDesc + '^' + $("#chk_" + e.id).val();
+    //     });
+
+    //     quillTreatment.container.firstChild.innerHTML = strContent + '</ol>';
+
+    //     $('#hidTreatmentIds').val(strIds);
+    //     $('#hidTreatmentDesc').val(strDesc);
+    // }
 </script>

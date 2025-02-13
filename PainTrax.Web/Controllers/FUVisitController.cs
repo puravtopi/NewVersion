@@ -441,7 +441,7 @@ namespace PainTrax.Web.Controllers
                             for (int i = 0; i < page1Data.bodypart.Split(',').Length; i++)
                             {
                                 var linkbody = page1Data.bodypart.Split(',')[i].Replace(" ", "_");
-                                daignoLink += "<a href=# onclick=openDaignoModel('" + linkbody + "')>" + page1Data.bodypart.Split(',')[i] + "</a>&nbsp;";
+                                daignoLink += "<a href=# onclick=openDaignoModel('" + linkbody + "')>" + page1Data.bodypart.Split(',')[i] + "</a><br/>";
                             }
 
                         }

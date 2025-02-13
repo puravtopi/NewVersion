@@ -14,6 +14,7 @@ using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using PainTrax.Web.ViewModel;
 using System.Data;
+using System.Net;
 
 
 
@@ -32,6 +33,7 @@ namespace PainTrax.Web.Controllers
         private readonly AppProviderRelService _appProviderRelService = new AppProviderRelService();
         private readonly MDTImportServices _servicesMDTImport = new MDTImportServices();
         private readonly UserService _userService = new UserService();
+        private readonly LocationsService _locService = new LocationsService();
 
 
         private readonly IMapper _mapper;
@@ -65,11 +67,25 @@ namespace PainTrax.Web.Controllers
             //HttpContext.Session.SetString(SessionKeys.Sessiondldoe, SIDate);
             //if (!string.IsNullOrEmpty(Location_ID))
             //{ HttpContext.Session.SetString(SessionKeys.Sessiondldlloc, Location_ID); }
+            string LocationName = string.Empty;
 
+            var dtloc = _locService.GetAll(" and cmp_id=" + cmpid + " and id=" + Convert.ToString(HttpContext.Session.GetString(SessionKeys.Sessiondldlloc)));
+
+            if (dtloc.Count > 0)
+            {
+                if (!string.IsNullOrEmpty(dtloc[0].location))
+                {
+                    // string filepathFrom = Path.Combine(Environment.WebRootPath, "Uploads/HeaderTemplate") + "//" + dt[0].header_template;
+                    LocationName = Convert.ToString(dtloc[0].location);
+
+                    //  string filepathTo = filePath;
+                    // AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
+                }
+            }
 
 
             ViewBag.SelectedDate = HttpContext.Session.GetString(SessionKeys.Sessiondldoe);
-            ViewBag.SelectedLocation = HttpContext.Session.GetString(SessionKeys.Sessiondldlloc);
+            ViewBag.SelectedLocation = LocationName;
             return View(objPro);
         }
         // [HttpPost]
@@ -129,10 +145,24 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
+                string LocationID = HttpContext.Session.GetString(SessionKeys.Sessiondldlloc);
+                string LocationName = string.Empty;
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 // var data = _SIservice.GetPatientsSIDNL();
-                var data = _SIservice.GetPatientsSIDNL(HttpContext.Session.GetString(SessionKeys.Sessiondldoe), HttpContext.Session.GetString(SessionKeys.Sessiondldlloc), cmpid);
+                var data = _SIservice.GetPatientsSIDNL(HttpContext.Session.GetString(SessionKeys.Sessiondldoe), LocationID, cmpid);
+                var dtloc = _locService.GetAll(" and cmp_id=" + cmpid + " and id=" + LocationID);
 
+                if (dtloc.Count > 0)
+                {
+                    if (!string.IsNullOrEmpty(dtloc[0].location))
+                    {
+                        // string filepathFrom = Path.Combine(Environment.WebRootPath, "Uploads/HeaderTemplate") + "//" + dt[0].header_template;
+                        LocationName = Convert.ToString(dtloc[0].location);
+
+                        //  string filepathTo = filePath;
+                        // AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
+                    }
+                }
 
                 int? providorId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
 
@@ -152,9 +182,9 @@ namespace PainTrax.Web.Controllers
                 // Create a new DataTable
                 DataTable dt = new DataTable();
                 // Add columns to the DataTable
-
-
-                dt.Columns.AddRange(new DataColumn[]
+                if (Convert.ToInt32(LocationID) > 0)
+                {
+                    dt.Columns.AddRange(new DataColumn[]
                         {
                     //new DataColumn("ieid", typeof(string)),
                     //new DataColumn("fuid", typeof(string)),
@@ -165,8 +195,9 @@ namespace PainTrax.Web.Controllers
                     new DataColumn("Proc FU Date", typeof(string)),
                     //new DataColumn("doa", typeof(string)),
                     new DataColumn("InHouse Proc", typeof(string)),
-                    new DataColumn("Doe", typeof(string)),
-                    new DataColumn("Location", typeof(string)),
+                    //new DataColumn("Doe", typeof(string)),
+
+                    //new DataColumn("Location", typeof(string)),
                     new DataColumn("Procedure Requested", typeof(string)),
                     new DataColumn("Procedure Scheduled", typeof(string)),
                     new DataColumn("Alert", typeof(string)),
@@ -174,17 +205,81 @@ namespace PainTrax.Web.Controllers
 
                         });
 
+                }
+                else
+                {
+                    dt.Columns.AddRange(new DataColumn[]
+                            {
+                    //new DataColumn("ieid", typeof(string)),
+                    //new DataColumn("fuid", typeof(string)),
+                    new DataColumn("Name - Acct#", typeof(string)),
+                    new DataColumn("Case Type", typeof(string)),
+                    //new DataColumn("lname", typeof(string)),
+                    new DataColumn("Visit Details", typeof(string)),
+                    new DataColumn("Proc FU Date", typeof(string)),
+                    //new DataColumn("doa", typeof(string)),
+                    new DataColumn("InHouse Proc", typeof(string)),
+                    //new DataColumn("Doe", typeof(string)),
+
+                    new DataColumn("Location", typeof(string)),
+                    new DataColumn("Procedure Requested", typeof(string)),
+                    new DataColumn("Procedure Scheduled", typeof(string)),
+                    new DataColumn("Alert", typeof(string)),
+                    new DataColumn("Next Visit", typeof(string))
+
+                            });
+
+
+                }
+
+
                 // Populate the DataTable with data from the list of attorneys
 
-
-                foreach (var cnt in data)
+                if (Convert.ToInt32(LocationID) > 0)
                 {
-                    dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.followupdate, cnt.inhouse, cnt.doe, cnt.location, cnt.requested, cnt.scheduled, cnt.alert, string.Empty);
+                    foreach (var cnt in data)
+                    {
+                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.followupdate, cnt.inhouse, cnt.requested, cnt.scheduled, cnt.alert, string.Empty);
+                    }
+                }
+                else
+                {
+                    foreach (var cnt in data)
+                    {
+                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.followupdate, cnt.inhouse, cnt.location, cnt.requested, cnt.scheduled, cnt.alert, string.Empty);
+                    }
                 }
 
                 DataTable dt1 = new DataTable();
 
-                dt1.Columns.AddRange(new DataColumn[]
+
+                if (Convert.ToInt32(LocationID) > 0)
+                {
+
+                    dt1.Columns.AddRange(new DataColumn[]
+                {
+
+                    new DataColumn(" ", typeof(string)),
+                    new DataColumn("  ", typeof(string)),
+                    new DataColumn("    ", typeof(string)),
+                    new DataColumn("     ", typeof(string)),
+                    new DataColumn("       ", typeof(string)),
+                    new DataColumn("        ", typeof(string)),
+                    new DataColumn("         ", typeof(string)),
+                    new DataColumn("          ", typeof(string)),
+                    //new DataColumn("           ", typeof(string)),
+                    //new DataColumn("            ", typeof(string)),
+                    new DataColumn("             ", typeof(string))
+
+                });
+
+                    dt1.Rows.Add("Date :", HttpContext.Session.GetString(SessionKeys.Sessiondldoe), string.Empty, string.Empty, "Location : ", LocationName, string.Empty, "MA/Provider : ", providerName);
+                    dt1.Rows.Add(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
+                }
+                else
+                {
+
+                    dt1.Columns.AddRange(new DataColumn[]
                 {
 
                     new DataColumn(" ", typeof(string)),
@@ -196,14 +291,16 @@ namespace PainTrax.Web.Controllers
                     new DataColumn("         ", typeof(string)),
                     new DataColumn("          ", typeof(string)),
                     new DataColumn("           ", typeof(string)),
-                    new DataColumn("            ", typeof(string)),
+                    //new DataColumn("            ", typeof(string)),
                     new DataColumn("             ", typeof(string))
 
                 });
 
-                dt1.Rows.Add("Date :", HttpContext.Session.GetString(SessionKeys.Sessiondldoe), string.Empty, string.Empty, "Location : ", string.Empty, string.Empty, "MA/Provider : ", providerName, string.Empty, string.Empty);
-                dt1.Rows.Add(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
+                    dt1.Rows.Add("Date :", HttpContext.Session.GetString(SessionKeys.Sessiondldoe), string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, "MA/Provider : ", providerName, string.Empty);
+                    dt1.Rows.Add(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, string.Empty);
 
+
+                }
 
                 // Create a new Excel file
                 var memoryStream = new MemoryStream();

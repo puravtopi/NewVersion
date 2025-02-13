@@ -2064,10 +2064,10 @@ namespace PainTrax.Web.Controllers
                     string bodypart = "";
 
                     if (!string.IsNullOrEmpty(page1Data.bodypart))
-                        bodypart = Common.ReplceCommowithAnd(page1Data.bodypart);
+                        bodypart = Common.ReplceCommowithAnd(page1Data.bodypart.ToLower());
 
                     body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart) + " pain.");
-                    body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",", ", "));
+                    body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
 
                     string assessment = "";
                     if (!string.IsNullOrEmpty(page1Data.assessment))

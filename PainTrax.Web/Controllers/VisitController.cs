@@ -2368,8 +2368,8 @@ namespace PainTrax.Web.Controllers
                     plan = page1Data.plan;
                     if (!string.IsNullOrEmpty(page1Data.bodypart))
                     {
-                        bodypart = Common.ReplceCommowithAnd(page1Data.bodypart);
-                        body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",", ", ") + " pain.");
+                        bodypart = Common.ReplceCommowithAnd(page1Data.bodypart.ToLower());
+                        body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", ") + " pain.");
 
                     }
                     else
@@ -2417,7 +2417,7 @@ namespace PainTrax.Web.Controllers
 
 
 
-                    body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" :(bodypart).ToString().Replace(",", ", "));
+                    body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" :bodypart.Replace(",", ", "));
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",", ", "));
 
                     string assessment = "";

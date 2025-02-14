@@ -11,6 +11,16 @@
 <div class="col-lg-12">
     <input type="hidden" id="txtId_P1" value="@Model.id" />
     <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label">
+            Body Parts
+        </label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="txtbodypart" style="width:100%" value="@Model.bodypart" data-role="tagsinput" />
+            <input type="hidden" id="hdbodyparts" />
+        </div>
+
+    </div>
+    <div class="row mb-3">
         <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Reason">
             Reason For Appointment
             <div class="col-sm-10">
@@ -129,16 +139,7 @@
         </div>
 
     </div>
-    <div class="row mb-3">
-        <label for="inputNumber" class="col-sm-2 col-form-label">
-            Body Parts
-        </label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="txtbodypart" style="width:100%" value="@Model.bodypart" data-role="tagsinput" />
-            <input type="hidden" id="hdbodyparts" />
-        </div>
-
-    </div>
+    
     @* <div class="row mb-3">
 
         <div class="col-sm-10" id="divdaigo">

@@ -292,6 +292,14 @@ namespace PainTrax.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult CheckSession()
+        {
+            bool isExpired = string.IsNullOrEmpty(HttpContext.Session.GetString(SessionKeys.SessionUserName)); // Change as per your session key
+            //bool isExpired = false;
+            return Json(new { sessionExpired = isExpired });
+        }
+
         public IActionResult ForgotPassword()
         {
             return View();

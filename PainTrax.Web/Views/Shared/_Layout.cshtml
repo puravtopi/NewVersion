@@ -758,7 +758,49 @@
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
 
+    <!-- Session Expired Modal -->
+    <div id="sessionExpiredModal" class="modal" tabindex="-1" role="dialog" style="display:none;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Session Expired</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Your session has expired. Please log in again.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="redirectToLogin()">Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        function redirectToLogin() {
+            window.location.href = "/Home/Login"; // Change to your login page
+        }
+    </script>
+
+
+
+    <script>
+        function checkSession() {
+            fetch('/Home/CheckSession') // Change to your controller path
+                .then(response => response.json())
+                .then(data => {
+                    if (data.sessionExpired) {
+                        showSessionExpiredPopup();
+                    }
+                });
+        }
+
+        function showSessionExpiredPopup() {
+            document.getElementById('sessionExpiredModal').style.display = 'block';
+        }
+
+        // Check session every 1 minute
+        setInterval(checkSession, 1 * 60 * 1000);
+    </script>
 
     <script src="~/assets/vendor/apexcharts/apexcharts.min.js" asp-append-version="true"></script>
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>

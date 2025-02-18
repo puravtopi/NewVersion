@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.StaticFiles;
 using MS.Services;
 using Newtonsoft.Json;
 using Optivem.Framework.Core.Domain;
+using PainTrax.Services;
 using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
@@ -445,6 +446,98 @@ namespace PainTrax.Web.Controllers
 
             return sb.ToString();
         }
+
+        /* PatientDocumentController.cs replace oldpath = @"D:\Apex\LiveServerOld\AKS - Copy - AKS - Copy\PatientDocument" with server path  */
+        public ActionResult Transfer()
+        {
+            //string oldpath = @"D:\Apex\LiveServerOld\AKS - Copy - AKS - Copy\PatientDocument";
+            string oldpath = @"E:\ProductionServer\ePainTrax_NV_AKS\PatientDocument";
+            string[] dirs = Directory.GetDirectories(oldpath, "*", SearchOption.TopDirectoryOnly);
+            List<Tuple<string, string, string>> folderList = new List<Tuple<string, string, string>>();
+            ParentService _service = new ParentService();
+            foreach (string folder in dirs)
+            {
+                string foldername = System.IO.Path.GetFileName(folder);
+                string newfoldername = "";
+                string status = "Transfered";
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+                //folderList.Add(FolderName);
+                DataTable dt = _service.GetData("select id from tbl_patient where old_id=" + foldername + " and cmp_id=" + cmpid);
+                if (dt.Rows.Count > 0)
+                {
+                    newfoldername = dt.Rows[0]["id"].ToString();
+                    status = !Directory.Exists(Path.Combine(_storagePath + "/Old Documents/" + newfoldername)) ? "Directory Not Created" : status;
+                    if (Directory.Exists(Path.Combine(_storagePath + "/Old Documents/" + newfoldername)))
+                    {
+                        string[] sourceFiles = Directory.GetFiles(Path.Combine(oldpath, foldername));
+                        foreach (string sourceFile in sourceFiles)
+                        {
+                            string fileName = Path.GetFileName(sourceFile);
+                            string targetFile = Path.Combine(_storagePath + "/Old Documents/" + newfoldername, fileName);
+
+                            if (!System.IO.File.Exists(targetFile))
+                            {
+                                status = "Partial Copied";
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    status = "Old Id Not Found";
+                }
+
+                folderList.Add(Tuple.Create(foldername, newfoldername, status));
+            }
+            ViewBag.Folders = folderList;
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult TransferProcess(string str)
+        {
+            string oldpath = @"E:\ProductionServer\ePainTrax_NV_AKS\PatientDocument";
+            string[] dirs = Directory.GetDirectories(oldpath, "*", SearchOption.TopDirectoryOnly);
+            ParentService _service = new ParentService();
+            foreach (string folder in dirs)
+            {
+                string foldername = System.IO.Path.GetFileName(folder);
+                string newfoldername = "";
+                string status = "";
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+                DataTable dt = _service.GetData("select id from tbl_patient where old_id=" + foldername + " and  cmp_id=" + cmpid);
+                if (dt.Rows.Count > 0)
+                {
+                    newfoldername = dt.Rows[0]["id"].ToString();
+                    if (!Directory.Exists(Path.Combine(_storagePath + "/Old Documents/" + newfoldername)))
+                    {
+                        Directory.CreateDirectory(Path.Combine(_storagePath + "/Old Documents/" + newfoldername));
+                    }
+                    string[] sourceFiles = Directory.GetFiles(Path.Combine(oldpath, foldername));
+                    foreach (string sourceFile in sourceFiles)
+                    {
+                        string fileName = Path.GetFileName(sourceFile);
+                        string targetFile = Path.Combine(_storagePath + "/Old Documents/" + newfoldername, fileName);
+
+                        if (!System.IO.File.Exists(targetFile))
+                        {
+                            System.IO.File.Copy(sourceFile, targetFile);
+                        }
+                    }
+
+                }
+                else
+                {
+                    status = "Old Id Not Found";
+                }
+
+
+            }
+
+            return Json(new { status = 1 });
+
+        }
+
 
         #endregion
     }

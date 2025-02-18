@@ -2175,6 +2175,8 @@ namespace PainTrax.Web.Controllers
                 {
 
                     body = body.Replace("#Treatment", this.removePtag(pageOtherData.treatment_details));
+                    body = body.Replace("#heshe", Common.GethesheFromSex(patientData.gender));
+                    body = body.Replace("#hisher", Common.GethisherFromSex(patientData.gender));
                     body = body.Replace("#note1", this.removePtag(pageOtherData.note1));
                     body = body.Replace("#note2", this.removePtag(pageOtherData.note2));
                     body = body.Replace("#note3", this.removePtag(pageOtherData.note3));

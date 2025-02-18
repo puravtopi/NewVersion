@@ -470,6 +470,24 @@ namespace PainTrax.Web.Helper
             else
                 return "";
         }
+        public static string? GethesheFromSex(string sex)
+        {
+            if (string.IsNullOrEmpty(sex) == false)
+            {
+                return sex == "1" ? "he" : "she";
+            }
+            else
+                return "";
+        }
+        public static string? GethisherFromSex(string sex)
+        {
+            if (string.IsNullOrEmpty(sex) == false)
+            {
+                return sex == "1" ? "his" : "her";
+            }
+            else
+                return "";
+        }
 
         public static string? GetGenderFromSex(string sex)
         {

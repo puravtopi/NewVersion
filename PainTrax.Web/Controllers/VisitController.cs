@@ -3776,7 +3776,7 @@ namespace PainTrax.Web.Controllers
             int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
             int fu_id = 0;
 
-            var fuData = _ieService.GetLastFU(patientIEId);
+            var fuData = _ieService.GetLastFU(patientIEId,type);
 
             if (fuData == null)
             {

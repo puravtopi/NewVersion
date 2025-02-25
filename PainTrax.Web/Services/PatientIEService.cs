@@ -38,11 +38,12 @@ public class PatientIEService : ParentService
         return datalist;
     }
 
-    public tbl_patient_fu? GetLastFU(int data)
+    public tbl_patient_fu? GetLastFU(int data,string type)
     {
         DataTable dt = new DataTable();
-        MySqlCommand cm = new MySqlCommand("select * from tbl_patient_fu where patientIE_ID=@id order by id desc LIMIT 1", conn);
+        MySqlCommand cm = new MySqlCommand("select * from tbl_patient_fu where patientIE_ID=@id and type=@type order by id desc LIMIT 1", conn);
         cm.Parameters.AddWithValue("@id", data);
+        cm.Parameters.AddWithValue("@type", type);
         var datalist = ConvertDataTable<tbl_patient_fu>(GetData(cm)).FirstOrDefault();
         return datalist;
     }

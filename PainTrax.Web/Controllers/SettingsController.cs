@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Threading;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
@@ -86,6 +88,8 @@ namespace PainTrax.Web.Controllers
                 HttpContext.Session.SetString(SessionKeys.SessionDaignosisNotFoundStatment, model.notfoundStatment == null ? "" : model.notfoundStatment);
                 HttpContext.Session.SetString(SessionKeys.SessionInjectionAsSeparateBlock, model.injectionAsSeparateBlock.ToString().ToLower());
                 HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, model.header_template.ToString().ToLower());
+                HttpContext.Session.SetString(SessionKeys.SessionFontFamily, model.font_family.ToString().ToLower());
+                HttpContext.Session.SetString(SessionKeys.SessionPageSize, model.font_size.ToString().ToLower());
                 return View(model);
             }
             catch (Exception ex)

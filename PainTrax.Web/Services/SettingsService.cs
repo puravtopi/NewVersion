@@ -29,8 +29,8 @@ namespace PainTrax.Web.Services
         public void Insert(tbl_settings data)
         {
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_settings
-		(page_size,location,dateformat,cmp_id,pageBreakForInjection,injectionAsSeparateBlock)Values
-				(@page_size,@location,@dateformat,@cmp_id,@pageBreakForInjection,@injectionAsSeparateBlock,@isdaignosisshow,@foundStatment,@notfoundStatment,@header_template)", conn);
+		(page_size,location,dateformat,cmp_id,pageBreakForInjection,injectionAsSeparateBlock,font_family,font_size)Values
+				(@page_size,@location,@dateformat,@cmp_id,@pageBreakForInjection,@injectionAsSeparateBlock,@isdaignosisshow,@foundStatment,@notfoundStatment,@header_template,@font_family,@font_size)", conn);
             cm.Parameters.AddWithValue("@page_size", data.page_size);
             cm.Parameters.AddWithValue("@location", data.location);
             cm.Parameters.AddWithValue("@dateformat",data.dateformat);
@@ -41,6 +41,8 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@foundStatment", data.foundStatment);
             cm.Parameters.AddWithValue("@notfoundStatment", data.notfoundStatment);
             cm.Parameters.AddWithValue("@header_template", data.header_template);
+            cm.Parameters.AddWithValue("@font_family", data.font_family);
+            cm.Parameters.AddWithValue("@font_size", data.font_size);
             Execute(cm);
 
         }
@@ -55,7 +57,9 @@ namespace PainTrax.Web.Services
 isdaignosisshow=@isdaignosisshow,
       foundStatment=@foundStatment,
       header_template=@header_template,
-notfoundStatment=@notfoundStatment
+notfoundStatment=@notfoundStatment,
+font_family=@font_family,
+font_size=@font_size
 			where cmp_id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.cmp_id);
             cm.Parameters.AddWithValue("@page_size", data.page_size);
@@ -67,6 +71,8 @@ notfoundStatment=@notfoundStatment
             cm.Parameters.AddWithValue("@foundStatment", data.foundStatment);
             cm.Parameters.AddWithValue("@notfoundStatment", data.notfoundStatment);
             cm.Parameters.AddWithValue("@header_template", data.header_template);
+            cm.Parameters.AddWithValue("@font_family", data.font_family);
+            cm.Parameters.AddWithValue("@font_size", data.font_size);
 
             Execute(cm);
         }

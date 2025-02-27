@@ -25,6 +25,8 @@
         public static string SessionInjectionAsSeparateBlock = "injectionAsSeparateBlock";
         public static string SessionFormsAccess = "formaccess";
         public static string SessionHeaderTemplate = "headerTemplate";
+        public static string SessionFontFamily = "fontfamily";
+        public static string SessionFontSize = "fontsize";
 
         public static string Sessiondldoe = "dldoe";
         public static string Sessiondldlloc = "dlloc";

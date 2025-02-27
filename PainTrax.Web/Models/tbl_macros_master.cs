@@ -24,5 +24,14 @@ namespace PainTrax.Web.Models
         public DateTime? updated_date { get; set; }
         public int? updated_by { get; set; }
 
+        // Extra fields for Pre Op
+
+        public string? pc_desc { get; set; }
+        public string? ros_desc { get; set; }
+        public string? ds_desc { get; set; }
+        public string? pt_desc { get; set; }
+        public string? drd_desc { get; set; }
+        public string? drd_notes { get; set; }
+
     }
 }

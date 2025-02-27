@@ -58,6 +58,35 @@ namespace PainTrax.Web.Controllers
             return RedirectToAction("Index");
         }
 
+
+
+        public IActionResult CreatePreOP()
+        {
+            tbl_macros_master obj = new tbl_macros_master();
+            return View(obj);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreatePreOP(tbl_macros_master model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    model.created_by = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
+                    model.created_date = System.DateTime.Now;
+                    model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                    _services.Insert(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "CreatePre");
+            }
+            return RedirectToAction("Index");
+        }
+
+
         public IActionResult Edit(int id)
         {
             var data = new tbl_macros_master();
@@ -89,6 +118,40 @@ namespace PainTrax.Web.Controllers
             }
             return RedirectToAction("Index");
         }
+
+
+        public IActionResult EditPreOP(int id)
+        {
+            var data = new tbl_macros_master();
+            try
+            {
+                tbl_macros_master obj = new tbl_macros_master();
+                obj.id = id;
+                data = _services.GetOne(obj);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "Edit");
+            }
+            return View(data);
+        }
+
+        [HttpPost]
+        public IActionResult EditPreOP(tbl_macros_master model)
+        {
+            try
+            {
+                model.updated_by = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
+                model.updated_date = System.DateTime.Now;
+                _services.Update(model);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "EditPreOP");
+            }
+            return RedirectToAction("Index");
+        }
+
 
         public IActionResult Delete(int id)
         {

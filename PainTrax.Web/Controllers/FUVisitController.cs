@@ -28,6 +28,9 @@ namespace PainTrax.Web.Controllers
         private readonly PatientService _patientservices = new PatientService();
         private readonly PatientFUService _patientFuservices = new PatientFUService();
         private readonly FUPage1Service _fuPage1services = new FUPage1Service();
+        private readonly FUPreService _fuPreservices = new FUPreService();
+
+
         private readonly FUPage2Service _fuPage2services = new FUPage2Service();
         private readonly FUPage3Service _fuPage3services = new FUPage3Service();
         private readonly FUNEService _fuNEservices = new FUNEService();
@@ -222,6 +225,34 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                         obj.Page1 = new tbl_ie_page1();
+
+                    // for pre op start
+                    var preData = _fuPreservices.GetOne(patientFUId);
+                    if (preData != null)
+                    {
+                        var preData1 = _mapper.Map<tbl_pre>(preData);
+                        obj.pre = preData1;
+                    }
+                    else
+                    {
+
+
+
+                        tbl_pre objdefaultdata = new tbl_pre();
+                        var defData = _fuPreservices.GetOneOPDefault(patientIEId);
+                        if (defData != null)
+                        {
+                            objdefaultdata.txtPastMedicalHistory = defData.txtPastMedicalHistory;
+                            objdefaultdata.txtpastsurgicalhistory = defData.txtpastsurgicalhistory;
+                            objdefaultdata.txtdailyMedications = defData.txtdailyMedications;
+                            objdefaultdata.txtAllergies = defData.txtAllergies;
+                        }
+
+                        var preDatadef = _mapper.Map<tbl_pre>(objdefaultdata);
+                        obj.pre = preDatadef;
+
+                    }
+
 
                     var page2Data = _fuPage2services.GetOne(patientFUId);
 
@@ -449,6 +480,29 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                         obj.Page1 = new tbl_ie_page1();
+
+
+
+
+                    // preop  start. 
+
+                    tbl_pre objdefaultdata = new tbl_pre();
+                    var defData = _fuPreservices.GetOneOPDefault(patientIEId);
+                    if (defData != null)
+                    {
+                        objdefaultdata.txtPastMedicalHistory = defData.txtPastMedicalHistory;
+                        objdefaultdata.txtpastsurgicalhistory = defData.txtpastsurgicalhistory;
+                        objdefaultdata.txtdailyMedications = defData.txtdailyMedications;
+                        objdefaultdata.txtAllergies = defData.txtAllergies;
+                    }
+
+                    var preDatadef = _mapper.Map<tbl_pre>(objdefaultdata);
+                    obj.pre = preDatadef;
+
+                    // preop end.
+
+
+
 
                     var page2Data = _ieService.GetOnePage2(id);
 
@@ -882,6 +936,34 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
+        public IActionResult SavePre(tbl_pre model)
+        {
+            try
+            {
+                //int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                //model.cmp_id = cmpid;
+
+                var obj = _fuPreservices.GetOne(model.PatientFU_ID.Value);
+                if (Convert.ToBoolean(model.chkLeftShoulder.Value) || Convert.ToBoolean(model.chkRightShoulder.Value) || Convert.ToBoolean(model.chkLeftKnee.Value) || Convert.ToBoolean(model.chkRightKnee.Value))
+                {
+                    if (obj != null)
+                    {
+                        model.id = obj.id;
+                        _fuPreservices.Update(model);
+                    }
+                    else
+                        _fuPreservices.Insert(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "SavePage1");
+            }
+            return Json(1);
+        }
+
+
+        [HttpPost]
         public IActionResult SavePage2(tbl_fu_page2 model)
         {
             try
@@ -1169,7 +1251,7 @@ namespace PainTrax.Web.Controllers
                                     else
                                     {
 
-                                        if (column.ColumnName != "Followup")
+                                        if (column.ColumnName != "Followup" && column.ColumnName != "mcode_desc")
                                         {
                                             html.Append("<th scope=\"col\" style='height: 35px;min-width:130px'>");
                                             html.Append(column.ColumnName);
@@ -2017,7 +2099,7 @@ namespace PainTrax.Web.Controllers
 
                 //POC printing
 
-                var pocData = this.getPOC(fuid);
+                var pocData = this.getPOCPrint(fuid);
 
                 //CC printing
 
@@ -2928,7 +3010,7 @@ namespace PainTrax.Web.Controllers
 
 
             string strPoc = "";
-            string inject_desc = "";
+            string inject_desc = "", ccdesc = "", pedesc = "", adesc = "", pocDesc="";
             if (dsPOC != null && dsPOC.Rows.Count > 0)
             {
 
@@ -2937,17 +3019,33 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(dsPOC.Rows[i]["Heading"].ToString()))
                     {
 
-                        //if (i != dsPOC.Tables[0].Rows.Count - 1)
-                        //    strPoc = strPoc + "<b style='text-transform:uppercase'>" + dsPOC.Tables[0].Rows[i]["Heading"].ToString().TrimEnd(':') + ": </b>" + dsPOC.Tables[0].Rows[i]["PDesc"].ToString() + "<br/><br/>";
-                        //else
-
-                        //if (dsPOC.Tables[0].Rows[i]["Executed"] != DBNull.Value)
-                        //{
-                        //    this.generatePNReport(bodypart, dsPOC.Tables[0].Rows[i]["MCODE"].ToString(), ViewState["name"].ToString(),
-                        //        ViewState["dob"].ToString(), ViewState["location"].ToString(), "", dsPOC.Tables[0].Rows[i]["Level"].ToString(), "", "", ViewState["doe"].ToString(), PatientIE_ID);
-                        //}
-
                         string heading = dsPOC.Rows[i]["Heading"].ToString();
+                        pocDesc = dsPOC.Rows[i]["PDesc"].ToString();
+                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
+                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
+                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
+
+
+
+
+                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
+                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
+                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
+
+
+                        adesc = adesc + dsPOC.Rows[i]["ADesc"] == null ? "" : dsPOC.Rows[i]["ADesc"].ToString().Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
+                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
+                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
+
 
                         if (heading.ToLower().Contains("(side)"))
                         {
@@ -2985,6 +3083,9 @@ namespace PainTrax.Web.Controllers
             {
                 strInjectionDesc = inject_desc,
                 strPoc = strPoc != "" ? "<ol>" + strPoc + "</ol>" : "",
+                strCCDesc = ccdesc,
+                strPEDesc = pedesc,
+                strADesc = adesc
             };
 
             return pocDetails;

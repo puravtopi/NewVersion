@@ -1498,7 +1498,7 @@ namespace PainTrax.Web.Controllers
                                     else
                                     {
 
-                                        if (column.ColumnName != "Followup")
+                                        if (column.ColumnName != "Followup" && column.ColumnName!= "mcode_desc")
                                         {
                                             html.Append("<th scope=\"col\" style='height: 35px;;min-width:130px;'>");
                                             html.Append(column.ColumnName);
@@ -1703,7 +1703,7 @@ namespace PainTrax.Web.Controllers
                                         }
                                         else if (column.ColumnName == "MCODE")
                                         {
-                                            html.Append("<td  data-bs-toggle='tooltip' data-bs-placement='top'  title='" + row["mcode_desc"] + "' style='text-align:center; background-color:#3de33d;min-width:130px'>");
+                                            html.Append("<td   data-bs-toggle='tooltip' data-bs-placement='top'  title='" + row["mcode_desc"] + "' style='text-align:center; background-color:#3de33d;min-width:130px;'>");
                                             html.Append(row[column.ColumnName]);
                                             html.Append("</td>");
                                         }
@@ -2154,7 +2154,7 @@ namespace PainTrax.Web.Controllers
                                 //}
                                 else if (column.ColumnName == "MCODE")
                                 {
-                                    html.Append("<td style='text-align:center; background-color:#3de33d'>");
+                                    html.Append("<td style='text-align:center; background-color:#3de33d;'>");
                                     html.Append(row[column.ColumnName]);
                                     html.Append("</td>");
                                 }
@@ -3776,7 +3776,7 @@ namespace PainTrax.Web.Controllers
             int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
             int fu_id = 0;
 
-            var fuData = _ieService.GetLastFU(patientIEId);
+            var fuData = _ieService.GetLastFU(patientIEId,type);
 
             if (fuData == null)
             {

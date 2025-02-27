@@ -89,6 +89,9 @@
                                         <a class="nav-link " id="page1-tab" data-bs-target="#bordered-profile" role="tab" aria-controls="profile" aria-selected="false">SOAP</a>
                                     </li>
                                     <li class="nav-item" role="presentation">
+                                        <a class="nav-link " id="page1-tab" data-bs-target="#bordered-preop" role="tab" aria-controls="profile" aria-selected="false">PreOP</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="page2-tab" data-bs-target="#bordered-contact" role="tab" aria-controls="contact" aria-selected="false">Page2</a>
                                     </li>
                                     <li class="nav-item" role="presentation">
@@ -134,6 +137,12 @@
                                         <input type="hidden" value="@Model.id" id="hdIEId" />
                                         <input type="hidden" value="@Model.fu_id" id="hdFUId" />
                                         <input type="hidden" value="@Model.dos" id="hdDOS" />
+
+                                        <input type="hidden" value="@Model.dos.Value.ToString("MM/dd/yyyy")" id="hddoe" />
+                                        <input type="hidden" value="@(Model.doa!=null?Model.doa.Value.ToString("MM/dd/yyyy"):"")" id="hddoa" />
+                                        <input type="hidden" value="@Model.compensation" id="hdcasetype" />
+                                        <input type="hidden" value="@PainTrax.Web.Helper.EnumHelper.GetDisplayName(Enum.Parse<PainTrax.Web.Helper.EnumHelper.Gender>(Model.gender))" id="hdgender" />
+
 
                                         <div class="col-lg-12">
 
@@ -611,6 +620,13 @@
                                     <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
                                         @Html.Partial("_Page1", Model.Page1)
                                     </div>
+
+                                    @* PreOP Start *@
+                                    <div class="tab-pane fade" id="bordered-preop" role="tabpanel" aria-labelledby="profile-tab">
+                                        @Html.Partial("_PreOP", Model.pre)
+                                    </div>
+                                    @* PreOP End *@
+
                                     <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
                                         @Html.Partial("_Page2", Model.Page2)
                                     </div>
@@ -1125,6 +1141,9 @@
             else if (id === "bordered-profile") {
                 fnPage1Save(null);
             }
+            else if (id === "bordered-preop") {
+                fnPreOPSave(null);
+            }
             else if (id === "bordered-contact") {
                 fnPage2Save(null);
             }
@@ -1201,6 +1220,9 @@
         }
         else if (id === "bordered-profile") {
             fnPage1Save(t);
+        }
+        else if (id === "bordered-preop") {
+            fnPreOPSave(t);
         }
         else if (id === "bordered-contact") {
             fnPage2Save(t);

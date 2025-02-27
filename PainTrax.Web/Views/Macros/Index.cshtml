@@ -7,7 +7,7 @@
         <h1>Macros List</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item">Home</li>
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">List</li>
             </ol>
         </nav>
@@ -26,7 +26,8 @@
                                 <button class="btn btn-primary" style="float:right;margin-left:10px" data-bs-toggle="modal" data-bs-target="#importModal">Import</button>
                                <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcel" asp-controller="Macros">Export</a>
                                 <button class="btn btn-secondary" style="float:right;margin-left:10px" onclick="fndownalodSample()">DownLoad Sample</button>                                
-                                <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Macros">Add New</a>
+                                <a class="btn btn-success" style="float:right;margin-left:10px" asp-action="Create" asp-controller="Macros">Add New</a>
+                                <a class="btn btn-success" style="float:right" asp-action="CreatePreOP" asp-controller="Macros">Add New Pre Op</a>
                             </div>
                         </div>
 
@@ -99,6 +100,7 @@
 
             var url = '@Url.Action("List","Macros")';
             var editurl = '@Url.Action("Edit","Macros")';
+            var editurlPreOP = '@Url.Action("EditPreOP", "Macros")';
             var deleteurl = '@Url.Action("Delete","Macros")';
 
             $("#tbl").DataTable({
@@ -126,9 +128,21 @@
                    
                     {
                         "render": function (data, type, full, meta) {
-                            var index = '<a href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'
-                            index += '<a href="' + deleteurl + '/' + full.id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
-                            return index;
+                            var index = "";
+                            debugger;
+                            if (full.bodypart.indexOf("PreOP") !== -1) {
+                                index = '<a href="' + editurlPreOP + '/' + full.id + '"><i class="ri-edit-line"  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'
+                                index += '<a href="' + deleteurl + '/' + full.id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+                            }
+                            else {
+                                index = '<a href="' + editurl + '/' + full.id + '"><i class="ri-edit-line"  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'
+                                index += '<a href="' + deleteurl + '/' + full.id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+                            }   
+
+
+                            // var index = '<a href="' + editurl + '/' + full.id + '"><i class="ri-edit-line"  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'
+                            // index += '<a href="' + deleteurl + '/' + full.id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+                             return index;
                         }
                     }
                     ,

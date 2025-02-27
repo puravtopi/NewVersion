@@ -28,6 +28,9 @@ namespace PainTrax.Web.Controllers
         private readonly PatientService _patientservices = new PatientService();
         private readonly PatientFUService _patientFuservices = new PatientFUService();
         private readonly FUPage1Service _fuPage1services = new FUPage1Service();
+        private readonly FUPreService _fuPreservices = new FUPreService();
+
+
         private readonly FUPage2Service _fuPage2services = new FUPage2Service();
         private readonly FUPage3Service _fuPage3services = new FUPage3Service();
         private readonly FUNEService _fuNEservices = new FUNEService();
@@ -222,6 +225,34 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                         obj.Page1 = new tbl_ie_page1();
+
+                    // for pre op start
+                    var preData = _fuPreservices.GetOne(patientFUId);
+                    if (preData != null)
+                    {
+                        var preData1 = _mapper.Map<tbl_pre>(preData);
+                        obj.pre = preData1;
+                    }
+                    else
+                    {
+
+
+
+                        tbl_pre objdefaultdata = new tbl_pre();
+                        var defData = _fuPreservices.GetOneOPDefault(patientIEId);
+                        if (defData != null)
+                        {
+                            objdefaultdata.txtPastMedicalHistory = defData.txtPastMedicalHistory;
+                            objdefaultdata.txtpastsurgicalhistory = defData.txtpastsurgicalhistory;
+                            objdefaultdata.txtdailyMedications = defData.txtdailyMedications;
+                            objdefaultdata.txtAllergies = defData.txtAllergies;
+                        }
+
+                        var preDatadef = _mapper.Map<tbl_pre>(objdefaultdata);
+                        obj.pre = preDatadef;
+
+                    }
+
 
                     var page2Data = _fuPage2services.GetOne(patientFUId);
 
@@ -449,6 +480,29 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                         obj.Page1 = new tbl_ie_page1();
+
+
+
+
+                    // preop  start. 
+
+                    tbl_pre objdefaultdata = new tbl_pre();
+                    var defData = _fuPreservices.GetOneOPDefault(patientIEId);
+                    if (defData != null)
+                    {
+                        objdefaultdata.txtPastMedicalHistory = defData.txtPastMedicalHistory;
+                        objdefaultdata.txtpastsurgicalhistory = defData.txtpastsurgicalhistory;
+                        objdefaultdata.txtdailyMedications = defData.txtdailyMedications;
+                        objdefaultdata.txtAllergies = defData.txtAllergies;
+                    }
+
+                    var preDatadef = _mapper.Map<tbl_pre>(objdefaultdata);
+                    obj.pre = preDatadef;
+
+                    // preop end.
+
+
+
 
                     var page2Data = _ieService.GetOnePage2(id);
 
@@ -880,6 +934,34 @@ namespace PainTrax.Web.Controllers
             }
             return Json(1);
         }
+
+        [HttpPost]
+        public IActionResult SavePre(tbl_pre model)
+        {
+            try
+            {
+                //int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                //model.cmp_id = cmpid;
+
+                var obj = _fuPreservices.GetOne(model.PatientFU_ID.Value);
+                if (Convert.ToBoolean(model.chkLeftShoulder.Value) || Convert.ToBoolean(model.chkRightShoulder.Value) || Convert.ToBoolean(model.chkLeftKnee.Value) || Convert.ToBoolean(model.chkRightKnee.Value))
+                {
+                    if (obj != null)
+                    {
+                        model.id = obj.id;
+                        _fuPreservices.Update(model);
+                    }
+                    else
+                        _fuPreservices.Insert(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "SavePage1");
+            }
+            return Json(1);
+        }
+
 
         [HttpPost]
         public IActionResult SavePage2(tbl_fu_page2 model)

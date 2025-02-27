@@ -85,7 +85,7 @@ namespace PainTrax.Web.ViewModel
         public string? referring_physician { get; set; }
         public string? type { get; set; }
         public string? doc_json { get; set; }
-
+        public tbl_pre pre { get; set; }
         public tbl_ie_page1 Page1 { get; set; }
         public tbl_ie_page2 Page2 { get; set; }
         public tbl_ie_page3 Page3 { get; set; }

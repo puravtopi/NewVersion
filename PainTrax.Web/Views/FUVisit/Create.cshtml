@@ -116,7 +116,16 @@
                                 @{
                                     if (Model.id > 0)
                                     {
-                                        <a href="@Url.Action("FUPrint","FUVisit")?ieid=@Model.id&fuid=@Model.fu_id" target="_new" class="btn btn-success bi bi-printer"  style="float:right;"></a>
+                                        if(Model.pre.id > 0)
+                                        {
+                                            <a href="@Url.Action("PreOpPrint","FUVisit")?ieid=@Model.id&fuid=@Model.fu_id" target="_new" class="btn btn-success bi bi-printer" style="float:right;"></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("FUPrint","FUVisit")?ieid=@Model.id&fuid=@Model.fu_id" target="_new" class="btn btn-success bi bi-printer" style="float:right;"></a>
+                                        }
+
+                                        
                                     }
                                   }&nbsp; &nbsp;
                                 <button type="button" id="btnSaveAll" class="btn btn-secondary bi bi-floppy" onclick="fnSave()" style="margin-right:4px; margin-left:4px; float:right;">

@@ -14,5 +14,7 @@
         public string notfoundStatment { get; set; }
         public string header_template { get; set; }
         public string header_template_hidden { get; set; }
+        public string font_family { get; set; }
+        public string font_size { get; set; }        
     }
 }

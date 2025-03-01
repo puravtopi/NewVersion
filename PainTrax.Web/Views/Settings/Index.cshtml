@@ -40,6 +40,29 @@
                                             <span asp-validation-for="page_size" class="text-danger"></span>
                                         </div>
                                     </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="font_family" class="col-md-4 col-lg-3 col-form-label">Font Family</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="font_family">
+                                                <option value="Arial">Arial</option>
+                                                <option value="Calibri">Calibri</option>
+                                                <option value="TimesNewRoman">Times New Roman</option>                                               
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="font_size" class="col-md-4 col-lg-3 col-form-label">Font Size</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="font_size">
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                                <option value="13">13</option>
+                                                <option value="14">14</option>
+                                            </select>
+                                        </div>
+                                    </div>                                    
 
                                     <div class="row mb-3">
                                         <label for="title" asp-for="location" class="col-md-4 col-lg-3 col-form-label">Location</label>

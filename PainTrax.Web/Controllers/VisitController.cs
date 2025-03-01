@@ -3896,6 +3896,13 @@ namespace PainTrax.Web.Controllers
             }
             else
             {
+                if (fuData.doe != null) {
+                    if (fuData.doe.Value.ToString("MM/dd/yyyy") == System.DateTime.Now.ToString("MM/dd/yyyy"))
+                    {
+                        return Json(new { success = false});
+                    }
+                }
+
                 tbl_patient_fu objFU = new tbl_patient_fu()
                 {
                     created_by = userid,
@@ -3961,8 +3968,8 @@ namespace PainTrax.Web.Controllers
 
                 }
             }
-
-            return RedirectToAction("Create", "FuVisit", new { patientIEId = patientIEId, patientFUId = fu_id, type = type });
+            var redirectUrl = Url.Action("Create", "FuVisit", new { patientIEId = patientIEId, patientFUId = fu_id, type = type });
+            return Json(new { success = true, redirectUrl = redirectUrl });
 
 
         }

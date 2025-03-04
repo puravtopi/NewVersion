@@ -439,7 +439,7 @@
             tab.on('click', 'td.dt-control', function (e) {
                 let tr = e.target.closest('tr');
                 let row = tab.row(tr);
-
+                e.target.innerHTML = "➕";
                 if (row.child.isShown()) {
                     // This row is already open - close it
                     row.child.hide();
@@ -447,6 +447,7 @@
                 else {
                     // Open this row
                     row.child(fnGetFUList(row.data())).show();
+                     e.target.innerHTML = "➖";
                 }
             });
         }

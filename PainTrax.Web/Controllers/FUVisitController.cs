@@ -2662,26 +2662,37 @@ namespace PainTrax.Web.Controllers
 
                 var patientData = _ieService.GetOnebyPatientId(ieId);
                 var fuData = _patientFuservices.GetOne(fuId);
-                
-                if (patientData.doa == null)
+                if (fuData.type == "Preop H and P")
                 {
-                    docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
-                }
-                else if (patientData.doa == null && fuData.type == "Preop H and P")
-                {
-                    docName = patientData.lname + "," + patientData.fname + "_PreOP_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
-                }               
-                else if (patientData.account_no != null)
-                {
-                    docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
-                }
-                else if (patientData.account_no != null && fuData.type == "Preop H and P")
-                {
-                    docName = patientData.lname + "," + patientData.fname + "_PreOP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                    if (patientData.doa == null)
+                    {
+                        docName = patientData.lname + "," + patientData.fname + "_PreOP_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
+                    }
+                    else if (patientData.account_no != null)
+                    {
+                        docName = patientData.lname + "," + patientData.fname + "_PreOP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                    }
+                    else
+                    {
+                        docName = patientData.lname + "," + patientData.fname + "_PreOP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                    }
                 }
                 else
                 {
-                    docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                    if (patientData.doa == null)
+                    {
+                        docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
+                    }
+
+                    else if (patientData.account_no != null)
+                    {
+                        docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                    }
+
+                    else
+                    {
+                        docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                    }
                 }
 
                 patientName = patientData.lname + ", " + patientData.fname;

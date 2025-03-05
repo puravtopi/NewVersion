@@ -554,7 +554,7 @@
 
                        var DummyDOE = $("#hddoe").val();
                         // Split the date string into month, day, and year
-                        var dateParts = DummyDOE.split('-'); 
+                        var dateParts = DummyDOE.split('/'); 
 
                         // Create a new Date object using the split parts
                         var dateObj = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]); // Month is 0-indexed
@@ -568,7 +568,7 @@
                         var DOE = formattedDate;
                         var DummyDOA = $("#hddoa").val();
                         // Split the date string into month, day, and year
-                        var dateParts1 = DummyDOA.split('-');
+                        var dateParts1 = DummyDOA.split('/');
 
                         // Create a new Date object using the split parts
                         var dateObj1 = new Date(dateParts1[2], dateParts1[0] - 1, dateParts1[1]); // Month is 0-indexed

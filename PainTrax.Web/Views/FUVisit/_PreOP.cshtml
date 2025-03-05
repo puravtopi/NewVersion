@@ -552,8 +552,34 @@
                         selectedbodypart = $("#SelectedBodyParthidden").val();
 
 
-                        var DOE = $("#hddoe").val();
-                        var DOA = $("#hddoa").val();
+                       var DummyDOE = $("#hddoe").val();
+                        // Split the date string into month, day, and year
+                        var dateParts = DummyDOE.split('-'); // This will split "03-05-2025" into ["03", "05", "2025"]
+
+                        // Create a new Date object using the split parts
+                        var dateObj = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]); // Month is 0-indexed
+
+                        // Format the date to "March, 05, 2025"
+                        var formattedDate = dateObj.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: '2-digit'
+                        });
+                        var DOE = formattedDate;
+                        var DummyDOA = $("#hddoa").val();
+                        // Split the date string into month, day, and year
+                        var dateParts1 = DummyDOA.split('-'); // This will split "03-05-2025" into ["03", "05", "2025"]
+
+                        // Create a new Date object using the split parts
+                        var dateObj1 = new Date(dateParts1[2], dateParts1[0] - 1, dateParts1[1]); // Month is 0-indexed
+
+                        // Format the date to "March, 05, 2025"
+                        var formattedDate1 = dateObj1.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: '2-digit'
+                        });
+                        var DOA = formattedDate1;
                         var Gender = $("#hdgender").val();
                         var CASETYPE = $("#hdcasetype").val();
                         var casetype1 = "";

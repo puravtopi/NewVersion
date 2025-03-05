@@ -2050,15 +2050,13 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#ln", patientData.lname);
                     body = body.Replace("#dob", Common.commonDate(patientData.dob));
                     body = body.Replace("#doi", Common.commonDate(patientData.doa));
-                    body = body.Replace("#dos", Common.commonDate(fuData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
+                    body = body.Replace("#dos", Common.commonDate(fuData.doe));
                     body = body.Replace("#location", patientData.location);
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
-                    body = body.Replace("#gender", gender);
+                    body = body.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
                     body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
-
-
-                    // body = body.Replace("#CT", System.Enum.GetName(typeof(CaseType), Convert.ToInt32(patientData.compensation)));
-                    body = body.Replace("#CT", patientData.compensation);
+                    body = body.Replace("#acctno", patientData.account_no);                   
+                    body = body.Replace("#CASETYPE", patientData.compensation);
                 }
 
                 //header printing

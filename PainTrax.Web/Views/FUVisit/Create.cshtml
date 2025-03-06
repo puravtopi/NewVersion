@@ -116,7 +116,7 @@
                                 @{
                                     if (Model.id > 0)
                                     {
-                                        if(Model.pre.id > 0)
+                                        if (Model.type == "Preop H and P")
                                         {
                                             <a href="@Url.Action("PreOpPrint","FUVisit")?ieid=@Model.id&fuid=@Model.fu_id" target="_new" class="btn btn-success bi bi-printer" style="float:right;"></a>
                                         }

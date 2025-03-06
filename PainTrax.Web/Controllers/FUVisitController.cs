@@ -140,7 +140,7 @@ namespace PainTrax.Web.Controllers
                     obj.physicianid = fuData.physicianid;
                     obj.providerid = fuData.provider_id;
                     obj.locationid = fuData.location_id == null ? ieData.location_id : fuData.location_id;
-
+                    obj.type = fuData.type;
                     if (ieData.primary_ins_cmp_id != null)
                     {
                         var primaryCmp = _inscosservices.GetOne(ieData.primary_ins_cmp_id.Value);
@@ -616,7 +616,7 @@ namespace PainTrax.Web.Controllers
                 }
 
                 obj.listWebsiteMacros = macroList;
-
+                
                 obj.fu_id = patientFUId;
             }
             catch (Exception ex)
@@ -2056,7 +2056,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
                     body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
                     body = body.Replace("#acctno", patientData.account_no);                   
-                    body = body.Replace("#CASETYPE", patientData.compensation);
+                    body = body.Replace("#CASETYPE", patientData.accidentType);
                 }
 
                 //header printing

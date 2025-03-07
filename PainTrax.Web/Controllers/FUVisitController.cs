@@ -2053,6 +2053,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#dos", Common.commonDate(fuData.doe));
                     body = body.Replace("#location", patientData.location);
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
+                    body = body.Replace("#upper_gender", Common.GetGenderFromSex(patientData.gender).ToUpper());
                     body = body.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
                     body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
                     body = body.Replace("#acctno", patientData.account_no);                   
@@ -2088,7 +2089,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#REVIEWOFSYSTEMS", string.IsNullOrEmpty(preData.txtSocialHistory) ? "" : this.removePtag(preData.txtSocialHistory));
                     body = body.Replace("#PhysicalExamination", string.IsNullOrEmpty(preData.txtPhysicalExamination) ? "" : this.removePtag(preData.txtPhysicalExamination));
                     body = body.Replace("#DIAGNOSTICSTUDIES", string.IsNullOrEmpty(preData.txtDiagnosticImaging) ? "" : this.removePtag(preData.txtDiagnosticImaging));
-                    body = body.Replace("#PREOPERATIVEDIAGNOSES", string.IsNullOrEmpty(preData.txtAssestmentplan) ? "" : this.removePtag(preData.txtAssestmentplan));
+                    body = body.Replace("#DISABILITY", string.IsNullOrEmpty(preData.txtAssestmentplan) ? "" : this.removePtag(preData.txtAssestmentplan));
                     body = body.Replace("#PROPOSEDTREATMENT", string.IsNullOrEmpty(preData.txtExaminedResult) ? "" : this.removePtag(preData.txtExaminedResult));
                     body = body.Replace("#Default", string.IsNullOrEmpty(preData.txtDefault) ? "" : this.removePtag(preData.txtDefault));
                     body = body.Replace("#Note", string.IsNullOrEmpty(preData.txtNote) ? "" : this.removePtag(preData.txtNote));

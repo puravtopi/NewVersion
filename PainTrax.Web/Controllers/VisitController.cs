@@ -40,7 +40,7 @@ namespace PainTrax.Web.Controllers
         private readonly MacrosMasterService _macroService = new MacrosMasterService();
         private readonly TreatmentMasterService _treatmentService = new TreatmentMasterService();
         private readonly DiagcodesService _diagcodesService = new DiagcodesService();
-      
+
         private readonly POCServices _pocService = new POCServices();
         private readonly LocationsService _locService = new LocationsService();
         private readonly CaseTypeService _caseTypeService = new CaseTypeService();
@@ -378,6 +378,9 @@ namespace PainTrax.Web.Controllers
                     else
                         obj.Page3 = new tbl_ie_page3();
 
+
+
+
                     obj.Page3.care = string.IsNullOrEmpty(obj.Page3.care) ? _defaultdata.care : obj.Page3.care;
                     obj.Page3.goal = string.IsNullOrEmpty(obj.Page3.goal) ? _defaultdata.goal : obj.Page3.goal;
 
@@ -494,16 +497,6 @@ namespace PainTrax.Web.Controllers
                         obj.Page3.care = _defaultdata.care;
                     }
 
-                    obj.Page3.diagcervialbulge_study = "MRI";
-                    obj.Page3.diagthoracicbulge_study = "MRI";
-                    obj.Page3.diaglumberbulge_study = "MRI";
-                    obj.Page3.diagleftshoulder_study = "MRI";
-                    obj.Page3.diagrightshoulder_study = "MRI";
-                    obj.Page3.diagleftknee_study = "MRI";
-                    obj.Page3.diagrightknee_study = "MRI";
-
-
-
                     obj.Other.listTreatmentMaster = _data;
 
                     var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
@@ -594,6 +587,25 @@ namespace PainTrax.Web.Controllers
 
                     obj.doc_json = JsonConvert.SerializeObject(nodes, Formatting.Indented);
 
+                }
+                if (obj.Page3 != null)
+                {
+                    obj.Page3.diagcervialbulge_study = (obj.Page3.diagcervialbulge_study == null || obj.Page3.diagcervialbulge_study=="0") ? "1" : obj.Page3.diagcervialbulge_study;
+                    obj.Page3.diagthoracicbulge_study = (obj.Page3.diagthoracicbulge_study == null || obj.Page3.diagthoracicbulge_study == "0") ? "1" : obj.Page3.diagthoracicbulge_study;
+                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null || obj.Page3.diaglumberbulge_study == "0") ? "1" : obj.Page3.diaglumberbulge_study;
+                    obj.Page3.diagleftshoulder_study = (obj.Page3.diagleftshoulder_study == null || obj.Page3.diagleftshoulder_study == "0") ? "1" : obj.Page3.diagleftshoulder_study;
+                    obj.Page3.diagrightshoulder_study = (obj.Page3.diagrightshoulder_study == null || obj.Page3.diagrightshoulder_study == "0") ? "1" : obj.Page3.diagrightshoulder_study;
+                    obj.Page3.diagleftknee_study = (obj.Page3.diagleftknee_study == null || obj.Page3.diagleftknee_study == "0") ? "1" : obj.Page3.diagleftknee_study;
+                    obj.Page3.diagrightknee_study = (obj.Page3.diagrightknee_study == null || obj.Page3.diagrightknee_study == "0") ? "1" : obj.Page3.diagrightknee_study;
+                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null || obj.Page3.diaglumberbulge_study == "0") ? "1" : obj.Page3.diaglumberbulge_study;
+
+                    obj.Page3.other1_study = (obj.Page3.other1_study == null || obj.Page3.other1_study == "0") ? "1" : obj.Page3.other1_study;
+                    obj.Page3.other2_study = (obj.Page3.other2_study == null || obj.Page3.other2_study == "0") ? "1" : obj.Page3.other2_study;
+                    obj.Page3.other3_study = (obj.Page3.other3_study == null || obj.Page3.other3_study == "0") ? "1" : obj.Page3.other3_study;
+                    obj.Page3.other4_study = (obj.Page3.other4_study == null || obj.Page3.other4_study == "0") ? "1" : obj.Page3.other4_study;
+                    obj.Page3.other5_study = (obj.Page3.other5_study == null || obj.Page3.other5_study == "0") ? "1" : obj.Page3.other5_study;
+                    obj.Page3.other6_study = (obj.Page3.other6_study == null || obj.Page3.other6_study == "0") ? "1" : obj.Page3.other6_study;
+                    obj.Page3.other7_study = (obj.Page3.other7_study == null || obj.Page3.other7_study == "0") ? "1" : obj.Page3.other7_study;
                 }
 
             }
@@ -1498,7 +1510,7 @@ namespace PainTrax.Web.Controllers
                                     else
                                     {
 
-                                        if (column.ColumnName != "Followup" && column.ColumnName!= "mcode_desc")
+                                        if (column.ColumnName != "Followup" && column.ColumnName != "mcode_desc")
                                         {
                                             html.Append("<th scope=\"col\" style='height: 35px;;min-width:130px;'>");
                                             html.Append(column.ColumnName);
@@ -2326,7 +2338,7 @@ namespace PainTrax.Web.Controllers
                         body = body.Replace("#drName", "");
                     body = body.Replace("#address", locData[0].address);
                     //body = body.Replace("#Address", locData[0].address);
-                     body = body.Replace("#Address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
+                    body = body.Replace("#Address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                     //  body = body.Replace("#address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                     body = body.Replace("#loc", locData[0].location);
                     body = body.Replace("#Location", locData[0].location);
@@ -2412,12 +2424,12 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#ln", patientData.lname);
                     body = body.Replace("#gender", Common.GetMrMrsFromSex(patientData.gender));
                     body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
-                    
 
 
 
 
-                    body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" :bodypart.Replace(",", ", "));
+
+                    body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",", ", "));
 
                     string assessment = "";
@@ -2930,7 +2942,7 @@ namespace PainTrax.Web.Controllers
                     string filepathTo = filePath;
                     AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
                 }
-                else 
+                else
                 {
                     try
                     {
@@ -3094,7 +3106,7 @@ namespace PainTrax.Web.Controllers
 
                         if (heading.ToLower().Contains("(levels)"))
                         {
-                            heading = heading.Replace("(levels)",dsPOC.Rows[i]["Level"].ToString());
+                            heading = heading.Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
                             heading = heading.Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
                         }
 
@@ -3776,7 +3788,7 @@ namespace PainTrax.Web.Controllers
             int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
             int fu_id = 0;
 
-            var fuData = _ieService.GetLastFU(patientIEId,type);
+            var fuData = _ieService.GetLastFU(patientIEId, type);
 
             if (fuData == null)
             {
@@ -3896,10 +3908,11 @@ namespace PainTrax.Web.Controllers
             }
             else
             {
-                if (fuData.doe != null) {
+                if (fuData.doe != null)
+                {
                     if (fuData.doe.Value.ToString("MM/dd/yyyy") == System.DateTime.Now.ToString("MM/dd/yyyy"))
                     {
-                        return Json(new { success = false});
+                        return Json(new { success = false });
                     }
                 }
 

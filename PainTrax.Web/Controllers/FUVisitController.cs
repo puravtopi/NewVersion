@@ -494,6 +494,8 @@ namespace PainTrax.Web.Controllers
                         objdefaultdata.txtpastsurgicalhistory = defData.txtpastsurgicalhistory;
                         objdefaultdata.txtdailyMedications = defData.txtdailyMedications;
                         objdefaultdata.txtAllergies = defData.txtAllergies;
+                        objdefaultdata.txtFamilyHistory = defData.txtFamilyHistory;
+                        objdefaultdata.txtSH = defData.txtSH;
                     }
 
                     var preDatadef = _mapper.Map<tbl_pre>(objdefaultdata);

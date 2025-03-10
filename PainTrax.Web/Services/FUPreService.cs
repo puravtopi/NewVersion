@@ -25,7 +25,7 @@ public class FUPreService : ParentService
     public tbl_preOPDefault? GetOneOPDefault(int id)
     {
         DataTable dt = new DataTable();
-        MySqlCommand cm = new MySqlCommand("SELECT ie.compensation AS casetype,a.pmh AS txtPastMedicalHistory ,a.psh as txtpastsurgicalhistory,a.medication AS txtdailyMedications,a.allergies AS txtAllergies FROM tbl_patient_ie ie LEFT JOIN  tbl_ie_page1 a ON ie.patient_id = a.patient_id AND ie.id = a.ie_id AND ie.patient_id = a.patient_id AND ie.cmp_id=a.cmp_id WHERE ie.id=@id ", conn);
+        MySqlCommand cm = new MySqlCommand("SELECT ie.compensation AS casetype,a.pmh AS txtPastMedicalHistory ,a.psh as txtpastsurgicalhistory,a.medication AS txtdailyMedications,a.allergies AS txtAllergies,a.family_history AS txtFamilyHistory,a.socila_history AS txtSH FROM tbl_patient_ie ie LEFT JOIN  tbl_ie_page1 a ON ie.patient_id = a.patient_id AND ie.id = a.ie_id AND ie.patient_id = a.patient_id AND ie.cmp_id=a.cmp_id WHERE ie.id=@id ", conn);
         cm.Parameters.AddWithValue("@id", id);
         var datalist = ConvertDataTable<tbl_preOPDefault>(GetData(cm)).FirstOrDefault();
         return datalist;

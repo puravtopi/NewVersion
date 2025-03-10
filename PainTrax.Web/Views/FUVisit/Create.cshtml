@@ -147,7 +147,7 @@
                                         <input type="hidden" value="@Model.fu_id" id="hdFUId" />
                                         <input type="hidden" value="@Model.dos" id="hdDOS" />
 
-                                        <input type="hidden" value="@Model.dos.Value.ToString("MM/dd/yyyy")" id="hddoe" />
+                                        <input type="hidden" value="@(Model.doi!=null?Model.doi.Value.ToString("MM/dd/yyyy"):"")" id="hddoe" />
                                         <input type="hidden" value="@(Model.doa!=null?Model.doa.Value.ToString("MM/dd/yyyy"):"")" id="hddoa" />
                                         <input type="hidden" value="@Model.compensation" id="hdcasetype" />
                                         <input type="hidden" value="@PainTrax.Web.Helper.EnumHelper.GetDisplayName(Enum.Parse<PainTrax.Web.Helper.EnumHelper.Gender>(Model.gender))" id="hdgender" />

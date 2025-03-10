@@ -3,8 +3,14 @@
 
 
 <style>
-    .ck-editor__editable_inline p {
+    .ck-editor__editable_inline p {        
         margin: 0;
+    }
+
+    .ck.ck-reset.ck-editor.ck-rounded-corners {
+        max-height: 250px;
+        margin-bottom: 10px;
+        overflow-y: scroll
     }
 </style>
 
@@ -37,6 +43,22 @@
             </div>*@
             <div class="col-sm-10" style="height: fit-content;">
                 <textarea id="txtHistoryPresentillness">@Model.txtHistoryPresentillness</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top">
+            HISTORY OF PRESENT ILLNESS :
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtPresentillness">@(@Model.txtPresentillness ?? 
+   "A #age -year-old #gender involved in a #CASETYPE on #doi.\n" + 
+   "The patient was examined by #ProviderName, and that I agreed with _____findings."))</textarea>
             </div>
         </div>
 
@@ -106,6 +128,32 @@
             </div>*@
             <div class="col-sm-10" style="height: fit-content;">
                 <textarea id="txtAllergies">@Model.txtAllergies</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" >
+            Family History :
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtFamilyHistory">@Model.txtFamilyHistory</textarea>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" >
+            Social History :
+        </label>
+        <div class="col-sm-10" style="height: fit-content;">
+            @* <input type="hidden" asp-for="cc" />
+            <div id="div_cc_desc">
+            </div>*@
+            <div class="col-sm-10" style="height: fit-content;">
+                <textarea id="txtSH">@Model.txtSH</textarea>
             </div>
         </div>
     </div>
@@ -241,6 +289,22 @@
             txtHistoryPresentillness = editor;  // declare the name of the text box which need to send for saving further
         }).catch(handleSampleError);
 
+        ClassicEditor.create(document.querySelector('#txtPresentillness'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtPresentillness = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+
 
         ClassicEditor.create(document.querySelector('#txtpresentcomplain'), {
             mention: {
@@ -320,6 +384,36 @@
         }).then(editor => {
             window.editor = editor;
             txtAllergies = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+         ClassicEditor.create(document.querySelector('#txtFamilyHistory'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtFamilyHistory = editor;  // declare the name of the text box which need to send for saving further
+        }).catch(handleSampleError);
+         ClassicEditor.create(document.querySelector('#txtSH'), {
+            mention: {
+                feeds: [
+                    {
+                        marker: '~',
+                        feed: getFeedItems,
+                        itemRenderer: customItemRenderer
+                        /*minimumCharacters: 1*/
+                    }
+                ]
+            }
+        }).then(editor => {
+            window.editor = editor;
+            txtSH = editor;  // declare the name of the text box which need to send for saving further
         }).catch(handleSampleError);
 
         ClassicEditor.create(document.querySelector('#txtSocialHistory'), {
@@ -643,6 +737,8 @@
             "txtpastsurgicalhistory": txtpastsurgicalhistory.getData(),
             "txtdailyMedications": txtdailyMedications.getData(),
             "txtAllergies": txtAllergies.getData(),
+            "txtFamilyHistory": txtFamilyHistory.getData(),
+            "txtSH": txtSH.getData(),
             "txtpastaccideninjuries": null,
             "txtSocialHistory": txtSocialHistory.getData(),
             "txtPhysicalExamination": txtPhysicalExamination.getData(),

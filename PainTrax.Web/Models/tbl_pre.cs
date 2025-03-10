@@ -34,6 +34,9 @@ public class tbl_pre
     public string? txtExaminedResult { get; set; }
     public string? txtDefault { get; set; }
     public string? txtNote { get; set; }
+    public string? txtPresentillness { get; set; }
+    public string? txtFamilyHistory { get; set; }
+    public string? txtSH { get; set; }
 
 
 }
@@ -44,5 +47,7 @@ public class tbl_preOPDefault
     public string? txtpastsurgicalhistory { get; set; }
     public string? txtdailyMedications { get; set; }
     public string? txtAllergies { get; set; }
+    public string? txtFamilyHistory { get; set; }
+    public string? txtSH { get; set; }
 }
 

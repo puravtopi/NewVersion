@@ -25,7 +25,7 @@ public class FUPreService : ParentService
     public tbl_preOPDefault? GetOneOPDefault(int id)
     {
         DataTable dt = new DataTable();
-        MySqlCommand cm = new MySqlCommand("SELECT ie.compensation AS casetype,a.pmh AS txtPastMedicalHistory ,a.psh as txtpastsurgicalhistory,a.medication AS txtdailyMedications,a.allergies AS txtAllergies,a.family_history AS txtFamilyHistory,a.socila_history AS txtSH FROM tbl_patient_ie ie LEFT JOIN  tbl_ie_page1 a ON ie.patient_id = a.patient_id AND ie.id = a.ie_id AND ie.patient_id = a.patient_id AND ie.cmp_id=a.cmp_id WHERE ie.id=@id ", conn);
+        MySqlCommand cm = new MySqlCommand("SELECT ie.compensation AS casetype,a.pmh AS txtPastMedicalHistory ,a.psh as txtpastsurgicalhistory,a.medication AS txtdailyMedications,a.allergies AS txtAllergies,a.family_history AS txtFamilyHistory,a.social_history AS txtSH FROM tbl_patient_ie ie LEFT JOIN  tbl_ie_page1 a ON ie.patient_id = a.patient_id AND ie.id = a.ie_id AND ie.patient_id = a.patient_id WHERE ie.id=@id ", conn);
         cm.Parameters.AddWithValue("@id", id);
         var datalist = ConvertDataTable<tbl_preOPDefault>(GetData(cm)).FirstOrDefault();
         return datalist;
@@ -34,8 +34,8 @@ public class FUPreService : ParentService
     public void Insert(tbl_pre data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_pre
-		(PatientIE_ID,PatientFU_ID,CreationDate,Patient_Name,DOB,DOS,chkLeftShoulder,chkRightShoulder,chkLeftHip,chkRightHip,chkLeftKnee,chkRightKnee,chkLeftAnkleFoot,chkRightAnkleFoot,txtHistoryPresentillness,txtpresentcomplain,txtPastMedicalHistory,txtpastsurgicalhistory,txtdailyMedications,txtAllergies,txtpastaccideninjuries,txtSocialHistory,txtPhysicalExamination,txtDiagnosticImaging,txtAssestmentplan,txtExaminedResult,txtDefault,txtNote)Values
-				(@PatientIE_ID,@PatientFU_ID,@CreationDate,@Patient_Name,@DOB,@DOS,@chkLeftShoulder,@chkRightShoulder,@chkLeftHip,@chkRightHip,@chkLeftKnee,@chkRightKnee,@chkLeftAnkleFoot,@chkRightAnkleFoot,@txtHistoryPresentillness,@txtpresentcomplain,@txtPastMedicalHistory,@txtpastsurgicalhistory,@txtdailyMedications,@txtAllergies,@txtpastaccideninjuries,@txtSocialHistory,@txtPhysicalExamination,@txtDiagnosticImaging,@txtAssestmentplan,@txtExaminedResult,@txtDefault,@txtNote)", conn);
+		(PatientIE_ID,PatientFU_ID,CreationDate,Patient_Name,DOB,DOS,chkLeftShoulder,chkRightShoulder,chkLeftHip,chkRightHip,chkLeftKnee,chkRightKnee,chkLeftAnkleFoot,chkRightAnkleFoot,txtHistoryPresentillness,txtpresentcomplain,txtPastMedicalHistory,txtpastsurgicalhistory,txtdailyMedications,txtAllergies,txtpastaccideninjuries,txtSocialHistory,txtPhysicalExamination,txtDiagnosticImaging,txtAssestmentplan,txtExaminedResult,txtDefault,txtNote,txtPresentillness,txtFamilyHistory,txtSH)Values
+				(@PatientIE_ID,@PatientFU_ID,@CreationDate,@Patient_Name,@DOB,@DOS,@chkLeftShoulder,@chkRightShoulder,@chkLeftHip,@chkRightHip,@chkLeftKnee,@chkRightKnee,@chkLeftAnkleFoot,@chkRightAnkleFoot,@txtHistoryPresentillness,@txtpresentcomplain,@txtPastMedicalHistory,@txtpastsurgicalhistory,@txtdailyMedications,@txtAllergies,@txtpastaccideninjuries,@txtSocialHistory,@txtPhysicalExamination,@txtDiagnosticImaging,@txtAssestmentplan,@txtExaminedResult,@txtDefault,@txtNote,@txtPresentillness,@txtFamilyHistory,@txtSH)", conn);
 
         cm.Parameters.AddWithValue("@PatientIE_ID", data.PatientIE_ID);
         cm.Parameters.AddWithValue("@PatientFU_ID", data.PatientFU_ID);
@@ -65,6 +65,9 @@ public class FUPreService : ParentService
         cm.Parameters.AddWithValue("@txtExaminedResult", data.txtExaminedResult);
         cm.Parameters.AddWithValue("@txtDefault", data.txtDefault);
         cm.Parameters.AddWithValue("@txtNote", data.txtNote);
+        cm.Parameters.AddWithValue("@txtPresentillness", data.txtPresentillness);
+        cm.Parameters.AddWithValue("@txtFamilyHistory", data.txtFamilyHistory);
+        cm.Parameters.AddWithValue("@txtSH", data.txtSH);
         Execute(cm);
         //var result = Execute(cm);
         //cm.ExecuteNonQuery();
@@ -101,7 +104,10 @@ public class FUPreService : ParentService
             txtAssestmentplan=@txtAssestmentplan,
             txtExaminedResult=@txtExaminedResult,
             txtDefault=@txtDefault,
-            txtNote=@txtNote
+            txtNote=@txtNote,
+            txtPresentillness=@txtPresentillness,
+            txtFamilyHistory=@txtFamilyHistory,
+            txtSH=@txtSH
         where id=@id", conn);
 
         cm.Parameters.AddWithValue("@id", data.id);
@@ -133,6 +139,9 @@ public class FUPreService : ParentService
         cm.Parameters.AddWithValue("@txtExaminedResult", data.txtExaminedResult);
         cm.Parameters.AddWithValue("@txtDefault", data.txtDefault);
         cm.Parameters.AddWithValue("@txtNote", data.txtNote);
+        cm.Parameters.AddWithValue("@txtPresentillness", data.txtPresentillness);
+        cm.Parameters.AddWithValue("@txtFamilyHistory", data.txtFamilyHistory);
+        cm.Parameters.AddWithValue("@txtSH", data.txtSH);
         Execute(cm);
     
     }

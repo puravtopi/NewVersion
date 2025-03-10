@@ -246,6 +246,8 @@ namespace PainTrax.Web.Controllers
                             objdefaultdata.txtpastsurgicalhistory = defData.txtpastsurgicalhistory;
                             objdefaultdata.txtdailyMedications = defData.txtdailyMedications;
                             objdefaultdata.txtAllergies = defData.txtAllergies;
+                            objdefaultdata.txtSH = defData.txtSH;
+                            objdefaultdata.txtFamilyHistory = defData.txtFamilyHistory;
                         }
 
                         var preDatadef = _mapper.Map<tbl_pre>(objdefaultdata);
@@ -2075,7 +2077,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#dos", Common.commonDate(fuData.doe));
                     body = body.Replace("#location", patientData.location);
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
-                    body = body.Replace("#upper_gender", Common.GetGenderFromSex(patientData.gender).ToUpper());
+                    body = body.Replace("#upper_gender", Common.GetGenderFromSex(patientData.gender).First().ToString().ToUpper() + Common.GetGenderFromSex(patientData.gender).Substring(1));
                     body = body.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
                     body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
                     body = body.Replace("#acctno", patientData.account_no);                   
@@ -2100,6 +2102,17 @@ namespace PainTrax.Web.Controllers
                 //Preop printing
 
                 var preData = _fuPreservices.GetOne(fuid);
+                var Presentillness = string.IsNullOrEmpty(preData.txtPresentillness) ? "" : preData.txtPresentillness;
+
+
+                Presentillness = Presentillness.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
+                Presentillness = Presentillness.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
+
+                Presentillness = Presentillness.Replace("#CASETYPE", patientData.accidentType);
+                Presentillness = Presentillness.Replace("#doi", Common.commonDate(patientData.doa));
+                //Presentillness = Presentillness.Replace("#ProviderName", Common.commonDate(patientData.doa));
+
+                body = body.Replace("#Presentillness", Presentillness);
                 if (preData != null)
                 {
                     body = body.Replace("#CC", string.IsNullOrEmpty(preData.txtHistoryPresentillness) ? "" : this.removePtag(preData.txtHistoryPresentillness));
@@ -2108,6 +2121,8 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#PastSurgicalHistory", string.IsNullOrEmpty(preData.txtpastsurgicalhistory) ? "" : this.removePtag(preData.txtpastsurgicalhistory));
                     body = body.Replace("#CURRENTMEDICATIONS", string.IsNullOrEmpty(preData.txtdailyMedications) ? "" : this.removePtag(preData.txtdailyMedications));
                     body = body.Replace("#Allergies", string.IsNullOrEmpty(preData.txtAllergies) ? "" : this.removePtag(preData.txtAllergies));
+                    body = body.Replace("#SocialHistory", string.IsNullOrEmpty(preData.txtSH) ? "" : this.removePtag(preData.txtSH));
+                    body = body.Replace("#FamilyHistory", string.IsNullOrEmpty(preData.txtFamilyHistory) ? "" : this.removePtag(preData.txtFamilyHistory));
                     body = body.Replace("#REVIEWOFSYSTEMS", string.IsNullOrEmpty(preData.txtSocialHistory) ? "" : this.removePtag(preData.txtSocialHistory));
                     body = body.Replace("#PhysicalExamination", string.IsNullOrEmpty(preData.txtPhysicalExamination) ? "" : this.removePtag(preData.txtPhysicalExamination));
                     body = body.Replace("#DIAGNOSTICSTUDIES", string.IsNullOrEmpty(preData.txtDiagnosticImaging) ? "" : this.removePtag(preData.txtDiagnosticImaging));

@@ -590,7 +590,7 @@ namespace PainTrax.Web.Controllers
                 }
                 if (obj.Page3 != null)
                 {
-                    obj.Page3.diagcervialbulge_study = (obj.Page3.diagcervialbulge_study == null || obj.Page3.diagcervialbulge_study=="0") ? "1" : obj.Page3.diagcervialbulge_study;
+                    obj.Page3.diagcervialbulge_study = (obj.Page3.diagcervialbulge_study == null || obj.Page3.diagcervialbulge_study == "0") ? "1" : obj.Page3.diagcervialbulge_study;
                     obj.Page3.diagthoracicbulge_study = (obj.Page3.diagthoracicbulge_study == null || obj.Page3.diagthoracicbulge_study == "0") ? "1" : obj.Page3.diagthoracicbulge_study;
                     obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null || obj.Page3.diaglumberbulge_study == "0") ? "1" : obj.Page3.diaglumberbulge_study;
                     obj.Page3.diagleftshoulder_study = (obj.Page3.diagleftshoulder_study == null || obj.Page3.diagleftshoulder_study == "0") ? "1" : obj.Page3.diagleftshoulder_study;
@@ -2597,7 +2597,7 @@ namespace PainTrax.Web.Controllers
                 }
                 else
                 {
-                    body = body.Replace("#injection", "");
+                    body = body.Replace("#injection", injectionHtml);
                 }
 
                 body = body.Replace("#location", patientData.location);
@@ -3039,7 +3039,7 @@ namespace PainTrax.Web.Controllers
 
         private pocDetails getPOC(int PatientIE_ID)
         {
-            DataTable dsPOC = _pocService.GetPOCIE(PatientIE_ID);
+            DataTable dsPOC = _pocService.GetPOCIENew(PatientIE_ID);
 
 
 
@@ -3064,32 +3064,49 @@ namespace PainTrax.Web.Controllers
                         //}
 
                         string heading = dsPOC.Rows[i]["Heading"].ToString();
+
                         pocDesc = dsPOC.Rows[i]["PDesc"].ToString();
-                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
-                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
-                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
-                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
-                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
-                        ccdesc = ccdesc + dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString().Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
+
+                        string _ccdesc = dsPOC.Rows[i]["CCDesc"] == null ? "" : dsPOC.Rows[i]["CCDesc"].ToString();
+                        if (_ccdesc != "")
+                        {
+                            _ccdesc = _ccdesc.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
+                            _ccdesc = _ccdesc.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                            _ccdesc = _ccdesc.Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                            _ccdesc = _ccdesc.Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
+                            _ccdesc = _ccdesc.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                            _ccdesc = _ccdesc.Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
+
+                            ccdesc = ccdesc + _ccdesc;
+                        }
 
 
+                        string _pedesc = dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString();
+                        if (_pedesc != "")
+                        {
+                            _pedesc = _pedesc.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
+                            _pedesc = _pedesc.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                            _pedesc = _pedesc.Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                            _pedesc = _pedesc.Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
+                            _pedesc = _pedesc.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                            _pedesc = _pedesc.Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
 
+                            pedesc = pedesc + _pedesc;
+                        }
 
-                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
-                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
-                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
-                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
-                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
-                        pedesc = pedesc + dsPOC.Rows[i]["PEDesc"] == null ? "" : dsPOC.Rows[i]["PEDesc"].ToString().Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
+                        string _adesc = dsPOC.Rows[i]["ADesc"] == null ? "" : dsPOC.Rows[i]["ADesc"].ToString();
 
+                        if (_adesc != null)
+                        {
+                            _adesc = _adesc.Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
+                            _adesc = _adesc.Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
+                            _adesc = _adesc.Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
+                            _adesc = _adesc.Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
+                            _adesc = _adesc.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
+                            _adesc = _adesc.Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
 
-                        adesc = adesc + dsPOC.Rows[i]["ADesc"] == null ? "" : dsPOC.Rows[i]["ADesc"].ToString().Replace("(SIDE)", dsPOC.Rows[i]["Sides"].ToString());
-                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(side)", dsPOC.Rows[i]["Sides"].ToString());
-                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(levels)", dsPOC.Rows[i]["Level"].ToString());
-                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(LEVELS)", dsPOC.Rows[i]["Level"].ToString());
-                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
-                        adesc = adesc + dsPOC.Rows[i]["adesc"] == null ? "" : dsPOC.Rows[i]["adesc"].ToString().Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
-
+                            adesc = adesc + _adesc;
+                        }
 
                         if (heading.ToLower().Contains("(side)"))
                         {

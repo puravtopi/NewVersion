@@ -2169,6 +2169,7 @@ namespace PainTrax.Web.Controllers
                         else
                             body = body.Replace("#Sign", "");
 
+                        body = body.Replace("#Physician", userData.fullname);
                         body = body.Replace("#ProviderName", userData.providername);
                         body = body.Replace("#AssProviderName", userData.assistant_providername);
                     }

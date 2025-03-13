@@ -18,6 +18,8 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml;
 using HtmlToOpenXml;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
+using MailKit;
 
 namespace PainTrax.Web.Controllers
 {
@@ -249,6 +251,7 @@ namespace PainTrax.Web.Controllers
                             objdefaultdata.txtAllergies = defData.txtAllergies;
                             objdefaultdata.txtSH = defData.txtSH;
                             objdefaultdata.txtFamilyHistory = defData.txtFamilyHistory;
+                            objdefaultdata.txtPresentillness = defData.txtPresentillness;
                         }
 
                         var preDatadef = _mapper.Map<tbl_pre>(objdefaultdata);
@@ -499,6 +502,7 @@ namespace PainTrax.Web.Controllers
                         objdefaultdata.txtAllergies = defData.txtAllergies;
                         objdefaultdata.txtFamilyHistory = defData.txtFamilyHistory;
                         objdefaultdata.txtSH = defData.txtSH;
+                        objdefaultdata.txtPresentillness = defData.txtPresentillness;
                     }
 
                     var preDatadef = _mapper.Map<tbl_pre>(objdefaultdata);
@@ -2055,9 +2059,15 @@ namespace PainTrax.Web.Controllers
 
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 string body = string.Empty;
+
                 //using streamreader for reading my htmltemplate   
 
                 var fuData = _patientFuservices.GetOne(fuid);
+               
+                tbl_users user = new tbl_users();
+                user.Id = fuData.provider_id;
+                var providerData = _userService.GetOneById(user.Id.Value);
+
 
                 var templateData = _printService.GetTemplate(cmpid, fuData.type);
                 var gender = "";
@@ -2065,6 +2075,7 @@ namespace PainTrax.Web.Controllers
                 body = templateData.content;
 
                 var patientData = _ieService.GetOnebyPatientId(ieid);
+                body = body.Replace("#Physicianhistory", patientData.providerName);
 
                 if (patientData != null)
                 {
@@ -2103,17 +2114,53 @@ namespace PainTrax.Web.Controllers
                 //Preop printing
 
                 var preData = _fuPreservices.GetOne(fuid);
+                string bodypart = "";
+                var page1Data = _ieService.GetOnePage1(ieid);
+                if (page1Data != null)
+                {
+                    if (!string.IsNullOrEmpty(page1Data.bodypart))
+                    {
+                        bodypart = Common.ReplceCommowithAnd(page1Data.bodypart.ToLower());
+                        body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", ") + " pain.");
+
+                    }
+                    else
+                    {
+                        body = body.Replace("#PC", "");
+                    }
+                }
+
                 var Presentillness = string.IsNullOrEmpty(preData.txtPresentillness) ? "" : preData.txtPresentillness;
-
-
                 Presentillness = Presentillness.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
-                Presentillness = Presentillness.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
-
+                Presentillness = Presentillness.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
+                Presentillness = Presentillness.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", ") + " pain.");
                 Presentillness = Presentillness.Replace("#CASETYPE", patientData.accidentType);
+                Presentillness = Presentillness.Replace("#accidenttype", patientData.accidentType);
                 Presentillness = Presentillness.Replace("#doi", Common.commonDate(patientData.doa));
                 //Presentillness = Presentillness.Replace("#ProviderName", Common.commonDate(patientData.doa));
-
+               
                 body = body.Replace("#Presentillness", Presentillness);
+                var strDiagnostic = this.getDiagnosticie(ieid);
+
+                if (cmpid != "4")
+                {
+                    if (string.IsNullOrEmpty(strDiagnostic))
+                    {
+                        if (HttpContext.Session.GetString(SessionKeys.SessionIsDaignosis) == "true")
+                        {
+                            strDiagnostic = HttpContext.Session.GetString(SessionKeys.SessionDaignosisNotFoundStatment);
+                        }
+                    }
+                    else
+                    {
+                        if (HttpContext.Session.GetString(SessionKeys.SessionIsDaignosis) == "true")
+                        {
+                            strDiagnostic = strDiagnostic + "<br/><br/>" + HttpContext.Session.GetString(SessionKeys.SessionDaignosisFoundStatment); ;
+                        }
+                    }
+                }
+
+                body = body.Replace("#Diagnostic", this.removePtag(strDiagnostic));
                 if (preData != null)
                 {
                     body = body.Replace("#CC", string.IsNullOrEmpty(preData.txtHistoryPresentillness) ? "" : this.removePtag(preData.txtHistoryPresentillness));
@@ -2141,9 +2188,9 @@ namespace PainTrax.Web.Controllers
 
                     int? providorId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
 
-                    if (patientData.provider_id != null)
+                    if (providerData.Id != null)
                     {
-                        signUserId = patientData.provider_id.Value;
+                        signUserId = providerData.Id.Value;
                     }
                     else if (providorId != null)
                     {
@@ -2159,20 +2206,21 @@ namespace PainTrax.Web.Controllers
                         var userData = _userService.GetOne(_user);
                         signName = userData.signature;
 
-                        if (!string.IsNullOrEmpty(signName))
-                        {
-                            string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
-                            //string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
-                            string base64Image = ImageToBase64(Environment.WebRootPath + signatureUrl);
-                            body = body.Replace("#Sign", $" <img src='data:image/jpg;base64,{base64Image}' alt='My Image' />");
-                            // body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
-                        }
-                        else
-                            body = body.Replace("#Sign", "");
+                        //if (!string.IsNullOrEmpty(signName))
+                        //{
+                        //    string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
+                        //    //string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
+                        //    string base64Image = ImageToBase64(Environment.WebRootPath + signatureUrl);
+                        //    body = body.Replace("#Sign", $" <img src='data:image/jpg;base64,{base64Image}' alt='My Image' />");
+                        //    // body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
+                        //}
+                        //else
+                        //    body = body.Replace("#Sign", "");
 
-                        body = body.Replace("#Physician", userData.fullname);
-                        body = body.Replace("#ProviderName", userData.providername);
-                        body = body.Replace("#AssProviderName", userData.assistant_providername);
+                        body = body.Replace("#Physician", providerData.providername);
+                        
+                        body = body.Replace("#ProviderName", providerData.providername);
+                        body = body.Replace("#AssProviderName", providerData.assistant_providername);
                     }
                     else
                         body = body.Replace("#Sign", "");
@@ -3422,7 +3470,368 @@ namespace PainTrax.Web.Controllers
 
             return pocDetails;
         }
+        private string getDiagnosticie(int id)
+        {
+            var data = _ieService.GetOnePage3(id);
 
+            string strDaignosis = "", stradddaigno = "";
+            bool isnormal = true;
+
+            if (data != null)
+            {
+
+                if (data.diagcervialbulge_date != null)
+                {
+                    strDaignosis = data.diagcervialbulge_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagcervialbulge_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagcervialbulge_study));
+
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagcervialbulge_text))
+                    {
+
+                        strDaignosis = strDaignosis + " of the cervical spine " + data.diagcervialbulge_text + ", ";
+
+                        stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                        isnormal = false;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp1))
+                    {
+                        strDaignosis = strDaignosis + " HNP at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".";
+                        stradddaigno = stradddaigno + "Cervical herniated nucleus pulposis at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".<br/>";
+                        isnormal = false;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp2))
+                    {
+                        strDaignosis = strDaignosis + data.diagcervialbulge_hnp2.TrimEnd('.') + ".";
+                        if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp2))
+                        {
+                            stradddaigno = stradddaigno + data.diagcervialbulge_hnp2.TrimEnd('.') + ".<br/>";
+                        }
+
+                        isnormal = false;
+                    }
+
+                    if (isnormal)
+                    {
+                        strDaignosis = strDaignosis + " of the cervical spine is normal. ";
+                    }
+                }
+
+                if (data.diagthoracicbulge_date != null)
+                {
+                    isnormal = true;
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagthoracicbulge_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagthoracicbulge_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
+                    {
+                        strDaignosis = strDaignosis + " of the thoracic spine " + data.diagthoracicbulge_text + ", ";
+
+                        stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                        isnormal = false;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_hnp1))
+                    {
+                        strDaignosis = strDaignosis + " HNP at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ". ";
+                        stradddaigno = stradddaigno + "Thoracic herniated nucleus pulposis at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ".<br/>";
+                        isnormal = false;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_hnp2))
+                    {
+                        strDaignosis = strDaignosis + data.diagthoracicbulge_hnp2.TrimEnd('.') + ". ";
+                        if (!string.IsNullOrEmpty(data.diagthoracicbulge_hnp2))
+                        {
+                            stradddaigno = stradddaigno + data.diagthoracicbulge_hnp2.TrimEnd('.') + ".<br/>";
+                        }
+
+                        isnormal = false;
+                    }
+
+                    if (isnormal)
+                    {
+                        strDaignosis = strDaignosis + " of the thoracic spine is normal. ";
+                    }
+                }
+
+                if (data.diaglumberbulge_date != null)
+                {
+                    isnormal = true;
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diaglumberbulge_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diaglumberbulge_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diaglumberbulge_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
+                    {
+                        strDaignosis = strDaignosis + " of the lumbar spine " + data.diaglumberbulge_text + ", ";
+
+                        stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                        isnormal = false;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp1))
+                    {
+                        strDaignosis = strDaignosis + " HNP at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ". ";
+                        stradddaigno = stradddaigno + "Lumbar herniated nucleus pulposis at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ".<br/>";
+                        isnormal = false;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp2))
+                    {
+                        strDaignosis = strDaignosis + data.diaglumberbulge_hnp2.TrimEnd('.') + ". ";
+                        if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp2))
+                        {
+                            stradddaigno = stradddaigno + data.diaglumberbulge_hnp2.TrimEnd('.') + ".<br/>";
+                        }
+
+                        isnormal = false;
+                    }
+
+                    if (isnormal)
+                    {
+                        strDaignosis = strDaignosis + " of the lumbar spine is normal. ";
+                    }
+                }
+
+                if (data.diagleftshoulder_date != null)
+                {
+
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftshoulder_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagleftshoulder_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagleftshoulder_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagleftshoulder_text))
+                    {
+                        strDaignosis = strDaignosis + " of the left shoulder:  " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                    }
+                    else
+                    {
+                        strDaignosis = strDaignosis + " of the left shoulder is normal. ";
+                    }
+
+                }
+
+                if (data.diagrightshoulder_date != null)
+                {
+
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagrightshoulder_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagrightshoulder_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagrightshoulder_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagrightshoulder_text))
+                    {
+                        strDaignosis = strDaignosis + " of the right shoulder:  " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                    }
+                    else
+                    {
+                        strDaignosis = strDaignosis + " of the right shoulder is normal. ";
+                    }
+
+                }
+                if (data.diagleftknee_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftknee_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagleftknee_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagleftknee_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagleftknee_text))
+                    {
+                        strDaignosis = strDaignosis + " of the left knee:  " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
+                    }
+                    else
+                    {
+                        strDaignosis = strDaignosis + " of the left knee is normal. ";
+                    }
+                }
+
+                if (data.diagrightknee_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagrightknee_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagrightknee_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagrightknee_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagrightknee_text))
+                    {
+                        strDaignosis = strDaignosis + " of the right knee:  " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
+                    }
+                    else
+                    {
+                        strDaignosis = strDaignosis + " of the right knee is normal. ";
+                    }
+                }
+
+
+
+                //if (data.diagrightknee_date != null)
+                //{
+                //    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagrightknee_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                //    if (!string.IsNullOrEmpty(data.diagrightknee_study))
+                //    {
+                //        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagrightknee_study));
+                //        strDaignosis = strDaignosis + " " + study;
+                //    }
+
+                //    if (!string.IsNullOrEmpty(data.diagrightknee_text))
+                //    {
+                //        strDaignosis = strDaignosis + " of the right knee " + data.diagrightknee_text.TrimEnd('.') + ". ";
+                //    }
+                //    else
+                //    {
+                //        strDaignosis = strDaignosis + " of the right knee is normal. ";
+                //    }
+                //}
+
+                if (data.other1_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other1_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other1_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other1_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other1_text))
+                    {
+                        strDaignosis = strDaignosis + data.other1_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+                if (data.other2_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other2_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other2_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other2_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other2_text))
+                    {
+                        strDaignosis = strDaignosis + data.other2_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+                if (data.other3_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other3_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other3_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other3_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other3_text))
+                    {
+                        strDaignosis = strDaignosis + data.other3_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+                if (data.other4_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other4_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other4_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other4_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other4_text))
+                    {
+                        strDaignosis = strDaignosis + data.other4_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+                if (data.other5_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other5_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other5_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other5_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other5_text))
+                    {
+                        strDaignosis = strDaignosis + data.other5_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+                if (data.other6_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other6_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other6_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other6_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other6_text))
+                    {
+                        strDaignosis = strDaignosis + data.other6_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+                if (data.other7_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other7_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other7_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other7_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other7_text))
+                    {
+                        strDaignosis = strDaignosis + data.other7_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+            }
+
+            return strDaignosis;
+
+        }
         private string getDiagnostic(int id)
         {
             var data = _fuPage3services.GetOne(id);

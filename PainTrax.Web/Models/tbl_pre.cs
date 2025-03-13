@@ -49,5 +49,7 @@ public class tbl_preOPDefault
     public string? txtAllergies { get; set; }
     public string? txtFamilyHistory { get; set; }
     public string? txtSH { get; set; }
+    public string? txtPresentillness { get; set; }
+
 }
 

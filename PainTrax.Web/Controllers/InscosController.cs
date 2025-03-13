@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace PainTrax.Web.Controllers
 {
-    [AuthenticateUser]
+    [SessionCheckFilter]
     public class InscosController : Controller
     {
         private readonly ILogger<InscosController> _logger;

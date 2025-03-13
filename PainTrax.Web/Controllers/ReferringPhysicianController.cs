@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class ReferringPhysicianController : Controller
     {
         private readonly IMapper _mapper;

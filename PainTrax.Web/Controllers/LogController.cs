@@ -6,6 +6,7 @@ using PainTrax.Web.Services;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class LogController : Controller
     {
         private readonly IMapper _mapper;

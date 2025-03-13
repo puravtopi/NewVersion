@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 
 namespace PainTrax.Web.Controllers
 {
-    [AuthenticateUser]
+    [SessionCheckFilter]
     public class AdjusterController : Controller
     {
         #region Variables

@@ -13,7 +13,7 @@ using System.Globalization;
 
 namespace PainTrax.Web.Controllers
 {
-    //[AuthenticateUser]
+    [SessionCheckFilter]
     public class GroupController : Controller
     {
         private readonly ILogger<GroupController> _logger;   

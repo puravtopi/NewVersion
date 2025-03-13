@@ -13,6 +13,7 @@ using Org.BouncyCastle.Asn1.Cmp;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class SignatureController : Controller
     {
         private readonly ILogger<SignatureController> _logger;

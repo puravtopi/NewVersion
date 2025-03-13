@@ -17,6 +17,7 @@ using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class ReportController : Controller
     {
 

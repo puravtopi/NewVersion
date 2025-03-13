@@ -6,6 +6,7 @@ using PainTrax.Web.Models;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class ForwardSettingController : Controller
     {
 

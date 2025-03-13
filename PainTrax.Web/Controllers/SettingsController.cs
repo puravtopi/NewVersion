@@ -8,6 +8,7 @@ using PainTrax.Web.Services;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class SettingsController : Controller
     {
         #region Variables

@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class FUVisitController : Controller
     {
 
@@ -625,22 +626,22 @@ namespace PainTrax.Web.Controllers
 
                 if (obj.Page3 != null)
                 {
-                    obj.Page3.diagcervialbulge_study = (obj.Page3.diagcervialbulge_study == null || obj.Page3.diagcervialbulge_study == "0") ? "1" : obj.Page3.diagcervialbulge_study;
-                    obj.Page3.diagthoracicbulge_study = (obj.Page3.diagthoracicbulge_study == null || obj.Page3.diagthoracicbulge_study == "0") ? "1" : obj.Page3.diagthoracicbulge_study;
-                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null || obj.Page3.diaglumberbulge_study == "0") ? "1" : obj.Page3.diaglumberbulge_study;
-                    obj.Page3.diagleftshoulder_study = (obj.Page3.diagleftshoulder_study == null || obj.Page3.diagleftshoulder_study == "0") ? "1" : obj.Page3.diagleftshoulder_study;
-                    obj.Page3.diagrightshoulder_study = (obj.Page3.diagrightshoulder_study == null || obj.Page3.diagrightshoulder_study == "0") ? "1" : obj.Page3.diagrightshoulder_study;
-                    obj.Page3.diagleftknee_study = (obj.Page3.diagleftknee_study == null || obj.Page3.diagleftknee_study == "0") ? "1" : obj.Page3.diagleftknee_study;
-                    obj.Page3.diagrightknee_study = (obj.Page3.diagrightknee_study == null || obj.Page3.diagrightknee_study == "0") ? "1" : obj.Page3.diagrightknee_study;
-                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null || obj.Page3.diaglumberbulge_study == "0") ? "1" : obj.Page3.diaglumberbulge_study;
+                    obj.Page3.diagcervialbulge_study = (obj.Page3.diagcervialbulge_study == null ) ? "1" : obj.Page3.diagcervialbulge_study;
+                    obj.Page3.diagthoracicbulge_study = (obj.Page3.diagthoracicbulge_study == null) ? "1" : obj.Page3.diagthoracicbulge_study;
+                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null ) ? "1" : obj.Page3.diaglumberbulge_study;
+                    obj.Page3.diagleftshoulder_study = (obj.Page3.diagleftshoulder_study == null ) ? "1" : obj.Page3.diagleftshoulder_study;
+                    obj.Page3.diagrightshoulder_study = (obj.Page3.diagrightshoulder_study == null ) ? "1" : obj.Page3.diagrightshoulder_study;
+                    obj.Page3.diagleftknee_study = (obj.Page3.diagleftknee_study == null ) ? "1" : obj.Page3.diagleftknee_study;
+                    obj.Page3.diagrightknee_study = (obj.Page3.diagrightknee_study == null ) ? "1" : obj.Page3.diagrightknee_study;
+                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null ) ? "1" : obj.Page3.diaglumberbulge_study;
 
-                    obj.Page3.other1_study = (obj.Page3.other1_study == null || obj.Page3.other1_study == "0") ? "1" : obj.Page3.other1_study;
-                    obj.Page3.other2_study = (obj.Page3.other2_study == null || obj.Page3.other2_study == "0") ? "1" : obj.Page3.other2_study;
-                    obj.Page3.other3_study = (obj.Page3.other3_study == null || obj.Page3.other3_study == "0") ? "1" : obj.Page3.other3_study;
-                    obj.Page3.other4_study = (obj.Page3.other4_study == null || obj.Page3.other4_study == "0") ? "1" : obj.Page3.other4_study;
-                    obj.Page3.other5_study = (obj.Page3.other5_study == null || obj.Page3.other5_study == "0") ? "1" : obj.Page3.other5_study;
-                    obj.Page3.other6_study = (obj.Page3.other6_study == null || obj.Page3.other6_study == "0") ? "1" : obj.Page3.other6_study;
-                    obj.Page3.other7_study = (obj.Page3.other7_study == null || obj.Page3.other7_study == "0") ? "1" : obj.Page3.other7_study;
+                    obj.Page3.other1_study = (obj.Page3.other1_study == null) ? "1" : obj.Page3.other1_study;
+                    obj.Page3.other2_study = (obj.Page3.other2_study == null ) ? "1" : obj.Page3.other2_study;
+                    obj.Page3.other3_study = (obj.Page3.other3_study == null ) ? "1" : obj.Page3.other3_study;
+                    obj.Page3.other4_study = (obj.Page3.other4_study == null ) ? "1" : obj.Page3.other4_study;
+                    obj.Page3.other5_study = (obj.Page3.other5_study == null) ? "1" : obj.Page3.other5_study;
+                    obj.Page3.other6_study = (obj.Page3.other6_study == null ) ? "1" : obj.Page3.other6_study;
+                    obj.Page3.other7_study = (obj.Page3.other7_study == null ) ? "1" : obj.Page3.other7_study;
                 }
             }
             catch (Exception ex)

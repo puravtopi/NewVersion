@@ -17,6 +17,7 @@ using iText.Forms;
 using iText.Forms.Fields;
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class PdfController : Controller
     {
         private readonly IWebHostEnvironment _environment;

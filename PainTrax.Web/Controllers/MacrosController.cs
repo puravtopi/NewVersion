@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace PainTrax.Web.Controllers
 {
-    [AuthenticateUser]
+    [SessionCheckFilter]
     public class MacrosController : Controller
     {
         private readonly ILogger<MacrosController> _logger;

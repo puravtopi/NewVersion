@@ -12,6 +12,7 @@ using DocumentFormat.OpenXml;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class AccidentTypeController : Controller
     {
         private readonly IMapper _mapper;

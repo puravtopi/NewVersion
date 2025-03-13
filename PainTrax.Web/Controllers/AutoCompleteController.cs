@@ -6,7 +6,7 @@ using PainTrax.Web.Services;
 
 namespace PainTrax.Web.Controllers
 {
-    [AuthenticateUser]
+    [SessionCheckFilter]
     public class AutoCompleteController : Controller
     {
 

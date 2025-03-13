@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class CaseTypeController : Controller
     {
         private readonly IMapper _mapper;

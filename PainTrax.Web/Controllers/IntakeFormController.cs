@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class IntakeFormController : Controller
     {
         private readonly Common _commonservices = new Common();

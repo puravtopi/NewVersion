@@ -20,7 +20,7 @@ using System.Net;
 
 namespace PainTrax.Web.Controllers
 {
-    [AuthenticateUser]
+    [SessionCheckFilter]
     public class SignInSheetController : Controller
     {
         private readonly Common _commonservices = new Common();

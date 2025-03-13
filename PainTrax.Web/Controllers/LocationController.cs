@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace PainTrax.Web.Controllers
 {
-    [AuthenticateUser]
+    [SessionCheckFilter]
     public class LocationController : Controller
     {
         private readonly IMapper _mapper;

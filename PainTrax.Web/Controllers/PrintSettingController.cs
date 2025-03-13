@@ -7,6 +7,7 @@ using PainTrax.Web.Services;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class PrintSettingController : Controller
     {
         #region Variables

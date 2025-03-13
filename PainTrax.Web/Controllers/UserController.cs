@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 
 namespace PainTrax.Web.Controllers
 {
-    [AuthenticateUser]
+    [SessionCheckFilter]
     public class UserController : Controller
     {
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;

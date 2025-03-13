@@ -9,6 +9,7 @@ using PainTrax.Web.ViewModel;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class DefaultSettingsController : Controller
     {
         private readonly ILogger<tbl_default> _logger;

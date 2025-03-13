@@ -16,7 +16,7 @@ using System.Text.RegularExpressions;
 
 namespace PainTrax.Web.Controllers
 {
-    [AuthenticateUser]
+    [SessionCheckFilter]
     public class ProcedureController : Controller
     {
         private readonly IMapper _mapper;

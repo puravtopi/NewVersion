@@ -4043,11 +4043,11 @@ namespace PainTrax.Web.Controllers
                             founddiagnosticstudies = false;
                             continue;
                         }
-                        if (paragraphText.StartsWith("FOLLOW-UP:"))
+                        if (paragraphText.StartsWith("Follow-up:"))
                         {
                             html.Append($"<p>{paragraphText}</p>");
                             //followup.Append($"<p>{paragraphText}</p>");
-                            followup.Append(paragraphText.Substring(("FOLLOW-UP:".Length)));
+                            followup.Append(paragraphText.Substring(("Follow-up:".Length)));
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;

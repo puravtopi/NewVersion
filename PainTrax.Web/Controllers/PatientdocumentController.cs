@@ -27,7 +27,7 @@ using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace PainTrax.Web.Controllers
 {
-    [AuthenticateUser]
+    [SessionCheckFilter]
     public class PatientdocumentController : Controller
     {
         private readonly ILogger<PatientdocumentController> _logger;

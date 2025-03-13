@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class AppointmentController : Controller
     {
         private readonly Common _commonservices = new Common();

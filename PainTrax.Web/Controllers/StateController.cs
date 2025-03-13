@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class StateController : Controller
     {
         private readonly IMapper _mapper;

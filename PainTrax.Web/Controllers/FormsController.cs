@@ -11,6 +11,7 @@ using System;
 
 namespace PainTrax.Web.Controllers
 {
+    [SessionCheckFilter]
     public class FormsController : Controller
     {
         private readonly IMapper _mapper;

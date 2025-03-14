@@ -2087,7 +2087,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#dob", Common.commonDate(patientData.dob));
                     body = body.Replace("#doi", Common.commonDate(patientData.doa));
                     body = body.Replace("#dos", Common.commonDate(fuData.doe));
-                    body = body.Replace("#location", patientData.location);
+                    //body = body.Replace("#location", patientData.location);
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
                     body = body.Replace("#upper_gender", Common.GetGenderFromSex(patientData.gender).First().ToString().ToUpper() + Common.GetGenderFromSex(patientData.gender).Substring(1));
                     body = body.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
@@ -2098,7 +2098,7 @@ namespace PainTrax.Web.Controllers
 
                 //header printing
 
-                var locData = _locService.GetAll(" and id=" + patientData.location_id);
+                var locData = _locService.GetAll(" and id=" + fuData.location_id);
 
                 if (locData != null && locData.Count > 0)
                 {
@@ -2107,7 +2107,7 @@ namespace PainTrax.Web.Controllers
                     //body = body.Replace("#Address", locData[0].address);
                     body = body.Replace("#Address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                     body = body.Replace("#loc", locData[0].location);
-                    body = body.Replace("#Location", locData[0].location);
+                    body = body.Replace("#location", locData[0].location);
                     body = body.Replace("#Nameofpractice", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
                     body = body.Replace("#Phone", locData[0].telephone);
                 }

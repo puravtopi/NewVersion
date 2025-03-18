@@ -2105,8 +2105,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
                     body = body.Replace("#address", locData[0].address);
                     //body = body.Replace("#Address", locData[0].address);
-                    body = body.Replace("#Address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
-                    body = body.Replace("#loc", locData[0].location);
+                    body = body.Replace("#Address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);                    
                     body = body.Replace("#location", locData[0].location);
                     body = body.Replace("#Nameofpractice", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
                     body = body.Replace("#Phone", locData[0].telephone);
@@ -2140,7 +2139,7 @@ namespace PainTrax.Web.Controllers
                 //Presentillness = Presentillness.Replace("#ProviderName", Common.commonDate(patientData.doa));
                
                 body = body.Replace("#Presentillness", Presentillness);
-                var strDiagnostic = this.getDiagnosticie(ieid);
+                var strDiagnostic = this.getDiagnosticie(ieid, preData);
 
                 if (cmpid != "4")
                 {
@@ -3470,7 +3469,7 @@ namespace PainTrax.Web.Controllers
 
             return pocDetails;
         }
-        private string getDiagnosticie(int id)
+        private string getDiagnosticie(int id, tbl_pre pre)
         {
             var data = _ieService.GetOnePage3(id);
 
@@ -3610,7 +3609,7 @@ namespace PainTrax.Web.Controllers
                     }
                 }
 
-                if (data.diagleftshoulder_date != null)
+                if (data.diagleftshoulder_date != null && pre.chkLeftShoulder == true)
                 {
 
                     strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftshoulder_date.Value.ToString("MM/dd/yyyy") + " - ";
@@ -3632,7 +3631,7 @@ namespace PainTrax.Web.Controllers
 
                 }
 
-                if (data.diagrightshoulder_date != null)
+                if (data.diagrightshoulder_date != null && pre.chkRightShoulder == true)
                 {
 
                     strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagrightshoulder_date.Value.ToString("MM/dd/yyyy") + " - ";
@@ -3653,7 +3652,7 @@ namespace PainTrax.Web.Controllers
                     }
 
                 }
-                if (data.diagleftknee_date != null)
+                if (data.diagleftknee_date != null && pre.chkLeftKnee == true)
                 {
                     strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftknee_date.Value.ToString("MM/dd/yyyy") + " - ";
 
@@ -3673,7 +3672,7 @@ namespace PainTrax.Web.Controllers
                     }
                 }
 
-                if (data.diagrightknee_date != null)
+                if (data.diagrightknee_date != null && pre.chkRightKnee == true)
                 {
                     strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagrightknee_date.Value.ToString("MM/dd/yyyy") + " - ";
 

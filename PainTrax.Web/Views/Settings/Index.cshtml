@@ -46,7 +46,7 @@
                                             <select class="form-select" asp-for="font_family">
                                                 <option value="Arial">Arial</option>
                                                 <option value="Calibri">Calibri</option>
-                                                <option value="TimesNewRoman">Times New Roman</option>                                               
+                                                <option value="TimesNewRoman">Times New Roman</option>
                                             </select>
                                         </div>
                                     </div>
@@ -62,7 +62,7 @@
                                                 <option value="14">14</option>
                                             </select>
                                         </div>
-                                    </div>                                    
+                                    </div>
 
                                     <div class="row mb-3">
                                         <label for="title" asp-for="location" class="col-md-4 col-lg-3 col-form-label">Location</label>
@@ -159,9 +159,32 @@
     </section>
 
 </main><!-- End #main -->
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+             $(document).ready(function () {
+                 var mess='@ViewBag.Message';
+                 if(mess!='' && mess!=undefined){
+         $('#myModalMessage').modal('show');
+                       $('#messBody').html('<p>'+mess+'</p>');
+                       
+                       autoclosepopup();
+                 }
+             })
+
+
+             function autoclosepopup() {
+        $('#myModalMessage').data('hideInterval', setTimeout(function () {
+            $('#myModalMessage').modal('hide');
+        }, 1500));
+    }
+
+</script>
+
+
 @section Scripts {
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
 }

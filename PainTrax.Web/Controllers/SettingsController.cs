@@ -91,6 +91,8 @@ namespace PainTrax.Web.Controllers
                 HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, model.header_template.ToString().ToLower());
                 HttpContext.Session.SetString(SessionKeys.SessionFontFamily, model.font_family.ToString().ToLower());
                 HttpContext.Session.SetString(SessionKeys.SessionPageSize, model.font_size.ToString().ToLower());
+
+                ViewBag.Message = "Settings Updated Successfully";
                 return View(model);
             }
             catch (Exception ex)

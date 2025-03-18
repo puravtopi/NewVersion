@@ -3,11 +3,11 @@
 
 
 <style>
-    .ck-editor__editable_inline p {        
+    .clsPreop .ck-editor__editable_inline p {
         margin: 0;
     }
 
-    .ck.ck-reset.ck-editor.ck-rounded-corners {
+    .clsPreop .ck.ck-reset.ck-editor.ck-rounded-corners {
         max-height: 250px;
         margin-bottom: 10px;
         overflow-y: scroll
@@ -41,7 +41,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtHistoryPresentillness">@Model.txtHistoryPresentillness</textarea>
             </div>
         </div>
@@ -55,7 +55,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtPresentillness">@Model.txtPresentillness</textarea>
             </div>
         </div>
@@ -69,7 +69,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtpresentcomplain">@Model.txtpresentcomplain</textarea>
             </div>
         </div>
@@ -83,7 +83,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtPastMedicalHistory">@Model.txtPastMedicalHistory</textarea>
             </div>
         </div>
@@ -97,7 +97,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtpastsurgicalhistory">@Model.txtpastsurgicalhistory</textarea>
             </div>
         </div>
@@ -111,7 +111,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtdailyMedications">@Model.txtdailyMedications</textarea>
             </div>
         </div>
@@ -124,7 +124,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtAllergies">@Model.txtAllergies</textarea>
             </div>
         </div>
@@ -137,21 +137,21 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtFamilyHistory">@Model.txtFamilyHistory</textarea>
             </div>
         </div>
     </div>
     <div class="row mb-3">
         <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#SH">
-            
+
             Social History :
         </label>
         <div class="col-sm-10" style="height: fit-content;">
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtSH">@Model.txtSH</textarea>
             </div>
         </div>
@@ -164,7 +164,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtSocialHistory">@Model.txtSocialHistory</textarea>
             </div>
         </div>
@@ -177,7 +177,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtPhysicalExamination">@Model.txtPhysicalExamination</textarea>
             </div>
         </div>
@@ -190,7 +190,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtDiagnosticImaging">@Model.txtDiagnosticImaging</textarea>
             </div>
         </div>
@@ -203,7 +203,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtAssestmentplan">@(@Model.txtAssestmentplan ?? "The patient is currently _____% and temporarily _____ partially/totally disabled.")</textarea>
             </div>
         </div>
@@ -216,7 +216,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtExaminedResult">@Model.txtExaminedResult</textarea>
             </div>
         </div>
@@ -228,7 +228,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtDefault">@Model.txtDefault</textarea>
             </div>
         </div>
@@ -241,7 +241,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsPreop" style="height: fit-content;">
                 <textarea id="txtNote">@Model.txtNote</textarea>
             </div>
         </div>
@@ -265,7 +265,7 @@
 
 <script>
 
-    var txtHistoryPresentillness, txtpresentcomplain, txtPastMedicalHistory, txtpastsurgicalhistory, txtdailyMedications, txtAllergies, txtSocialHistory, txtPhysicalExamination, txtDiagnosticImaging, txtAssestmentplan, txtExaminedResult, txtDefault, txtNote,txtPresentillness,txtFamilyHistory,txtSH;
+    var txtHistoryPresentillness, txtpresentcomplain, txtPastMedicalHistory, txtpastsurgicalhistory, txtdailyMedications, txtAllergies, txtSocialHistory, txtPhysicalExamination, txtDiagnosticImaging, txtAssestmentplan, txtExaminedResult, txtDefault, txtNote, txtPresentillness, txtFamilyHistory, txtSH;
 
 
 
@@ -384,7 +384,7 @@
             window.editor = editor;
             txtAllergies = editor;  // declare the name of the text box which need to send for saving further
         }).catch(handleSampleError);
-         ClassicEditor.create(document.querySelector('#txtFamilyHistory'), {
+        ClassicEditor.create(document.querySelector('#txtFamilyHistory'), {
             mention: {
                 feeds: [
                     {
@@ -399,7 +399,7 @@
             window.editor = editor;
             txtFamilyHistory = editor;  // declare the name of the text box which need to send for saving further
         }).catch(handleSampleError);
-         ClassicEditor.create(document.querySelector('#txtSH'), {
+        ClassicEditor.create(document.querySelector('#txtSH'), {
             mention: {
                 feeds: [
                     {
@@ -645,9 +645,9 @@
                         selectedbodypart = $("#SelectedBodyParthidden").val();
 
 
-                       var DummyDOE = $("#hddoe").val();
+                        var DummyDOE = $("#hddoe").val();
                         // Split the date string into month, day, and year
-                        var dateParts = DummyDOE.split('/'); 
+                        var dateParts = DummyDOE.split('/');
 
                         // Create a new Date object using the split parts
                         var dateObj = new Date(dateParts[2], dateParts[0] - 1, dateParts[1]); // Month is 0-indexed
@@ -660,7 +660,7 @@
                         });
                         var DOE = formattedDate;
                         var DOA = $("#hddoa").val();
-                        
+
                         var Gender = $("#hdgender").val();
                         var CASETYPE = $("#hdcasetype").val();
                         var casetype1 = "";
@@ -696,7 +696,7 @@
 
                         $('#txtNote').val(Note);
                         txtNote.data.set(Note);
-                       
+
                     },
                     error: function (xhr, status, error) {
                         alert("Error!" + xhr.status);

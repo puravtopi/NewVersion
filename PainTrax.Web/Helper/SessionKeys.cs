@@ -27,6 +27,8 @@
         public static string SessionHeaderTemplate = "headerTemplate";
         public static string SessionFontFamily = "fontfamily";
         public static string SessionFontSize = "fontsize";
+        public static string SessionPreop = "preop";
+        public static string SessionPostop = "postop";
 
         public static string Sessiondldoe = "dldoe";
         public static string Sessiondldlloc = "dlloc";

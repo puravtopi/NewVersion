@@ -16,5 +16,7 @@
         public string header_template_hidden { get; set; }
         public string font_family { get; set; }
         public string font_size { get; set; }        
+        public bool show_preop { get; set; }        
+        public bool show_postop { get; set; }        
     }
 }

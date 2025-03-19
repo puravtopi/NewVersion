@@ -90,11 +90,20 @@
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link " id="page1-tab" data-bs-target="#bordered-profile" role="tab" aria-controls="profile" aria-selected="false">SOAP</a>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <a class="nav-link " id="preop-tab" style="display:none;" data-bs-target="#bordered-preop" role="tab" aria-controls="profile" aria-selected="false">PreOP</a>
-                                    </li>
+                                    @if (Convert.ToBoolean(HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionPreop)))
+                                    {
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link " id="page1-tab" data-bs-target="#bordered-preop" role="tab" aria-controls="profile" aria-selected="false">PreOP</a>
+                                        </li>
+                                    }
+                                    @if (Convert.ToBoolean(HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionPostop)))
+                                    {
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link " id="postop-tab" data-bs-target="#bordered-postop" role="tab" aria-controls="profile" aria-selected="false">PostOP</a>
+                                        </li>
+                                    }
                                      <li class="nav-item" role="presentation">
-                                        <a class="nav-link " id="postop-tab" style="display:none;" data-bs-target="#bordered-postop" role="tab" aria-controls="profile" aria-selected="false">PostOP</a>
+                                        
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="page2-tab" data-bs-target="#bordered-contact" role="tab" aria-controls="contact" aria-selected="false">Page2</a>

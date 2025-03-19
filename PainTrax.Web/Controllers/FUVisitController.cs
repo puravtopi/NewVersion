@@ -3622,7 +3622,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagleftshoulder_text))
                     {
-                        strDaignosis = strDaignosis + " of the left shoulder:  " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the left shoulder " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -3644,7 +3644,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagrightshoulder_text))
                     {
-                        strDaignosis = strDaignosis + " of the right shoulder:  " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the right shoulder " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -3664,7 +3664,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagleftknee_text))
                     {
-                        strDaignosis = strDaignosis + " of the left knee:  " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the left knee " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -3684,7 +3684,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagrightknee_text))
                     {
-                        strDaignosis = strDaignosis + " of the right knee:  " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the right knee " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -4006,7 +4006,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagrightshoulder_text))
                     {
-                        strDaignosis = strDaignosis + " of the right shoulder:  " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the right shoulder " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -4028,7 +4028,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagleftknee_text))
                     {
-                        strDaignosis = strDaignosis + " of the left knee:  " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the left knee " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -4048,7 +4048,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagrightknee_text))
                     {
-                        strDaignosis = strDaignosis + " of the right knee:  " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the right knee " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {

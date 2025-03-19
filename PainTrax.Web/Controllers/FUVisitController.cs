@@ -32,6 +32,7 @@ namespace PainTrax.Web.Controllers
         private readonly PatientFUService _patientFuservices = new PatientFUService();
         private readonly FUPage1Service _fuPage1services = new FUPage1Service();
         private readonly FUPreService _fuPreservices = new FUPreService();
+        private readonly FUPostService _fuPostService = new FUPostService();
 
 
         private readonly FUPage2Service _fuPage2services = new FUPage2Service();
@@ -258,6 +259,16 @@ namespace PainTrax.Web.Controllers
                         obj.pre = preDatadef;
 
                     }
+
+                    // for post op start
+                    var postData = _fuPostService.GetOne(patientFUId);
+                    if (postData != null)
+                    {
+                        var postData1 = _mapper.Map<tbl_post>(postData);
+                        obj.post = postData1;
+                    }
+                    else
+                        obj.post = new tbl_post();
 
 
                     var page2Data = _fuPage2services.GetOne(patientFUId);
@@ -509,7 +520,15 @@ namespace PainTrax.Web.Controllers
                     obj.pre = preDatadef;
 
                     // preop end.
-
+                    var postData = _fuPostService.GetOne(patientFUId);
+                    if (postData != null)
+                    {
+                        var postData1 = _mapper.Map<tbl_post>(postData);
+                        obj.post = postData1;
+                    }
+                    else
+                        obj.post = new tbl_post();
+                    
 
 
 
@@ -611,6 +630,7 @@ namespace PainTrax.Web.Controllers
                     obj.id = 0;
                     obj.Page1 = new tbl_ie_page1();
                     obj.Page2 = new tbl_ie_page2();
+                    obj.post = new tbl_post();
                     obj.Page3 = new tbl_ie_page3();
                     obj.NE = new tbl_ie_ne();
                     obj.Comment = new tbl_ie_comment();
@@ -987,6 +1007,32 @@ namespace PainTrax.Web.Controllers
             catch (Exception ex)
             {
                 SaveLog(ex, "SavePage1");
+            }
+            return Json(1);
+        }
+        [HttpPost]
+        public IActionResult SavePost(tbl_post model)
+        {
+            try
+            {
+                //int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                //model.cmp_id = cmpid;
+
+                var obj = _fuPostService.GetOne(model.PatientFU_ID.Value);
+                if (Convert.ToBoolean(model.chkLeftShoulder.Value) || Convert.ToBoolean(model.chkRightShoulder.Value) || Convert.ToBoolean(model.chkLeftKnee.Value) || Convert.ToBoolean(model.chkRightKnee.Value))
+                {
+                    if (obj != null)
+                    {
+                        model.id = obj.id;
+                        _fuPostService.Update(model);
+                    }
+                    else
+                        _fuPostService.Insert(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "SavePost");
             }
             return Json(1);
         }
@@ -2139,7 +2185,7 @@ namespace PainTrax.Web.Controllers
                 //Presentillness = Presentillness.Replace("#ProviderName", Common.commonDate(patientData.doa));
                
                 body = body.Replace("#Presentillness", Presentillness);
-                var strDiagnostic = this.getDiagnosticie(ieid, preData);
+                var strDiagnostic = this.getDiagnosticie(ieid,preData);
 
                 if (cmpid != "4")
                 {
@@ -2229,6 +2275,138 @@ namespace PainTrax.Web.Controllers
             catch (Exception ex)
             {
                 SaveLog(ex, "PreOpPrint");
+            }
+            return View();
+        }
+        #endregion
+        #region PostOpPrint
+        public IActionResult PostOpPrint(int ieid, int fuid)
+        {
+            try
+            {
+                string plan = "";
+                ViewBag.url = HttpContext.Request.GetEncodedUrl();
+
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+                string body = string.Empty;
+
+                //using streamreader for reading my htmltemplate   
+
+                var fuData = _patientFuservices.GetOne(fuid);
+
+                tbl_users user = new tbl_users();
+                user.Id = fuData.provider_id;
+                var providerData = _userService.GetOneById(user.Id.Value);
+
+
+                var templateData = _printService.GetTemplate(cmpid, fuData.type);
+                var gender = "";
+
+                body = templateData.content;
+
+                var patientData = _ieService.GetOnebyPatientId(ieid);
+                body = body.Replace("#Physicianhistory", patientData.providerName);
+
+                if (patientData != null)
+                {
+                    gender = Common.GetMrMrsFromSex(patientData.gender);
+
+                    body = body.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
+                    body = body.Replace("#fn", patientData.fname);
+                    body = body.Replace("#ln", patientData.lname);
+                    body = body.Replace("#dob", Common.commonDate(patientData.dob));
+                    body = body.Replace("#doi", Common.commonDate(patientData.doa));
+                    body = body.Replace("#dos", Common.commonDate(fuData.doe));
+                    //body = body.Replace("#location", patientData.location);
+                    body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
+                    body = body.Replace("#upper_gender", Common.GetGenderFromSex(patientData.gender).First().ToString().ToUpper() + Common.GetGenderFromSex(patientData.gender).Substring(1));
+                    body = body.Replace("#gender", Common.GetGenderFromSex(patientData.gender));
+                    body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
+                    body = body.Replace("#acctno", patientData.account_no);
+                    body = body.Replace("#CASETYPE", patientData.accidentType);
+                }
+
+                //header printing
+
+                var locData = _locService.GetAll(" and id=" + fuData.location_id);
+
+                if (locData != null && locData.Count > 0)
+                {
+                    body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
+                    body = body.Replace("#address", locData[0].address);
+                    //body = body.Replace("#Address", locData[0].address);
+                    body = body.Replace("#Address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
+                    body = body.Replace("#location", locData[0].location);
+                    body = body.Replace("#Nameofpractice", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
+                    body = body.Replace("#Phone", locData[0].telephone);
+                }
+                //Preop printing
+
+                var postData = _fuPostService.GetOne(fuid);           
+
+                
+
+                
+                
+                if (postData != null)
+                {
+                    body = body.Replace("#CC", string.IsNullOrEmpty(postData.txtHistoryPresentillness) ? "" : this.removePtag(postData.txtHistoryPresentillness));
+                    
+                    body = body.Replace("#PhysicalExamination", string.IsNullOrEmpty(postData.txtPhysicalExamination) ? "" : this.removePtag(postData.txtPhysicalExamination));                   
+                    body = body.Replace("#TREATMENT", string.IsNullOrEmpty(postData.txtExaminedResult) ? "" : this.removePtag(postData.txtExaminedResult));
+                   
+                    ViewBag.ieId = patientData.id;
+                    ViewBag.fuId = fuid;
+                    ViewBag.locId = patientData.location_id;
+
+
+                    string signName = "";
+                    int signUserId = 0;
+
+                    int? providorId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
+
+                    if (providerData.Id != null)
+                    {
+                        signUserId = providerData.Id.Value;
+                    }
+                    else if (providorId != null)
+                    {
+                        signUserId = providorId.Value;
+                    }
+
+                    if (signUserId > 0)
+                    {
+                        tbl_users _user = new tbl_users()
+                        {
+                            Id = signUserId
+                        };
+                        var userData = _userService.GetOne(_user);
+                        signName = userData.signature;
+
+                        if (!string.IsNullOrEmpty(signName))
+                        {
+                            string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
+                            //string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
+                            string base64Image = ImageToBase64(Environment.WebRootPath + signatureUrl);
+                            body = body.Replace("#Sign", $" <img src='data:image/jpg;base64,{base64Image}' alt='My Image' />");
+                            // body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
+                        }
+                        else
+                            body = body.Replace("#Sign", "");
+
+                        body = body.Replace("#Physician", providerData.providername);
+
+                        body = body.Replace("#ProviderName", providerData.providername);
+                        body = body.Replace("#AssProviderName", providerData.assistant_providername);
+                    }
+                    else
+                        body = body.Replace("#Sign", "");
+                }
+                ViewBag.content = body;
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "PostOpPrint");
             }
             return View();
         }
@@ -2760,6 +2938,21 @@ namespace PainTrax.Web.Controllers
                     else
                     {
                         docName = patientData.lname + "," + patientData.fname + "_PreOP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                    }
+                }
+                else if (fuData.type == "Postop FU")
+                {
+                    if (patientData.doa == null)
+                    {
+                        docName = patientData.lname + "," + patientData.fname + "_POP_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
+                    }
+                    else if (patientData.account_no != null)
+                    {
+                        docName = patientData.lname + "," + patientData.fname + "_POP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                    }
+                    else
+                    {
+                        docName = patientData.lname + "," + patientData.fname + "_POP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
                     }
                 }
                 else
@@ -3610,6 +3803,7 @@ namespace PainTrax.Web.Controllers
                 }
 
                 if (data.diagleftshoulder_date != null && pre.chkLeftShoulder == true)
+                if (data.diagleftshoulder_date != null  && pre.chkLeftShoulder == true)
                 {
 
                     strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftshoulder_date.Value.ToString("MM/dd/yyyy") + " - ";

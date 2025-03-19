@@ -1,4 +1,6 @@
-﻿@model PainTrax.Web.ViewModel.VisitVM
+﻿@inject IHttpContextAccessor HttpContextAccessor
+@using PainTrax.Web.Helper;
+@model PainTrax.Web.ViewModel.VisitVM
 @{
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -132,15 +134,15 @@
                                             <a href="@Url.Action("FUPrint","FUVisit")?ieid=@Model.id&fuid=@Model.fu_id" target="_new" class="btn btn-success bi bi-printer" style="float:right;"></a>
                                         }
 
-                                        
+
                                     }
-                                  }&nbsp; &nbsp;
+                                }&nbsp; &nbsp;
                                 <button type="button" id="btnSaveAll" class="btn btn-secondary bi bi-floppy" onclick="fnSave()" style="margin-right:4px; margin-left:4px; float:right;">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
                                         <path d="M11 2H9v3h2z"></path>
                                         <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"></path>
                                     </svg>
-                                </button>    
+                                </button>
                                 <a id="printButtonSOAP" name="printButtonSOAP" onclick="DownloadPdf(@Model.patientid  ,'@Model.fname','@Model.lname')" href="#" class="btn btn-warning bi bi-printer" title="Print Demo" style="float:right;display:block"></a> &nbsp; &nbsp;
                             </div>
                             <div class="clearfix"></div>
@@ -638,9 +640,13 @@
                                     </div>
 
                                     @* PreOP Start *@
-                                    <div class="tab-pane fade" id="bordered-preop" role="tabpanel" aria-labelledby="profile-tab">
-                                        @Html.Partial("_PreOP", Model.pre)
-                                    </div>
+                                    @if (Convert.ToBoolean(HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionPreop)))
+                                    {
+                                        <div class="tab-pane fade" id="bordered-preop" role="tabpanel" aria-labelledby="profile-tab">
+                                            @Html.Partial("_PreOP", Model.pre)
+                                        </div>
+                                    }
+
                                     @* PreOP End *@
                                      @* PostOP Start *@
                                     <div class="tab-pane fade" id="bordered-postop" role="tabpanel" aria-labelledby="profile-tab">
@@ -814,7 +820,7 @@
 
                             </div>
 
-                             <div class="row mb-3">
+                            <div class="row mb-3">
                                 <label class="col-sm-4 ">
                                     <b> Body Part</b>
                                 </label>
@@ -1007,7 +1013,7 @@
     var _ccitems = ('@ViewBag.ccmacroList').replace(/&quot;/ig, '"');
     const ccitems = JSON.parse(_ccitems.replace(/[\n\r]/g, '\\n'));
 
-   
+
     function getCCFeedItems(queryText) {
 
         // As an example of an asynchronous action, return a promise
@@ -1206,11 +1212,11 @@
         e.preventDefault();
         var t = this;
 
-          var selectedTabId = $(this).attr('id');
-         if(selectedTabId==='home-tab')
+        var selectedTabId = $(this).attr('id');
+        if (selectedTabId === 'home-tab')
             $('#printButtonSOAP').show();
         else
-              $('#printButtonSOAP').hide();
+            $('#printButtonSOAP').hide();
 
         if (id === "bordered-home") {
 
@@ -1297,7 +1303,7 @@
             "fu_id": $("#hdFUId").val(),
             "patientid": $("#patientid").val(),
             "locationid": $("#locationid").val(),
-            "providerid":$("#providerid").val(),
+            "providerid": $("#providerid").val(),
             "dos": $("#hdDOS").val(),
             "dov": $("#dov").val(),
             "doa": $("#doa").val(),
@@ -1344,7 +1350,7 @@
             "alert_note": $("#alert_note").val(),
             "physicianid": $("#physicianid").val(),
             "type": '@ViewBag.type',
-            "accidentType":$("#accidentType").val()
+            "accidentType": $("#accidentType").val()
         }
 
 
@@ -1429,7 +1435,7 @@
     }
 
     function fnShowPOCSummary() {
-         // var url = '@Url.Action("POCSummary", "FUVisit")?patientFUId=' + $("#hdFUId").val();
+        // var url = '@Url.Action("POCSummary", "FUVisit")?patientFUId=' + $("#hdFUId").val();
         var url = '@Url.Action("POCSummary", "FUVisit")?patientFUId=' + $("#hdIEId").val();
 
         $.ajax({
@@ -1451,7 +1457,7 @@
         $('#pdCT').text($("#compensation option:selected").text());
         $('#pdLoc').text($("#locationid option:selected").text());
         $('#pdDOS').text(fngetAGE($("#dov").val()));
-       
+
         $('#pdDOA').text(fngetAGE($("#doa").val()));
         $('#pdGender').text($("#gender option:selected").text());
 
@@ -1667,7 +1673,7 @@
         }, 1500));
     }
 
-     /* New Function in Script*/
+    /* New Function in Script*/
     function DownloadPdf(id, fname, lname) {
         var downloadurl = '@Url.Action("GeneratePdf", "Forms")';
         //alert(fname);

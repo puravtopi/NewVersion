@@ -59,7 +59,9 @@ isdaignosisshow=@isdaignosisshow,
       header_template=@header_template,
 notfoundStatment=@notfoundStatment,
 font_family=@font_family,
-font_size=@font_size
+font_size=@font_size,
+show_preop=@show_preop,
+show_postop=@show_postop
 			where cmp_id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.cmp_id);
             cm.Parameters.AddWithValue("@page_size", data.page_size);
@@ -73,6 +75,8 @@ font_size=@font_size
             cm.Parameters.AddWithValue("@header_template", data.header_template);
             cm.Parameters.AddWithValue("@font_family", data.font_family);
             cm.Parameters.AddWithValue("@font_size", data.font_size);
+            cm.Parameters.AddWithValue("@show_preop", data.show_preop);
+            cm.Parameters.AddWithValue("@show_postop", data.show_postop);
 
             Execute(cm);
         }

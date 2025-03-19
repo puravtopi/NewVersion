@@ -119,6 +119,8 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionDaignosisNotFoundStatment, setting.notfoundStatment == null ? "" : setting.notfoundStatment);
                         HttpContext.Session.SetString(SessionKeys.SessionInjectionAsSeparateBlock, setting.injectionAsSeparateBlock.ToString().ToLower());
                         HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, string.IsNullOrEmpty(setting.header_template) ? "" : setting.header_template.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionPostop, setting.show_postop==null ? "true" : setting.show_postop.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionPreop, setting.show_preop == null ? "true" : setting.show_preop.ToString());
 
 
                     }
@@ -130,6 +132,8 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionPageBreak, "false");
                         HttpContext.Session.SetString(SessionKeys.SessionIsDaignosis, "false");
                         HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, "");
+                        HttpContext.Session.SetString(SessionKeys.SessionPreop, "true");
+                        HttpContext.Session.SetString(SessionKeys.SessionPostop, "true");
 
 
                     }

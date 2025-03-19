@@ -785,7 +785,8 @@
 
     <script>
         function checkSession() {
-            fetch('/Home/CheckSession') // Change to your controller path
+            var url = '@Url.Action("CheckSession", "Home")';
+            fetch(url) // Change to your controller path
                 .then(response => response.json())
                 .then(data => {
                     if (data.sessionExpired) {

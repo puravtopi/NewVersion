@@ -110,6 +110,24 @@
                                         </div>
                                     </div>
                                     <div class="row mb-3">
+                                        <label for="title" asp-for="show_preop" class="col-md-4 col-lg-3 col-form-label">Show PreOp</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="show_preop">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="show_postop" class="col-md-4 col-lg-3 col-form-label">Show PostOp</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="show_postop">
+                                                <option value="true">Yes</option>
+                                                <option value="false">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
                                         <label for="title" asp-for="injectionAsSeparateBlock" class="col-md-4 col-lg-3 col-form-label">Diagnostics Settings</label>
                                         <div class="col-md-1 col-lg-1">
                                             <input type="checkbox" asp-for="isdaignosisshow" />

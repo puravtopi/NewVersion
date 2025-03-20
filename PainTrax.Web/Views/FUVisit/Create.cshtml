@@ -167,14 +167,14 @@
                                                     <!-- Advanced Form Elements -->
 
                                                     <div class="row mb-3">
-                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#location">
                                                             Location
                                                         </label>
                                                         <div class="col-sm-4">
                                                             <select asp-for="locationid" class="form-select" asp-items="@ViewBag.locList" onchange="fnUpdateSidePanel();"></select>
                                                             <span id="error-locationid" style="display:none" class="errorSpan">Please Select Location.</span>
                                                         </div>
-                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#dos">
                                                             DOS.
                                                         </label>
                                                         <div class="col-sm-4">
@@ -182,13 +182,13 @@
                                                         </div>
                                                     </div>
                                                     <div class="row mb-3">
-                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#doi">
                                                             DOA.
                                                         </label>
                                                         <div class="col-sm-4">
                                                             <input type="date" asp-for="doa" class="form-control" onchange="fnUpdateSidePanel();" />
                                                         </div>
-                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#CT">
                                                             Case Type
                                                         </label>
                                                         <div class="col-sm-4">
@@ -231,12 +231,12 @@
                                                     <!-- General Form Elements -->
 
                                                     <div class="row mb-3">
-                                                        <label for="inputText" class="col-sm-2 col-form-label">Last Name</label>
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#ln">Last Name</label>
                                                         <div class="col-sm-4">
                                                             <input type="text" class="form-control" asp-for="lname" onchange="fnCheckPatientNameOnly();fnUpdateSidePanel()">
                                                             <span id="error-lname" style="display:none" class="errorSpan">Please Enter Last Name.</span>
                                                         </div>
-                                                        <label for="inputText" class="col-sm-2 col-form-label">First Name</label>
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#fn">First Name</label>
                                                         <div class="col-sm-4">
                                                             <input type="text" class="form-control" asp-for="fname" onchange="fnCheckPatientNameOnly();fnUpdateSidePanel();">
                                                             <span id="error-fname" style="display:none" class="errorSpan">Please Enter First Name.</span>
@@ -248,7 +248,7 @@
                                                         <div class="col-sm-4">
                                                             <input type="text" class="form-control" asp-for="mname" onchange="fnCheckPatientNameOnly();fnUpdateSidePanel();">
                                                         </div>
-                                                        <label for="inputText" class="col-sm-2 col-form-label">Sex</label>
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#gender">Sex</label>
                                                         <div class="col-sm-4">
                                                             <select asp-for="gender" class="form-select" onchange="fnUpdateSidePanel();" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.Gender>()"></select>
                                                         </div>
@@ -256,7 +256,7 @@
 
                                                     </div>
                                                     <div class="row mb-3">
-                                                        <label for="inputText" class="col-sm-2 col-form-label">DOB</label>
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#dob">DOB</label>
                                                         <div class="col-sm-4">
                                                             <input type="date" class="form-control" asp-for="dob" onchange="fnUpdateSidePanel();">
                                                             <span id="error-dob" style="display:none" class="errorSpan">Please Enter DOB.</span>

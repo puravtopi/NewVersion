@@ -151,7 +151,7 @@ namespace PainTrax.Web.Controllers
                 }
                 else
                 {
-                    model.signature = model.signature_hidden;
+                    model.signature = model.signature;
                 }
                 _services.Update(model);
             }

@@ -1461,7 +1461,7 @@ namespace PainTrax.Web.Controllers
                                             string date1 = string.Empty;
                                             if (!string.IsNullOrEmpty(Convert.ToString(row[17])))
                                             { date1 = Convert.ToDateTime(row[17]).ToString("MM/dd/yy").Replace('-', '/'); }
-
+                                            
 
                                             StringBuilder notify = new StringBuilder();
                                             if (!string.IsNullOrEmpty(Convert.ToString(row[12])))
@@ -2301,9 +2301,9 @@ namespace PainTrax.Web.Controllers
 
                 var templateData = _printService.GetTemplate(cmpid, fuData.type);
                 var gender = "";
-
+                var postData = _fuPostService.GetOne(fuid);
                 body = templateData.content;
-
+                var data = getPOCDate(fuid, ieid);
                 var patientData = _ieService.GetOnebyPatientId(ieid);
                 body = body.Replace("#Physicianhistory", patientData.providerName);
 
@@ -2342,7 +2342,7 @@ namespace PainTrax.Web.Controllers
                 }
                 //Preop printing
 
-                var postData = _fuPostService.GetOne(fuid);           
+                        
 
                 
 
@@ -2350,11 +2350,17 @@ namespace PainTrax.Web.Controllers
                 
                 if (postData != null)
                 {
-                    body = body.Replace("#CC", string.IsNullOrEmpty(postData.txtHistoryPresentillness) ? "" : this.removePtag(postData.txtHistoryPresentillness));
+                    var CC = string.IsNullOrEmpty(postData.txtHistoryPresentillness) ? "" : postData.txtHistoryPresentillness;
+
+                    CC = CC.Replace("#dos", data);
+
+
+                    body = body.Replace("#CC", CC);
+                    //body = body.Replace("#CC", string.IsNullOrEmpty(postData.txtHistoryPresentillness) ? "" : this.removePtag(postData.txtHistoryPresentillness));
                     
                     body = body.Replace("#PhysicalExamination", string.IsNullOrEmpty(postData.txtPhysicalExamination) ? "" : this.removePtag(postData.txtPhysicalExamination));                   
                     body = body.Replace("#TREATMENT", string.IsNullOrEmpty(postData.txtExaminedResult) ? "" : this.removePtag(postData.txtExaminedResult));
-                   
+                    
                     ViewBag.ieId = patientData.id;
                     ViewBag.fuId = fuid;
                     ViewBag.locId = patientData.location_id;
@@ -3661,6 +3667,69 @@ namespace PainTrax.Web.Controllers
             };
 
             return pocDetails;
+        }
+        private string getPOCDate(int fuid,int ieId)
+        {
+            string potion = null;
+            string iinew = string.Empty;
+            string test = "";
+            var postData = _fuPostService.GetOne(fuid);
+            if(postData != null)
+            {
+                if(postData.chkLeftKnee == true)
+                {
+                    potion = "Left";
+                    iinew = "knee";
+                }
+                else if (postData.chkRightKnee == true)
+                {
+                    potion = "Right";
+                    iinew = "knee";
+                }
+                else if (postData.chkLeftShoulder == true)
+                {
+                    potion = "Left";
+                    iinew = "shoulder";
+                }
+                else
+                {
+                    potion = "Right";
+                    iinew = "shoulder";
+                }
+            }
+                
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                //var x = _pocService.GetAllProceduresFU(iinew.Trim(), patientFUId, potion, cmpid.Value); //commented by moulick as all poc required so specific visit wise poc cancled. 
+                var x = _pocService.GetAllProcedures(iinew.Trim(), ieId, potion, cmpid.Value);
+                if (x != null)
+                {
+                    if (x.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in x.Rows)
+                        {
+                           
+                            foreach (DataColumn column in x.Columns)
+                            {
+                                if (column.ColumnName == "Executed")
+                                {
+                                    test = Convert.ToDateTime(row[17]).ToString("MM/dd/yyyy").Replace('-', '/');
+                                }
+                            }
+                        }
+                    }
+                }
+                        //var x = _pocService.GetAllProcedures(iinew.Trim(), patientIEId, potion);
+
+                        //if (x != null)
+                        //{
+                        //    if (x.Rows.Count > 0)
+                        //    {
+                        //        ViewBag.executeddate = Convert.ToDateTime(row[17]).ToString("MM/dd/yyyy").Replace('-', '/');
+
+                        //    }
+                        //}
+                    
+            return test;
         }
         private string getDiagnosticie(int id, tbl_pre pre)
         {

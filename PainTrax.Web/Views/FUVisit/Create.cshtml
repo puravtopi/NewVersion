@@ -90,12 +90,21 @@
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link " id="page1-tab" data-bs-target="#bordered-profile" role="tab" aria-controls="profile" aria-selected="false">SOAP</a>
                                     </li>
-                                     @if (Convert.ToBoolean(HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionPreop)))
+                                    @if (Convert.ToBoolean(HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionPreop)))
                                     {
                                         <li class="nav-item" role="presentation">
                                             <a class="nav-link " id="page1-tab" data-bs-target="#bordered-preop" role="tab" aria-controls="profile" aria-selected="false">PreOP</a>
                                         </li>
                                     }
+                                    @if (Convert.ToBoolean(HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionPostop)))
+                                    {
+                                        <li class="nav-item" role="presentation">
+                                            <a class="nav-link " id="postop-tab" data-bs-target="#bordered-postop" role="tab" aria-controls="profile" aria-selected="false">PostOP</a>
+                                        </li>
+                                    }
+                                     <li class="nav-item" role="presentation">
+                                        
+                                    </li>
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="page2-tab" data-bs-target="#bordered-contact" role="tab" aria-controls="contact" aria-selected="false">Page2</a>
                                     </li>
@@ -124,6 +133,10 @@
                                         if (Model.type == "Preop H and P")
                                         {
                                             <a href="@Url.Action("PreOpPrint","FUVisit")?ieid=@Model.id&fuid=@Model.fu_id" target="_new" class="btn btn-success bi bi-printer" style="float:right;"></a>
+                                        }
+                                        else if (Model.type == "Postop FU")
+                                        {
+                                            <a href="@Url.Action("PostOpPrint","FUVisit")?ieid=@Model.id&fuid=@Model.fu_id" target="_new" class="btn btn-success bi bi-printer" style="float:right;"></a>
                                         }
                                         else
                                         {
@@ -644,6 +657,11 @@
                                     }
 
                                     @* PreOP End *@
+                                     @* PostOP Start *@
+                                    <div class="tab-pane fade" id="bordered-postop" role="tabpanel" aria-labelledby="profile-tab">
+                                        @Html.Partial("_PostOP", Model.post)
+                                    </div>
+                                    @* PostOP End *@
 
                                     <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
                                         @Html.Partial("_Page2", Model.Page2)
@@ -1067,10 +1085,23 @@
 
 </script>
 
+
 <script>
 
     $(document).ready(function () {
+        debugger;
+        // Razor syntax to inject the model value into JavaScript
+        var condition = '@Model.type';  // Ensure that this is output as a string
 
+        // Check the condition and show the corresponding tab
+        if (condition === "Preop H and P") {
+            
+            document.getElementById('preop-tab').style.display = 'block';
+        } else if (condition === "Postop FU") {
+            
+            document.getElementById('postop-tab').style.display = 'block';
+           
+        }
 
 
         $("body").addClass("toggle-sidebar");
@@ -1162,6 +1193,10 @@
             else if (id === "bordered-preop") {
                 fnPreOPSave(null);
             }
+            else if (id === "bordered-postop") {
+                fnPostOPSave(null);
+            }
+           
             else if (id === "bordered-contact") {
                 fnPage2Save(null);
             }
@@ -1241,6 +1276,9 @@
         }
         else if (id === "bordered-preop") {
             fnPreOPSave(t);
+        }
+        else if (id === "bordered-postop") {
+            fnPostOPSave(t);
         }
         else if (id === "bordered-contact") {
             fnPage2Save(t);

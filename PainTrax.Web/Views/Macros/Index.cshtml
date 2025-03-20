@@ -27,6 +27,7 @@
                                <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcel" asp-controller="Macros">Export</a>
                                 <button class="btn btn-secondary" style="float:right;margin-left:10px" onclick="fndownalodSample()">DownLoad Sample</button>                                
                                 <a class="btn btn-success" style="float:right;margin-left:10px" asp-action="Create" asp-controller="Macros">Add New</a>
+                                <a class="btn btn-success" style="float:right;margin-left:10px" asp-action="CreatePostOP" asp-controller="Macros">Add New Post Op</a>
                                 <a class="btn btn-success" style="float:right" asp-action="CreatePreOP" asp-controller="Macros">Add New Pre Op</a>
                             </div>
                         </div>
@@ -101,6 +102,7 @@
             var url = '@Url.Action("List","Macros")';
             var editurl = '@Url.Action("Edit","Macros")';
             var editurlPreOP = '@Url.Action("EditPreOP", "Macros")';
+            var editurlPostOP = '@Url.Action("EditPostOP", "Macros")';
             var deleteurl = '@Url.Action("Delete","Macros")';
 
             $("#tbl").DataTable({
@@ -132,6 +134,10 @@
                             debugger;
                             if (full.bodypart.indexOf("PreOP") !== -1) {
                                 index = '<a href="' + editurlPreOP + '/' + full.id + '"><i class="ri-edit-line"  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'
+                                index += '<a href="' + deleteurl + '/' + full.id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+                            }
+                            else if (full.bodypart.indexOf("PostOP") !== -1) {
+                                index = '<a href="' + editurlPostOP + '/' + full.id + '"><i class="ri-edit-line"  data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'
                                 index += '<a href="' + deleteurl + '/' + full.id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
                             }
                             else {

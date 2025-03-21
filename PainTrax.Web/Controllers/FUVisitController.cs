@@ -3714,8 +3714,10 @@ namespace PainTrax.Web.Controllers
                                 {
                                 if (row[17] != DBNull.Value)
                                 {
-                                    test = Convert.ToDateTime(row[17]).ToString("MM/dd/yyyy").Replace('-', '/');
+                                    test = row[17] != DBNull.Value ? Convert.ToDateTime(row[17]).ToString("MM/dd/yyyy").Replace('-', '/') : string.Empty;
                                 }
+                                
+                            }
                             }
                         }
                     }

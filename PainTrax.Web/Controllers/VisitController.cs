@@ -3317,14 +3317,14 @@ namespace PainTrax.Web.Controllers
                     if (firstHeader != null)
                     {
                         headerPart.FeedData(firstHeader.GetStream());
-                    }
+                }
                 }
 
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
                 var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
                 restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
-                if (cmpid == 7)
+                if (cmpid == 7 || cmpid == 13)
                 {
                     if (!string.IsNullOrEmpty(dos))
                     {
@@ -3332,7 +3332,11 @@ namespace PainTrax.Web.Controllers
                         restheaderPart.Header = CreateHeaderWithPageNumber(patientName, _dos);
                     }
                 }
+                else
+                {
 
+                    restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
+                }
 
 
                 //  restheaderPart.Header = new Header(new Paragraph("Purav\nSandip"));

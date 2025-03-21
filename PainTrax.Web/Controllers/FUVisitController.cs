@@ -3712,6 +3712,8 @@ namespace PainTrax.Web.Controllers
                             {
                                 if (column.ColumnName == "Executed")
                                 {
+                                if (row[17] != DBNull.Value)
+                                {
                                     test = Convert.ToDateTime(row[17]).ToString("MM/dd/yyyy").Replace('-', '/');
                                 }
                             }

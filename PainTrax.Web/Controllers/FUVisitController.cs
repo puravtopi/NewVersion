@@ -3168,13 +3168,18 @@ namespace PainTrax.Web.Controllers
 
                 var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
                 restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
-                if (cmpid == 7)
+                if (cmpid == 7 || cmpid == 13)
                 {
                     if (!string.IsNullOrEmpty(dos))
                     {
                         string _dos = Common.commonDate(Convert.ToDateTime(dos), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
                         restheaderPart.Header = CreateHeaderWithPageNumber(patientName, _dos);
                     }
+                }
+                else
+                {
+
+                    restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
                 }
 
 

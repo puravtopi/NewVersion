@@ -20,6 +20,7 @@ using HtmlToOpenXml;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 using MailKit;
+using System.Net;
 
 namespace PainTrax.Web.Controllers
 {
@@ -2316,7 +2317,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#ln", patientData.lname);
                     body = body.Replace("#dob", Common.commonDate(patientData.dob));
                     body = body.Replace("#doi", Common.commonDate(patientData.doa));
-                    body = body.Replace("#dos", Common.commonDate(fuData.doe));
+                    body = body.Replace("#dos", Common.commonDate(Convert.ToDateTime(fuData.doe), HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
                     //body = body.Replace("#location", patientData.location);
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
                     body = body.Replace("#upper_gender", Common.GetGenderFromSex(patientData.gender).First().ToString().ToUpper() + Common.GetGenderFromSex(patientData.gender).Substring(1));
@@ -2402,7 +2403,7 @@ namespace PainTrax.Web.Controllers
 
                         body = body.Replace("#Physician", providerData.providername);
 
-                        body = body.Replace("#ProviderName", providerData.providername);
+                        body = body.Replace("#ProviderName", providerData.providername.ToUpper());
                         body = body.Replace("#AssProviderName", providerData.assistant_providername);
                     }
                     else
@@ -2981,7 +2982,7 @@ namespace PainTrax.Web.Controllers
 
                 patientName = patientData.lname + ", " + patientData.fname;
 
-                dos = patientData.doe == null ? "" : patientData.doe.Value.ToShortDateString();
+                dos = fuData.doe == null ? "" : fuData.doe.Value.ToShortDateString();
 
                 string subPath = "Report/" + cmpid; // Your code goes here
 

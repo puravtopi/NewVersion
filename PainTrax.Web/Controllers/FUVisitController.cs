@@ -2021,8 +2021,17 @@ namespace PainTrax.Web.Controllers
 
 
         [HttpPost]
-        public IActionResult GetDaignoCodeList(string bodyparts)
+        public IActionResult GetDaignoCodeList(string bodyparts, int fuId)
         {
+
+            var page1Data = _fuPage1services.GetOne(fuId);
+
+            string assetment = "";
+
+            if (page1Data != null)
+                assetment = page1Data.assessment;
+
+
             bodyparts = bodyparts.Replace("_", " ");
             ViewBag.BodyPart = bodyparts.ToUpper();
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
@@ -2038,7 +2047,7 @@ namespace PainTrax.Web.Controllers
                               DaignoCodeId = c.Id.Value,
                               Description = c.Description,
                               DiagCode = c.DiagCode,
-                              IsSelect = c.PreSelect,
+                              IsSelect = assetment != null ? (assetment.IndexOf(c.Description) > 0 ? true : c.PreSelect) : false,
                               Display_Order = c.display_order,
                               cmp_id = c.cmp_id
 

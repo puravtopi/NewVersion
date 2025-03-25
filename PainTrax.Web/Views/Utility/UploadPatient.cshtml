@@ -100,8 +100,26 @@
         </div>
     </section>
 </main><!-- End #main -->
-@if (TempData["msg"] != null)
-    @Html.Raw(TempData["msg"])
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+             $(document).ready(function () {
+                 var mess='@ViewBag.Message';
+                 if(mess!='' && mess!=undefined){
+                       $('#myModalMessage').modal('show');
+                       $('#messBody').html('<p>'+mess+'</p>');
+
+                       autoclosepopup();
+                 }
+             })
+
+
+             function autoclosepopup() {
+        $('#myModalMessage').data('hideInterval', setTimeout(function () {
+            $('#myModalMessage').modal('hide');
+        }, 1500));
+    }
+
+</script>
 
 
 @section Scripts {

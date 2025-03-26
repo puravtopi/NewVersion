@@ -19,7 +19,8 @@ using DocumentFormat.OpenXml;
 using HtmlToOpenXml;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
-
+using MailKit;
+using System.Net;
 
 namespace PainTrax.Web.Controllers
 {
@@ -1461,7 +1462,7 @@ namespace PainTrax.Web.Controllers
                                             string date1 = string.Empty;
                                             if (!string.IsNullOrEmpty(Convert.ToString(row[17])))
                                             { date1 = Convert.ToDateTime(row[17]).ToString("MM/dd/yy").Replace('-', '/'); }
-
+                                            
 
                                             StringBuilder notify = new StringBuilder();
                                             if (!string.IsNullOrEmpty(Convert.ToString(row[12])))
@@ -2020,8 +2021,17 @@ namespace PainTrax.Web.Controllers
 
 
         [HttpPost]
-        public IActionResult GetDaignoCodeList(string bodyparts)
+        public IActionResult GetDaignoCodeList(string bodyparts, int fuId)
         {
+
+            var page1Data = _fuPage1services.GetOne(fuId);
+
+            string assetment = "";
+
+            if (page1Data != null)
+                assetment = page1Data.assessment;
+
+
             bodyparts = bodyparts.Replace("_", " ");
             ViewBag.BodyPart = bodyparts.ToUpper();
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
@@ -2037,7 +2047,7 @@ namespace PainTrax.Web.Controllers
                               DaignoCodeId = c.Id.Value,
                               Description = c.Description,
                               DiagCode = c.DiagCode,
-                              IsSelect = c.PreSelect,
+                              IsSelect = assetment != null ? (assetment.IndexOf(c.Description) > 0 ? true : c.PreSelect) : false,
                               Display_Order = c.display_order,
                               cmp_id = c.cmp_id
 
@@ -2301,9 +2311,9 @@ namespace PainTrax.Web.Controllers
 
                 var templateData = _printService.GetTemplate(cmpid, fuData.type);
                 var gender = "";
-
+                var postData = _fuPostService.GetOne(fuid);
                 body = templateData.content;
-
+                var data = getPOCDate(fuid, ieid);
                 var patientData = _ieService.GetOnebyPatientId(ieid);
                 body = body.Replace("#Physicianhistory", patientData.providerName);
 
@@ -2316,7 +2326,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#ln", patientData.lname);
                     body = body.Replace("#dob", Common.commonDate(patientData.dob));
                     body = body.Replace("#doi", Common.commonDate(patientData.doa));
-                    body = body.Replace("#dos", Common.commonDate(fuData.doe));
+                    body = body.Replace("#dos", Common.commonDate(Convert.ToDateTime(fuData.doe), HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
                     //body = body.Replace("#location", patientData.location);
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
                     body = body.Replace("#upper_gender", Common.GetGenderFromSex(patientData.gender).First().ToString().ToUpper() + Common.GetGenderFromSex(patientData.gender).Substring(1));
@@ -2342,7 +2352,7 @@ namespace PainTrax.Web.Controllers
                 }
                 //Preop printing
 
-                var postData = _fuPostService.GetOne(fuid);           
+                        
 
                 
 
@@ -2350,11 +2360,17 @@ namespace PainTrax.Web.Controllers
                 
                 if (postData != null)
                 {
-                    body = body.Replace("#CC", string.IsNullOrEmpty(postData.txtHistoryPresentillness) ? "" : this.removePtag(postData.txtHistoryPresentillness));
+                    var CC = string.IsNullOrEmpty(postData.txtHistoryPresentillness) ? "" : postData.txtHistoryPresentillness;
+
+                    CC = CC.Replace("#dos", data);
+
+
+                    body = body.Replace("#CC", CC);
+                    //body = body.Replace("#CC", string.IsNullOrEmpty(postData.txtHistoryPresentillness) ? "" : this.removePtag(postData.txtHistoryPresentillness));
                     
                     body = body.Replace("#PhysicalExamination", string.IsNullOrEmpty(postData.txtPhysicalExamination) ? "" : this.removePtag(postData.txtPhysicalExamination));                   
                     body = body.Replace("#TREATMENT", string.IsNullOrEmpty(postData.txtExaminedResult) ? "" : this.removePtag(postData.txtExaminedResult));
-                   
+                    
                     ViewBag.ieId = patientData.id;
                     ViewBag.fuId = fuid;
                     ViewBag.locId = patientData.location_id;
@@ -2396,7 +2412,7 @@ namespace PainTrax.Web.Controllers
 
                         body = body.Replace("#Physician", providerData.providername);
 
-                        body = body.Replace("#ProviderName", providerData.providername);
+                        body = body.Replace("#ProviderName", providerData.providername.ToUpper());
                         body = body.Replace("#AssProviderName", providerData.assistant_providername);
                     }
                     else
@@ -2975,7 +2991,7 @@ namespace PainTrax.Web.Controllers
 
                 patientName = patientData.lname + ", " + patientData.fname;
 
-                dos = patientData.doe == null ? "" : patientData.doe.Value.ToShortDateString();
+                dos = fuData.doe == null ? "" : fuData.doe.Value.ToShortDateString();
 
                 string subPath = "Report/" + cmpid; // Your code goes here
 
@@ -3162,13 +3178,18 @@ namespace PainTrax.Web.Controllers
 
                 var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
                 restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
-                if (cmpid == 7)
+                if (cmpid == 7 || cmpid == 13)
                 {
                     if (!string.IsNullOrEmpty(dos))
                     {
                         string _dos = Common.commonDate(Convert.ToDateTime(dos), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
                         restheaderPart.Header = CreateHeaderWithPageNumber(patientName, _dos);
                     }
+                }
+                else
+                {
+
+                    restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
                 }
 
 
@@ -3661,6 +3682,73 @@ namespace PainTrax.Web.Controllers
             };
 
             return pocDetails;
+        }
+        private string getPOCDate(int fuid,int ieId)
+        {
+            string potion = null;
+            string iinew = string.Empty;
+            string test = "";
+            var postData = _fuPostService.GetOne(fuid);
+            if(postData != null)
+            {
+                if(postData.chkLeftKnee == true)
+                {
+                    potion = "Left";
+                    iinew = "knee";
+                }
+                else if (postData.chkRightKnee == true)
+                {
+                    potion = "Right";
+                    iinew = "knee";
+                }
+                else if (postData.chkLeftShoulder == true)
+                {
+                    potion = "Left";
+                    iinew = "shoulder";
+                }
+                else
+                {
+                    potion = "Right";
+                    iinew = "shoulder";
+                }
+            }
+                
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                //var x = _pocService.GetAllProceduresFU(iinew.Trim(), patientFUId, potion, cmpid.Value); //commented by moulick as all poc required so specific visit wise poc cancled. 
+                var x = _pocService.GetAllProcedures(iinew.Trim(), ieId, potion, cmpid.Value);
+                if (x != null)
+                {
+                    if (x.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in x.Rows)
+                        {
+                           
+                            foreach (DataColumn column in x.Columns)
+                            {
+                                if (column.ColumnName == "Executed")
+                                {
+                                if (row[17] != DBNull.Value)
+                                {
+                                    test = row[17] != DBNull.Value ? Convert.ToDateTime(row[17]).ToString("MM/dd/yyyy").Replace('-', '/') : string.Empty;
+                                }
+                                
+                            }
+                            }
+                        }
+                    }
+                }
+                        //var x = _pocService.GetAllProcedures(iinew.Trim(), patientIEId, potion);
+
+                        //if (x != null)
+                        //{
+                        //    if (x.Rows.Count > 0)
+                        //    {
+                        //        ViewBag.executeddate = Convert.ToDateTime(row[17]).ToString("MM/dd/yyyy").Replace('-', '/');
+
+                        //    }
+                        //}
+                    
+            return test;
         }
         private string getDiagnosticie(int id, tbl_pre pre)
         {

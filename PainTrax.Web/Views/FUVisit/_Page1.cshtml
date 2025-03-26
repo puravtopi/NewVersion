@@ -539,7 +539,7 @@
 
         $('#modeltitle').text("Add Daignosis");
 
-        var url = '@Url.Action("GetDaignoCodeList", "FUVisit")?bodyparts=' + body;
+        var url = '@Url.Action("GetDaignoCodeList", "FUVisit")?bodyparts=' + body+'&fuId='+ $("#hdFUId").val();
 
         $.ajax({
             type: "Post",

@@ -50,6 +50,7 @@
                             <input type="hidden" asp-for="createdby" />
                             <input type="hidden" asp-for="createddate" />
                             <input type="hidden" asp-for="cmp_id" />
+                            <input type="hidden" asp-for="signature" />
                                <div class="row">
                             <div class="col-lg-6">
                                 <div class="row mb-3">
@@ -164,7 +165,7 @@
                                             }
                                         </div>
 
-                                        <input type="hidden" id="signature_hidden" name="header_template_hidden" value="@Model.signature" />
+                                        <input type="hidden" id="signature_hidden" name="header_template_hidden" asp-for="signature" value="@Model.signature" />
                                     </div>
                                     <div class="row mb-3">
                                         <label class="col-md-4 col-lg-3 col-form-label">Assistant Provider Name</label>

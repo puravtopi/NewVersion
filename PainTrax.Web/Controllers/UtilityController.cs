@@ -208,6 +208,7 @@ namespace PainTrax.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult UploadPatient(IFormFile patient)
         {
+            ViewBag.Message = "";
 
             try
             {
@@ -262,12 +263,15 @@ namespace PainTrax.Web.Controllers
 
                             _patientimportservice.InsertPage2(obj2);
                         }
+
+                        ViewBag.Message = "Patient Data uploaded successfully.";
                     }
 
                 }
             }
             catch (Exception ex)
             {
+                ViewBag.Message = "";
                 SaveLog(ex, "ImportData");
             }
             return View();
@@ -277,7 +281,7 @@ namespace PainTrax.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult UploadPatientFU(IFormFile patientFU)
         {
-
+            ViewBag.Message = "";
             try
             {
                 int cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value;
@@ -334,6 +338,7 @@ namespace PainTrax.Web.Controllers
 
                             _patientimportservice.InsertPage2FU(obj2);
                         }
+                        ViewBag.Message = "Patient Data uploaded successfully.";
                     }
 
                 }
@@ -341,6 +346,7 @@ namespace PainTrax.Web.Controllers
             catch (Exception ex)
             {
                 SaveLog(ex, "ImportData");
+                ViewBag.Message = "";
             }
             return View("UploadPatient");
         }

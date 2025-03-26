@@ -14,17 +14,17 @@ namespace PainTrax.Web.Helper
 
         public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
-            var emailSettings = _configuration.GetSection("EmailSettings");
+            var emailSettings = _configuration.GetSection("SmtpSettings");
 
             var email = new MimeMessage();
-            email.From.Add(new MailboxAddress(emailSettings["SenderName"], emailSettings["SenderEmail"]));
+            email.From.Add(new MailboxAddress(emailSettings["SenderEmail"], emailSettings["SenderEmail"]));
             email.To.Add(MailboxAddress.Parse(toEmail));
             email.Subject = subject;
             email.Body = new TextPart("html") { Text = body };
 
             using var smtp = new SmtpClient();
-            await smtp.ConnectAsync(emailSettings["SmtpServer"], int.Parse(emailSettings["Port"]), MailKit.Security.SecureSocketOptions.StartTls);
-            await smtp.AuthenticateAsync(emailSettings["SenderEmail"], emailSettings["Password"]);
+            await smtp.ConnectAsync(emailSettings["Server"], int.Parse(emailSettings["Port"]), MailKit.Security.SecureSocketOptions.StartTls);
+            await smtp.AuthenticateAsync(emailSettings["SenderEmail"], emailSettings["SenderPassword"]);
             await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);
         }

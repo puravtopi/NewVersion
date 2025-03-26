@@ -45,6 +45,17 @@ namespace PainTrax.Web.Services
 
         }
 
+        public tbl_users? GetOneByEmail(string email,string client_code)
+        {
+            DataTable dt = new DataTable();
+            MySqlCommand cm = new MySqlCommand("select u.id,u.fname,u.lname from tbl_users u join tbl_company c on u.cmp_id=c.id where u.emailid=@email and c.client_code=@clientcode", conn);
+            cm.Parameters.AddWithValue("@email", email);
+            cm.Parameters.AddWithValue("@clientcode", client_code);
+            var datalist = ConvertDataTable<tbl_users>(GetData(cm)).FirstOrDefault();
+            return datalist;
+
+        }
+
         public void Insert(tbl_users data)
         {
             string fullName = data.fname + " " + data.lname;
@@ -188,6 +199,19 @@ namespace PainTrax.Web.Services
                 cm = new MySqlCommand("update  tbl_users set password='" + encryPass + "' where id=" + item.Id, conn);
                 Execute(cm);
             }
+        }
+
+        public void UpdateUserPassword(tbl_users data)
+        {
+            string fullName = data.fname + " " + data.lname;
+            data.fullname = fullName;
+            MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_users SET
+		password=@password
+        where Id=@Id", conn);
+            cm.Parameters.AddWithValue("@Id", data.Id);
+           
+            cm.Parameters.AddWithValue("@password", data.password);
+            Execute(cm);
         }
 
     }

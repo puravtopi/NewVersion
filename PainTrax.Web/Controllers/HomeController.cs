@@ -11,7 +11,7 @@ using System.Diagnostics;
 
 namespace PainTrax.Web.Controllers
 {
-   
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -121,7 +121,7 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionDaignosisNotFoundStatment, setting.notfoundStatment == null ? "" : setting.notfoundStatment);
                         HttpContext.Session.SetString(SessionKeys.SessionInjectionAsSeparateBlock, setting.injectionAsSeparateBlock.ToString().ToLower());
                         HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, string.IsNullOrEmpty(setting.header_template) ? "" : setting.header_template.ToString());
-                        HttpContext.Session.SetString(SessionKeys.SessionPostop, setting.show_postop==null ? "true" : setting.show_postop.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionPostop, setting.show_postop == null ? "true" : setting.show_postop.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionPreop, setting.show_preop == null ? "true" : setting.show_preop.ToString());
 
 
@@ -310,22 +310,66 @@ namespace PainTrax.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ForgotPassword()
         {
+            ViewBag.Success = null;
+            ViewBag.Error = false;
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(PainTrax.Web.ViewModel.ForgotPassword model)
         {
-            await _emailService.SendEmailAsync("purav.topi@gmail.com", "Test Email", "<h1>Hello from .NET Core</h1>");
+
+
+            var user = _userService.GetOneByEmail(model.email, model.companycode);
+
+            if (user != null)
+            {
+                var subject = "Reset Your Password";
+                var link = "https://paintrax.com/v2/home/ResetPassword?tqrs=" + EncryptionHelper.Encrypt(user.Id.ToString() + "");
+                var body = System.IO.File.ReadAllText("wwwroot/Uploads/EmailTemplate/ForgotPassword.html")
+                               .Replace("{RESET_LINK}", link);
+
+
+
+
+                //await _emailService.SendEmailAsync("purav.topi@gmail.com", subject, body);
+                ViewBag.Success = true;
+                ViewBag.Error = false;
+            }
+            else
+            {
+                ViewBag.Success = false;
+                ViewBag.Error = true;
+            }
             return View();
         }
 
-
-        public IActionResult ResetPassword()
+        [HttpGet]
+        public IActionResult ResetPassword(string tqrs)
         {
-            return View();
+            tqrs = tqrs.Replace(" ", "+");
+            var model = new ResetPassword();
+
+            model.cmpid = EncryptionHelper.Decrypt(tqrs);
+
+            return View(model);
         }
 
+
+        [HttpPost]
+        public IActionResult ResetPassword(ResetPassword model)
+        {
+            if (model != null)
+            {
+                var user = new tbl_users();
+
+                user.Id = Convert.ToInt32(model.cmpid);
+                user.password = EncryptionHelper.Encrypt(model.password);
+
+                _userService.UpdateUserPassword(user);
+            }
+            return View();
+        }
 
         #region private Method
         private void SaveLog(Exception ex, string actionname)

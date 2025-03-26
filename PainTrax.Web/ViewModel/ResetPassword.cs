@@ -4,8 +4,9 @@ namespace PainTrax.Web.ViewModel
 {
     public class ResetPassword
     {
-        public string password {  get; set; }
+        public string password { get; set; }
         public string Token { get; set; }
+        public string cmpid { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]

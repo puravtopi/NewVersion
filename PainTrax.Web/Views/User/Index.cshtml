@@ -165,6 +165,8 @@
                 if (data) {
                     oTable = $('#example').DataTable();
                     oTable.draw();
+                    // Refresh the page after the deletion is complete
+                     location.reload();
                 }
                 else {
                     alert("Something Went Wrong!");

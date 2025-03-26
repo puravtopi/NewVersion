@@ -3,6 +3,7 @@
 
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using PainTrax.Web.Helper;
 using PainTrax.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,7 @@ builder.Services.AddScoped<SignatureService>();
 
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<ILoggingService, LoggingService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 
 // Add services to the container.

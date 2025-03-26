@@ -24,14 +24,16 @@ namespace PainTrax.Web.Controllers
         private readonly Common _commonservices = new Common();
         private readonly UserService _userService = new UserService();
         private readonly SettingsService _setting = new SettingsService();
+        private readonly IEmailService _emailService;
 
 
-        public HomeController(ILogger<HomeController> logger, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public HomeController(ILogger<HomeController> logger, IEmailService emailService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _session = _httpContextAccessor.HttpContext.Session;
+            _emailService = emailService;
         }
 
         public IActionResult Index()
@@ -305,10 +307,20 @@ namespace PainTrax.Web.Controllers
             return Json(new { sessionExpired = isExpired });
         }
 
-        public IActionResult ForgotPassword()
+        [HttpGet]
+        public async Task<IActionResult> ForgotPassword()
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(PainTrax.Web.ViewModel.ForgotPassword model)
+        {
+            await _emailService.SendEmailAsync("purav.topi@gmail.com", "Test Email", "<h1>Hello from .NET Core</h1>");
+            return View();
+        }
+
+
         public IActionResult ResetPassword()
         {
             return View();

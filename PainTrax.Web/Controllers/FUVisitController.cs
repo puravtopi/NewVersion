@@ -19,7 +19,7 @@ using DocumentFormat.OpenXml;
 using HtmlToOpenXml;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
-using MailKit;
+
 
 namespace PainTrax.Web.Controllers
 {

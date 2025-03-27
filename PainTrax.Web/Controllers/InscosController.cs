@@ -347,7 +347,7 @@ namespace PainTrax.Web.Controllers
                     new DataColumn("Address2", typeof(string)),
                     new DataColumn("City", typeof(string)),
                     new DataColumn("State", typeof(string)),
-                    new DataColumn("Emailaddress", typeof(string)),
+                    new DataColumn("EmailAddress", typeof(string)),
                     new DataColumn("Telephone", typeof(string)),
                     new DataColumn("ContactPerson", typeof(string)),
                     new DataColumn("setasdefault", typeof(bool)),

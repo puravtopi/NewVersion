@@ -3,6 +3,7 @@
     public static class SessionKeys
     {
         public static string SessionCmpId = "cmpid";
+        public static string SessionCmpName = "cmpname";
         public static string SessionCmpEmail = "cmpemail";
         public static string SessionCmpUserId = "cmpuserid";
         public static string SessionUserName = "username";

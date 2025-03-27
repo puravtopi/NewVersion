@@ -4,9 +4,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+    
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Demo</title>
+    <title>PainTrax</title>
 
 
     <link href="~/assets/img/favicon.png" rel="icon">
@@ -129,14 +130,16 @@
             <span class="spinner"></span>
         </div>
     </div>
-
+    @{
+       var clientCode = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionCmpName);
+    }
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
 
         <div class="d-flex align-items-center justify-content-between">
             <a asp-action="Index" asp-controller="Home" class="logo d-flex align-items-center">
                 <img src="~/assets/img/logo.png" alt="">
-                <span class="d-none d-lg-block">PainTrax</span>
+                <span class="d-none d-lg-block">PainTrax - @clientCode</span>
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>
         </div><!-- End Logo -->

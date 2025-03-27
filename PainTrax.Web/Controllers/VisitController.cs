@@ -2415,7 +2415,8 @@ namespace PainTrax.Web.Controllers
                     //  history.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
                     history = history.Replace("#patientname", sex + " " + patientData.lname + " " + patientData.fname + " " + patientData.lname);
                     history = history.Replace("#accidenttype", patientData.accidentType);
-
+                    history = history.Replace("#heshe", Common.GethesheFromSex(patientData.gender));
+                  
                     body = body.Replace("#history", history);
 
                     body = body.Replace("#DD", string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd);

@@ -114,7 +114,7 @@ namespace PainTrax.Web.Controllers
                     {
                         HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, setting.location);
                         HttpContext.Session.SetInt32(SessionKeys.SessionPageSize, setting.page_size);
-                        HttpContext.Session.SetString(SessionKeys.SessionDateFormat, setting.dateformat);
+                        HttpContext.Session.SetString(SessionKeys.SessionDateFormat, setting.dateformat==null?"MM/dd/yyyy": setting.dateformat);
                         HttpContext.Session.SetString(SessionKeys.SessionPageBreak, setting.pageBreakForInjection.ToString().ToLower());
                         HttpContext.Session.SetString(SessionKeys.SessionIsDaignosis, setting.isdaignosisshow.ToString().ToLower());
                         HttpContext.Session.SetString(SessionKeys.SessionDaignosisFoundStatment, setting.foundStatment == null ? "" : setting.foundStatment);
@@ -310,7 +310,7 @@ namespace PainTrax.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ForgotPassword()
         {
-            ViewBag.Success = null;
+            ViewBag.Success = false;
             ViewBag.Error = false;
             return View();
         }
@@ -367,6 +367,13 @@ namespace PainTrax.Web.Controllers
                 user.password = EncryptionHelper.Encrypt(model.password);
 
                 _userService.UpdateUserPassword(user);
+                ViewBag.Success = true;
+                ViewBag.Error = false;
+            }
+            else
+            {
+                ViewBag.Success = false;
+                ViewBag.Error = true;
             }
             return View();
         }

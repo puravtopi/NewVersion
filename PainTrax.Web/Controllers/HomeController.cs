@@ -332,7 +332,7 @@ namespace PainTrax.Web.Controllers
 
 
 
-                //await _emailService.SendEmailAsync("purav.topi@gmail.com", subject, body);
+                await _emailService.SendEmailAsync("purav.topi@gmail.com", subject, body);
                 ViewBag.Success = true;
                 ViewBag.Error = false;
             }
@@ -351,8 +351,10 @@ namespace PainTrax.Web.Controllers
             var model = new ResetPassword();
 
             model.cmpid = EncryptionHelper.Decrypt(tqrs);
-
+            ViewBag.Success = false;
+            ViewBag.Error = false;
             return View(model);
+
         }
 
 
@@ -367,6 +369,7 @@ namespace PainTrax.Web.Controllers
                 user.password = EncryptionHelper.Encrypt(model.password);
 
                 _userService.UpdateUserPassword(user);
+
                 ViewBag.Success = true;
                 ViewBag.Error = false;
             }

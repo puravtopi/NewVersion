@@ -2433,7 +2433,7 @@ namespace PainTrax.Web.Controllers
 
                     body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",", ", "));
-
+                    body = body.Replace("#bpl", string.IsNullOrEmpty(bodypart) ? "" : (bodypart.ToLower()).ToString().Replace(",", ", "));
                     string assessment = "";
                     if (!string.IsNullOrEmpty(page1Data.assessment))
                     {
@@ -2883,8 +2883,14 @@ namespace PainTrax.Web.Controllers
                 }
                 else
                     docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
-
-                patientName = patientData.lname + ", " + patientData.fname;
+                if(cmpid == "14")
+                {
+                    patientName = patientData.fname + ", " + patientData.lname;
+                }
+                else
+                {
+                    patientName = patientData.lname + ", " + patientData.fname;
+                }
 
                 dos = patientData.doe == null ? "" : patientData.doe.Value.ToShortDateString();
 

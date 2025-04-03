@@ -2297,16 +2297,26 @@ namespace PainTrax.Web.Controllers
                 string printbody = "<body style='font-size:12px;font-family:'Times New Roman', Times,serif'>";
                 //using streamreader for reading my htmltemplate   
 
-                var templateData = _printService.GetTemplate(cmpid, "IE");
+                var templateData = new tbl_template();
+                var patientData = _ieService.GetOnebyPatientId(id);
+                if(patientData.compensation=="WC")
+                {
+                    templateData = _printService.GetTemplate(cmpid, "IE WC");
+                }
+                else
+                {
+                    templateData = _printService.GetTemplate(cmpid, "IE");
+                }               
                 var gender = "";
                 var sex = "";
 
                 body = templateData.content;
 
-                var patientData = _ieService.GetOnebyPatientId(id);
+                
 
                 if (patientData != null)
                 {
+                    body = body.Replace("#wcbgroup", patientData.primary_wcb_group);
                     sex = Common.GetGenderFromSex(patientData.gender);
                     gender = Common.GetMrMrsFromSex(patientData.gender);
                     //body = body.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
@@ -2435,14 +2445,32 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",", ", "));
                     body = body.Replace("#bpl", string.IsNullOrEmpty(bodypart) ? "" : (bodypart.ToLower()).ToString().Replace(",", ", "));
                     string assessment = "";
-                    if (!string.IsNullOrEmpty(page1Data.assessment))
+                    if(cmpid=="14")
                     {
                         if (bodypart != null)
-                            assessment = page1Data.assessment.Replace("#PC", bodypart + " pain.");
+                        {
+                            // Regular expression pattern to capture the condition and the code after the '-'
+                            string pattern = @"<p>([^-]+) - (\S+)</p>";
+
+                            // Replace and rearrange the content using regex
+                            string outputStr = Regex.Replace(page1Data.assessment, pattern, "<p>$2 - $1</p>");
+                            assessment = outputStr.Replace("#PC", bodypart + " pain.");
+                        }                            
                         else
                             assessment = page1Data.assessment.Replace("#PC", "");
-                        assessment = assessment.Replace("#accidenttype", patientData.accidentType);
+                        
                     }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(page1Data.assessment))
+                        {
+                            if (bodypart != null)
+                                assessment = page1Data.assessment.Replace("#PC", bodypart + " pain.");
+                            else
+                                assessment = page1Data.assessment.Replace("#PC", "");
+                            assessment = assessment.Replace("#accidenttype", patientData.accidentType);
+                        }
+                    }                 
 
 
 

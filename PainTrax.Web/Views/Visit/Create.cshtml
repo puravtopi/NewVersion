@@ -874,8 +874,12 @@
     var _ccitems = ('@ViewBag.ccmacroList').replace(/&quot;/ig, '"');
     const ccitems = JSON.parse(_ccitems.replace(/[\n\r]/g, '\\n'));
 
-    var _allitems = ('@ViewBag.allmacroList').replace(/&quot;/ig, '"');
+    //var _allitems = ('@ViewBag.allmacroList').replace(/&quot;/ig, '"');
+    var _allitems = ('@ViewBag.allmacroList').replace(/&quot;/ig, '"')
+        .replace(/&#x2B;/g, '+');
     const allitems = JSON.parse(_allitems.replace(/[\n\r]/g, '\\n'));
+
+    
 
     function getFeedItems(queryText) {
 

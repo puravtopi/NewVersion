@@ -529,7 +529,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                         obj.post = new tbl_post();
-                    
+
 
 
 
@@ -651,22 +651,22 @@ namespace PainTrax.Web.Controllers
 
                 if (obj.Page3 != null)
                 {
-                    obj.Page3.diagcervialbulge_study = (obj.Page3.diagcervialbulge_study == null ) ? "1" : obj.Page3.diagcervialbulge_study;
+                    obj.Page3.diagcervialbulge_study = (obj.Page3.diagcervialbulge_study == null) ? "1" : obj.Page3.diagcervialbulge_study;
                     obj.Page3.diagthoracicbulge_study = (obj.Page3.diagthoracicbulge_study == null) ? "1" : obj.Page3.diagthoracicbulge_study;
-                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null ) ? "1" : obj.Page3.diaglumberbulge_study;
-                    obj.Page3.diagleftshoulder_study = (obj.Page3.diagleftshoulder_study == null ) ? "1" : obj.Page3.diagleftshoulder_study;
-                    obj.Page3.diagrightshoulder_study = (obj.Page3.diagrightshoulder_study == null ) ? "1" : obj.Page3.diagrightshoulder_study;
-                    obj.Page3.diagleftknee_study = (obj.Page3.diagleftknee_study == null ) ? "1" : obj.Page3.diagleftknee_study;
-                    obj.Page3.diagrightknee_study = (obj.Page3.diagrightknee_study == null ) ? "1" : obj.Page3.diagrightknee_study;
-                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null ) ? "1" : obj.Page3.diaglumberbulge_study;
+                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null) ? "1" : obj.Page3.diaglumberbulge_study;
+                    obj.Page3.diagleftshoulder_study = (obj.Page3.diagleftshoulder_study == null) ? "1" : obj.Page3.diagleftshoulder_study;
+                    obj.Page3.diagrightshoulder_study = (obj.Page3.diagrightshoulder_study == null) ? "1" : obj.Page3.diagrightshoulder_study;
+                    obj.Page3.diagleftknee_study = (obj.Page3.diagleftknee_study == null) ? "1" : obj.Page3.diagleftknee_study;
+                    obj.Page3.diagrightknee_study = (obj.Page3.diagrightknee_study == null) ? "1" : obj.Page3.diagrightknee_study;
+                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null) ? "1" : obj.Page3.diaglumberbulge_study;
 
                     obj.Page3.other1_study = (obj.Page3.other1_study == null) ? "1" : obj.Page3.other1_study;
-                    obj.Page3.other2_study = (obj.Page3.other2_study == null ) ? "1" : obj.Page3.other2_study;
-                    obj.Page3.other3_study = (obj.Page3.other3_study == null ) ? "1" : obj.Page3.other3_study;
-                    obj.Page3.other4_study = (obj.Page3.other4_study == null ) ? "1" : obj.Page3.other4_study;
+                    obj.Page3.other2_study = (obj.Page3.other2_study == null) ? "1" : obj.Page3.other2_study;
+                    obj.Page3.other3_study = (obj.Page3.other3_study == null) ? "1" : obj.Page3.other3_study;
+                    obj.Page3.other4_study = (obj.Page3.other4_study == null) ? "1" : obj.Page3.other4_study;
                     obj.Page3.other5_study = (obj.Page3.other5_study == null) ? "1" : obj.Page3.other5_study;
-                    obj.Page3.other6_study = (obj.Page3.other6_study == null ) ? "1" : obj.Page3.other6_study;
-                    obj.Page3.other7_study = (obj.Page3.other7_study == null ) ? "1" : obj.Page3.other7_study;
+                    obj.Page3.other6_study = (obj.Page3.other6_study == null) ? "1" : obj.Page3.other6_study;
+                    obj.Page3.other7_study = (obj.Page3.other7_study == null) ? "1" : obj.Page3.other7_study;
                 }
             }
             catch (Exception ex)
@@ -1462,7 +1462,7 @@ namespace PainTrax.Web.Controllers
                                             string date1 = string.Empty;
                                             if (!string.IsNullOrEmpty(Convert.ToString(row[17])))
                                             { date1 = Convert.ToDateTime(row[17]).ToString("MM/dd/yy").Replace('-', '/'); }
-                                            
+
 
                                             StringBuilder notify = new StringBuilder();
                                             if (!string.IsNullOrEmpty(Convert.ToString(row[12])))
@@ -2119,7 +2119,7 @@ namespace PainTrax.Web.Controllers
                 //using streamreader for reading my htmltemplate   
 
                 var fuData = _patientFuservices.GetOne(fuid);
-               
+
                 tbl_users user = new tbl_users();
                 user.Id = fuData.provider_id;
                 var providerData = _userService.GetOneById(user.Id.Value);
@@ -2161,7 +2161,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
                     body = body.Replace("#address", locData[0].address);
                     //body = body.Replace("#Address", locData[0].address);
-                    body = body.Replace("#Address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);                    
+                    body = body.Replace("#Address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                     body = body.Replace("#location", locData[0].location);
                     body = body.Replace("#Nameofpractice", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
                     body = body.Replace("#Phone", locData[0].telephone);
@@ -2193,9 +2193,9 @@ namespace PainTrax.Web.Controllers
                 Presentillness = Presentillness.Replace("#accidenttype", patientData.accidentType);
                 Presentillness = Presentillness.Replace("#doi", Common.commonDate(patientData.doa));
                 //Presentillness = Presentillness.Replace("#ProviderName", Common.commonDate(patientData.doa));
-               
+
                 body = body.Replace("#Presentillness", Presentillness);
-                var strDiagnostic = this.getDiagnosticie(ieid,preData);
+                var strDiagnostic = this.getDiagnosticie(ieid, preData);
 
                 if (cmpid != "4")
                 {
@@ -2273,7 +2273,7 @@ namespace PainTrax.Web.Controllers
                             body = body.Replace("#Sign", "");
 
                         body = body.Replace("#Physician", providerData.providername);
-                        
+
                         body = body.Replace("#ProviderName", providerData.providername);
                         body = body.Replace("#AssProviderName", providerData.assistant_providername);
                     }
@@ -2352,12 +2352,12 @@ namespace PainTrax.Web.Controllers
                 }
                 //Preop printing
 
-                        
 
-                
 
-                
-                
+
+
+
+
                 if (postData != null)
                 {
                     var CC = string.IsNullOrEmpty(postData.txtHistoryPresentillness) ? "" : postData.txtHistoryPresentillness;
@@ -2367,10 +2367,10 @@ namespace PainTrax.Web.Controllers
 
                     body = body.Replace("#CC", CC);
                     //body = body.Replace("#CC", string.IsNullOrEmpty(postData.txtHistoryPresentillness) ? "" : this.removePtag(postData.txtHistoryPresentillness));
-                    
-                    body = body.Replace("#PhysicalExamination", string.IsNullOrEmpty(postData.txtPhysicalExamination) ? "" : this.removePtag(postData.txtPhysicalExamination));                   
+
+                    body = body.Replace("#PhysicalExamination", string.IsNullOrEmpty(postData.txtPhysicalExamination) ? "" : this.removePtag(postData.txtPhysicalExamination));
                     body = body.Replace("#TREATMENT", string.IsNullOrEmpty(postData.txtExaminedResult) ? "" : this.removePtag(postData.txtExaminedResult));
-                    
+
                     ViewBag.ieId = patientData.id;
                     ViewBag.fuId = fuid;
                     ViewBag.locId = patientData.location_id;
@@ -2442,6 +2442,7 @@ namespace PainTrax.Web.Controllers
                 //using streamreader for reading my htmltemplate   
 
                 var fuData = _patientFuservices.GetOne(fuid);
+                var fed = _patientFuservices.GetFirstIEDateOne(fuData.patientIE_ID.Value);
 
                 var templateData = _printService.GetTemplate(cmpid, fuData.type);
                 var gender = "";
@@ -2468,6 +2469,7 @@ namespace PainTrax.Web.Controllers
 
                     // body = body.Replace("#CT", System.Enum.GetName(typeof(CaseType), Convert.ToInt32(patientData.compensation)));
                     body = body.Replace("#CT", patientData.compensation);
+                    body = body.Replace("#fed", fed == null ? "" : Common.commonDate(fed.Value, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
                 }
 
                 //header printing
@@ -3683,15 +3685,15 @@ namespace PainTrax.Web.Controllers
 
             return pocDetails;
         }
-        private string getPOCDate(int fuid,int ieId)
+        private string getPOCDate(int fuid, int ieId)
         {
             string potion = null;
             string iinew = string.Empty;
             string test = "";
             var postData = _fuPostService.GetOne(fuid);
-            if(postData != null)
+            if (postData != null)
             {
-                if(postData.chkLeftKnee == true)
+                if (postData.chkLeftKnee == true)
                 {
                     potion = "Left";
                     iinew = "knee";
@@ -3712,42 +3714,42 @@ namespace PainTrax.Web.Controllers
                     iinew = "shoulder";
                 }
             }
-                
-                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-                //var x = _pocService.GetAllProceduresFU(iinew.Trim(), patientFUId, potion, cmpid.Value); //commented by moulick as all poc required so specific visit wise poc cancled. 
-                var x = _pocService.GetAllProcedures(iinew.Trim(), ieId, potion, cmpid.Value);
-                if (x != null)
+
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            //var x = _pocService.GetAllProceduresFU(iinew.Trim(), patientFUId, potion, cmpid.Value); //commented by moulick as all poc required so specific visit wise poc cancled. 
+            var x = _pocService.GetAllProcedures(iinew.Trim(), ieId, potion, cmpid.Value);
+            if (x != null)
+            {
+                if (x.Rows.Count > 0)
                 {
-                    if (x.Rows.Count > 0)
+                    foreach (DataRow row in x.Rows)
                     {
-                        foreach (DataRow row in x.Rows)
+
+                        foreach (DataColumn column in x.Columns)
                         {
-                           
-                            foreach (DataColumn column in x.Columns)
+                            if (column.ColumnName == "Executed")
                             {
-                                if (column.ColumnName == "Executed")
-                                {
                                 if (row[17] != DBNull.Value)
                                 {
                                     test = row[17] != DBNull.Value ? Convert.ToDateTime(row[17]).ToString("MM/dd/yyyy").Replace('-', '/') : string.Empty;
                                 }
-                                
-                            }
+
                             }
                         }
                     }
                 }
-                        //var x = _pocService.GetAllProcedures(iinew.Trim(), patientIEId, potion);
+            }
+            //var x = _pocService.GetAllProcedures(iinew.Trim(), patientIEId, potion);
 
-                        //if (x != null)
-                        //{
-                        //    if (x.Rows.Count > 0)
-                        //    {
-                        //        ViewBag.executeddate = Convert.ToDateTime(row[17]).ToString("MM/dd/yyyy").Replace('-', '/');
+            //if (x != null)
+            //{
+            //    if (x.Rows.Count > 0)
+            //    {
+            //        ViewBag.executeddate = Convert.ToDateTime(row[17]).ToString("MM/dd/yyyy").Replace('-', '/');
 
-                        //    }
-                        //}
-                    
+            //    }
+            //}
+
             return test;
         }
         private string getDiagnosticie(int id, tbl_pre pre)
@@ -3891,27 +3893,27 @@ namespace PainTrax.Web.Controllers
                 }
 
                 if (data.diagleftshoulder_date != null && pre.chkLeftShoulder == true)
-                if (data.diagleftshoulder_date != null  && pre.chkLeftShoulder == true)
-                {
-
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftshoulder_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.diagleftshoulder_study))
+                    if (data.diagleftshoulder_date != null && pre.chkLeftShoulder == true)
                     {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagleftshoulder_study));
-                        strDaignosis = strDaignosis + " " + study;
-                    }
 
-                    if (!string.IsNullOrEmpty(data.diagleftshoulder_text))
-                    {
-                        strDaignosis = strDaignosis + " of the left shoulder " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
-                    }
-                    else
-                    {
-                        strDaignosis = strDaignosis + " of the left shoulder is normal. ";
-                    }
+                        strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftshoulder_date.Value.ToString("MM/dd/yyyy") + " - ";
 
-                }
+                        if (!string.IsNullOrEmpty(data.diagleftshoulder_study))
+                        {
+                            var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagleftshoulder_study));
+                            strDaignosis = strDaignosis + " " + study;
+                        }
+
+                        if (!string.IsNullOrEmpty(data.diagleftshoulder_text))
+                        {
+                            strDaignosis = strDaignosis + " of the left shoulder " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                        }
+                        else
+                        {
+                            strDaignosis = strDaignosis + " of the left shoulder is normal. ";
+                        }
+
+                    }
 
                 if (data.diagrightshoulder_date != null && pre.chkRightShoulder == true)
                 {

@@ -24,6 +24,15 @@ public class PatientFUService : ParentService
         return datalist;
     }
 
+    public DateTime? GetFirstIEDateOne(int id)
+    {
+        DataTable dt = new DataTable();
+        MySqlCommand cm = new MySqlCommand("select doe from tbl_patient_ie where id=@id ", conn);
+        cm.Parameters.AddWithValue("@id", id);
+        var datalist = ConvertDataTable<tbl_patient_ie>(GetData(cm)).FirstOrDefault();
+        return datalist == null ? null : datalist.doe;
+    }
+
     public List<vm_patient_fu> GetAllByIeId(int ie_id)
     {
         DataTable dt = new DataTable();
@@ -114,7 +123,7 @@ public class PatientFUService : ParentService
 
         cm.Parameters.AddWithValue("@id", id);
         cm.Parameters.AddWithValue("@plan", plan);
-       
+
         var result = ExecuteScalar(cm);
         return result;
     }

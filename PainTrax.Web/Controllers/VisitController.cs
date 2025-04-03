@@ -3327,17 +3327,40 @@ namespace PainTrax.Web.Controllers
                     }
 
                     // Copy Image Parts
+                    //foreach (var imagePart in firstHeader.ImageParts)
+                    //{
+                    //    // Add image part to the target header
+                    //    ImagePart newImagePart = headerPart.AddImagePart(imagePart.ContentType);
+
+                    //    // Copy image stream
+                    //    using (Stream imageStream = imagePart.GetStream())
+                    //    {
+                    //        newImagePart.FeedData(imageStream);
+                    //    }
+                    //}
+
+                    // Copy Image Parts
+                    Dictionary<string, string> imageRelMapping = new Dictionary<string, string>();
+
                     foreach (var imagePart in firstHeader.ImageParts)
                     {
-                        // Add image part to the target header
+                        // Add a new image part to the target header
                         ImagePart newImagePart = headerPart.AddImagePart(imagePart.ContentType);
 
-                        // Copy image stream
-                        using (Stream imageStream = imagePart.GetStream())
+                        // Copy the image data
+                        using (Stream imageStream = imagePart.GetStream(FileMode.Open, FileAccess.Read))
                         {
                             newImagePart.FeedData(imageStream);
                         }
+
+                        // Map the old relationship ID to the new image part ID
+                        string oldRelId = firstHeader.GetIdOfPart(imagePart);
+                        string newRelId = headerPart.GetIdOfPart(newImagePart);
+                        imageRelMapping[oldRelId] = newRelId;
                     }
+
+                    // Update relationships in header XML
+                    UpdateHeaderXml(headerPart, imageRelMapping);
                 }
 
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
@@ -3375,6 +3398,38 @@ namespace PainTrax.Web.Controllers
                 }
             }
         }
+
+
+        // Method to update header XML to reference new image relationships
+        private static void UpdateHeaderXml(HeaderPart headerPart, Dictionary<string, string> imageRelMapping)
+        {
+            string headerXml;
+
+            // Read the existing header XML
+            using (StreamReader reader = new StreamReader(headerPart.GetStream(FileMode.Open, FileAccess.Read)))
+            {
+                headerXml = reader.ReadToEnd();
+            }
+
+            // Replace old relationship IDs with new ones
+            foreach (var kvp in imageRelMapping)
+            {
+                headerXml = headerXml.Replace($"r:id=\"{kvp.Key}\"", $"r:id=\"{kvp.Value}\"");
+            }
+
+            // Write the updated XML back to the header part
+            using (MemoryStream memStream = new MemoryStream())
+            {
+                using (StreamWriter writer = new StreamWriter(memStream))
+                {
+                    writer.Write(headerXml);
+                    writer.Flush();
+                    memStream.Position = 0;
+                    headerPart.FeedData(memStream);
+                }
+            }
+        }
+
 
         public Header CreateHeaderWithPageNumber(string text1, string text2)
         {

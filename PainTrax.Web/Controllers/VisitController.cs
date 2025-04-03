@@ -591,22 +591,22 @@ namespace PainTrax.Web.Controllers
                 }
                 if (obj.Page3 != null)
                 {
-                    obj.Page3.diagcervialbulge_study = (obj.Page3.diagcervialbulge_study == null ) ? "1" : obj.Page3.diagcervialbulge_study;
-                    obj.Page3.diagthoracicbulge_study = (obj.Page3.diagthoracicbulge_study == null ) ? "1" : obj.Page3.diagthoracicbulge_study;
+                    obj.Page3.diagcervialbulge_study = (obj.Page3.diagcervialbulge_study == null) ? "1" : obj.Page3.diagcervialbulge_study;
+                    obj.Page3.diagthoracicbulge_study = (obj.Page3.diagthoracicbulge_study == null) ? "1" : obj.Page3.diagthoracicbulge_study;
                     obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null) ? "1" : obj.Page3.diaglumberbulge_study;
-                    obj.Page3.diagleftshoulder_study = (obj.Page3.diagleftshoulder_study == null ) ? "1" : obj.Page3.diagleftshoulder_study;
-                    obj.Page3.diagrightshoulder_study = (obj.Page3.diagrightshoulder_study == null ) ? "1" : obj.Page3.diagrightshoulder_study;
-                    obj.Page3.diagleftknee_study = (obj.Page3.diagleftknee_study == null ) ? "1" : obj.Page3.diagleftknee_study;
-                    obj.Page3.diagrightknee_study = (obj.Page3.diagrightknee_study == null ) ? "1" : obj.Page3.diagrightknee_study;
-                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null ) ? "1" : obj.Page3.diaglumberbulge_study;
+                    obj.Page3.diagleftshoulder_study = (obj.Page3.diagleftshoulder_study == null) ? "1" : obj.Page3.diagleftshoulder_study;
+                    obj.Page3.diagrightshoulder_study = (obj.Page3.diagrightshoulder_study == null) ? "1" : obj.Page3.diagrightshoulder_study;
+                    obj.Page3.diagleftknee_study = (obj.Page3.diagleftknee_study == null) ? "1" : obj.Page3.diagleftknee_study;
+                    obj.Page3.diagrightknee_study = (obj.Page3.diagrightknee_study == null) ? "1" : obj.Page3.diagrightknee_study;
+                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null) ? "1" : obj.Page3.diaglumberbulge_study;
 
-                    obj.Page3.other1_study = (obj.Page3.other1_study == null ) ? "1" : obj.Page3.other1_study;
-                    obj.Page3.other2_study = (obj.Page3.other2_study == null ) ? "1" : obj.Page3.other2_study;
-                    obj.Page3.other3_study = (obj.Page3.other3_study == null ) ? "1" : obj.Page3.other3_study;
-                    obj.Page3.other4_study = (obj.Page3.other4_study == null ) ? "1" : obj.Page3.other4_study;
-                    obj.Page3.other5_study = (obj.Page3.other5_study == null ) ? "1" : obj.Page3.other5_study;
+                    obj.Page3.other1_study = (obj.Page3.other1_study == null) ? "1" : obj.Page3.other1_study;
+                    obj.Page3.other2_study = (obj.Page3.other2_study == null) ? "1" : obj.Page3.other2_study;
+                    obj.Page3.other3_study = (obj.Page3.other3_study == null) ? "1" : obj.Page3.other3_study;
+                    obj.Page3.other4_study = (obj.Page3.other4_study == null) ? "1" : obj.Page3.other4_study;
+                    obj.Page3.other5_study = (obj.Page3.other5_study == null) ? "1" : obj.Page3.other5_study;
                     obj.Page3.other6_study = (obj.Page3.other6_study == null) ? "1" : obj.Page3.other6_study;
-                    obj.Page3.other7_study = (obj.Page3.other7_study == null ) ? "1" : obj.Page3.other7_study;
+                    obj.Page3.other7_study = (obj.Page3.other7_study == null) ? "1" : obj.Page3.other7_study;
                 }
 
             }
@@ -2426,7 +2426,7 @@ namespace PainTrax.Web.Controllers
                     history = history.Replace("#patientname", sex + " " + patientData.lname + " " + patientData.fname + " " + patientData.lname);
                     history = history.Replace("#accidenttype", patientData.accidentType);
                     history = history.Replace("#heshe", Common.GethesheFromSex(patientData.gender));
-                  
+
                     body = body.Replace("#history", history);
 
                     body = body.Replace("#DD", string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd);
@@ -2476,7 +2476,7 @@ namespace PainTrax.Web.Controllers
 
                     if (dataPOC != null)
                     {
-                        assessment = string.IsNullOrEmpty(dataPOC.strADesc) ? assessment : assessment + "<br/><br/>" + dataPOC.strADesc;
+                        assessment = string.IsNullOrEmpty(dataPOC.strADesc) ? assessment : assessment + dataPOC.strADesc;
                     }
 
                     body = body.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
@@ -2911,7 +2911,7 @@ namespace PainTrax.Web.Controllers
                 }
                 else
                     docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
-                if(cmpid == "14")
+                if (cmpid == "14")
                 {
                     patientName = patientData.fname + ", " + patientData.lname;
                 }
@@ -3141,7 +3141,7 @@ namespace PainTrax.Web.Controllers
                             _adesc = _adesc.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
                             _adesc = _adesc.Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
 
-                            adesc = adesc + _adesc;
+                            adesc = adesc + (string.IsNullOrEmpty(adesc) ? "" : "<br/>") + _adesc;
                         }
 
                         if (heading.ToLower().Contains("(side)"))
@@ -3352,7 +3352,20 @@ namespace PainTrax.Web.Controllers
                     if (firstHeader != null)
                     {
                         headerPart.FeedData(firstHeader.GetStream());
-                }
+                    }
+
+                    // Copy Image Parts
+                    foreach (var imagePart in firstHeader.ImageParts)
+                    {
+                        // Add image part to the target header
+                        ImagePart newImagePart = headerPart.AddImagePart(imagePart.ContentType);
+
+                        // Copy image stream
+                        using (Stream imageStream = imagePart.GetStream())
+                        {
+                            newImagePart.FeedData(imageStream);
+                        }
+                    }
                 }
 
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);

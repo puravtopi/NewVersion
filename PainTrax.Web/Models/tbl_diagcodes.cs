@@ -5,7 +5,7 @@ namespace PainTrax.Web.Models
 	public class tbl_diagcodes
 	{
 		public string? BodyPart { get; set; }		
-		public string DiagCode { get; set; }
+		public string? DiagCode { get; set; }
 		public string? Description { get; set; }
 		public int? display_order { get; set; }
 		public int? Id { get; set; }

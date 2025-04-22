@@ -2121,8 +2121,7 @@ namespace PainTrax.Web.Controllers
                 var fuData = _patientFuservices.GetOne(fuid);
 
                 tbl_users user = new tbl_users();
-                user.Id = fuData.provider_id;
-                var providerData = _userService.GetOneById(user.Id.Value);
+
 
 
                 var templateData = _printService.GetTemplate(cmpid, fuData.type);
@@ -2243,14 +2242,23 @@ namespace PainTrax.Web.Controllers
 
                     int? providorId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
 
-                    if (providerData.Id != null)
+                    var providerData = new tbl_users();
+                    if (fuData.provider_id != null)
                     {
-                        signUserId = providerData.Id.Value;
+                        user.Id = fuData.provider_id;
+                        providerData = _userService.GetOneById(user.Id.Value);
+                        if (providerData.Id != null)
+                        {
+                            signUserId = providerData.Id.Value;
+                        }
+                        else if (providorId != null)
+                        {
+                            signUserId = providorId.Value;
+                        }
                     }
-                    else if (providorId != null)
-                    {
-                        signUserId = providorId.Value;
-                    }
+                        
+
+
 
                     if (signUserId > 0)
                     {

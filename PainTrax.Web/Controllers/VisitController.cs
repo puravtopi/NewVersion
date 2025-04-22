@@ -2301,7 +2301,8 @@ namespace PainTrax.Web.Controllers
                 var patientData = _ieService.GetOnebyPatientId(id);
                 if(patientData.compensation=="WC")
                 {
-                    templateData = _printService.GetTemplate(cmpid, "IE WC");
+                    //templateData = _printService.GetTemplate(cmpid, "IE WC");
+                    templateData = _printService.GetTemplate(cmpid, "IE");
                 }
                 else
                 {

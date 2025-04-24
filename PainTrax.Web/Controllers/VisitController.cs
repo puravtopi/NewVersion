@@ -3190,6 +3190,11 @@ namespace PainTrax.Web.Controllers
                                 inject_desc = inject_desc + "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
                                 inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
                                 inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+
+                                string pageBreakHtml = "<div style='page-break-before: always;'>";
+                                pageBreakHtml = pageBreakHtml+ inject_desc+"</div>";
+
+                                inject_desc = pageBreakHtml;
                             }
                         }
                         strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + pocDesc + "</li>";

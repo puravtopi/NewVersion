@@ -213,11 +213,11 @@ namespace PainTrax.Web.Controllers
             try
             {
                 int cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).Value;
-              
+
                 if (patient != null && patient.Length > 0)
                 {
                     //DataTable dt = this.Read2007Xlsx(patient);
-                    DataTable dt = new DataTable(); 
+                    DataTable dt = new DataTable();
                     using (var stream = new MemoryStream())
                     {
                         patient.CopyToAsync(stream);
@@ -247,21 +247,58 @@ namespace PainTrax.Web.Controllers
                                 social_history = dt.Rows[i]["Social History"].ToString(),
                                 assessment = this.getAssement(dt.Rows[i]["Diagnoses"].ToString()),
                                 appt_reason = dt.Rows[i]["Reason"].ToString(),
-                                occupation= dt.Rows[i]["Occupation"].ToString(),
+                                occupation = dt.Rows[i]["Occupation"].ToString(),
                                 impairment_rating = dt.Rows[i]["Tylenol"].ToString(),
 
                             };
                             _patientimportservice.InsertPage1(obj);
 
-                            tbl_ie_page2 obj2 = new tbl_ie_page2() {
+                            tbl_ie_page2 obj2 = new tbl_ie_page2()
+                            {
                                 aod = dt.Rows[i]["Activities"].ToString(),
                                 ros = dt.Rows[i]["ROS"].ToString(),
-                                ie_id= Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
-                                cmp_id= cmpid,
-                                patient_id= Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
+                                ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
+                                cmp_id = cmpid,
+                                patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
                             };
 
                             _patientimportservice.InsertPage2(obj2);
+
+                            if (dt.Columns.Contains("Neurological"))
+                            {
+
+                                var objNE = _patientimportservice.GetOneNE(Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()));
+
+                                if (objNE == null)
+                                {
+                                    objNE = new tbl_ie_ne()
+                                    {
+                                        cmp_id = cmpid,
+                                        ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
+                                        manual_muscle_strength_testing = dt.Rows[i]["ManualMuscle"].ToString(),
+                                        neurological_exam = dt.Rows[i]["Neurological"].ToString(),
+                                        sensory = dt.Rows[i]["Sensory"].ToString(),
+                                        patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
+                                        other_content = dt.Rows[i]["DeepTendon"].ToString(),
+                                    };
+
+                                    _patientimportservice.InsertNE(objNE);
+                                }
+                                else
+                                {
+                                    var _objNE = new tbl_ie_ne()
+                                    {
+
+                                        manual_muscle_strength_testing = dt.Rows[i]["ManualMuscle"].ToString(),
+                                        neurological_exam = dt.Rows[i]["Neurological"].ToString(),
+                                        sensory = dt.Rows[i]["Sensory"].ToString(),
+                                        id = objNE.id,
+                                        other_content = dt.Rows[i]["DeepTendon"].ToString(),
+                                    };
+
+                                    _patientimportservice.UpdatePageNE(_objNE);
+                                }
+                            }
                         }
 
                         ViewBag.Message = "Patient Data uploaded successfully.";
@@ -321,7 +358,7 @@ namespace PainTrax.Web.Controllers
                                 appt_reason = dt.Rows[i]["Reason"].ToString(),
                                 occupation = dt.Rows[i]["Occupation"].ToString(),
                                 impairment_rating = dt.Rows[i]["Tylenol"].ToString(),
-                                fu_id= Convert.ToInt32(dt.Rows[i]["Patient_fu_id"].ToString()),
+                                fu_id = Convert.ToInt32(dt.Rows[i]["Patient_fu_id"].ToString()),
 
                             };
                             _patientimportservice.InsertPage1FU(obj);
@@ -337,6 +374,42 @@ namespace PainTrax.Web.Controllers
                             };
 
                             _patientimportservice.InsertPage2FU(obj2);
+
+                            if (dt.Columns.Contains("Neurological"))
+                            {
+                                var objNE = _patientimportservice.GetOneNEFU(Convert.ToInt32(dt.Rows[i]["Patient_fu_id"].ToString()));
+
+                                if (objNE == null)
+                                {
+                                    objNE = new tbl_fu_ne()
+                                    {
+                                        cmp_id = cmpid,
+                                        ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
+                                        manual_muscle_strength_testing = dt.Rows[i]["ManualMuscle"].ToString(),
+                                        neurological_exam = dt.Rows[i]["Neurological"].ToString(),
+                                        sensory = dt.Rows[i]["Sensory"].ToString(),
+                                        patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
+                                        other_content = dt.Rows[i]["DeepTendon"].ToString(),
+                                        fu_id = Convert.ToInt32(dt.Rows[i]["Patient_fu_id"].ToString()),
+                                    };
+
+                                    _patientimportservice.InsertNEFU(objNE);
+                                }
+                                else
+                                {
+                                    var _objNE = new tbl_fu_ne()
+                                    {
+
+                                        manual_muscle_strength_testing = dt.Rows[i]["ManualMuscle"].ToString(),
+                                        neurological_exam = dt.Rows[i]["Neurological"].ToString(),
+                                        sensory = dt.Rows[i]["Sensory"].ToString(),
+                                        other_content = dt.Rows[i]["DeepTendon"].ToString(),
+                                        id = objNE.id
+                                    };
+
+                                    _patientimportservice.UpdateNEFU(_objNE);
+                                }
+                            }
                         }
                         ViewBag.Message = "Patient Data uploaded successfully.";
                     }

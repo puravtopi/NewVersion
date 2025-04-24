@@ -137,6 +137,7 @@ impairment_rating=@impairment_rating,appt_reason=@appt_reason,
             return datalist;
         }
 
+
         #endregion
 
         #region Page2
@@ -220,6 +221,95 @@ impairment_rating=@impairment_rating,appt_reason=@appt_reason,
             var datalist = ConvertDataTable<tbl_ie_page2>(GetData(cm)).FirstOrDefault();
             return datalist;
         }
+        #endregion
+
+        #region NE
+
+        public int InsertNE(tbl_ie_ne data)
+        {
+            MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_ie_ne
+		(neurological_exam,sensory,manual_muscle_strength_testing,ie_id,patient_id,other_content,cmp_id)Values
+				(@neurological_exam,@sensory,@manual_muscle_strength_testing,@ie_id,@patient_id,@other_content,@cmp_id);select @@identity;", conn);
+            cm.Parameters.AddWithValue("@neurological_exam", data.neurological_exam);
+            cm.Parameters.AddWithValue("@sensory", data.sensory);
+            cm.Parameters.AddWithValue("@manual_muscle_strength_testing", data.manual_muscle_strength_testing);
+            cm.Parameters.AddWithValue("@ie_id", data.ie_id);
+            cm.Parameters.AddWithValue("@other_content", data.other_content);
+            cm.Parameters.AddWithValue("@patient_id", data.patient_id);
+            cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+            var result = ExecuteScalar(cm);
+            return result;
+        }
+
+
+        public void InsertNEFU(tbl_fu_ne data)
+        {
+            MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_fu_ne
+		(neurological_exam,sensory,manual_muscle_strength_testing,other_content,ie_id,patient_id,cmp_id,fu_id)Values
+				(@neurological_exam,@sensory,@manual_muscle_strength_testing,@other_content,@ie_id,@patient_id,@cmp_id,@fu_id)", conn);
+            cm.Parameters.AddWithValue("@neurological_exam", data.neurological_exam);
+            cm.Parameters.AddWithValue("@sensory", data.sensory);
+            cm.Parameters.AddWithValue("@manual_muscle_strength_testing", data.manual_muscle_strength_testing);
+            cm.Parameters.AddWithValue("@other_content", data.other_content);
+            cm.Parameters.AddWithValue("@ie_id", data.ie_id);
+            cm.Parameters.AddWithValue("@patient_id", data.patient_id);
+            cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+            cm.Parameters.AddWithValue("@fu_id", data.fu_id);
+            Execute(cm);
+        }
+
+        public void UpdateNEFU(tbl_fu_ne data)
+        {
+            MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_fu_ne SET
+		neurological_exam=@neurological_exam,
+		sensory=@sensory,
+other_content=@other_content,
+		manual_muscle_strength_testing=@manual_muscle_strength_testing
+			where id=@id", conn);
+            cm.Parameters.AddWithValue("@id", data.id);
+            cm.Parameters.AddWithValue("@neurological_exam", data.neurological_exam);
+            cm.Parameters.AddWithValue("@sensory", data.sensory);
+            cm.Parameters.AddWithValue("@other_content", data.other_content);
+            cm.Parameters.AddWithValue("@manual_muscle_strength_testing", data.manual_muscle_strength_testing);
+           
+
+            Execute(cm);
+        }
+
+        public int UpdatePageNE(tbl_ie_ne data)
+        {
+            MySqlCommand cm = new MySqlCommand(@"update tbl_ie_ne
+		 set neurological_exam=@neurological_exam,sensory=@sensory,manual_muscle_strength_testing=@manual_muscle_strength_testing,other_content=@other_content
+         where id=@id;select 1;", conn);
+
+            cm.Parameters.AddWithValue("@neurological_exam", data.neurological_exam);
+            cm.Parameters.AddWithValue("@sensory", data.sensory);
+            cm.Parameters.AddWithValue("@other_content", data.other_content);
+            cm.Parameters.AddWithValue("@manual_muscle_strength_testing", data.manual_muscle_strength_testing);
+            cm.Parameters.AddWithValue("@id", data.id);
+
+            var result = ExecuteScalar(cm);
+            return result;
+        }
+
+        public tbl_ie_ne GetOneNE(int id)
+        {
+            DataTable dt = new DataTable();
+            MySqlCommand cm = new MySqlCommand("select * from tbl_ie_ne where ie_id=@id ", conn);
+            cm.Parameters.AddWithValue("@id", id);
+            var datalist = ConvertDataTable<tbl_ie_ne>(GetData(cm)).FirstOrDefault();
+            return datalist;
+        }
+
+        public tbl_fu_ne? GetOneNEFU(int id)
+        {
+            DataTable dt = new DataTable();
+            MySqlCommand cm = new MySqlCommand("select * from tbl_fu_ne where fu_id=@id ", conn);
+            cm.Parameters.AddWithValue("@id", id);
+            var datalist = ConvertDataTable<tbl_fu_ne>(GetData(cm)).FirstOrDefault();
+            return datalist;
+        }
+
         #endregion
     }
 }

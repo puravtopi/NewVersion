@@ -15,13 +15,13 @@ namespace PainTrax.Web.Models
         public string?  visitiefu { get; set; }
         public string? followupdate { get; set; }
         public DateTime? doa { get; set; }
-        public DateTime? doe { get; set; }
+        public DateTime ? doe { get; set; }
         public string? casetype { get; set; }
         public string? location { get; set; }
         public string? requested { get; set; }
         public string? scheduled { get; set; }
         public string? alert { get; set; }
-        public Int32? inhouse { get; set; }
+        public string? inhouse { get; set; }
 
 
         /*public string label { get; set; }

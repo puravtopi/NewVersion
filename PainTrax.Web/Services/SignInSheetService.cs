@@ -84,7 +84,9 @@ public class SignInSheetService : ParentService
                 Location_ID = "0";
 
             }
-            MySqlCommand cm = new MySqlCommand("CALL GetPatientsSIDNL(" + cmpID + ",'" + doe + "'," + Location_ID + ")", conn);
+            // MySqlCommand cm = new MySqlCommand("CALL GetPatientsSIDNL(" + cmpID + ",'" + doe + "'," + Location_ID + ")", conn);
+            MySqlCommand cm = new MySqlCommand("CALL GetPatientsSIDNLNew(" + cmpID + ",'" + doe + "'," + Location_ID + ")", conn);
+            
 
             //var datalist = (GetData(cm));
 
@@ -112,9 +114,10 @@ public class SignInSheetService : ParentService
                 Location_ID = "0";
 
             }
-            MySqlCommand cm = new MySqlCommand("CALL GetPatientsSIDNL(" + cmpID + ",'" + doe + "'," + Location_ID + ")", conn);
+            //MySqlCommand cm = new MySqlCommand("CALL GetPatientsSIDNL(" + cmpID + ",'" + doe + "'," + Location_ID + ")", conn);
+            MySqlCommand cm = new MySqlCommand("CALL GetPatientsSIDNLNew(" + cmpID + ",'" + doe + "'," + Location_ID + ")", conn);
 
-             datalist = (GetData(cm));
+            datalist = (GetData(cm));
 
             // MySqlCommand cm = new MySqlCommand(query, conn);
 

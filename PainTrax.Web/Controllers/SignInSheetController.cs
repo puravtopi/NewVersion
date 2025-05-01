@@ -163,7 +163,7 @@ namespace PainTrax.Web.Controllers
                         // AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
                     }
                 }
-
+                
                 int? providorId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
 
                 string providerName = string.Empty;
@@ -191,17 +191,17 @@ namespace PainTrax.Web.Controllers
                     new DataColumn("Name - Acct#", typeof(string)),
                     new DataColumn("Case Type", typeof(string)),
                     //new DataColumn("lname", typeof(string)),
-                    new DataColumn("Visit Details", typeof(string)),
-                    new DataColumn("Proc FU Date", typeof(string)),
+                    new DataColumn("Visit", typeof(string)),
+                   // new DataColumn("Proc FU Date", typeof(string)),
                     //new DataColumn("doa", typeof(string)),
-                    new DataColumn("InHouse Proc", typeof(string)),
+                    new DataColumn("InH Proc", typeof(string)),
                     //new DataColumn("Doe", typeof(string)),
 
                     //new DataColumn("Location", typeof(string)),
-                    new DataColumn("Procedure Requested", typeof(string)),
-                    new DataColumn("Procedure Scheduled", typeof(string)),
-                    new DataColumn("Alert", typeof(string)),
-                    new DataColumn("Next Visit", typeof(string))
+                    new DataColumn("Proc Req", typeof(string)),
+                    new DataColumn("Proc Sched", typeof(string)),
+                    new DataColumn("Alert", typeof(string))
+                   // new DataColumn("Next Visit", typeof(string))
 
                         });
 
@@ -215,17 +215,17 @@ namespace PainTrax.Web.Controllers
                     new DataColumn("Name - Acct#", typeof(string)),
                     new DataColumn("Case Type", typeof(string)),
                     //new DataColumn("lname", typeof(string)),
-                    new DataColumn("Visit Details", typeof(string)),
-                    new DataColumn("Proc FU Date", typeof(string)),
+                    new DataColumn("Visit", typeof(string)),
+                    //new DataColumn("Proc FU Date", typeof(string)),
                     //new DataColumn("doa", typeof(string)),
-                    new DataColumn("InHouse Proc", typeof(string)),
+                    new DataColumn("InH Proc", typeof(string)),
                     //new DataColumn("Doe", typeof(string)),
 
                     new DataColumn("Location", typeof(string)),
-                    new DataColumn("Procedure Requested", typeof(string)),
-                    new DataColumn("Procedure Scheduled", typeof(string)),
-                    new DataColumn("Alert", typeof(string)),
-                    new DataColumn("Next Visit", typeof(string))
+                    new DataColumn("Proc Req", typeof(string)),
+                    new DataColumn("Proc Sched", typeof(string)),
+                    new DataColumn("Alert", typeof(string))
+                   // new DataColumn("Next Visit", typeof(string))
 
                             });
 
@@ -239,14 +239,14 @@ namespace PainTrax.Web.Controllers
                 {
                     foreach (var cnt in data)
                     {
-                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.followupdate, cnt.inhouse, cnt.requested, cnt.scheduled, cnt.alert, string.Empty);
+                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.inhouse, cnt.requested, cnt.scheduled, cnt.alert);
                     }
                 }
                 else
                 {
                     foreach (var cnt in data)
                     {
-                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.followupdate, cnt.inhouse, cnt.location, cnt.requested, cnt.scheduled, cnt.alert, string.Empty);
+                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.inhouse, cnt.location, cnt.requested, cnt.scheduled, cnt.alert);
                     }
                 }
 

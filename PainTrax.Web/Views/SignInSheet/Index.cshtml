@@ -79,6 +79,7 @@
 
                 var html = "";
                 var json = JSON.parse(data);
+                let total = json.length;
                 $.each(json, function (index, value) {
                     html += '<li><span class="caret"> <a onclick="GetSIDateDetails(' + value.IEID + ',' + value.FUID + ',\'' + String(value.type) + '\')">' + value.lname + ',' + value.fname + '</a></span>';
                     html += '<ul class="nested">';
@@ -88,11 +89,14 @@
                     html += '<li>' + value.type + '</li>';
                     html += '<li> DOE:' + value.doe + '</li>';
                     html += '</ul></li>';
+
                 });
                 document.getElementById("myUL").innerHTML = "";
                 // document.getElementById("dlSI").innerHTML = '<a class="dropdown-item d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Document"  href="' + editurldocument + '/' + full.patient_id + '"><i class="bi bi-folder-fill" title="Document"></i><span>Document</span></a>';
                 //  document.getElementById("dlSI").innerHTML = '<a  href="' + SIUrl + '/' + document.getElementById("txtSIDate").value + ' / ' + document.getElementById("location_id").value + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Down SI"></i></a> &nbsp; &nbsp;';
                 $('#myUL').append(html);
+                document.getElementById("Total").innerHTML = '<h6 style="color:black"> Total : ' + total + '</h1>';
+                document.getElementById("totrow").style = "display:block";
                 BindScriptforTreeView();
             },
             error: function (data, status, jqXHR) { alert("Error " + jqXHR); }
@@ -310,6 +314,7 @@
                 </div>
                 <hr>
                 <div class="card info-card sales-card">
+                    <ul id="Total"></ul>
                     <div class="row">
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                             <ul id="myUL"></ul>

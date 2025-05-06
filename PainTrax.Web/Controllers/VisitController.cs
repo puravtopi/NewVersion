@@ -478,8 +478,19 @@ namespace PainTrax.Web.Controllers
                     obj.patientid = 0;
                     obj.id = 0;
                     obj.Page1 = new tbl_ie_page1();
+
+                    obj.providerid = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
+
                     obj.Page2 = new tbl_ie_page2();
                     obj.Page3 = new tbl_ie_page3();
+
+
+
+                    obj.Page3.diagcervialbulge_text = "Reveals ";
+                    obj.Page3.diagthoracicbulge_text = "Reveals ";
+                    obj.Page3.diaglumberbulge_text = "Reveals ";
+                    obj.Page3.gait = "Normal";
+
                     obj.NE = new tbl_ie_ne();
                     obj.Comment = new tbl_ie_comment();
                     obj.Other = new tbl_ie_other();
@@ -2299,7 +2310,7 @@ namespace PainTrax.Web.Controllers
 
                 var templateData = new tbl_template();
                 var patientData = _ieService.GetOnebyPatientId(id);
-                if(patientData.compensation=="WC")
+                if (patientData.compensation == "WC")
                 {
                     //templateData = _printService.GetTemplate(cmpid, "IE WC");
                     templateData = _printService.GetTemplate(cmpid, "IE");
@@ -2307,13 +2318,13 @@ namespace PainTrax.Web.Controllers
                 else
                 {
                     templateData = _printService.GetTemplate(cmpid, "IE");
-                }               
+                }
                 var gender = "";
                 var sex = "";
 
                 body = templateData.content;
 
-                
+
 
                 if (patientData != null)
                 {
@@ -2446,7 +2457,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",", ", "));
                     body = body.Replace("#bpl", string.IsNullOrEmpty(bodypart) ? "" : (bodypart.ToLower()).ToString().Replace(",", ", "));
                     string assessment = "";
-                    if(cmpid=="14")
+                    if (cmpid == "14")
                     {
                         if (bodypart != null)
                         {
@@ -2456,10 +2467,10 @@ namespace PainTrax.Web.Controllers
                             // Replace and rearrange the content using regex
                             string outputStr = Regex.Replace(page1Data.assessment, pattern, "<p>$2 - $1</p>");
                             assessment = outputStr.Replace("#PC", bodypart + " pain.");
-                        }                            
+                        }
                         else
                             assessment = page1Data.assessment.Replace("#PC", "");
-                        
+
                     }
                     else
                     {
@@ -2471,7 +2482,7 @@ namespace PainTrax.Web.Controllers
                                 assessment = page1Data.assessment.Replace("#PC", "");
                             assessment = assessment.Replace("#accidenttype", patientData.accidentType);
                         }
-                    }                 
+                    }
 
 
 
@@ -2615,11 +2626,11 @@ namespace PainTrax.Web.Controllers
                     if (HttpContext.Session.GetString(SessionKeys.SessionPageBreak) == "true")
                     {
                         // Create HTML with a page break before the injection section
-                        string pageBreakHtml = "<div style='page-break-before: always;'>";
-                        pageBreakHtml += injectionHtml;
-                        pageBreakHtml += "</div>";
+                        //  string pageBreakHtml = "<div style='page-break-before: always;'>Test Page</div><div style='page-break-before: always;'>";
+                        //pageBreakHtml += injectionHtml;
+                        //pageBreakHtml += "</div>";
 
-                        body = body.Replace("#injection", pageBreakHtml);
+                        body = body.Replace("#injection", injectionHtml);
                     }
                     else
                     {
@@ -3081,7 +3092,7 @@ namespace PainTrax.Web.Controllers
 
 
             string strPoc = "", pocDesc = "", ccdesc = "", pedesc = "", adesc = "";
-            string inject_desc = "";
+            string inject_desc = "", pageBreakHtml="";
             if (dsPOC != null && dsPOC.Rows.Count > 0)
             {
 
@@ -3187,14 +3198,13 @@ namespace PainTrax.Web.Controllers
                         {
                             if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
                             {
-                                inject_desc = inject_desc + "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
+                                inject_desc = (dsPOC.Rows[i]["injection_description"].ToString());
                                 inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
                                 inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
 
-                                string pageBreakHtml = "<div style='page-break-before: always;'>";
-                                pageBreakHtml = pageBreakHtml+ inject_desc+"</div>";
+                                inject_desc = "<div style='page-break-before: always;'>" + inject_desc + "</div>";
+                                pageBreakHtml = pageBreakHtml + inject_desc;
 
-                                inject_desc = pageBreakHtml;
                             }
                         }
                         strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + pocDesc + "</li>";
@@ -3204,7 +3214,7 @@ namespace PainTrax.Web.Controllers
 
             pocDetails pocDetails = new pocDetails()
             {
-                strInjectionDesc = inject_desc,
+                strInjectionDesc = pageBreakHtml,
                 strPoc = strPoc != "" ? "<ol>" + strPoc + "</ol>" : "",
                 strCCDesc = ccdesc,
                 strPEDesc = pedesc,
@@ -3573,7 +3583,7 @@ namespace PainTrax.Web.Controllers
 
                         strDaignosis = strDaignosis + " of the cervical spine " + data.diagcervialbulge_text + ", ";
 
-                        stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                        stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
 
@@ -3616,7 +3626,7 @@ namespace PainTrax.Web.Controllers
                     {
                         strDaignosis = strDaignosis + " of the thoracic spine " + data.diagthoracicbulge_text + ", ";
 
-                        stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                        stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
 
@@ -3659,7 +3669,7 @@ namespace PainTrax.Web.Controllers
                     {
                         strDaignosis = strDaignosis + " of the lumbar spine " + data.diaglumberbulge_text + ", ";
 
-                        stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                        stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
 

@@ -4152,7 +4152,7 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(data.diagcervialbulge_text))
                     {
 
-                        strDaignosis = strDaignosis + " of the cervical spine " + data.diagcervialbulge_text + ", ";
+                        strDaignosis = strDaignosis + " of the cervical spine reveals disc bulge at " + data.diagcervialbulge_text + ", ";
 
                         stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
@@ -4195,7 +4195,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
                     {
-                        strDaignosis = strDaignosis + " of the thoracic spine " + data.diagthoracicbulge_text + ", ";
+                        strDaignosis = strDaignosis + " of the thoracic spine reveals disc bulge at " + data.diagthoracicbulge_text + ", ";
 
                         stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
@@ -4238,7 +4238,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
                     {
-                        strDaignosis = strDaignosis + " of the lumbar spine " + data.diaglumberbulge_text + ", ";
+                        strDaignosis = strDaignosis + " of the lumbar spine reveals disc bulge at " + data.diaglumberbulge_text + ", ";
 
                         stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;

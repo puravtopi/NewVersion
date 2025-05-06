@@ -242,6 +242,14 @@ namespace PainTrax.Web.Controllers
 
             var providers = _userService.GetProviders(cmpid.Value);
             ViewBag.providerList = providers;
+
+
+            if (HttpContext.Session.GetString(SessionKeys.SessionDesignation) == "Provider")
+            {
+                int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionUserId);
+                HttpContext.Session.SetInt32(SessionKeys.SessionSelectedProviderId, userid == null ? 0 : userid.Value);
+            }
+
             return View();
         }
 
@@ -251,7 +259,10 @@ namespace PainTrax.Web.Controllers
 
 
             HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, model.locationid == null ? 0 : model.locationid.Value);
-            HttpContext.Session.SetInt32(SessionKeys.SessionSelectedProviderId, model.providerid == null ? 0 : model.providerid.Value);
+            if (HttpContext.Session.GetString(SessionKeys.SessionDesignation) != "Provider")
+            {
+                HttpContext.Session.SetInt32(SessionKeys.SessionSelectedProviderId, model.providerid == null ? 0 : model.providerid.Value);
+            }
 
             return RedirectToAction("Index", "Home");
         }

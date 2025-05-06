@@ -17,6 +17,8 @@ import { Paragraph } from '@ckeditor/ckeditor5-paragraph';
 import { PasteFromOffice } from '@ckeditor/ckeditor5-paste-from-office';
 import { Table, TableToolbar } from '@ckeditor/ckeditor5-table';
 import { TextTransformation } from '@ckeditor/ckeditor5-typing';
+import Underline from '@ckeditor/ckeditor5-underline';
+
 
 // You can read more about extending the build with additional plugins in the "Installing plugins" guide.
 // See https://ckeditor.com/docs/ckeditor5/latest/installation/plugins/installing-plugins.html for details.
@@ -36,7 +38,8 @@ class Editor extends ClassicEditor {
 		PasteFromOffice,
 		Table,
 		TableToolbar,
-		TextTransformation
+		TextTransformation,
+		Underline 
 	];
 
 	public static override defaultConfig = {
@@ -46,6 +49,7 @@ class Editor extends ClassicEditor {
 				'|',
 				'bold',
 				'italic',
+				'underline',
 				'bulletedList',
 				'numberedList',
 				'|',

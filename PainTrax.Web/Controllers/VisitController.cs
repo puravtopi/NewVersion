@@ -486,18 +486,18 @@ namespace PainTrax.Web.Controllers
 
 
 
-                    obj.Page3.diagcervialbulge_text = "Reveals ";
-                    obj.Page3.diagthoracicbulge_text = "Reveals ";
-                    obj.Page3.diaglumberbulge_text = "Reveals ";
-                    obj.Page3.gait = "Normal";
+                    obj.Page3.diagcervialbulge_text = "reveals ";
+                    obj.Page3.diagthoracicbulge_text = "reveals ";
+                    obj.Page3.diaglumberbulge_text = "reveals ";
+                    obj.Page3.gait = HttpContext.Session.GetString(SessionKeys.SessionGAIT);
 
                     obj.NE = new tbl_ie_ne();
                     obj.Comment = new tbl_ie_comment();
                     obj.Other = new tbl_ie_other();
-                    obj.Other.followup_duration = "2-4 weeks.";
+                    obj.Other.followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
                     obj.dos = System.DateTime.Now;
                     obj.locationid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
-                    obj.Page3.gait = "Guarded";
+                  
 
                     var _data = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
 
@@ -2455,6 +2455,7 @@ namespace PainTrax.Web.Controllers
 
                     body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",", ", "));
+                   
                     body = body.Replace("#bpl", string.IsNullOrEmpty(bodypart) ? "" : (bodypart.ToLower()).ToString().Replace(",", ", "));
                     string assessment = "";
                     if (cmpid == "14")

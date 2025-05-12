@@ -102,6 +102,7 @@ namespace PainTrax.Web.Controllers
                 {
 
                     HttpContext.Session.SetInt32(SessionKeys.SessionCmpId, response.Model.cmp_id.Value);
+                    HttpContext.Session.SetString(SessionKeys.SessionCmpClientId, response.Model.client_code);
                     HttpContext.Session.SetString(SessionKeys.SessionCmpName, response.Model.company_name);
                     HttpContext.Session.SetInt32(SessionKeys.SessionCmpUserId, response.Model.Id.Value);
                     HttpContext.Session.SetString(SessionKeys.SessionCmpEmail, response.Model.emailid);
@@ -124,7 +125,8 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, string.IsNullOrEmpty(setting.header_template) ? "" : setting.header_template.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionPostop, setting.show_postop == null ? "true" : setting.show_postop.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionPreop, setting.show_preop == null ? "true" : setting.show_preop.ToString());
-
+                        HttpContext.Session.SetString(SessionKeys.SessionGAIT, setting.gait_default.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionFUDate, setting.fu_default.ToString());
 
                     }
                     else

@@ -20,6 +20,7 @@ namespace PainTrax.Web.Controllers
         private readonly IWebHostEnvironment _environment;
         private readonly PatientIEService _ieService = new PatientIEService();
         private readonly PatientService _patientservices = new PatientService();
+       
 
         public FormsController(ILogger<FormsController> logger, IWebHostEnvironment environment)
         {
@@ -29,6 +30,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Index(string searchtxt = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
 
             string cnd = " and cmp_id=" + cmpid;
 
@@ -38,7 +40,7 @@ namespace PainTrax.Web.Controllers
             var result = _patientservices.GetAll(cnd);
             var data = result;
 
-            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpclientid.TrimEnd());
             if (!Directory.Exists(downloadFolder))
             {
                 Directory.CreateDirectory(downloadFolder);
@@ -125,6 +127,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Manage(string searchtxt = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
 
             string cnd = " and cmp_id=" + cmpid;
 
@@ -134,7 +137,7 @@ namespace PainTrax.Web.Controllers
             var result = _patientservices.GetAll(cnd);
             var data = result;
 
-            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpclientid);
             var subFolders = Directory.GetDirectories(downloadFolder);
 
             var filesByFolder = new Dictionary<string, List<string>>();
@@ -161,7 +164,8 @@ namespace PainTrax.Web.Controllers
         {
 
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+            string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
+            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpclientid);
             string newFolderPath = Path.Combine(downloadFolder, folderName);
             if (!Directory.Exists(newFolderPath))
             {
@@ -180,7 +184,8 @@ namespace PainTrax.Web.Controllers
         public ActionResult DeleteFolder(string folderName)
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+            string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
+            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpclientid);
             string folderPath = Path.Combine(downloadFolder, folderName);
             if (Directory.Exists(folderPath))
             {
@@ -206,7 +211,8 @@ namespace PainTrax.Web.Controllers
         public ActionResult UploadFile(string folderName, IFormFile file)
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+            string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
+            var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpclientid);
             if (file != null && file.Length > 0 && Path.GetExtension(file.FileName).ToLower() == ".pdf")
             {
                 string folderPath = Path.Combine(downloadFolder, folderName);
@@ -279,6 +285,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult GeneratePdf(string pdffile, string id, string txt_date = "", string txt_surgery = "", string txt_docName = "", string txt_MCode_Proc = "", string txtProcedureCode = "", string txt_diagnosis = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
             Dictionary<string, string> controls = new Dictionary<string, string>();
 
             try
@@ -304,7 +311,7 @@ namespace PainTrax.Web.Controllers
 
             try
             {
-                uploadsFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+                uploadsFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpclientid);
                 filePath = Path.Combine(uploadsFolder, pdffile);
 
                 signPath = Path.Combine(_environment.WebRootPath, "signatures");

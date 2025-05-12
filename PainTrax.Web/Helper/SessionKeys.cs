@@ -3,6 +3,7 @@
     public static class SessionKeys
     {
         public static string SessionCmpId = "cmpid";
+        public static string SessionCmpClientId = "cmpclientid";
         public static string SessionCmpName = "cmpname";
         public static string SessionCmpEmail = "cmpemail";
         public static string SessionCmpUserId = "cmpuserid";
@@ -30,6 +31,8 @@
         public static string SessionFontSize = "fontsize";
         public static string SessionPreop = "preop";
         public static string SessionPostop = "postop";
+        public static string SessionGAIT = "GAIT";
+        public static string SessionFUDate = "FuDate";
 
         public static string Sessiondldoe = "dldoe";
         public static string Sessiondldlloc = "dlloc";

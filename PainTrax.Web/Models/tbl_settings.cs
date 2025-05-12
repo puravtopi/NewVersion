@@ -16,6 +16,8 @@
         public string header_template_hidden { get; set; }
         public string font_family { get; set; }
         public string font_size { get; set; }        
+        public string gait_default { get; set; }        
+        public string fu_default { get; set; }        
         public bool show_preop { get; set; }        
         public bool show_postop { get; set; }        
     }

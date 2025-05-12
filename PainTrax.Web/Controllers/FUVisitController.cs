@@ -944,7 +944,6 @@ namespace PainTrax.Web.Controllers
                     fu_id = model.fu_id.Value;
                 }
                 else
-
                     fu_id = _patientFuservices.Insert(objFU);
 
                 HttpContext.Session.SetInt32(SessionKeys.SessionIEId, ie);
@@ -3348,7 +3347,7 @@ namespace PainTrax.Web.Controllers
             DataTable dsPOC = _pocService.GetPOCFU(PatientFU_ID);
 
             string strPoc = "", pocDesc = "", ccdesc = "", pedesc = "", adesc = "";
-            string inject_desc = "";
+            string inject_desc = "", pageBreakHtml="";
             if (dsPOC != null && dsPOC.Rows.Count > 0)
             {
 
@@ -3437,14 +3436,13 @@ namespace PainTrax.Web.Controllers
                         {
                             if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
                             {
-                                inject_desc = inject_desc + "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
+                                inject_desc = (dsPOC.Rows[i]["injection_description"].ToString());
                                 inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
                                 inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
 
-                                string pageBreakHtml = "<div style='page-break-before: always;'>";
-                                pageBreakHtml = pageBreakHtml + inject_desc + "</div>";
+                                inject_desc = "<div style='page-break-before: always;'>" + inject_desc + "</div>";
+                                pageBreakHtml = pageBreakHtml + inject_desc;
 
-                                inject_desc = pageBreakHtml;
                             }
                         }
                         strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + pocDesc + "</li>";
@@ -3454,7 +3452,7 @@ namespace PainTrax.Web.Controllers
 
             pocDetails pocDetails = new pocDetails()
             {
-                strInjectionDesc = inject_desc,
+                strInjectionDesc = pageBreakHtml,
                 strPoc = strPoc != "" ? "<ol>" + strPoc + "</ol>" : "",
                 strCCDesc = ccdesc,
                 strPEDesc = pedesc,

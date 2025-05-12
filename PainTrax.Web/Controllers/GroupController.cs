@@ -40,12 +40,13 @@ namespace PainTrax.Web.Controllers
             try
             {               
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
                 obj.LocationList = _commonservices.GetLocationsCheckBoxList(cmpid.Value);
                 obj.PagesList = _commonservices.GetPagesCheckBoxList();
                 obj.ReportsList = _commonservices.GetReportsCheckBoxList();
                 obj.RoleList = _commonservices.GetRolsCheckBoxList();
 
-                var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+                var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpclientid);
                 var subFolders = Directory.GetDirectories(downloadFolder);
 
                 var filesByFolder = new Dictionary<string, List<string>>();
@@ -160,6 +161,7 @@ namespace PainTrax.Web.Controllers
                 tbl_groups obj = new tbl_groups();
                 obj.Id = id;
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
                 data = _services.GetOne(obj);
                 data.LocationList = _commonservices.GetLocationsCheckBoxList(cmpid.Value, data.Location_ids);
                 data.PagesList = _commonservices.GetPagesCheckBoxList(data.pages_ids);
@@ -167,7 +169,7 @@ namespace PainTrax.Web.Controllers
                 data.RoleList = _commonservices.GetRolsCheckBoxList(data.role_ids);
                 data.form_name = data.form_name == null ? "" : data.form_name;
 
-                var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpid);
+                var downloadFolder = Path.Combine(_environment.WebRootPath, "Downloads/" + cmpclientid);
                 var subFolders = Directory.GetDirectories(downloadFolder);
 
                 var filesByFolder = new Dictionary<string, List<string>>();

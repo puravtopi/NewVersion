@@ -496,11 +496,9 @@ namespace PainTrax.Web.Controllers
                     obj.Other = new tbl_ie_other();
                     obj.Other.followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
                     obj.dos = System.DateTime.Now;
-                    obj.locationid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
-                  
+                    obj.locationid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);                
 
                     var _data = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
-
 
                     if (_defaultdata != null)
                     {
@@ -3089,8 +3087,6 @@ namespace PainTrax.Web.Controllers
         private pocDetails getPOC(int PatientIE_ID)
         {
             DataTable dsPOC = _pocService.GetPOCIENew(PatientIE_ID);
-
-
 
             string strPoc = "", pocDesc = "", ccdesc = "", pedesc = "", adesc = "";
             string inject_desc = "", pageBreakHtml="";

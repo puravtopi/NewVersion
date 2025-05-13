@@ -1,4 +1,7 @@
-﻿<style>
+﻿@using PainTrax.Web.Helper;
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<style>
 
     input:read-only {
         background-color: #d4d4d4;
@@ -81,16 +84,30 @@
                             <input type="text" class="form-control" value="" id="Level" />
                         </div>
                     </div>
-
+                    @{
+                        var cmpCode = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
+                    }
 
                     <div class="row mb-3" id="divSide">
                         <label id="Sidelbl" class="col-sm-2 col-form-label">Side</label>
                         <div class="col-sm-4">
                             <select id="Side" class="form-control">
-                                <option value=" ">--Select--</option>
-                                <option value="Left">LEFT</option>
-                                <option value="Right">RIGHT</option>
-                                <option value="Bilateral">BILATERAL</option>
+                                @if (cmpCode == "MNPLLC")
+                                {
+                                    <option value=" ">--Select--</option>
+                                    <option value="Left">LEFT</option>
+                                    <option value="Right">RIGHT</option>
+                                    <option value="Bilateral">BILATERAL</option>
+                                }
+                                else
+                                {
+                                    <option value=" ">--Select--</option>
+                                    <option value="Left">Left</option>
+                                    <option value="Right">Right</option>
+                                    <option value="Bilateral">Bilateral</option>
+                                
+                                }
+                               
                             </select>
                         </div>
                     </div>

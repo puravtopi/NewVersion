@@ -125,8 +125,8 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, string.IsNullOrEmpty(setting.header_template) ? "" : setting.header_template.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionPostop, setting.show_postop == null ? "true" : setting.show_postop.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionPreop, setting.show_preop == null ? "true" : setting.show_preop.ToString());
-                        HttpContext.Session.SetString(SessionKeys.SessionGAIT, setting.gait_default.ToString());
-                        HttpContext.Session.SetString(SessionKeys.SessionFUDate, setting.fu_default.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionGAIT, setting.gait_default==null?"": setting.gait_default.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionFUDate, setting.fu_default==null?"": setting.fu_default.ToString());
 
                     }
                     else

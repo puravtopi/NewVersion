@@ -682,272 +682,281 @@ namespace PainTrax.Web.Controllers
             try
             {
                 var data = model;
-                int patientId = 0, priminsId = 0, secinsId = 0, attornyId = 0, adjusterId = 0, empId = 0;
+                var _isExist = _patientFuservices.IsFuExist(model.fu_id.Value, model.dov.Value, model.type);
 
-                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-                int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
-                int age = calculateAge(model.dob.Value);
-
-                tbl_patient objPatient = new tbl_patient()
+                if (!_isExist)
                 {
-                    account_no = model.account_no,
-                    address = model.address,
-                    city = model.city,
-                    dob = model.dob,
-                    email = model.email,
-                    fname = model.fname,
-                    gender = model.gender,
-                    home_ph = model.home_ph,
-                    lname = model.lname,
-                    mc = model.mc,
-                    mname = model.mname,
-                    mobile = model.mobile,
-                    ssn = model.ssn,
-                    state = model.state,
-                    physicianid = model.physicianid,
-                    vaccinated = model.vaccinated,
-                    zip = model.zip,
-                    cmp_id = cmpid,
-                    createdby = userid,
-                    age = age
-                };
+                    int patientId = 0, priminsId = 0, secinsId = 0, attornyId = 0, adjusterId = 0, empId = 0;
 
-                if (model.id.Value > 0)
-                {
-                    objPatient.id = model.patientid;
-                    _patientservices.Update(objPatient);
-                    patientId = model.patientid.Value;
+                    int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                    int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
+                    int age = calculateAge(model.dob.Value);
+
+                    tbl_patient objPatient = new tbl_patient()
+                    {
+                        account_no = model.account_no,
+                        address = model.address,
+                        city = model.city,
+                        dob = model.dob,
+                        email = model.email,
+                        fname = model.fname,
+                        gender = model.gender,
+                        home_ph = model.home_ph,
+                        lname = model.lname,
+                        mc = model.mc,
+                        mname = model.mname,
+                        mobile = model.mobile,
+                        ssn = model.ssn,
+                        state = model.state,
+                        physicianid = model.physicianid,
+                        vaccinated = model.vaccinated,
+                        zip = model.zip,
+                        cmp_id = cmpid,
+                        createdby = userid,
+                        age = age
+                    };
+
+                    if (model.id.Value > 0)
+                    {
+                        objPatient.id = model.patientid;
+                        _patientservices.Update(objPatient);
+                        patientId = model.patientid.Value;
+                    }
+                    else
+                    {
+                        patientId = _patientservices.Insert(objPatient);
+                    }
+                    var query = "";
+                    List<tbl_inscos> insdata = new List<tbl_inscos>();
+                    tbl_inscos objInscos = new tbl_inscos();
+
+                    if (!string.IsNullOrEmpty(model.prime_cmpname))
+                    {
+                        query = " and cmpname='" + model.prime_cmpname + "' and cmp_id=" + cmpid + "";
+
+                        insdata = _inscosservices.GetAll(query);
+
+                        //save primary insurance
+
+                        objInscos = new tbl_inscos()
+                        {
+                            address1 = model.prime_address,
+                            cmpname = model.prime_cmpname,
+                            telephone = model.prime_phone,
+                            cmp_id = cmpid,
+                            createdby = userid
+
+                        };
+
+                        if (insdata.Count > 0)
+                        {
+                            objInscos.id = insdata[0].id.Value;
+                            _inscosservices.Update(objInscos);
+                            priminsId = insdata[0].id.Value;
+                        }
+                        else
+                        {
+                            priminsId = _inscosservices.Insert(objInscos);
+                        }
+
+                    }
+
+                    if (!string.IsNullOrEmpty(model.sec_cmpname))
+                    {
+
+                        query = " and cmpname='" + model.sec_cmpname + "' and cmp_id=" + cmpid + "";
+
+                        insdata = _inscosservices.GetAll(query);
+
+                        //save secondary insurance
+
+                        objInscos = new tbl_inscos()
+                        {
+                            address1 = model.sec_address,
+                            cmpname = model.sec_cmpname,
+                            telephone = model.sec_phone,
+                            cmp_id = cmpid,
+                            createdby = userid
+
+                        };
+
+                        if (insdata.Count > 0)
+                        {
+                            objInscos.id = insdata[0].id.Value;
+                            _inscosservices.Update(objInscos);
+                            secinsId = insdata[0].id.Value;
+                        }
+                        else
+                        {
+                            secinsId = _inscosservices.Insert(objInscos);
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(model.attory_name))
+                    {
+
+                        query = " and Attorney='" + model.attory_name + "' and cmp_id=" + cmpid + "";
+
+                        var attrydata = _attorneyservices.GetAll(query);
+
+
+                        //save attorney
+
+                        tbl_attorneys objAttorneys = new tbl_attorneys()
+                        {
+                            Attorney = model.attory_name,
+                            EmailId = model.attory_email,
+                            ContactNo = model.attory_phone,
+                            cmp_id = cmpid,
+                            CreatedBy = userid
+
+                        };
+
+                        if (attrydata.Count > 0)
+                        {
+                            objAttorneys.Id = attrydata[0].Id.Value;
+                            _attorneyservices.Update(objAttorneys);
+                            attornyId = attrydata[0].Id.Value;
+                        }
+                        else
+                        {
+                            attornyId = _attorneyservices.Insert(objAttorneys);
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(model.adj_name))
+                    {
+                        query = " and adjuster='" + model.adj_name + "' and cmp_id=" + cmpid + "";
+
+                        var adjdata = _aadjusterService.GetAll(query);
+
+                        //save adjuster
+
+                        tbl_adjuster objAdjuster = new tbl_adjuster()
+                        {
+                            adjuster = model.adj_name,
+                            emailaddress = model.adj_email,
+                            telephone = model.adj_phone,
+                            fax = model.adj_fax_no,
+                            cmp_id = cmpid,
+                            created_by = userid
+                        };
+
+                        if (adjdata.Count > 0)
+                        {
+                            objAdjuster.id = adjdata[0].id.Value;
+                            _aadjusterService.Update(objAdjuster);
+                            adjusterId = adjdata[0].id.Value;
+                        }
+                        else
+                        {
+                            adjusterId = _aadjusterService.Insert(objAdjuster);
+                        }
+                    }
+
+
+                    if (!string.IsNullOrEmpty(model.emp_name))
+                    {
+                        query = " and name='" + model.emp_name + "' and patient_id=" + model.patientid + "";
+
+                        var empdata = _empService.GetAll(query);
+
+                        //save employee
+
+                        tbl_emp objEmp = new tbl_emp()
+                        {
+                            address = model.emp_address,
+                            name = model.emp_name,
+                            phone = model.emp_phone,
+                            fax = model.emp_fax_no,
+                            patient_id = patientId
+                        };
+
+                        if (empdata.Count > 0)
+                        {
+                            objEmp.id = empdata[0].id.Value;
+                            _empService.Update(objEmp);
+                            empId = empdata[0].id.Value;
+                        }
+                        else
+                        {
+                            empId = _empService.Insert(objEmp);
+                        }
+                    }
+
+                    //save IE details 
+
+                    tbl_patient_ie objIE = new tbl_patient_ie()
+                    {
+                        adjuster_id = adjusterId,
+                        attorney_id = attornyId,
+                        created_by = userid,
+                        doa = model.doa,
+                        emp_id = empId,
+                        is_active = true,
+
+                        provider_id = model.providerid,
+                        patient_id = patientId,
+                        primary_claim_no = model.prime_claim_no,
+                        primary_ins_cmp_id = priminsId,
+                        primary_policy_no = model.prime_policy_no,
+                        primary_wcb_group = model.prime_WCB_group,
+                        secondary_claim_no = model.sec_claim_no,
+                        secondary_ins_cmp_id = secinsId,
+                        secondary_policy_no = model.sec_policy_no,
+                        secondary_wcb_group = model.sec_WCB_group,
+                        compensation = model.compensation,
+                        alert_note = model.alert_note,
+                        referring_physician = model.referring_physician
+
+                    };
+                    int ie = 0;
+                    if (model.id.Value > 0)
+                    {
+                        objIE.id = model.id.Value;
+                        _ieService.UpdateFromFU(objIE);
+                        ie = model.id.Value;
+                    }
+                    else
+                        ie = _ieService.Insert(objIE);
+
+
+                    //save FU details 
+
+                    tbl_patient_fu objFU = new tbl_patient_fu()
+                    {
+
+                        created_by = userid,
+                        doe = model.dov,
+                        patientIE_ID = ie,
+                        cmp_id = cmpid,
+                        created_date = System.DateTime.Now,
+                        is_active = true,
+                        patient_id = patientId,
+                        extra_comments = model.alert_note,
+                        type = model.type,
+                        accident_type = model.accidentType,
+                        provider_id = model.providerid,
+                        physicianid = model.physicianid,
+                        location_id = model.locationid
+                    };
+                    int fu_id = 0;
+                    if (model.fu_id.Value > 0)
+                    {
+                        objFU.id = model.fu_id.Value;
+                        _patientFuservices.Update(objFU);
+                        fu_id = model.fu_id.Value;
+                    }
+                    else
+                        fu_id = _patientFuservices.Insert(objFU);
+
+                    HttpContext.Session.SetInt32(SessionKeys.SessionIEId, ie);
+                    return Json(new { status = 1, patintid = patientId, ieid = ie, fuid = fu_id });
                 }
                 else
                 {
-                    patientId = _patientservices.Insert(objPatient);
+                    return Json(new { status = -1 });
                 }
-                var query = "";
-                List<tbl_inscos> insdata = new List<tbl_inscos>();
-                tbl_inscos objInscos = new tbl_inscos();
-
-                if (!string.IsNullOrEmpty(model.prime_cmpname))
-                {
-                    query = " and cmpname='" + model.prime_cmpname + "' and cmp_id=" + cmpid + "";
-
-                    insdata = _inscosservices.GetAll(query);
-
-                    //save primary insurance
-
-                    objInscos = new tbl_inscos()
-                    {
-                        address1 = model.prime_address,
-                        cmpname = model.prime_cmpname,
-                        telephone = model.prime_phone,
-                        cmp_id = cmpid,
-                        createdby = userid
-
-                    };
-
-                    if (insdata.Count > 0)
-                    {
-                        objInscos.id = insdata[0].id.Value;
-                        _inscosservices.Update(objInscos);
-                        priminsId = insdata[0].id.Value;
-                    }
-                    else
-                    {
-                        priminsId = _inscosservices.Insert(objInscos);
-                    }
-
-                }
-
-                if (!string.IsNullOrEmpty(model.sec_cmpname))
-                {
-
-                    query = " and cmpname='" + model.sec_cmpname + "' and cmp_id=" + cmpid + "";
-
-                    insdata = _inscosservices.GetAll(query);
-
-                    //save secondary insurance
-
-                    objInscos = new tbl_inscos()
-                    {
-                        address1 = model.sec_address,
-                        cmpname = model.sec_cmpname,
-                        telephone = model.sec_phone,
-                        cmp_id = cmpid,
-                        createdby = userid
-
-                    };
-
-                    if (insdata.Count > 0)
-                    {
-                        objInscos.id = insdata[0].id.Value;
-                        _inscosservices.Update(objInscos);
-                        secinsId = insdata[0].id.Value;
-                    }
-                    else
-                    {
-                        secinsId = _inscosservices.Insert(objInscos);
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(model.attory_name))
-                {
-
-                    query = " and Attorney='" + model.attory_name + "' and cmp_id=" + cmpid + "";
-
-                    var attrydata = _attorneyservices.GetAll(query);
-
-
-                    //save attorney
-
-                    tbl_attorneys objAttorneys = new tbl_attorneys()
-                    {
-                        Attorney = model.attory_name,
-                        EmailId = model.attory_email,
-                        ContactNo = model.attory_phone,
-                        cmp_id = cmpid,
-                        CreatedBy = userid
-
-                    };
-
-                    if (attrydata.Count > 0)
-                    {
-                        objAttorneys.Id = attrydata[0].Id.Value;
-                        _attorneyservices.Update(objAttorneys);
-                        attornyId = attrydata[0].Id.Value;
-                    }
-                    else
-                    {
-                        attornyId = _attorneyservices.Insert(objAttorneys);
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(model.adj_name))
-                {
-                    query = " and adjuster='" + model.adj_name + "' and cmp_id=" + cmpid + "";
-
-                    var adjdata = _aadjusterService.GetAll(query);
-
-                    //save adjuster
-
-                    tbl_adjuster objAdjuster = new tbl_adjuster()
-                    {
-                        adjuster = model.adj_name,
-                        emailaddress = model.adj_email,
-                        telephone = model.adj_phone,
-                        fax = model.adj_fax_no,
-                        cmp_id = cmpid,
-                        created_by = userid
-                    };
-
-                    if (adjdata.Count > 0)
-                    {
-                        objAdjuster.id = adjdata[0].id.Value;
-                        _aadjusterService.Update(objAdjuster);
-                        adjusterId = adjdata[0].id.Value;
-                    }
-                    else
-                    {
-                        adjusterId = _aadjusterService.Insert(objAdjuster);
-                    }
-                }
-
-
-                if (!string.IsNullOrEmpty(model.emp_name))
-                {
-                    query = " and name='" + model.emp_name + "' and patient_id=" + model.patientid + "";
-
-                    var empdata = _empService.GetAll(query);
-
-                    //save employee
-
-                    tbl_emp objEmp = new tbl_emp()
-                    {
-                        address = model.emp_address,
-                        name = model.emp_name,
-                        phone = model.emp_phone,
-                        fax = model.emp_fax_no,
-                        patient_id = patientId
-                    };
-
-                    if (empdata.Count > 0)
-                    {
-                        objEmp.id = empdata[0].id.Value;
-                        _empService.Update(objEmp);
-                        empId = empdata[0].id.Value;
-                    }
-                    else
-                    {
-                        empId = _empService.Insert(objEmp);
-                    }
-                }
-
-                //save IE details 
-
-                tbl_patient_ie objIE = new tbl_patient_ie()
-                {
-                    adjuster_id = adjusterId,
-                    attorney_id = attornyId,
-                    created_by = userid,
-                    doa = model.doa,
-                    emp_id = empId,
-                    is_active = true,
-
-                    provider_id = model.providerid,
-                    patient_id = patientId,
-                    primary_claim_no = model.prime_claim_no,
-                    primary_ins_cmp_id = priminsId,
-                    primary_policy_no = model.prime_policy_no,
-                    primary_wcb_group = model.prime_WCB_group,
-                    secondary_claim_no = model.sec_claim_no,
-                    secondary_ins_cmp_id = secinsId,
-                    secondary_policy_no = model.sec_policy_no,
-                    secondary_wcb_group = model.sec_WCB_group,
-                    compensation = model.compensation,
-                    alert_note = model.alert_note,
-                    referring_physician = model.referring_physician
-
-                };
-                int ie = 0;
-                if (model.id.Value > 0)
-                {
-                    objIE.id = model.id.Value;
-                    _ieService.UpdateFromFU(objIE);
-                    ie = model.id.Value;
-                }
-                else
-                    ie = _ieService.Insert(objIE);
-
-
-                //save FU details 
-
-                tbl_patient_fu objFU = new tbl_patient_fu()
-                {
-
-                    created_by = userid,
-                    doe = model.dov,
-                    patientIE_ID = ie,
-                    cmp_id = cmpid,
-                    created_date = System.DateTime.Now,
-                    is_active = true,
-                    patient_id = patientId,
-                    extra_comments = model.alert_note,
-                    type = model.type,
-                    accident_type = model.accidentType,
-                    provider_id = model.providerid,
-                    physicianid = model.physicianid,
-                    location_id = model.locationid
-                };
-                int fu_id = 0;
-                if (model.fu_id.Value > 0)
-                {
-                    objFU.id = model.fu_id.Value;
-                    _patientFuservices.Update(objFU);
-                    fu_id = model.fu_id.Value;
-                }
-                else
-                    fu_id = _patientFuservices.Insert(objFU);
-
-                HttpContext.Session.SetInt32(SessionKeys.SessionIEId, ie);
-                return Json(new { status = 1, patintid = patientId, ieid = ie, fuid = fu_id });
             }
 
             catch (Exception ex)

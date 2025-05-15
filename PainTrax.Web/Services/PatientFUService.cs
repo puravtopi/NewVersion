@@ -128,4 +128,19 @@ public class PatientFUService : ParentService
         return result;
     }
 
+    public bool IsFuExist(int id,DateTime doe, string type)
+    {
+        DataTable dt = new DataTable();
+        MySqlCommand cm = new MySqlCommand("select id from tbl_patient_fu where DATE(doe)=DATE(@doe) AND TYPE=@type AND id<>@id ", conn);
+        cm.Parameters.AddWithValue("@id", id);
+        cm.Parameters.AddWithValue("@doe", doe);
+        cm.Parameters.AddWithValue("@type", type);
+        var datalist = ConvertDataTable<tbl_patient_fu>(GetData(cm)).FirstOrDefault();
+        if (datalist == null)
+            return false;
+        else {
+            return true;
+        }
+    }
+
 }

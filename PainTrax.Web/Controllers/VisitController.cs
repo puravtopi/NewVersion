@@ -617,7 +617,14 @@ namespace PainTrax.Web.Controllers
                     obj.Page3.other6_study = (obj.Page3.other6_study == null) ? "1" : obj.Page3.other6_study;
                     obj.Page3.other7_study = (obj.Page3.other7_study == null) ? "1" : obj.Page3.other7_study;
                 }
-
+                ViewBag.age = obj.age;
+                ViewBag.dos = obj.dos != null ? Common.commonDate(obj.dos) : "_____";
+                ViewBag.gender = obj.gender;
+                ViewBag.fname = obj.fname;
+                ViewBag.lname = obj.lname;
+                ViewBag.doi = obj.doa != null ? Common.commonDate(obj.doa) : "_____";
+                ViewBag.accidentType = obj.accidentType;                
+                ViewBag.handedness = obj.handeness;
             }
             catch (Exception ex)
             {
@@ -652,6 +659,7 @@ namespace PainTrax.Web.Controllers
                     mc = model.mc,
                     mname = model.mname,
                     mobile = model.mobile,
+                    handeness = model.handeness,
                     ssn = model.ssn,
                     state = model.state,
                     physicianid = model.physicianid,

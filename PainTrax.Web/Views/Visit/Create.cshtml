@@ -323,14 +323,13 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="inputText" class="col-sm-2 col-form-label" style="display:none">
+                                                        <label for="inputText" class="col-sm-2 col-form-label">
                                                             Handedness
                                                         </label>
-                                                        <div class="col-sm-4" style="display:none">
-                                                            <select class="form-select" aria-label="Default select example">
-                                                                <option selected>Select Handedness</option>
-                                                                <option value="1">Right-Handed</option>
-                                                                <option value="2">Left-Handed</option>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" asp-for="handeness" aria-label="Default select example">                                                               
+                                                                <option selected value="1">Right</option>
+                                                                <option value="2">Left</option>
                                                                 <option value="3">Ambidextrous</option>
                                                             </select>
                                                         </div>
@@ -1235,6 +1234,7 @@
                         "gender": $("#gender").val(),
                         "dob": $("#dob").val(),
                         "email": $("#email").val(),
+                        "handeness": $("#handeness").val(),
                         "ssn": $("#ssn").val(),
                         "address": $("#address").val(),
                         "city": $("#city").val(),

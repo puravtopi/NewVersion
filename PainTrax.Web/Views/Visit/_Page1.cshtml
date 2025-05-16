@@ -1,14 +1,5 @@
 ﻿@model MS.Models.tbl_ie_page1
-@{
-    <input type="hidden" value="@ViewBag.handedness" id="hdnHandedness" />    
-    <input type="hidden" value="@ViewBag.age" id="hdnAge" />
-    <input type="hidden" value="@ViewBag.dos" id="hdnDOS" />
-    <input type="hidden" value="@ViewBag.gender" id="hdnGender" />
-    <input type="hidden" value="@ViewBag.fname" id="hdnFname" />
-    <input type="hidden" value="@ViewBag.lname" id="hdnLname" />
-    <input type="hidden" value="@ViewBag.doi" id="hdnDOI" />
-    <input type="hidden" value="@ViewBag.accidentType" id="hdnaccidentType" />
-}
+
 <style>
     .ck-editor__editable_inline p {
         margin: 0;
@@ -32,12 +23,12 @@
     <div class="row mb-3">
         <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Reason">
             Reason For Appointment
-            <div class="col-sm-10" >
+            <div class="col-sm-10">
                 <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
-                </div>
+            </div>
         </label>
-       
-     
+
+
         <div class="col-sm-10" style="height: fit-content;">
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
@@ -152,7 +143,7 @@
         </div>
     </div>
 
-    
+
 
     <div class="row mb-3">
         <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#CC">
@@ -220,11 +211,11 @@
             Assessment
             <br />
             <div class="col-sm-10" id="divdaigo">
-                  
-                  <br/>
+
+                <br />
                 @Html.Raw(ViewBag.DaignoLink)
-           <br />
-                
+                <br />
+
             </div>
             <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
         </label>
@@ -502,7 +493,6 @@
             var cc = ckCC.getData();
             var pe = ckPE.getData();
             var assessment = ckAssessment.getData();
-             var history = ckHistory.getData();
             // var plan = ckPlan.getData();
 
             //var rom = quillROM.root.innerHTML;
@@ -537,63 +527,7 @@
                         //rom = rom + "<p>" + data.data[0].rom_desc + "</p>";
                     }
 
-                     var DOS = $("#hdnDOS").val();
 
-
-
-
-
-                        var Gender = $("#hdnGender").val();
-
-                       
-
-                        var genderMrMs = "";
-
-
-
-                        if (Gender == "1") { genderMrMs = "Mr."; }
-
-                        else { genderMrMs = "Ms."; }
-
-
-
-                        var sex = "";
-
-
-
-                        if (Gender == "1") { sex = "male"; }
-
-                        else { sex = "female"; }
-
-
-
-                        var LName = $("#hdnLname").val();
-
-                        var FName = $("#hdnFname").val();
-
-                         var Age = $("#hdnAge").val();
-
-                         var DOI = $("#hdnDOI").val();
-
-
-
-
-
-                         var accidentType = $("#hdnaccidentType").val();
-
-                          
-
-
-
-                          var handed = $("#hdnHandedness").val();
-
-                          var handedness = "";
-
-
-
-                        if (handed == "1") { handedness = "right"; }
-
-                        else { handedness = "left"; }
 
                     $('#cc').val(cc);
                     ckCC.data.set(cc);
@@ -603,20 +537,6 @@
 
                     $('#assessment').val(assessment);
                     ckAssessment.data.set(assessment);
-
-                    history = history.replaceAll("#dos", DOS).replace("#gender", genderMrMs).replace("#fn", FName).replace("#ln", LName).replace("#age", Age).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
-
-                        $('#txtHistory').val(history);
-
-                        ckHistory.data.set(history);
-
-
-
-                        assessment = assessment.replace("#age", Age).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
-
-                        $('#txtAssessment').val(assessment);
-
-                        ckAssessment.data.set(assessment);
 
                 },
                 error: function (xhr, status, error) {

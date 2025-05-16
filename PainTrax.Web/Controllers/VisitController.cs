@@ -496,7 +496,7 @@ namespace PainTrax.Web.Controllers
                     obj.Other = new tbl_ie_other();
                     obj.Other.followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
                     obj.dos = System.DateTime.Now;
-                    obj.locationid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);                
+                    obj.locationid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
 
                     var _data = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
 
@@ -617,14 +617,7 @@ namespace PainTrax.Web.Controllers
                     obj.Page3.other6_study = (obj.Page3.other6_study == null) ? "1" : obj.Page3.other6_study;
                     obj.Page3.other7_study = (obj.Page3.other7_study == null) ? "1" : obj.Page3.other7_study;
                 }
-                ViewBag.age = obj.age;
-                ViewBag.dos = obj.dos != null ? Common.commonDate(obj.dos) : "_____";
-                ViewBag.gender = obj.gender;
-                ViewBag.fname = obj.fname;
-                ViewBag.lname = obj.lname;
-                ViewBag.doi = obj.doa != null ? Common.commonDate(obj.doa) : "_____";
-                ViewBag.accidentType = obj.accidentType;                
-                ViewBag.handedness = obj.handeness;
+
             }
             catch (Exception ex)
             {
@@ -659,7 +652,6 @@ namespace PainTrax.Web.Controllers
                     mc = model.mc,
                     mname = model.mname,
                     mobile = model.mobile,
-                    handeness = model.handeness,
                     ssn = model.ssn,
                     state = model.state,
                     physicianid = model.physicianid,
@@ -2461,7 +2453,7 @@ namespace PainTrax.Web.Controllers
 
                     body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",", ", "));
-                   
+
                     body = body.Replace("#bpl", string.IsNullOrEmpty(bodypart) ? "" : (bodypart.ToLower()).ToString().Replace(",", ", "));
                     string assessment = "";
                     if (cmpid == "14")
@@ -3097,7 +3089,7 @@ namespace PainTrax.Web.Controllers
             DataTable dsPOC = _pocService.GetPOCIENew(PatientIE_ID);
 
             string strPoc = "", pocDesc = "", ccdesc = "", pedesc = "", adesc = "";
-            string inject_desc = "", pageBreakHtml="";
+            string inject_desc = "", pageBreakHtml = "";
             if (dsPOC != null && dsPOC.Rows.Count > 0)
             {
 

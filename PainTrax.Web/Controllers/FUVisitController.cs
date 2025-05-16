@@ -682,7 +682,7 @@ namespace PainTrax.Web.Controllers
             try
             {
                 var data = model;
-                var _isExist = _patientFuservices.IsFuExist(model.fu_id.Value, model.dov.Value, model.type);
+                var _isExist = _patientFuservices.IsFuExist(model.fu_id.Value, model.dov==null?null: model.dov.Value.ToString("yyyy-MM-dd"), model.type,model.id.Value);
 
                 if (!_isExist)
                 {

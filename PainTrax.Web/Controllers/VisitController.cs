@@ -217,7 +217,7 @@ namespace PainTrax.Web.Controllers
                 if (id > 0)
                 {
                     var ieData = _ieService.GetOnebyPatientId(id);
-
+                    
                     var dataPOC = this.getPOC(id);
 
                     if (ieData != null)
@@ -447,7 +447,7 @@ namespace PainTrax.Web.Controllers
 
 
                     var patientData = _patientservices.GetOne(ieData.patient_id.Value);
-
+                   
                     if (patientData != null)
                     {
                         obj.fname = patientData.fname;
@@ -617,7 +617,7 @@ namespace PainTrax.Web.Controllers
                     obj.Page3.other6_study = (obj.Page3.other6_study == null) ? "1" : obj.Page3.other6_study;
                     obj.Page3.other7_study = (obj.Page3.other7_study == null) ? "1" : obj.Page3.other7_study;
                 }
-
+                
             }
             catch (Exception ex)
             {
@@ -652,6 +652,7 @@ namespace PainTrax.Web.Controllers
                     mc = model.mc,
                     mname = model.mname,
                     mobile = model.mobile,
+                    handeness = model.handeness,
                     ssn = model.ssn,
                     state = model.state,
                     physicianid = model.physicianid,
@@ -674,6 +675,8 @@ namespace PainTrax.Web.Controllers
                 }
 
                 HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, patientId);
+                string pid = HttpContext.Session.GetInt32(SessionKeys.SessionPatientId).ToString();
+                ViewBag.patientId = patientId;
                 var query = "";
                 List<tbl_inscos> insdata = new List<tbl_inscos>();
                 tbl_inscos objInscos = new tbl_inscos();
@@ -953,6 +956,34 @@ namespace PainTrax.Web.Controllers
             catch (Exception ex)
             {
                 SaveLog(ex, "GetMacroDetails");
+                return Json(new { result = -1, message = "An error occurred" });
+            }
+
+        }
+        [HttpPost]
+        public IActionResult GetPatientIEDetails(int Id)
+        {
+            try
+            {
+                var data = _ieService.GetOnebyPatientId(Id);
+
+                //ViewBag.accidentType = data.accidentType;
+                //ViewBag.doi = data.doa != null ? Common.commonDate(data.doa) : "_____";
+                //ViewBag.dos = data.doe != null ? Common.commonDate(data.doe) : "_____";
+                //ViewBag.age = data.age;
+                //ViewBag.gender = data.gender;
+                //ViewBag.fname = data.fname;
+                //ViewBag.lname = data.lname;
+                //ViewBag.handedness = data.handeness;
+
+                if (data!=null)
+                    return Json(new { result = 1, data = data });
+                else
+                    return Json(new { result = 0 });
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "GetPatientIEDetails");
                 return Json(new { result = -1, message = "An error occurred" });
             }
 

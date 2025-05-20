@@ -1,4 +1,5 @@
 ﻿@model MS.Models.tbl_ie_page1
+@using PainTrax.Web.Helper
 
 <style>
     .ck-editor__editable_inline p {
@@ -290,8 +291,16 @@
     <div class="modal-dialog modal-xl" id="modelDaignoCode">
     </div>
 </div><!-- End Large Modal-->
-
-
+@{
+    <input type="hidden" id="hdnHandedness" />
+    <input type="hidden" id="hdnAge" />
+    <input type="hidden" id="hdnDOS" />
+    <input type="hidden" id="hdnGender" />
+    <input type="hidden" id="hdnFname" />
+    <input type="hidden" id="hdnLname" />
+    <input type="hidden" id="hdnDOI" />
+    <input type="hidden" id="hdnaccidentType" />
+}
 
 
 <script src="~/assets/dist/bootstrap-tagsinput.min.js" asp-append-version="true"></script>
@@ -484,15 +493,15 @@
             .catch(handleSampleError);
 
     });
-
+    
     $('#txtbodypart').on('itemAdded', function (event) {
-
-
+        fnShowDetails();
         var item = event.item;
         try {
             var cc = ckCC.getData();
             var pe = ckPE.getData();
             var assessment = ckAssessment.getData();
+             var history = ckHistory.getData();
             // var plan = ckPlan.getData();
 
             //var rom = quillROM.root.innerHTML;
@@ -513,7 +522,7 @@
                 success: function (data, status, xhr) {
 
 
-                    debugger
+                    debugger;
 
                     if (data.result === 1) {
                         debugger
@@ -527,7 +536,63 @@
                         //rom = rom + "<p>" + data.data[0].rom_desc + "</p>";
                     }
 
+                     var DOS = $("#hdnDOS").val();
 
+
+
+
+
+                        var Gender = $("#hdnGender").val();
+
+
+
+                        var genderMrMs = "";
+
+
+
+                        if (Gender == "1") { genderMrMs = "Mr."; }
+
+                        else { genderMrMs = "Ms."; }
+
+
+
+                        var sex = "";
+
+
+
+                        if (Gender == "1") { sex = "male"; }
+
+                        else { sex = "female"; }
+
+
+
+                        var LName = $("#hdnLname").val();
+
+                        var FName = $("#hdnFname").val();
+
+                         var Age = $("#hdnAge").val();
+
+                         var DOI = $("#hdnDOI").val();
+
+
+
+
+
+                         var accidentType = $("#hdnaccidentType").val();
+
+
+
+
+
+                          var handed = $("#hdnHandedness").val();
+
+                          var handedness = "";
+
+
+
+                        if (handed == "1") { handedness = "right"; }
+
+                        else { handedness = "left"; }
 
                     $('#cc').val(cc);
                     ckCC.data.set(cc);
@@ -537,6 +602,20 @@
 
                     $('#assessment').val(assessment);
                     ckAssessment.data.set(assessment);
+
+                    history = history.replaceAll("#dos", DOS).replace("#gender", genderMrMs).replace("#fn", FName).replace("#ln", LName).replace("#age", Age).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
+
+                        $('#txtHistory').val(history);
+
+                        ckHistory.data.set(history);
+
+
+
+                        assessment = assessment.replace("#age", Age).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
+
+                        $('#txtAssessment').val(assessment);
+
+                        ckAssessment.data.set(assessment);
 
                 },
                 error: function (xhr, status, error) {
@@ -578,6 +657,64 @@
         $('#divdaigo').html(daig);
     });
 
+        function fnShowDetails() {        
+        
+        // Construct the URL with patientId
+        var url = '@Url.Action("GetPatientIEDetails", "Visit")?Id=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                debugger;
+
+                if (data.result === 1) {
+                   
+                       let dateObjdos = new Date(data.data.doe);
+                       if(dateObjdos)
+                       {
+                           // Format as MM/DD/YYYY
+    let formatteddateObjdos = (dateObjdos.getMonth() + 1).toString().padStart(2, '0') + '/' +
+                        dateObjdos.getDate().toString().padStart(2, '0') + '/' +
+                        dateObjdos.getFullYear();
+
+                    $('#hdnDOS').val(formatteddateObjdos);
+                       }
+                       else
+                       {
+                            $('#hdnDOS').val("____");
+                       }
+    
+                    $('#hdnHandedness').val(data.data.handeness);
+                    $('#hdnAge').val(data.data.age);
+                    $('#hdnGender').val(data.data.gender);
+                    $('#hdnFname').val(data.data.fname);
+                    $('#hdnLname').val(data.data.lname);
+
+                    let dateObjdoi = new Date(data.data.doa);
+                    if(dateObjdoi)
+                    {
+
+    // Format as MM/DD/YYYY
+    let formatteddateObjdoi = (dateObjdoi.getMonth() + 1).toString().padStart(2, '0') + '/' +
+                        dateObjdoi.getDate().toString().padStart(2, '0') + '/' +
+                        dateObjdoi.getFullYear();
+                        $('#hdnDOI').val(formatteddateObjdoi);
+                    }
+                    else
+                    {
+                         $('#hdnDOI').val("____");
+                    }
+                    
+                    $('#hdnaccidentType').val(data.data.accidentType);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Error! " + xhr.status);
+            }
+        });
+    }
 
     function openDaignoModel(body) {
 

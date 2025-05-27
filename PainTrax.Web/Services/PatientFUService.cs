@@ -108,7 +108,7 @@ public class PatientFUService : ParentService
     public void Delete(int fuId)
     {
         MySqlCommand cm = new MySqlCommand(@"DELETE FROM tbl_patient_fu
-		where id=@id", conn);
+		where id=@id;delete from tbl_procedures_details where Patientfu_Id=@id;", conn);
         cm.Parameters.AddWithValue("@id", fuId);
         Execute(cm);
     }

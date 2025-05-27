@@ -292,10 +292,10 @@
                                         <select name="location_id" id="location_id" class="form-control" onchange="locationChange()" asp-items="@ViewBag.locList"></select>
                                     </div>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                        <button class="btn btn-success" style="float:right; margin-left:10px;" onclick="GetSIDate()" type="button">Find</button>
-
+                                        
 
                                         <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="SISheetReport" asp-controller="SignInSheet">Download SI Sheet</a>
+                                        <button class="btn btn-success" style="float:right; margin-left:10px;" onclick="GetSIDate()" type="button">Search</button>
 
                                         <div id="dlSI">
                                         </div>

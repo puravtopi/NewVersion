@@ -609,13 +609,13 @@ namespace PainTrax.Web.Controllers
                     obj.Page3.diagrightknee_study = (obj.Page3.diagrightknee_study == null) ? "1" : obj.Page3.diagrightknee_study;
                     obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null) ? "1" : obj.Page3.diaglumberbulge_study;
 
-                    obj.Page3.other1_study = (obj.Page3.other1_study == null) ? "1" : obj.Page3.other1_study;
-                    obj.Page3.other2_study = (obj.Page3.other2_study == null) ? "1" : obj.Page3.other2_study;
-                    obj.Page3.other3_study = (obj.Page3.other3_study == null) ? "1" : obj.Page3.other3_study;
-                    obj.Page3.other4_study = (obj.Page3.other4_study == null) ? "1" : obj.Page3.other4_study;
-                    obj.Page3.other5_study = (obj.Page3.other5_study == null) ? "1" : obj.Page3.other5_study;
-                    obj.Page3.other6_study = (obj.Page3.other6_study == null) ? "1" : obj.Page3.other6_study;
-                    obj.Page3.other7_study = (obj.Page3.other7_study == null) ? "1" : obj.Page3.other7_study;
+                    obj.Page3.other1_study = (obj.Page3.other1_study == null) ? "0" : obj.Page3.other1_study;
+                    obj.Page3.other2_study = (obj.Page3.other2_study == null) ? "0" : obj.Page3.other2_study;
+                    obj.Page3.other3_study = (obj.Page3.other3_study == null) ? "0" : obj.Page3.other3_study;
+                    obj.Page3.other4_study = (obj.Page3.other4_study == null) ? "0" : obj.Page3.other4_study;
+                    obj.Page3.other5_study = (obj.Page3.other5_study == null) ? "0" : obj.Page3.other5_study;
+                    obj.Page3.other6_study = (obj.Page3.other6_study == null) ? "0" : obj.Page3.other6_study;
+                    obj.Page3.other7_study = (obj.Page3.other7_study == null) ? "0" : obj.Page3.other7_study;
                 }
                 
             }
@@ -895,7 +895,14 @@ namespace PainTrax.Web.Controllers
                 if (model != null)
                 {
                     int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-                    string cnd = " and fname='" + model.fname + "' and lname='" + model.lname + "' and DATE(DOB)='" + model.dob.Value.ToString("yyyy-MM-dd") + "' and cmp_id=" + cmpid;
+                    string cnd = " and fname='" + model.fname + "' and lname='" + model.lname + "' and DATE(DOB)='" + model.dob.Value.ToString("yyyy-MM-dd") + "'  and cmp_id=" + cmpid;
+
+
+                    if (string.IsNullOrEmpty(model.account_no))
+                        cnd = cnd + " and account_no is null";
+                    else
+                        cnd = cnd + " and account_no='" + model.account_no + "'";
+
                     var data = _patientservices.GetAll(cnd);
 
                     if (data.Count > 0)
@@ -924,6 +931,12 @@ namespace PainTrax.Web.Controllers
                     cnd = " and fname='" + model.fname + "' and lname='" + model.lname + "' and mname='" + model.mname + "'  and cmp_id=" + cmpid;
                 else
                     cnd = " and fname='" + model.fname + "' and lname='" + model.lname + "' and mname is null  and cmp_id=" + cmpid;
+
+                if (string.IsNullOrEmpty(model.account_no))
+                    cnd = cnd+" and account_no is null";
+                else
+                    cnd = cnd+ " and account_no='" + model.account_no + "'";
+
                 var data = _patientservices.GetAll(cnd);
 
                 if (data.Count > 0)

@@ -313,7 +313,7 @@
                                                             Account No
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control" asp-for="account_no">
+                                                            <input type="text" class="form-control" asp-for="account_no" onchange="fnCheckPatientNameOnly();">
                                                         </div>
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
                                                             Referring Physician
@@ -1050,7 +1050,7 @@
         }
 
         $("#btnSaveAll").click(function () {
-            ;
+            
 
             // var id = $("#hd-active-tab").val();
             var id = $('.tab-content .active').attr('id');
@@ -1066,9 +1066,10 @@
                         var model = {
                             "fname": $("#fname").val(),
                             "lname": $("#lname").val(),
-                            "dob": $("#dob").val()
+                            "dob": $("#dob").val(),
+                            "account_no": $("#account_no").val()
                         }
-
+                        
                         $.ajax({
                             type: "Post",
                             url: url,
@@ -1147,7 +1148,8 @@
                     var model = {
                         "fname": $("#fname").val(),
                         "lname": $("#lname").val(),
-                        "dob": $("#dob").val()
+                        "dob": $("#dob").val(),
+                        "account_no": $("#account_no").val()
                     }
 
                     $.ajax({
@@ -1526,7 +1528,8 @@
         var model = {
             "fname": $("#fname").val(),
             "lname": $("#lname").val(),
-            "mname": $("#mname").val()
+            "mname": $("#mname").val(),
+            "account_no":$("#account_no").val()
         }
 
         $.ajax({

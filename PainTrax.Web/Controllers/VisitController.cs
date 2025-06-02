@@ -1353,6 +1353,24 @@ namespace PainTrax.Web.Controllers
             }
             return Json(data);
         }
+        [HttpPost]
+        public IActionResult GetSignContent()
+        {
+            var data = new tbl_settings();
+            try
+            {
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                if (cmpid != null)
+                {
+                    data = _settingservices.GetOne(cmpid.Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "GetSignContent");
+            }
+            return Json(data);
+        }
 
         [HttpPost]
         public IActionResult GetDaignoCodeList(string bodyparts, int ieId)

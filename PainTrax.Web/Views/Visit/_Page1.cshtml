@@ -591,8 +591,11 @@
 
 
                         if (handed == "1") { handedness = "right"; }
+                        else if(handed == "2") { handedness = "left"; }
+                        else if(handed == "3") { handedness = "ambidextrous"; }
+                        else { handedness = "___"; }
 
-                        else { handedness = "left"; }
+          
 
                     $('#cc').val(cc);
                     ckCC.data.set(cc);

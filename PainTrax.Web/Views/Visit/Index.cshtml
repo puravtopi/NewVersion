@@ -106,8 +106,10 @@
                     <input type="hidden" id="sid" />
                     <input type="hidden" id="pid" />
                     <div class="col-sm-10">
+                        <div class="col-sm-10" id="signCon">
+                            </div>
 
-                        <p>
+                       @*  <p>
                             I, <b id="pname"></b>, hereby authorize <b>
                                 Quality Orthopedics &
                                 Complete Joint Care, PC
@@ -135,7 +137,7 @@
                         <ul>
                             <li>Workers Compensation Insurance form</li>
                             <li>HIPAA (OCA official Form N0.: 960) </li>
-                        </ul>
+                        </ul> *@
                         <center>
                             <canvas id="signature-pad" style="border: 1px solid #000;" crossorigin="anonymous"></canvas>
                             <img id="imgSign" style="display:none" />
@@ -225,7 +227,7 @@
 
         $(document).ready(function () {
             bindList();
-
+            fnShowSignatureContent();
 
 
             var undoStack = [];
@@ -511,9 +513,7 @@
         }
 
 
-        function fnShowSign(pId) {
-
-
+        function fnShowSign(pId) {           
 
 
             debugger
@@ -662,7 +662,25 @@
                 }
             })
         }
+        function fnShowSignatureContent() {
+            debugger;
+            var url = '';
+            
+                url = '@Url.Action("GetSignContent", "Visit")';
+            
 
+
+            $.ajax({
+                type: "Post",
+                url: url,
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data, status, xhr) {
+
+                    $("#signCon").html(data.sign_content);
+                   console.log(data);
+                }
+            })
+        }
 
         function fnFuType(id, patientid) {
             $("#type_ie_id").val(id);

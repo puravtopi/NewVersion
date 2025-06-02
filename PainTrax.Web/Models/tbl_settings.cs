@@ -19,6 +19,7 @@
         public string gait_default { get; set; }        
         public string fu_default { get; set; }        
         public bool show_preop { get; set; }        
-        public bool show_postop { get; set; }        
+        public bool show_postop { get; set; }
+        public string? sign_content { get; set; }
     }
 }

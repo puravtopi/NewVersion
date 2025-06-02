@@ -63,7 +63,8 @@ font_size=@font_size,
 show_preop=@show_preop,
 gait_default=@gait_default,
 fu_default=@fu_default,
-show_postop=@show_postop
+show_postop=@show_postop,
+sign_content=@sign_content
 			where cmp_id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.cmp_id);
             cm.Parameters.AddWithValue("@page_size", data.page_size);
@@ -79,6 +80,7 @@ show_postop=@show_postop
             cm.Parameters.AddWithValue("@font_size", data.font_size);
             cm.Parameters.AddWithValue("@show_preop", data.show_preop);
             cm.Parameters.AddWithValue("@show_postop", data.show_postop);
+            cm.Parameters.AddWithValue("@sign_content", data.sign_content);
             cm.Parameters.AddWithValue("@gait_default", data.gait_default);
             cm.Parameters.AddWithValue("@fu_default", data.fu_default);
 

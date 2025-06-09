@@ -547,6 +547,14 @@
                                 </a>
                             </li>
                         }
+                        if (pageAccess.ToLower().Contains("surgerycenter"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="SurgeryCenter">
+                                    <i class="bi bi-circle"></i><span>SurgeryCenter</span>
+                                </a>
+                            </li>
+                        }
                         if (pageAccess.ToLower().Contains("treatment master"))
                         {
                             <li>

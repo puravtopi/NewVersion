@@ -1213,7 +1213,7 @@
 
     function fnDetailsSave(t) {
 
-
+        debugger;
         bootbox.confirm({
 
             message: 'Are sure you want to save Details?',
@@ -1367,6 +1367,7 @@
                 else {
                     if (t !== null)
                         $(t).tab('show');
+                        fnShowPOC();
                 }
             }
         });

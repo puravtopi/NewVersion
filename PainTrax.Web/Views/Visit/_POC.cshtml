@@ -88,7 +88,7 @@
                         var cmpCode = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
                     }
 
-                    <div class="row mb-3" id="divSide">
+                   @*  <div class="row mb-3" id="divSide">
                         <label id="Sidelbl" class="col-sm-2 col-form-label">Side</label>
                         <div class="col-sm-4">
                             <select id="Side" class="form-control">
@@ -108,6 +108,17 @@
                                 
                                 }
                                
+                            </select>
+                        </div>
+                    </div> *@
+                    <div class="row mb-3" id="divSide">
+                        <label id="Sidelbl" class="col-sm-2 col-form-label">Side</label>
+                        <div class="col-sm-4">
+                            <select id="Side" class="form-control">
+                                <option value=" ">--Select--</option>
+                                <option value="Left">LEFT</option>
+                                <option value="Right">RIGHT</option>
+                                <option value="Bilateral">BILATERAL</option>
                             </select>
                         </div>
                     </div>
@@ -775,11 +786,7 @@
 
         $('#signEdit').hide();
 
-
-
-
-
-        if ($('#Haslevel').val() != "True") {
+        if ($('#Haslevel').val() != "1") {
             $('#Level').hide();
             $('#Levellbl').hide();
         }
@@ -789,7 +796,7 @@
             $('#Levellbl').show();
         }
 
-        if ($('#HasSides').val() != "True") {
+        if ($('#HasSides').val() != "1") {
             $('#Side').hide();
             $('#Sidelbl').hide();
         }
@@ -800,7 +807,7 @@
         }
 
 
-        if ($('#HasSubcode').val() != "True") {
+        if ($('#HasSubcode').val() != "1") {
             $('#SubProcedure').hide();
             $('#SubProcedurelbl').hide();
         }
@@ -830,7 +837,7 @@
 
 
 
-        if ($('#HasMedication').val() != "True") {
+        if ($('#HasMedication').val() != "1") {
             $('#Medication').hide();
             $('#Medicationlbl').hide();
         }
@@ -859,7 +866,7 @@
             $('#Medication').show();
             $('#Medicationlbl').show();
         }
-        if ($('#Hasmuscle').val() != "True") {
+        if ($('#Hasmuscle').val() != "1") {
             $('#Muscle').hide();
             $('#Musclelbl').hide();
         }

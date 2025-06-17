@@ -14,11 +14,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="accordion accordion-flush" id="accordionFlushExample">
-
-
-
                         @Html.Raw(ViewBag.content)
-
                     </div>
                 </div>
             </div>
@@ -747,7 +743,7 @@
 
 
 
-        if ($('#Haslevel').val() != "True") {
+        if ($('#Haslevel').val() != "1") {
             $('#Level').hide();
             $('#Levellbl').hide();
         }
@@ -757,7 +753,7 @@
             $('#Levellbl').show();
         }
 
-        if ($('#HasSides').val() != "True") {
+        if ($('#HasSides').val() != "1") {
             $('#Side').hide();
             $('#Sidelbl').hide();
         }
@@ -768,7 +764,7 @@
         }
 
 
-        if ($('#HasSubcode').val() != "True") {
+        if ($('#HasSubcode').val() != "1") {
             $('#SubProcedure').hide();
             $('#SubProcedurelbl').hide();
         }
@@ -795,7 +791,7 @@
 
 
 
-        if ($('#HasMedication').val() != "True") {
+        if ($('#HasMedication').val() != "1") {
             $('#Medication').hide();
             $('#Medicationlbl').hide();
         }
@@ -822,7 +818,7 @@
             $('#Medication').show();
             $('#Medicationlbl').show();
         }
-        if ($('#Hasmuscle').val() != "True") {
+        if ($('#Hasmuscle').val() != "1") {
             $('#Muscle').hide();
             $('#Musclelbl').hide();
         }

@@ -21,6 +21,7 @@ public class tbl_patient_fu{
 	public string? type { get;set;}
 	public string? history { get;set;}
     public string? accident_type { get; set; }
+    public bool? final_save { get; set; }
 
 
 

@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using PainTrax.Web.ViewModel;
 using System.Diagnostics;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace PainTrax.Web.Controllers
 {
@@ -95,8 +97,17 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
-
                 var response = _services.CompanyLogin(login);
+                if (response.Model!=null)
+                {
+                    if ((bool)!response?.Model?.is_newuser)
+                    {
+                        int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                        string tqrs = EncryptionHelper.Encrypt(response?.Model?.Id.ToString());
+
+                        return RedirectToAction("ResetPassword", new { tqrs = tqrs });
+                    }
+                }                
 
                 if (response.Success)
                 {
@@ -381,7 +392,7 @@ namespace PainTrax.Web.Controllers
 
                 user.Id = Convert.ToInt32(model.cmpid);
                 user.password = EncryptionHelper.Encrypt(model.password);
-
+                user.is_newuser = true;
                 _userService.UpdateUserPassword(user);
 
                 ViewBag.Success = true;

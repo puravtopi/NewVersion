@@ -217,7 +217,7 @@ namespace PainTrax.Web.Controllers
                 if (id > 0)
                 {
                     var ieData = _ieService.GetOnebyPatientId(id);
-                    
+
                     var dataPOC = this.getPOC(id);
 
                     if (ieData != null)
@@ -447,7 +447,7 @@ namespace PainTrax.Web.Controllers
 
 
                     var patientData = _patientservices.GetOne(ieData.patient_id.Value);
-                   
+
                     if (patientData != null)
                     {
                         obj.fname = patientData.fname;
@@ -617,7 +617,7 @@ namespace PainTrax.Web.Controllers
                     obj.Page3.other6_study = (obj.Page3.other6_study == null) ? "0" : obj.Page3.other6_study;
                     obj.Page3.other7_study = (obj.Page3.other7_study == null) ? "0" : obj.Page3.other7_study;
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -933,9 +933,9 @@ namespace PainTrax.Web.Controllers
                     cnd = " and fname='" + model.fname + "' and lname='" + model.lname + "' and mname is null  and cmp_id=" + cmpid;
 
                 if (string.IsNullOrEmpty(model.account_no))
-                    cnd = cnd+" and account_no is null";
+                    cnd = cnd + " and account_no is null";
                 else
-                    cnd = cnd+ " and account_no='" + model.account_no + "'";
+                    cnd = cnd + " and account_no='" + model.account_no + "'";
 
                 var data = _patientservices.GetAll(cnd);
 
@@ -989,7 +989,7 @@ namespace PainTrax.Web.Controllers
                 //ViewBag.lname = data.lname;
                 //ViewBag.handedness = data.handeness;
 
-                if (data!=null)
+                if (data != null)
                     return Json(new { result = 1, data = data });
                 else
                     return Json(new { result = 0 });
@@ -1814,9 +1814,6 @@ namespace PainTrax.Web.Controllers
                             // PlaceHolder1.Controls.Add(new Literal { Text = html.ToString() });
                         }
                     }
-
-
-
                 }
 
                 ViewBag.content = html.ToString();
@@ -4128,7 +4125,8 @@ namespace PainTrax.Web.Controllers
                     extra_comments = "",
                     type = type,
                     accident_type = fuData.accident_type,
-                    provider_id = fuData.provider_id
+                    provider_id = fuData.provider_id,
+                    final_save= false
 
                 };
                 fu_id = _patientFUservices.Insert(objFU);
@@ -4283,8 +4281,32 @@ namespace PainTrax.Web.Controllers
 
             return Json(new { updatedJson = JsonConvert.SerializeObject(nodes, Formatting.Indented) });
         }
-    }
 
+        [HttpPost]
+        public IActionResult DownloadSign()
+        {
+            var data = new tbl_settings();
+            try
+            {
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                if (cmpid != null)
+                {
+                    data = _settingservices.GetOne(cmpid.Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "GetSignContent");
+            }
+            return View("Index");
+        }
+
+
+    }
+    public class HtmlRequest
+    {
+        public string HtmlContent { get; set; }
+    }
     public class pocDetails
     {
         public string strPoc { get; set; }

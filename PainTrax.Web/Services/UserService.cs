@@ -207,10 +207,26 @@ namespace PainTrax.Web.Services
             data.fullname = fullName;
             MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_users SET
 		password=@password
+        
         where Id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.Id);
            
             cm.Parameters.AddWithValue("@password", data.password);
+            
+            Execute(cm);
+        }
+        public void ChnageUserPassword(tbl_users data)
+        {
+            string fullName = data.fname + " " + data.lname;
+            data.fullname = fullName;
+            MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_users SET
+		password=@password,
+        is_newuser=@is_newuser
+        where Id=@Id", conn);
+            cm.Parameters.AddWithValue("@Id", data.Id);
+
+            cm.Parameters.AddWithValue("@password", data.password);
+            cm.Parameters.AddWithValue("@is_newuser", data.is_newuser);
             Execute(cm);
         }
 

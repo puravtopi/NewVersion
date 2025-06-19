@@ -98,16 +98,7 @@ namespace PainTrax.Web.Controllers
             try
             {
                 var response = _services.CompanyLogin(login);
-                if (response.Model!=null)
-                {
-                    if ((bool)!response?.Model?.is_newuser)
-                    {
-                        int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-                        string tqrs = EncryptionHelper.Encrypt(response?.Model?.Id.ToString());
-
-                        return RedirectToAction("ResetPassword", new { tqrs = tqrs });
-                    }
-                }                
+                                
 
                 if (response.Success)
                 {
@@ -177,6 +168,17 @@ namespace PainTrax.Web.Controllers
                             Expires = DateTime.Now.AddDays(7) // Cookie expires in 7 days
                         };
                         Response.Cookies.Append("LoginCookie", JsonConvert.SerializeObject(login), options);
+                    }
+                    if (response.Model != null)
+                    {
+                        if ((bool)response?.Model?.is_newuser)
+                        {
+                            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                            string tqrs = EncryptionHelper.Encrypt(response?.Model?.Id.ToString());
+
+                            return RedirectToAction("ChangePassword", new { tqrs = tqrs });
+                        }
+                        
                     }
 
                     return RedirectToAction("GetProvider");
@@ -391,8 +393,7 @@ namespace PainTrax.Web.Controllers
                 var user = new tbl_users();
 
                 user.Id = Convert.ToInt32(model.cmpid);
-                user.password = EncryptionHelper.Encrypt(model.password);
-                user.is_newuser = true;
+                user.password = EncryptionHelper.Encrypt(model.password);                
                 _userService.UpdateUserPassword(user);
 
                 ViewBag.Success = true;
@@ -404,6 +405,43 @@ namespace PainTrax.Web.Controllers
                 ViewBag.Error = true;
             }
             return View();
+        }
+        [HttpGet]
+        public IActionResult ChangePassword(string tqrs)
+        {
+            tqrs = tqrs.Replace(" ", "+");
+            var model = new ChangePassword();
+
+            model.cmpid = EncryptionHelper.Decrypt(tqrs);
+            ViewBag.Success = false;
+            ViewBag.Error = false;
+            return View(model);
+
+        }
+
+
+        [HttpPost]
+        public IActionResult ChangePassword(ChangePassword model)
+        {
+            if (model != null)
+            {
+                var user = new tbl_users();
+
+                user.Id = Convert.ToInt32(model.cmpid);
+                user.password = EncryptionHelper.Encrypt(model.password);
+                user.is_newuser = false;
+                _userService.ChnageUserPassword(user);
+
+                ViewBag.Success = true;
+                ViewBag.Error = false;
+            }
+            else
+            {
+                ViewBag.Success = false;
+                ViewBag.Error = true;
+            }
+            //return View();
+            return RedirectToAction("GetProvider");
         }
 
         #region private Method

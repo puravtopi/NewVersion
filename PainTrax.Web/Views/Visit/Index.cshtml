@@ -836,22 +836,51 @@
         }
 
         function fnPrint() {
-            // const divContents = document.getElementById("signCon").innerHTML;
+            debugger
+            const divContents = document.getElementById("signCon").innerHTML;
+            var canvas = document.getElementById('signature-pad');
+            var imgData = canvas.toDataURL();
 
-            // const printWindow = window.open('', '_blank', 'width=800,height=600');
-            // printWindow.document.open();
-            // printWindow.document.write('<html><head><title>Print</title>');
-            // printWindow.document.write('<style>body{ font-family: Arial; }</style>');
-            // printWindow.document.write('</head><body></body></html>');
-            // printWindow.document.close();
+            var printSection = document.createElement('div');
+            printSection.innerHTML = divContents;
 
-            // printWindow.onload = function () {
-            //     printWindow.document.body.innerHTML = divContents;
-            //     printWindow.focus();
-            //     printWindow.print();
-            //     printWindow.close();
-            // };
-         
+            var img = document.createElement('img');
+            img.src = imgData;
+            img.width = 100;
+            //img.width = canvas.width;
+            img.height = 70;
+            //img.height = canvas.height;
+            img.style.borderBottom = "1px solid black";
+            img.style.marginTop = "20px";
+
+            printSection.appendChild(img);
+
+            var iframe = document.createElement('iframe');
+            iframe.style.position = 'fixed';
+            iframe.style.right = '0';
+            iframe.style.bottom = '0';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = '0';
+            document.body.appendChild(iframe);
+
+            var doc = iframe.contentWindow || iframe.contentDocument;
+            var docDoc = doc.document || doc;
+
+            docDoc.open();
+            docDoc.write(printSection.innerHTML);
+            docDoc.close();
+
+            iframe.onload = function () {
+                setTimeout(function () {
+                    iframe.contentWindow.focus();
+                    iframe.contentWindow.print();
+                    document.body.removeChild(iframe);
+                }, 100);
+            };
+
         }
+
+       
     </script>
 </main>

@@ -484,8 +484,6 @@ namespace PainTrax.Web.Controllers
                     obj.Page2 = new tbl_ie_page2();
                     obj.Page3 = new tbl_ie_page3();
 
-
-
                     obj.Page3.diagcervialbulge_text = "reveals ";
                     obj.Page3.diagthoracicbulge_text = "reveals ";
                     obj.Page3.diaglumberbulge_text = "reveals ";
@@ -600,22 +598,41 @@ namespace PainTrax.Web.Controllers
                 }
                 if (obj.Page3 != null)
                 {
+
+
+                    var _page3Setting = _settingservices.GetOne(cmpid.Value);
+
                     obj.Page3.diagcervialbulge_study = (obj.Page3.diagcervialbulge_study == null) ? "1" : obj.Page3.diagcervialbulge_study;
+                    obj.Page3.diagcervialbulge_comma = (obj.Page3.diagcervialbulge_comma == null) ? _page3Setting.diagcervialbulge_comma : obj.Page3.diagcervialbulge_comma;
                     obj.Page3.diagthoracicbulge_study = (obj.Page3.diagthoracicbulge_study == null) ? "1" : obj.Page3.diagthoracicbulge_study;
+                    obj.Page3.diagthoracicbulge_comma = (obj.Page3.diagthoracicbulge_comma == null) ? _page3Setting.diagthoracicbulge_comma : obj.Page3.diagthoracicbulge_comma;
                     obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null) ? "1" : obj.Page3.diaglumberbulge_study;
+                    obj.Page3.diaglumberbulge_comma = (obj.Page3.diaglumberbulge_comma == null) ? _page3Setting.diaglumberbulge_comma : obj.Page3.diaglumberbulge_comma;
                     obj.Page3.diagleftshoulder_study = (obj.Page3.diagleftshoulder_study == null) ? "1" : obj.Page3.diagleftshoulder_study;
+                    obj.Page3.diagleftshoulder_comma = (obj.Page3.diagleftshoulder_comma == null) ? _page3Setting.diagleftshoulder_comma : obj.Page3.diagleftshoulder_comma;
                     obj.Page3.diagrightshoulder_study = (obj.Page3.diagrightshoulder_study == null) ? "1" : obj.Page3.diagrightshoulder_study;
+                    obj.Page3.diagrightshoulder_comma = (obj.Page3.diagrightshoulder_comma == null) ?_page3Setting.diagrightshoulder_comma : obj.Page3.diagrightshoulder_comma;
                     obj.Page3.diagleftknee_study = (obj.Page3.diagleftknee_study == null) ? "1" : obj.Page3.diagleftknee_study;
+                    obj.Page3.diagleftknee_comma = (obj.Page3.diagleftknee_comma == null) ? _page3Setting.diagleftknee_comma : obj.Page3.diagleftknee_comma;
                     obj.Page3.diagrightknee_study = (obj.Page3.diagrightknee_study == null) ? "1" : obj.Page3.diagrightknee_study;
+                    obj.Page3.diagrightknee_comma = (obj.Page3.diagrightknee_comma == null) ? _page3Setting.diagrightknee_comma : obj.Page3.diagrightknee_comma;
                     obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null) ? "1" : obj.Page3.diaglumberbulge_study;
+                    obj.Page3.diaglumberbulge_comma = (obj.Page3.diaglumberbulge_comma == null) ? _page3Setting.diaglumberbulge_comma : obj.Page3.diaglumberbulge_comma;
 
                     obj.Page3.other1_study = (obj.Page3.other1_study == null) ? "0" : obj.Page3.other1_study;
+                    obj.Page3.other1_comma = (obj.Page3.other1_comma == null) ? _page3Setting.other1_comma : obj.Page3.other1_comma;
                     obj.Page3.other2_study = (obj.Page3.other2_study == null) ? "0" : obj.Page3.other2_study;
+                    obj.Page3.other2_comma = (obj.Page3.other2_comma == null) ? _page3Setting.other2_comma : obj.Page3.other2_comma;
                     obj.Page3.other3_study = (obj.Page3.other3_study == null) ? "0" : obj.Page3.other3_study;
+                    obj.Page3.other3_comma = (obj.Page3.other3_comma == null) ? _page3Setting.other3_comma : obj.Page3.other3_comma;
                     obj.Page3.other4_study = (obj.Page3.other4_study == null) ? "0" : obj.Page3.other4_study;
+                    obj.Page3.other4_comma = (obj.Page3.other4_comma == null) ? _page3Setting.other4_comma : obj.Page3.other4_comma;
                     obj.Page3.other5_study = (obj.Page3.other5_study == null) ? "0" : obj.Page3.other5_study;
+                    obj.Page3.other5_comma = (obj.Page3.other5_comma == null) ? _page3Setting.other5_comma : obj.Page3.other5_comma;
                     obj.Page3.other6_study = (obj.Page3.other6_study == null) ? "0" : obj.Page3.other6_study;
+                    obj.Page3.other6_comma = (obj.Page3.other6_comma == null) ? _page3Setting.other6_comma : obj.Page3.other6_comma;
                     obj.Page3.other7_study = (obj.Page3.other7_study == null) ? "0" : obj.Page3.other7_study;
+                    obj.Page3.other7_comma = (obj.Page3.other7_comma == null) ? _page3Setting.other7_comma : obj.Page3.other7_comma;
                 }
 
             }
@@ -1227,7 +1244,6 @@ namespace PainTrax.Web.Controllers
 
             return Json(data);
         }
-
 
         [HttpPost]
         public IActionResult SaveSign([FromBody] tbl_ie_sign model)

@@ -49,10 +49,6 @@ namespace PainTrax.Web.Services
             var datalist = ConvertDataTable<tbl_default>(GetData(cm)).FirstOrDefault();
             return datalist;
         }
-
-      
-
-
         public void Delete(tbl_default data)
         {
             MySqlCommand cm = new MySqlCommand(@"DELETE FROM tbl_default

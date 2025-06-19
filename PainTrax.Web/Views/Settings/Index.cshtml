@@ -149,12 +149,107 @@
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" asp-for="gait_default" class="form-control" />
                                         </div>
-                                       
+
                                     </div>
                                     <div class="row mb-3">
                                         <label class="col-md-4 col-lg-3 col-form-label">Followup Date</label>
                                         <div class="col-md-8 col-lg-9">
                                             <input type="text" asp-for="fu_default" class="form-control" />
+                                        </div>
+
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="diagcervialbulge_comma" class="col-md-2 col-lg-2 col-form-label">Cervial Comma</label>
+
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="diagcervialbulge_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="diagthoracicbulge_comma" class="col-md-2 col-lg-2 col-form-label">Thoracic Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="diagthoracicbulge_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="diaglumberbulge_comma" class="col-md-2 col-lg-2 col-form-label">Lumber Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="diaglumberbulge_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="diagleftshoulder_comma" class="col-md-2 col-lg-2 col-form-label">Left Shoulder Comma</label>
+
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="diagleftshoulder_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="diagrightshoulder_comma" class="col-md-2 col-lg-2 col-form-label">Right Shoulder Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="diagrightshoulder_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="diagleftknee_comma" class="col-md-2 col-lg-2 col-form-label">Left Knee Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="diagleftknee_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="diagrightknee_comma" class="col-md-2 col-lg-2 col-form-label">Right Knee Comma</label>
+
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="diagrightknee_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="diagbrain_comma" class="col-md-2 col-lg-2 col-form-label">Brain Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="diagbrain_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="other1_comma" class="col-md-2 col-lg-2 col-form-label">Other1 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="other1_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="other2_comma" class="col-md-2 col-lg-2 col-form-label">Other2 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="other2_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                         <label for="title" asp-for="other3_comma" class="col-md-2 col-lg-2 col-form-label">Other3 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="other3_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="other4_comma" class="col-md-2 col-lg-2 col-form-label">Other4 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="other4_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="title" asp-for="other5_comma" class="col-md-2 col-lg-2 col-form-label">Other5 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="other5_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="other6_comma" class="col-md-2 col-lg-2 col-form-label">Other6 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="other6_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                        <label for="title" asp-for="other7_comma" class="col-md-2 col-lg-2 col-form-label">Other7 Comma</label>
+                                        <div class="col-md-2 col-lg-2">
+                                            <select class="form-select" aria-label="Default select example" asp-for="other7_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label class="col-md-4 col-lg-3 col-form-label">GAIT</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <input type="text" asp-for="gait_default" class="form-control" />
                                         </div>
 
                                     </div>
@@ -185,10 +280,10 @@
                                             <input type="hidden" id="header_template_hidden" name="header_template_hidden" value="@Model.header_template" />
                                         </div>
                                     </div>
-                                  
-                                                                        
-                                    
-                                   
+
+
+
+
                                     <div class="row mb-3">
 
                                         <div class="col-sm-10">
@@ -210,26 +305,26 @@
 <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
-     var ckHistory;
-     ClassicEditor
+    var ckHistory;
+    ClassicEditor
         .create(document.querySelector('#txtHistory'))
         .catch(error => {
             console.error(error);
         });
-             $(document).ready(function () {
-                 
-
-                 var mess='@ViewBag.Message';
-                 if(mess!='' && mess!=undefined){
-         $('#myModalMessage').modal('show');
-                       $('#messBody').html('<p>'+mess+'</p>');
-                       
-                       autoclosepopup();
-                 }
-             })
+    $(document).ready(function () {
 
 
-             function autoclosepopup() {
+        var mess = '@ViewBag.Message';
+        if (mess != '' && mess != undefined) {
+            $('#myModalMessage').modal('show');
+            $('#messBody').html('<p>' + mess + '</p>');
+
+            autoclosepopup();
+        }
+    })
+
+
+    function autoclosepopup() {
         $('#myModalMessage').data('hideInterval', setTimeout(function () {
             $('#myModalMessage').modal('hide');
         }, 1500));

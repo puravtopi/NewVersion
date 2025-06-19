@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
 namespace PainTrax.Web.Helper
@@ -89,6 +90,17 @@ namespace PainTrax.Web.Helper
             TMFlow = 6
         }
 
+        public enum StudyComma
+        {
+            [Display(Name = "")]
+            NA = 0,
+            [Display(Name = ":")]
+            MRI = 1,
+            [Display(Name = "reveals")]
+            CTScan = 2,
+           
+        }
+
         public static string GetDisplayName(Enum enumValue)
         {
             return enumValue.GetType()
@@ -97,6 +109,23 @@ namespace PainTrax.Web.Helper
                             .GetCustomAttribute<DisplayAttribute>()
                             .GetName();
         }
+        //public static string GetDisplayName(this Enum enumValue)
+        //{
+        //    return enumValue
+        //        .GetType()
+        //        .GetMember(enumValue.ToString())
+        //        .First()
+        //        .GetCustomAttribute<DisplayAttribute>()?
+        //        .GetName() ?? enumValue.ToString();
+        //}
 
+        //public static IEnumerable<SelectListItem> GetEnumSelectListWithDisplayNames<T>() where T : Enum
+        //{
+        //    return Enum.GetValues(typeof(T)).Cast<T>().Select(e => new SelectListItem
+        //    {
+        //        Text = e.GetDisplayName(),
+        //        Value = e.GetDisplayName() // <--- This is key: use display name as value
+        //    });
+        //}
     }
 }

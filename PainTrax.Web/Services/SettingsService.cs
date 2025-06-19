@@ -30,7 +30,13 @@ namespace PainTrax.Web.Services
         {
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_settings
 		(page_size,location,dateformat,cmp_id,pageBreakForInjection,injectionAsSeparateBlock,font_family,font_size)Values
-				(@page_size,@location,@dateformat,@cmp_id,@pageBreakForInjection,@injectionAsSeparateBlock,@isdaignosisshow,@foundStatment,@notfoundStatment,@header_template,@font_family,@font_size)", conn);
+				(@page_size,@location,@dateformat,@cmp_id,@pageBreakForInjection,@injectionAsSeparateBlock,@isdaignosisshow,
+            @foundStatment,@notfoundStatment,@header_template,@font_family,@font_size,
+            @diagcervialbulge_comma,@diagthoracicbulge_comma,@diaglumberbulge_comma,
+            @diagleftshoulder_comma,@diagrightshoulder_comma,@diagleftknee_comma,
+            @diagrightknee_comma,@diagbrain_comma,@other1_comma,
+            @other2_comma,@other3_comma,@other4_comma,
+            @other5_comma,@other6_comma,@other7_comma)", conn);
             cm.Parameters.AddWithValue("@page_size", data.page_size);
             cm.Parameters.AddWithValue("@location", data.location);
             cm.Parameters.AddWithValue("@dateformat",data.dateformat);
@@ -43,6 +49,21 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@header_template", data.header_template);
             cm.Parameters.AddWithValue("@font_family", data.font_family);
             cm.Parameters.AddWithValue("@font_size", data.font_size);
+            cm.Parameters.AddWithValue("@diagcervialbulge_comma", data.diagcervialbulge_comma);
+            cm.Parameters.AddWithValue("@diagthoracicbulge_comma", data.diagthoracicbulge_comma);
+            cm.Parameters.AddWithValue("@diaglumberbulge_comma", data.diaglumberbulge_comma);
+            cm.Parameters.AddWithValue("@diagleftshoulder_comma", data.diagleftshoulder_comma);
+            cm.Parameters.AddWithValue("@diagrightshoulder_comma", data.diagrightshoulder_comma);
+            cm.Parameters.AddWithValue("@diagleftknee_comma", data.diagleftknee_comma);
+            cm.Parameters.AddWithValue("@diagrightknee_comma", data.diagrightknee_comma);
+            cm.Parameters.AddWithValue("@diagbrain_comma", data.diagbrain_comma);
+            cm.Parameters.AddWithValue("@other1_comma", data.other1_comma);
+            cm.Parameters.AddWithValue("@other2_comma", data.other2_comma);
+            cm.Parameters.AddWithValue("@other3_comma", data.other3_comma);
+            cm.Parameters.AddWithValue("@other4_comma", data.other4_comma);
+            cm.Parameters.AddWithValue("@other5_comma", data.other5_comma);
+            cm.Parameters.AddWithValue("@other6_comma", data.other6_comma);
+            cm.Parameters.AddWithValue("@other7_comma", data.other7_comma);
             Execute(cm);
 
         }
@@ -64,7 +85,22 @@ show_preop=@show_preop,
 gait_default=@gait_default,
 fu_default=@fu_default,
 show_postop=@show_postop,
-sign_content=@sign_content
+sign_content=@sign_content,
+diagcervialbulge_comma=@diagcervialbulge_comma,
+diagthoracicbulge_comma=@diagthoracicbulge_comma,
+diaglumberbulge_comma=@diaglumberbulge_comma,
+diagleftshoulder_comma=@diagleftshoulder_comma,
+diagrightshoulder_comma=@diagrightshoulder_comma,
+diagleftknee_comma=@diagleftknee_comma,
+diagrightknee_comma=@diagrightknee_comma,
+diagbrain_comma=@diagbrain_comma,
+other1_comma=@other1_comma,
+other2_comma=@other2_comma,
+other3_comma=@other3_comma,
+other4_comma=@other4_comma,
+other5_comma=@other5_comma,
+other6_comma=@other6_comma,
+other7_comma=@other7_comma 
 			where cmp_id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.cmp_id);
             cm.Parameters.AddWithValue("@page_size", data.page_size);
@@ -83,6 +119,21 @@ sign_content=@sign_content
             cm.Parameters.AddWithValue("@sign_content", data.sign_content);
             cm.Parameters.AddWithValue("@gait_default", data.gait_default);
             cm.Parameters.AddWithValue("@fu_default", data.fu_default);
+            cm.Parameters.AddWithValue("@diagcervialbulge_comma", data.diagcervialbulge_comma);
+            cm.Parameters.AddWithValue("@diagthoracicbulge_comma", data.diagthoracicbulge_comma);
+            cm.Parameters.AddWithValue("@diaglumberbulge_comma", data.diaglumberbulge_comma);
+            cm.Parameters.AddWithValue("@diagleftshoulder_comma", data.diagleftshoulder_comma);
+            cm.Parameters.AddWithValue("@diagrightshoulder_comma", data.diagrightshoulder_comma);
+            cm.Parameters.AddWithValue("@diagleftknee_comma", data.diagleftknee_comma);
+            cm.Parameters.AddWithValue("@diagrightknee_comma", data.diagrightknee_comma);
+            cm.Parameters.AddWithValue("@diagbrain_comma", data.diagbrain_comma);
+            cm.Parameters.AddWithValue("@other1_comma", data.other1_comma);
+            cm.Parameters.AddWithValue("@other2_comma", data.other2_comma);
+            cm.Parameters.AddWithValue("@other3_comma", data.other3_comma);
+            cm.Parameters.AddWithValue("@other4_comma", data.other4_comma);
+            cm.Parameters.AddWithValue("@other5_comma", data.other5_comma);
+            cm.Parameters.AddWithValue("@other6_comma", data.other6_comma);
+            cm.Parameters.AddWithValue("@other7_comma", data.other7_comma);
 
             Execute(cm);
         }

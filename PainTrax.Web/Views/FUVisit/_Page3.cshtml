@@ -19,8 +19,9 @@
             </div>
 
             <div class="col-md-3">
-
-                <input type="text" class="form-control" placeholder="Cervical bulge" asp-for="diagcervialbulge_text">
+                <select class="form-select" style="width:25%;display:inline !important" aria-label="Default select example" asp-for="diagcervialbulge_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <input type="text" class="form-control" style="width:70%;display:inline !important" placeholder="Cervical bulge" asp-for="diagcervialbulge_text">
             </div>
             <div class="col-md-3">
 
@@ -41,8 +42,9 @@
             </div>
 
             <div class="col-md-3">
-
-                <input type="text" class="form-control" placeholder="Thoracic bulge" asp-for="diagthoracicbulge_text">
+                <select class="form-select" style="width:25%;display:inline !important" aria-label="Default select example" asp-for="diagthoracicbulge_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <input type="text" class="form-control" style="width:70%;display:inline !important" placeholder="Thoracic bulge" asp-for="diagthoracicbulge_text">
             </div>
             <div class="col-md-3">
 
@@ -63,8 +65,9 @@
             </div>
 
             <div class="col-md-3">
-
-                <input type="text" class="form-control" placeholder="Lumbar bulge" asp-for="diaglumberbulge_text">
+                <select class="form-select" style="width:25%;display:inline !important" aria-label="Default select example" asp-for="diaglumberbulge_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <input type="text" class="form-control" style="width:70%;display:inline !important" placeholder="Lumbar bulge" asp-for="diaglumberbulge_text">
             </div>
             <div class="col-md-3">
 
@@ -85,8 +88,9 @@
             </div>
 
             <div class="col-md-9">
-
-                  <textarea class="form-control" class="form-control" placeholder="Left Shoulder" asp-for="diagleftshoulder_text"></textarea>
+                <select class="form-select" style="width:8%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="diagleftshoulder_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:90%;display:inline !important" placeholder="Left Shoulder" asp-for="diagleftshoulder_text"></textarea>
             </div>
          
             <div class="col-md-2">
@@ -100,8 +104,9 @@
             </div>
 
             <div class="col-md-9">
-
-                  <textarea class="form-control" class="form-control" placeholder="Right Shoulder" asp-for="diagrightshoulder_text"></textarea>
+                <select class="form-select" style="width:8%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="diagrightshoulder_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:90%;display:inline !important" placeholder="Right Shoulder" asp-for="diagrightshoulder_text" rows="2"></textarea>
             </div>
          
             <div class="col-md-2">
@@ -115,8 +120,9 @@
             </div>
 
             <div class="col-md-9">
-
-                 <textarea class="form-control" class="form-control" placeholder="Left Knee" asp-for="diagleftknee_text"></textarea>
+                <select class="form-select" style="width:8%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="diagleftknee_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" rows="2" style="width:90%;display:inline !important" placeholder="Left Knee" asp-for="diagleftknee_text"></textarea>
             </div>
          
 
@@ -131,8 +137,9 @@
             </div>
 
             <div class="col-md-9">
-
-                 <textarea class="form-control" class="form-control" placeholder="Right Knee" asp-for="diagrightknee_text"></textarea>
+                <select class="form-select" style="width:8%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="diagleftknee_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" rows="2" style="width:90%;display:inline !important" placeholder="Left Knee" asp-for="diagleftknee_text"></textarea>
             </div>
             
 
@@ -155,9 +162,11 @@
             </div>
 
 
-            <div class="col-md-8">
 
-                <textarea class="form-control" asp-for="other1_text" rows="2"></textarea>
+            <div class="col-md-8">
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other1_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:80%;display:inline !important" asp-for="other1_text" rows="2"></textarea>
             </div>
 
 
@@ -173,8 +182,9 @@
 
 
             <div class="col-md-8">
-
-                <textarea class="form-control" rows="2" asp-for="other2_text"></textarea>
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other2_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:80%;display:inline !important" rows="2" asp-for="other2_text"></textarea>
             </div>
 
 
@@ -190,8 +200,9 @@
 
 
             <div class="col-md-8">
-
-                <textarea class="form-control" rows="2" asp-for="other3_text"></textarea>
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other3_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:80%;display:inline !important" rows="2" asp-for="other3_text"></textarea>
             </div>
 
             <div class="col-md-2">
@@ -206,8 +217,9 @@
 
 
             <div class="col-md-8">
-
-                <textarea class="form-control" rows="2" asp-for="other4_text"></textarea>
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other4_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:80%;display:inline !important" rows="2" asp-for="other4_text"></textarea>
             </div>
 
 
@@ -223,8 +235,9 @@
 
 
             <div class="col-md-8">
-
-                <textarea class="form-control" rows="2" asp-for="other5_text"></textarea>
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other5_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:80%;display:inline !important" rows="2" asp-for="other5_text"></textarea>
             </div>
 
 
@@ -240,8 +253,9 @@
 
 
             <div class="col-md-8">
-
-                <textarea class="form-control" rows="2" asp-for="other6_text"></textarea>
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other6_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:80%;display:inline !important" rows="2" asp-for="other6_text"></textarea>
             </div>
 
 
@@ -257,8 +271,9 @@
 
 
             <div class="col-md-8">
-
-                <textarea class="form-control" rows="2" asp-for="other7_text"></textarea>
+                <select class="form-select" style="width:15%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="other7_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" style="width:80%;display:inline !important" rows="2" asp-for="other7_text"></textarea>
             </div>
             <div class="clearfix"></div>
             <br />

@@ -611,7 +611,7 @@ namespace PainTrax.Web.Controllers
                     obj.Page3.diagleftshoulder_study = (obj.Page3.diagleftshoulder_study == null) ? "1" : obj.Page3.diagleftshoulder_study;
                     obj.Page3.diagleftshoulder_comma = (obj.Page3.diagleftshoulder_comma == null) ? _page3Setting.diagleftshoulder_comma : obj.Page3.diagleftshoulder_comma;
                     obj.Page3.diagrightshoulder_study = (obj.Page3.diagrightshoulder_study == null) ? "1" : obj.Page3.diagrightshoulder_study;
-                    obj.Page3.diagrightshoulder_comma = (obj.Page3.diagrightshoulder_comma == null) ?_page3Setting.diagrightshoulder_comma : obj.Page3.diagrightshoulder_comma;
+                    obj.Page3.diagrightshoulder_comma = (obj.Page3.diagrightshoulder_comma == null) ? _page3Setting.diagrightshoulder_comma : obj.Page3.diagrightshoulder_comma;
                     obj.Page3.diagleftknee_study = (obj.Page3.diagleftknee_study == null) ? "1" : obj.Page3.diagleftknee_study;
                     obj.Page3.diagleftknee_comma = (obj.Page3.diagleftknee_comma == null) ? _page3Setting.diagleftknee_comma : obj.Page3.diagleftknee_comma;
                     obj.Page3.diagrightknee_study = (obj.Page3.diagrightknee_study == null) ? "1" : obj.Page3.diagrightknee_study;
@@ -3650,17 +3650,18 @@ namespace PainTrax.Web.Controllers
                         strDaignosis = strDaignosis + " " + study;
                     }
 
+                    //if (!string.IsNullOrEmpty(data.diagcervialbulge_text))
+                    //{
+
+                    if (data.diagcervialbulge_comma != null)
+                        strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagcervialbulge_comma));
+                    strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text + ", ";
+
+
+                    stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.') + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diagcervialbulge_text))
-                    {
-
-                        if (data.diagcervialbulge_comma != null)
-                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagcervialbulge_comma));
-                        strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text + ", ";
-
-
-                        stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
-                    }
+                    //}
 
                     if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp1))
                     {
@@ -3697,16 +3698,17 @@ namespace PainTrax.Web.Controllers
                         strDaignosis = strDaignosis + " " + study;
                     }
 
-                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
-                    {
-                        strCommaValue = "";
-                        if (data.diagthoracicbulge_comma != null)
-                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagthoracicbulge_comma));
-                        strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text + ", ";
+                    //if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
+                    //{
+                    strCommaValue = "";
+                    if (data.diagthoracicbulge_comma != null)
+                        strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagthoracicbulge_comma));
+                    strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text + ", ";
 
-                        stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                    stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
                         isnormal = false;
-                    }
+                    //}
 
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_hnp1))
                     {
@@ -3743,16 +3745,17 @@ namespace PainTrax.Web.Controllers
                         strDaignosis = strDaignosis + " " + study;
                     }
 
-                    if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
-                    {
-                        strCommaValue = "";
-                        if (data.diaglumberbulge_comma != null)
-                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
-                        strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text + ", ";
+                    //if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
+                    //{
+                    strCommaValue = "";
+                    if (data.diaglumberbulge_comma != null)
+                        strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
+                    strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text + ", ";
 
-                        stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                    stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                    if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
                         isnormal = false;
-                    }
+                    //}
 
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp1))
                     {
@@ -4175,7 +4178,7 @@ namespace PainTrax.Web.Controllers
                     type = type,
                     accident_type = fuData.accident_type,
                     provider_id = fuData.provider_id,
-                    final_save= false
+                    final_save = false
 
                 };
                 fu_id = _patientFUservices.Insert(objFU);

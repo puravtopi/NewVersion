@@ -21,7 +21,11 @@ namespace PainTrax.Web.Models
         [Required(ErrorMessage = "Please Enter UserName")]
         public string? uname { get; set; }
 
-        [Required(ErrorMessage = "Please Enter Password")]
+        //[Required(ErrorMessage = "Please Enter Password")]
+        [Required]
+        [DataType(DataType.Password)]
+        [RegularExpression(@"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$",
+        ErrorMessage = "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.")]
         public string? password { get; set; }
 
         [Required(ErrorMessage = "Please Select Group")]

@@ -3633,7 +3633,7 @@ namespace PainTrax.Web.Controllers
         {
             var data = _ieService.GetOnePage3(id);
 
-            string strDaignosis = "", stradddaigno = "";
+            string strDaignosis = "", stradddaigno = "", strCommaValue = "";
             bool isnormal = true;
 
             if (data != null)
@@ -3653,9 +3653,12 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(data.diagcervialbulge_text))
                     {
 
-                        strDaignosis = strDaignosis + " of the cervical spine " + data.diagcervialbulge_text + ", ";
+                        if (data.diagcervialbulge_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagcervialbulge_comma));
+                        strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text + ", ";
 
-                        stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.TrimEnd('.') + ".<br/>";
+
+                        stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
 
@@ -3696,9 +3699,12 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
                     {
-                        strDaignosis = strDaignosis + " of the thoracic spine " + data.diagthoracicbulge_text + ", ";
+                        strCommaValue = "";
+                        if (data.diagthoracicbulge_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagthoracicbulge_comma));
+                        strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text + ", ";
 
-                        stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().TrimEnd('.') + ".<br/>";
+                        stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
 
@@ -3739,9 +3745,12 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
                     {
-                        strDaignosis = strDaignosis + " of the lumbar spine " + data.diaglumberbulge_text + ", ";
+                        strCommaValue = "";
+                        if (data.diaglumberbulge_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
+                        strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text + ", ";
 
-                        stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().TrimEnd('.') + ".<br/>";
+                        stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
 
@@ -3782,7 +3791,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagleftshoulder_text))
                     {
-                        strDaignosis = strDaignosis + " of the left shoulder " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                        strCommaValue = "";
+                        if (data.diagleftshoulder_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagleftshoulder_comma));
+
+                        strDaignosis = strDaignosis + " of the left shoulder  " + strCommaValue + " " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -3804,7 +3817,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagrightshoulder_text))
                     {
-                        strDaignosis = strDaignosis + " of the right shoulder " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                        strCommaValue = "";
+                        if (data.diagrightshoulder_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagrightshoulder_comma));
+
+                        strDaignosis = strDaignosis + " of the right shoulder " + strCommaValue + " " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -3812,6 +3829,8 @@ namespace PainTrax.Web.Controllers
                     }
 
                 }
+
+
                 if (data.diagleftknee_date != null)
                 {
                     strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftknee_date.Value.ToString("MM/dd/yyyy") + " - ";
@@ -3824,7 +3843,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagleftknee_text))
                     {
-                        strDaignosis = strDaignosis + " of the left knee " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
+                        strCommaValue = "";
+                        if (data.diagleftknee_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagleftknee_comma));
+
+                        strDaignosis = strDaignosis + " of the left knee " + strCommaValue + " " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -3844,35 +3867,17 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagrightknee_text))
                     {
-                        strDaignosis = strDaignosis + " of the right knee " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
+                        strCommaValue = "";
+                        if (data.diagrightknee_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagrightknee_comma));
+
+                        strDaignosis = strDaignosis + " of the right knee " + strCommaValue + " " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
                         strDaignosis = strDaignosis + " of the right knee is normal. ";
                     }
                 }
-
-
-
-                //if (data.diagrightknee_date != null)
-                //{
-                //    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagrightknee_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                //    if (!string.IsNullOrEmpty(data.diagrightknee_study))
-                //    {
-                //        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagrightknee_study));
-                //        strDaignosis = strDaignosis + " " + study;
-                //    }
-
-                //    if (!string.IsNullOrEmpty(data.diagrightknee_text))
-                //    {
-                //        strDaignosis = strDaignosis + " of the right knee " + data.diagrightknee_text.TrimEnd('.') + ". ";
-                //    }
-                //    else
-                //    {
-                //        strDaignosis = strDaignosis + " of the right knee is normal. ";
-                //    }
-                //}
 
                 if (data.other1_date != null)
                 {
@@ -3886,7 +3891,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other1_text))
                     {
-                        strDaignosis = strDaignosis + data.other1_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other1_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other1_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other1_text.TrimEnd('.') + ". ";
                     }
                 }
 
@@ -3902,7 +3911,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other2_text))
                     {
-                        strDaignosis = strDaignosis + data.other2_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other2_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other2_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other2_text.TrimEnd('.') + ". ";
                     }
                 }
 
@@ -3918,7 +3931,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other3_text))
                     {
-                        strDaignosis = strDaignosis + data.other3_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other3_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other3_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other3_text.TrimEnd('.') + ". ";
                     }
                 }
 
@@ -3934,7 +3951,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other4_text))
                     {
-                        strDaignosis = strDaignosis + data.other4_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other4_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other4_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other4_text.TrimEnd('.') + ". ";
                     }
                 }
 
@@ -3950,7 +3971,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other5_text))
                     {
-                        strDaignosis = strDaignosis + data.other5_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other5_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other5_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other5_text.TrimEnd('.') + ". ";
                     }
                 }
 
@@ -3966,7 +3991,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other6_text))
                     {
-                        strDaignosis = strDaignosis + data.other6_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other6_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other6_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other6_text.TrimEnd('.') + ". ";
                     }
                 }
 
@@ -3982,7 +4011,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other7_text))
                     {
-                        strDaignosis = strDaignosis + data.other7_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other7_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other7_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other7_text.TrimEnd('.') + ". ";
                     }
                 }
 

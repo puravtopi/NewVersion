@@ -246,16 +246,16 @@ namespace PainTrax.Web.Controllers
                                 psh = dt.Rows[i]["Past Surgical"].ToString(),
                                 social_history = dt.Rows[i]["Social History"].ToString(),
                                 assessment = this.getAssement(dt.Rows[i]["Diagnoses"].ToString()),
-                                appt_reason = dt.Rows[i]["Reason"].ToString(),
-                                occupation = dt.Rows[i]["Occupation"].ToString(),
-                                impairment_rating = dt.Rows[i]["Tylenol"].ToString(),
+                                //appt_reason = dt.Rows[i]["Reason"].ToString(),
+                                //occupation = dt.Rows[i]["Occupation"].ToString(),
+                                //impairment_rating = dt.Rows[i]["Tylenol"].ToString(),
 
                             };
                             _patientimportservice.InsertPage1(obj);
 
                             tbl_ie_page2 obj2 = new tbl_ie_page2()
                             {
-                                aod = dt.Rows[i]["Activities"].ToString(),
+                                //aod = dt.Rows[i]["Activities"].ToString(),
                                 ros = dt.Rows[i]["ROS"].ToString(),
                                 ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
                                 cmp_id = cmpid,
@@ -346,7 +346,7 @@ namespace PainTrax.Web.Controllers
                                 cmp_id = cmpid,
                                 allergies = dt.Rows[i]["Allergies"].ToString(),
                                 cc = dt.Rows[i]["CC"].ToString(),
-                                history = dt.Rows[i]["History"].ToString(),
+                                //history = dt.Rows[i]["History"].ToString(),
                                 ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
                                 medication = dt.Rows[i]["Medications"].ToString(),
                                 patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
@@ -355,9 +355,9 @@ namespace PainTrax.Web.Controllers
                                 psh = dt.Rows[i]["Past Surgical"].ToString(),
                                 social_history = dt.Rows[i]["Social History"].ToString(),
                                 assessment = this.getAssement(dt.Rows[i]["Diagnoses"].ToString()),
-                                appt_reason = dt.Rows[i]["Reason"].ToString(),
-                                occupation = dt.Rows[i]["Occupation"].ToString(),
-                                impairment_rating = dt.Rows[i]["Tylenol"].ToString(),
+                                //appt_reason = dt.Rows[i]["Reason"].ToString(),
+                                //occupation = dt.Rows[i]["Occupation"].ToString(),
+                                //impairment_rating = dt.Rows[i]["Tylenol"].ToString(),
                                 fu_id = Convert.ToInt32(dt.Rows[i]["Patient_fu_id"].ToString()),
 
                             };
@@ -365,7 +365,7 @@ namespace PainTrax.Web.Controllers
 
                             tbl_fu_page2 obj2 = new tbl_fu_page2()
                             {
-                                aod = dt.Rows[i]["Activities"].ToString(),
+                                //aod = dt.Rows[i]["Activities"].ToString(),
                                 ros = dt.Rows[i]["ROS"].ToString(),
                                 ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
                                 cmp_id = cmpid,

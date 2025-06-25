@@ -682,7 +682,7 @@ namespace PainTrax.Web.Controllers
             try
             {
                 var data = model;
-                var _isExist = _patientFuservices.IsFuExist(model.fu_id.Value, model.dov==null?null: model.dov.Value.ToString("yyyy-MM-dd"), model.type,model.id.Value);
+                var _isExist = _patientFuservices.IsFuExist(model.fu_id.Value, model.dov == null ? null : model.dov.Value.ToString("yyyy-MM-dd"), model.type, model.id.Value);
 
                 if (!_isExist)
                 {
@@ -2264,7 +2264,7 @@ namespace PainTrax.Web.Controllers
                             signUserId = providorId.Value;
                         }
                     }
-                        
+
 
 
 
@@ -2494,13 +2494,13 @@ namespace PainTrax.Web.Controllers
 
                 if (locData != null && locData.Count > 0)
                 {
-                    body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
+                    body = body.Replace("#drName", locData[0].nameofpractice == null ? "" : (locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice));
                     body = body.Replace("#address", locData[0].address);
                     //body = body.Replace("#Address", locData[0].address);
                     body = body.Replace("#Address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                     body = body.Replace("#loc", locData[0].location);
                     body = body.Replace("#Location", locData[0].location);
-                    body = body.Replace("#Nameofpractice", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
+                    body = body.Replace("#Nameofpractice", locData[0].nameofpractice == null ? "" : (locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice));
                     body = body.Replace("#Phone", locData[0].telephone);
                 }
 
@@ -3356,7 +3356,7 @@ namespace PainTrax.Web.Controllers
             DataTable dsPOC = _pocService.GetPOCFU(PatientFU_ID);
 
             string strPoc = "", pocDesc = "", ccdesc = "", pedesc = "", adesc = "";
-            string inject_desc = "", pageBreakHtml="";
+            string inject_desc = "", pageBreakHtml = "";
             if (dsPOC != null && dsPOC.Rows.Count > 0)
             {
 
@@ -3776,7 +3776,7 @@ namespace PainTrax.Web.Controllers
         {
             var data = _ieService.GetOnePage3(id);
 
-            string strDaignosis = "", stradddaigno = "";
+            string strDaignosis = "", stradddaigno = "", strCommaValue = "";
             bool isnormal = true;
 
             if (data != null)
@@ -3796,7 +3796,10 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(data.diagcervialbulge_text))
                     {
 
-                        strDaignosis = strDaignosis + " of the cervical spine " + data.diagcervialbulge_text + ", ";
+                        if (data.diagcervialbulge_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagcervialbulge_comma));
+                        strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text + ", ";
+
 
                         stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
@@ -3839,7 +3842,10 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
                     {
-                        strDaignosis = strDaignosis + " of the thoracic spine " + data.diagthoracicbulge_text + ", ";
+                        strCommaValue = "";
+                        if (data.diagthoracicbulge_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagthoracicbulge_comma));
+                        strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text + ", ";
 
                         stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
@@ -3882,370 +3888,10 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
                     {
-                        strDaignosis = strDaignosis + " of the lumbar spine " + data.diaglumberbulge_text + ", ";
-
-                        stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
-                        isnormal = false;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp1))
-                    {
-                        strDaignosis = strDaignosis + " HNP at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ". ";
-                        stradddaigno = stradddaigno + "Lumbar herniated nucleus pulposis at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ".<br/>";
-                        isnormal = false;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp2))
-                    {
-                        strDaignosis = strDaignosis + data.diaglumberbulge_hnp2.TrimEnd('.') + ". ";
-                        if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp2))
-                        {
-                            stradddaigno = stradddaigno + data.diaglumberbulge_hnp2.TrimEnd('.') + ".<br/>";
-                        }
-
-                        isnormal = false;
-                    }
-
-                    if (isnormal)
-                    {
-                        strDaignosis = strDaignosis + " of the lumbar spine is normal. ";
-                    }
-                }
-
-                if (data.diagleftshoulder_date != null && pre.chkLeftShoulder == true)
-                    if (data.diagleftshoulder_date != null && pre.chkLeftShoulder == true)
-                    {
-
-                        strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftshoulder_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                        if (!string.IsNullOrEmpty(data.diagleftshoulder_study))
-                        {
-                            var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagleftshoulder_study));
-                            strDaignosis = strDaignosis + " " + study;
-                        }
-
-                        if (!string.IsNullOrEmpty(data.diagleftshoulder_text))
-                        {
-                            strDaignosis = strDaignosis + " of the left shoulder " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
-                        }
-                        else
-                        {
-                            strDaignosis = strDaignosis + " of the left shoulder is normal. ";
-                        }
-
-                    }
-
-                if (data.diagrightshoulder_date != null && pre.chkRightShoulder == true)
-                {
-
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagrightshoulder_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.diagrightshoulder_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagrightshoulder_study));
-                        strDaignosis = strDaignosis + " " + study;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diagrightshoulder_text))
-                    {
-                        strDaignosis = strDaignosis + " of the right shoulder " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
-                    }
-                    else
-                    {
-                        strDaignosis = strDaignosis + " of the right shoulder is normal. ";
-                    }
-
-                }
-                if (data.diagleftknee_date != null && pre.chkLeftKnee == true)
-                {
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftknee_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.diagleftknee_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagleftknee_study));
-                        strDaignosis = strDaignosis + " " + study;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diagleftknee_text))
-                    {
-                        strDaignosis = strDaignosis + " of the left knee " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
-                    }
-                    else
-                    {
-                        strDaignosis = strDaignosis + " of the left knee is normal. ";
-                    }
-                }
-
-                if (data.diagrightknee_date != null && pre.chkRightKnee == true)
-                {
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagrightknee_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.diagrightknee_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagrightknee_study));
-                        strDaignosis = strDaignosis + " " + study;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diagrightknee_text))
-                    {
-                        strDaignosis = strDaignosis + " of the right knee " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
-                    }
-                    else
-                    {
-                        strDaignosis = strDaignosis + " of the right knee is normal. ";
-                    }
-                }
-
-
-
-                //if (data.diagrightknee_date != null)
-                //{
-                //    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagrightknee_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                //    if (!string.IsNullOrEmpty(data.diagrightknee_study))
-                //    {
-                //        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagrightknee_study));
-                //        strDaignosis = strDaignosis + " " + study;
-                //    }
-
-                //    if (!string.IsNullOrEmpty(data.diagrightknee_text))
-                //    {
-                //        strDaignosis = strDaignosis + " of the right knee " + data.diagrightknee_text.TrimEnd('.') + ". ";
-                //    }
-                //    else
-                //    {
-                //        strDaignosis = strDaignosis + " of the right knee is normal. ";
-                //    }
-                //}
-
-                if (data.other1_date != null)
-                {
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other1_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.other1_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other1_study));
-                        strDaignosis = strDaignosis + " " + study + " ";
-                    }
-
-                    if (!string.IsNullOrEmpty(data.other1_text))
-                    {
-                        strDaignosis = strDaignosis + data.other1_text.TrimEnd('.') + ". ";
-                    }
-                }
-
-                if (data.other2_date != null)
-                {
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other2_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.other2_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other2_study));
-                        strDaignosis = strDaignosis + " " + study + " ";
-                    }
-
-                    if (!string.IsNullOrEmpty(data.other2_text))
-                    {
-                        strDaignosis = strDaignosis + data.other2_text.TrimEnd('.') + ". ";
-                    }
-                }
-
-                if (data.other3_date != null)
-                {
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other3_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.other3_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other3_study));
-                        strDaignosis = strDaignosis + " " + study + " ";
-                    }
-
-                    if (!string.IsNullOrEmpty(data.other3_text))
-                    {
-                        strDaignosis = strDaignosis + data.other3_text.TrimEnd('.') + ". ";
-                    }
-                }
-
-                if (data.other4_date != null)
-                {
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other4_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.other4_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other4_study));
-                        strDaignosis = strDaignosis + " " + study + " ";
-                    }
-
-                    if (!string.IsNullOrEmpty(data.other4_text))
-                    {
-                        strDaignosis = strDaignosis + data.other4_text.TrimEnd('.') + ". ";
-                    }
-                }
-
-                if (data.other5_date != null)
-                {
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other5_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.other5_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other5_study));
-                        strDaignosis = strDaignosis + " " + study + " ";
-                    }
-
-                    if (!string.IsNullOrEmpty(data.other5_text))
-                    {
-                        strDaignosis = strDaignosis + data.other5_text.TrimEnd('.') + ". ";
-                    }
-                }
-
-                if (data.other6_date != null)
-                {
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other6_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.other6_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other6_study));
-                        strDaignosis = strDaignosis + " " + study + " ";
-                    }
-
-                    if (!string.IsNullOrEmpty(data.other6_text))
-                    {
-                        strDaignosis = strDaignosis + data.other6_text.TrimEnd('.') + ". ";
-                    }
-                }
-
-                if (data.other7_date != null)
-                {
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other7_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.other7_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other7_study));
-                        strDaignosis = strDaignosis + " " + study + " ";
-                    }
-
-                    if (!string.IsNullOrEmpty(data.other7_text))
-                    {
-                        strDaignosis = strDaignosis + data.other7_text.TrimEnd('.') + ". ";
-                    }
-                }
-
-            }
-
-            return strDaignosis;
-
-        }
-        private string getDiagnostic(int id)
-        {
-            var data = _fuPage3services.GetOne(id);
-
-            string strDaignosis = "", stradddaigno = "";
-            bool isnormal = true;
-
-            if (data != null)
-            {
-
-                if (data.diagcervialbulge_date != null)
-                {
-                    strDaignosis = data.diagcervialbulge_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.diagcervialbulge_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagcervialbulge_study));
-
-                        strDaignosis = strDaignosis + " " + study;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diagcervialbulge_text))
-                    {
-
-                        strDaignosis = strDaignosis + " of the cervical spine " + data.diagcervialbulge_text + ", ";
-
-                        stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.') + ".<br/>";
-                        isnormal = false;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp1))
-                    {
-                        strDaignosis = strDaignosis + " HNP at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".";
-                        stradddaigno = stradddaigno + "Cervical herniated nucleus pulposis at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".<br/>";
-                        isnormal = false;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp2))
-                    {
-                        strDaignosis = strDaignosis + data.diagcervialbulge_hnp2.TrimEnd('.') + ".";
-                        if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp2))
-                        {
-                            stradddaigno = stradddaigno + data.diagcervialbulge_hnp2.TrimEnd('.') + ".<br/>";
-                        }
-
-                        isnormal = false;
-                    }
-
-                    if (isnormal)
-                    {
-                        strDaignosis = strDaignosis + " of the cervical spine is normal. ";
-                    }
-                }
-
-                if (data.diagthoracicbulge_date != null)
-                {
-                    isnormal = true;
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagthoracicbulge_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagthoracicbulge_study));
-                        strDaignosis = strDaignosis + " " + study;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
-                    {
-                        strDaignosis = strDaignosis + " of the thoracic spine " + data.diagthoracicbulge_text + ", ";
-
-                        stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
-                        isnormal = false;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_hnp1))
-                    {
-                        strDaignosis = strDaignosis + " HNP at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ". ";
-                        stradddaigno = stradddaigno + "Thoracic herniated nucleus pulposis at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ".<br/>";
-                        isnormal = false;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_hnp2))
-                    {
-                        strDaignosis = strDaignosis + data.diagthoracicbulge_hnp2.TrimEnd('.') + ". ";
-                        if (!string.IsNullOrEmpty(data.diagthoracicbulge_hnp2))
-                        {
-                            stradddaigno = stradddaigno + data.diagthoracicbulge_hnp2.TrimEnd('.') + ".<br/>";
-                        }
-
-                        isnormal = false;
-                    }
-
-                    if (isnormal)
-                    {
-                        strDaignosis = strDaignosis + " of the thoracic spine is normal. ";
-                    }
-                }
-
-                if (data.diaglumberbulge_date != null)
-                {
-                    isnormal = true;
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diaglumberbulge_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.diaglumberbulge_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diaglumberbulge_study));
-                        strDaignosis = strDaignosis + " " + study;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
-                    {
-                        strDaignosis = strDaignosis + " of the lumbar spine " + data.diaglumberbulge_text + ", ";
+                        strCommaValue = "";
+                        if (data.diaglumberbulge_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
+                        strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text + ", ";
 
                         stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
                         isnormal = false;
@@ -4288,7 +3934,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagleftshoulder_text))
                     {
-                        strDaignosis = strDaignosis + " of the left shoulder:  " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                        strCommaValue = "";
+                        if (data.diagleftshoulder_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagleftshoulder_comma));
+
+                        strDaignosis = strDaignosis + " of the left shoulder  " + strCommaValue + " " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -4310,7 +3960,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagrightshoulder_text))
                     {
-                        strDaignosis = strDaignosis + " of the right shoulder " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                        strCommaValue = "";
+                        if (data.diagrightshoulder_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagrightshoulder_comma));
+
+                        strDaignosis = strDaignosis + " of the right shoulder " + strCommaValue + " " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -4332,7 +3986,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagleftknee_text))
                     {
-                        strDaignosis = strDaignosis + " of the left knee " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
+                        strCommaValue = "";
+                        if (data.diagleftknee_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagleftknee_comma));
+
+                        strDaignosis = strDaignosis + " of the left knee " + strCommaValue + " " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -4352,7 +4010,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.diagrightknee_text))
                     {
-                        strDaignosis = strDaignosis + " of the right knee " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
+                        strCommaValue = "";
+                        if (data.diagrightknee_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagrightknee_comma));
+
+                        strDaignosis = strDaignosis + " of the right knee " + strCommaValue + " " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -4372,7 +4034,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other1_text))
                     {
-                        strDaignosis = strDaignosis + data.other1_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other1_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other1_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other1_text.TrimEnd('.') + ". ";
                     }
                 }
 
@@ -4388,7 +4054,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other2_text))
                     {
-                        strDaignosis = strDaignosis + data.other2_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other2_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other2_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other2_text.TrimEnd('.') + ". ";
                     }
                 }
 
@@ -4404,7 +4074,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other3_text))
                     {
-                        strDaignosis = strDaignosis + data.other3_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other3_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other3_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other3_text.TrimEnd('.') + ". ";
                     }
                 }
 
@@ -4420,7 +4094,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other4_text))
                     {
-                        strDaignosis = strDaignosis + data.other4_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other4_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other4_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other4_text.TrimEnd('.') + ". ";
                     }
                 }
 
@@ -4436,7 +4114,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other5_text))
                     {
-                        strDaignosis = strDaignosis + data.other5_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other5_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other5_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other5_text.TrimEnd('.') + ". ";
                     }
                 }
 
@@ -4452,7 +4134,11 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other6_text))
                     {
-                        strDaignosis = strDaignosis + data.other6_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other6_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other6_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other6_text.TrimEnd('.') + ". ";
                     }
                 }
 
@@ -4468,7 +4154,406 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other7_text))
                     {
-                        strDaignosis = strDaignosis + data.other7_text.TrimEnd('.') + ". ";
+                        strCommaValue = "";
+                        if (data.other7_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other7_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other7_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+            }
+
+            return strDaignosis;
+
+        }
+        private string getDiagnostic(int id)
+        {
+            var data = _fuPage3services.GetOne(id);
+
+            string strDaignosis = "", stradddaigno = "", strCommaValue = "";
+            bool isnormal = true;
+
+            if (data != null)
+            {
+
+                if (data.diagcervialbulge_date != null)
+                {
+                    strDaignosis = data.diagcervialbulge_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagcervialbulge_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagcervialbulge_study));
+
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagcervialbulge_text))
+                    {
+
+                        if (data.diagcervialbulge_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagcervialbulge_comma));
+                        strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text + ", ";
+
+
+                        stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                        isnormal = false;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp1))
+                    {
+                        strDaignosis = strDaignosis + " HNP at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".";
+                        stradddaigno = stradddaigno + "Cervical herniated nucleus pulposis at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".<br/>";
+                        isnormal = false;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp2))
+                    {
+                        strDaignosis = strDaignosis + data.diagcervialbulge_hnp2.TrimEnd('.') + ".";
+                        if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp2))
+                        {
+                            stradddaigno = stradddaigno + data.diagcervialbulge_hnp2.TrimEnd('.') + ".<br/>";
+                        }
+
+                        isnormal = false;
+                    }
+
+                    if (isnormal)
+                    {
+                        strDaignosis = strDaignosis + " of the cervical spine is normal. ";
+                    }
+                }
+
+                if (data.diagthoracicbulge_date != null)
+                {
+                    isnormal = true;
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagthoracicbulge_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagthoracicbulge_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
+                    {
+                        strCommaValue = "";
+                        if (data.diagthoracicbulge_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagthoracicbulge_comma));
+                        strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text + ", ";
+
+                        stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                        isnormal = false;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_hnp1))
+                    {
+                        strDaignosis = strDaignosis + " HNP at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ". ";
+                        stradddaigno = stradddaigno + "Thoracic herniated nucleus pulposis at " + data.diagthoracicbulge_hnp1.TrimEnd('.') + ".<br/>";
+                        isnormal = false;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagthoracicbulge_hnp2))
+                    {
+                        strDaignosis = strDaignosis + data.diagthoracicbulge_hnp2.TrimEnd('.') + ". ";
+                        if (!string.IsNullOrEmpty(data.diagthoracicbulge_hnp2))
+                        {
+                            stradddaigno = stradddaigno + data.diagthoracicbulge_hnp2.TrimEnd('.') + ".<br/>";
+                        }
+
+                        isnormal = false;
+                    }
+
+                    if (isnormal)
+                    {
+                        strDaignosis = strDaignosis + " of the thoracic spine is normal. ";
+                    }
+                }
+
+                if (data.diaglumberbulge_date != null)
+                {
+                    isnormal = true;
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diaglumberbulge_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diaglumberbulge_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diaglumberbulge_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
+                    {
+                        strCommaValue = "";
+                        if (data.diaglumberbulge_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
+                        strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text + ", ";
+
+                        stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                        isnormal = false;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp1))
+                    {
+                        strDaignosis = strDaignosis + " HNP at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ". ";
+                        stradddaigno = stradddaigno + "Lumbar herniated nucleus pulposis at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ".<br/>";
+                        isnormal = false;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp2))
+                    {
+                        strDaignosis = strDaignosis + data.diaglumberbulge_hnp2.TrimEnd('.') + ". ";
+                        if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp2))
+                        {
+                            stradddaigno = stradddaigno + data.diaglumberbulge_hnp2.TrimEnd('.') + ".<br/>";
+                        }
+
+                        isnormal = false;
+                    }
+
+                    if (isnormal)
+                    {
+                        strDaignosis = strDaignosis + " of the lumbar spine is normal. ";
+                    }
+                }
+
+                if (data.diagleftshoulder_date != null)
+                {
+
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftshoulder_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagleftshoulder_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagleftshoulder_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagleftshoulder_text))
+                    {
+                        strCommaValue = "";
+                        if (data.diagleftshoulder_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagleftshoulder_comma));
+
+                        strDaignosis = strDaignosis + " of the left shoulder  " + strCommaValue + " " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                    }
+                    else
+                    {
+                        strDaignosis = strDaignosis + " of the left shoulder is normal. ";
+                    }
+
+                }
+
+                if (data.diagrightshoulder_date != null)
+                {
+
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagrightshoulder_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagrightshoulder_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagrightshoulder_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagrightshoulder_text))
+                    {
+                        strCommaValue = "";
+                        if (data.diagrightshoulder_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagrightshoulder_comma));
+
+                        strDaignosis = strDaignosis + " of the right shoulder " + strCommaValue + " " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                    }
+                    else
+                    {
+                        strDaignosis = strDaignosis + " of the right shoulder is normal. ";
+                    }
+
+                }
+
+
+                if (data.diagleftknee_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftknee_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagleftknee_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagleftknee_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagleftknee_text))
+                    {
+                        strCommaValue = "";
+                        if (data.diagleftknee_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagleftknee_comma));
+
+                        strDaignosis = strDaignosis + " of the left knee " + strCommaValue + " " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
+                    }
+                    else
+                    {
+                        strDaignosis = strDaignosis + " of the left knee is normal. ";
+                    }
+                }
+
+                if (data.diagrightknee_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagrightknee_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagrightknee_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagrightknee_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagrightknee_text))
+                    {
+                        strCommaValue = "";
+                        if (data.diagrightknee_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagrightknee_comma));
+
+                        strDaignosis = strDaignosis + " of the right knee " + strCommaValue + " " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
+                    }
+                    else
+                    {
+                        strDaignosis = strDaignosis + " of the right knee is normal. ";
+                    }
+                }
+
+                if (data.other1_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other1_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other1_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other1_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other1_text))
+                    {
+                        strCommaValue = "";
+                        if (data.other1_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other1_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other1_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+                if (data.other2_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other2_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other2_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other2_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other2_text))
+                    {
+                        strCommaValue = "";
+                        if (data.other2_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other2_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other2_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+                if (data.other3_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other3_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other3_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other3_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other3_text))
+                    {
+                        strCommaValue = "";
+                        if (data.other3_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other3_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other3_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+                if (data.other4_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other4_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other4_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other4_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other4_text))
+                    {
+                        strCommaValue = "";
+                        if (data.other4_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other4_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other4_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+                if (data.other5_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other5_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other5_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other5_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other5_text))
+                    {
+                        strCommaValue = "";
+                        if (data.other5_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other5_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other5_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+                if (data.other6_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other6_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other6_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other6_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other6_text))
+                    {
+                        strCommaValue = "";
+                        if (data.other6_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other6_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other6_text.TrimEnd('.') + ". ";
+                    }
+                }
+
+                if (data.other7_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.other7_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.other7_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other7_study));
+                        strDaignosis = strDaignosis + " " + study + " ";
+                    }
+
+                    if (!string.IsNullOrEmpty(data.other7_text))
+                    {
+                        strCommaValue = "";
+                        if (data.other7_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other7_comma));
+
+                        strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other7_text.TrimEnd('.') + ". ";
                     }
                 }
 

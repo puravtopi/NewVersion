@@ -380,7 +380,22 @@ poc_assesment=@poc_assesment
         other5_text,other6_date,other6_study,other6,other6_comma,
         other6_text,other7_date,other7_study,other7,other7_comma,
         other7_text,followupin,followupin_date,goal,care,universal,discharge_medications)Values
-				(@ie_id,@cmp_id,@patient_id,@gait,@diagcervialbulge_date,@diagcervialbulge_study,@diagcervialbulge,@diagcervialbulge_text,@diagcervialbulge_hnp1,@diagcervialbulge_hnp2,@diagthoracicbulge_date,@diagthoracicbulge_study,@diagthoracicbulge,@diagthoracicbulge_text,@diagthoracicbulge_hnp1,@diagthoracicbulge_hnp2,@diaglumberbulge_date,@diaglumberbulge_study,@diaglumberbulge,@diaglumberbulge_text,@diaglumberbulge_hnp1,@diaglumberbulge_hnp2,@diagleftshoulder_date,@diagleftshoulder_study,@diagleftshoulder,@diagleftshoulder_text,@diagrightshoulder_date,@diagrightshoulder_study,@diagrightshoulder,@diagrightshoulder_text,@diagleftknee_date,@diagleftknee_study,@diagleftknee,@diagleftknee_text,@diagrightknee_date,@diagrightknee_study,@diagrightknee,@diagrightknee_text,@diagbrain_date,@diagbrain_study,@diagbrain,@diagbrain_text,@other1_date,@other1_study,@other1,@other1_text,@other2_date,@other2_study,@other2,@other2_text,@other3_date,@other3_study,@other3,@other3_text,@other4_date,@other4_study,@other4,@other4_text,@other5_date,@other5_study,@other5,@other5_text,@other6_date,@other6_study,@other6,@other6_text,@other7_date,@other7_study,@other7,@other7_text,@followupin,@followupin_date,@goal,@care,@universal,@discharge_medications);select @@identity;", conn);
+				(@ie_id,@cmp_id,@patient_id,@gait,@diagcervialbulge_date,@diagcervialbulge_study,@diagcervialbulge,@diagcervialbulge_comma,
+        @diagcervialbulge_text,@diagcervialbulge_hnp1,@diagcervialbulge_hnp2,@diagthoracicbulge_date,@diagthoracicbulge_study,@diagthoracicbulge,@diagthoracicbulge_comma,
+        @diagthoracicbulge_text,@diagthoracicbulge_hnp1,@diagthoracicbulge_hnp2,@diaglumberbulge_date,@diaglumberbulge_study,@diaglumberbulge,@diaglumberbulge_comma,
+        @diaglumberbulge_text,@diaglumberbulge_hnp1,@diaglumberbulge_hnp2,@diagleftshoulder_date,@diagleftshoulder_study,@diagleftshoulder,@diagleftshoulder_comma,
+        @diagleftshoulder_text,@diagrightshoulder_date,@diagrightshoulder_study,@diagrightshoulder,@diagrightshoulder_comma,
+        @diagrightshoulder_text,@diagleftknee_date,@diagleftknee_study,@diagleftknee,@diagleftknee_comma,
+        @diagleftknee_text,@diagrightknee_date,@diagrightknee_study,@diagrightknee,@diagrightknee_comma,
+        @diagrightknee_text,@diagbrain_date,@diagbrain_study,@diagbrain,@diagbrain_comma,
+        @diagbrain_text,@other1_date,@other1_study,@other1,@other1_comma,
+        @other1_text,@other2_date,@other2_study,@other2,@other2_comma,
+        @other2_text,@other3_date,@other3_study,@other3,@other3_comma,
+        @other3_text,@other4_date,@other4_study,@other4,@other4_comma,
+        @other4_text,@other5_date,@other5_study,@other5,@other5_comma,
+        @other5_text,@other6_date,@other6_study,@other6,@other6_comma,
+        @other6_text,@other7_date,@other7_study,@other7,@other7_comma,
+        @other7_text,@followupin,@followupin_date,@goal,@care,@universal,@discharge_medications);select @@identity;", conn);
         cm.Parameters.AddWithValue("@ie_id", data.ie_id);
         cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
@@ -388,6 +403,7 @@ poc_assesment=@poc_assesment
         cm.Parameters.AddWithValue("@diagcervialbulge_date", data.diagcervialbulge_date);
         cm.Parameters.AddWithValue("@diagcervialbulge_study", data.diagcervialbulge_study);
         cm.Parameters.AddWithValue("@diagcervialbulge", data.diagcervialbulge);
+        cm.Parameters.AddWithValue("@diagcervialbulge_comma", data.diagcervialbulge_comma);
         cm.Parameters.AddWithValue("@diagcervialbulge_text", data.diagcervialbulge_text);
         cm.Parameters.AddWithValue("@diagcervialbulge_hnp1", data.diagcervialbulge_hnp1);
         cm.Parameters.AddWithValue("@diagcervialbulge_hnp2", data.diagcervialbulge_hnp2);
@@ -427,6 +443,7 @@ poc_assesment=@poc_assesment
         cm.Parameters.AddWithValue("@diagrightknee_text", data.diagrightknee_text);
         cm.Parameters.AddWithValue("@diagbrain_date", data.diagbrain_date);
         cm.Parameters.AddWithValue("@diagbrain_study", data.diagbrain_study);
+        cm.Parameters.AddWithValue("@diagbrain", data.diagbrain);
         cm.Parameters.AddWithValue("@diagbrain_comma", data.diagbrain_comma);
         cm.Parameters.AddWithValue("@diagbrain_text", data.diagbrain_text);
         cm.Parameters.AddWithValue("@other1_date", data.other1_date);
@@ -436,6 +453,7 @@ poc_assesment=@poc_assesment
         cm.Parameters.AddWithValue("@other1_text", data.other1_text);
         cm.Parameters.AddWithValue("@other2_date", data.other2_date);
         cm.Parameters.AddWithValue("@other2_study", data.other2_study);
+        cm.Parameters.AddWithValue("@other2", data.other2);
         cm.Parameters.AddWithValue("@other2_comma", data.other2_comma);
         cm.Parameters.AddWithValue("@other2_text", data.other2_text);
         cm.Parameters.AddWithValue("@other3_date", data.other3_date);

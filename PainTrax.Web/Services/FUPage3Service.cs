@@ -63,6 +63,7 @@ public class FUPage3Service: ParentService {
 		cm.Parameters.AddWithValue("@diagcervialbulge_date", data.diagcervialbulge_date);
 		cm.Parameters.AddWithValue("@diagcervialbulge_study", data.diagcervialbulge_study);
 		cm.Parameters.AddWithValue("@diagcervialbulge", data.diagcervialbulge);
+		cm.Parameters.AddWithValue("@diagcervialbulge_comma", data.diagcervialbulge_comma);
 		cm.Parameters.AddWithValue("@diagcervialbulge_text", data.diagcervialbulge_text);
 		cm.Parameters.AddWithValue("@diagcervialbulge_hnp1", data.diagcervialbulge_hnp1);
 		cm.Parameters.AddWithValue("@diagcervialbulge_hnp2", data.diagcervialbulge_hnp2);
@@ -88,6 +89,7 @@ public class FUPage3Service: ParentService {
 		cm.Parameters.AddWithValue("@diagrightshoulder_date", data.diagrightshoulder_date);
 		cm.Parameters.AddWithValue("@diagrightshoulder_study", data.diagrightshoulder_study);
 		cm.Parameters.AddWithValue("@diagrightshoulder", data.diagrightshoulder);
+		cm.Parameters.AddWithValue("@diagrightshoulder_comma", data.diagrightshoulder_comma);
 		cm.Parameters.AddWithValue("@diagrightshoulder_text", data.diagrightshoulder_text);
 		cm.Parameters.AddWithValue("@diagleftknee_date", data.diagleftknee_date);
 		cm.Parameters.AddWithValue("@diagleftknee_study", data.diagleftknee_study);
@@ -97,6 +99,7 @@ public class FUPage3Service: ParentService {
 		cm.Parameters.AddWithValue("@diagrightknee_date", data.diagrightknee_date);
 		cm.Parameters.AddWithValue("@diagrightknee_study", data.diagrightknee_study);
 		cm.Parameters.AddWithValue("@diagrightknee", data.diagrightknee);
+		cm.Parameters.AddWithValue("@diagrightknee_comma", data.diagrightknee_comma);
 		cm.Parameters.AddWithValue("@diagrightknee_text", data.diagrightknee_text);
 		cm.Parameters.AddWithValue("@diagbrain_date", data.diagbrain_date);
 		cm.Parameters.AddWithValue("@diagbrain_study", data.diagbrain_study);

@@ -13,6 +13,10 @@ using MySql.Data.MySqlClient;
 using PainTrax.Services;
 using GroupDocs.Viewer.Options;
 using System.Text.RegularExpressions;
+using System.Net;
+using Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System.Security.Cryptography;
 
 namespace PainTrax.Web.Controllers
 {
@@ -104,6 +108,7 @@ namespace PainTrax.Web.Controllers
             dataTable.Columns.Add("Name", typeof(string));
             dataTable.Columns.Add("DOB", typeof(string));
             dataTable.Columns.Add("DOA", typeof(string));
+            dataTable.Columns.Add("DOS", typeof(string));
             dataTable.Columns.Add("History", typeof(string));
             dataTable.Columns.Add("CC", typeof(string));
             dataTable.Columns.Add("ROS", typeof(string));
@@ -119,6 +124,7 @@ namespace PainTrax.Web.Controllers
             dataTable.Columns.Add("Plan", typeof(string));
             dataTable.Columns.Add("Current Medications", typeof(string));
             dataTable.Columns.Add("Care", typeof(string));
+            dataTable.Columns.Add("Goals", typeof(string));
             dataTable.Columns.Add("Precautions", typeof(string));
             dataTable.Columns.Add("Follow up", typeof(string));
 
@@ -226,11 +232,14 @@ namespace PainTrax.Web.Controllers
         {
             DataTable dataTable = new DataTable();
             dataTable.Columns.Add("Patient_id", typeof(string));
+            dataTable.Columns.Add("Patient_ie_id", typeof(string));
+           // dataTable.Columns.Add("Patient_1ie_id", typeof(string));
             dataTable.Columns.Add("Patient_fu_id", typeof(string));
             dataTable.Columns.Add("FName", typeof(string));
             dataTable.Columns.Add("LName", typeof(string));
             dataTable.Columns.Add("MName", typeof(string));
             dataTable.Columns.Add("Name", typeof(string));
+            dataTable.Columns.Add("DOB", typeof(string));
             dataTable.Columns.Add("DOE", typeof(string));
             dataTable.Columns.Add("DO1E", typeof(string));
             dataTable.Columns.Add("DOA", typeof(string));
@@ -388,6 +397,8 @@ namespace PainTrax.Web.Controllers
                 StringBuilder html = new StringBuilder();
                 StringBuilder name = new StringBuilder();
                 StringBuilder dob = new StringBuilder();
+                StringBuilder doa = new StringBuilder();
+                StringBuilder dos = new StringBuilder();
                 StringBuilder history = new StringBuilder();
                 StringBuilder cc = new StringBuilder();
                 StringBuilder ros = new StringBuilder();
@@ -427,6 +438,19 @@ namespace PainTrax.Web.Controllers
                             html.Append($"<p>{paragraphText}</p>");
                             //ros.Append($"<p>{paragraphText}</p>");
                             name.Append(paragraphText.Substring(("RE:".Length)));
+                            foundcc = false;
+                            foundpe = false;
+                            founddiagnoses = false;
+                            foundplan = false;
+                            foundcurmedications = false;
+                            foundhistory = false;
+                            continue;
+                        }
+                        if (paragraphText.StartsWith("Date:"))
+                        {
+                            html.Append($"<p>{paragraphText}</p>");
+                            //ros.Append($"<p>{paragraphText}</p>");
+                            dos.Append(paragraphText.Substring(("Date:".Length)));
                             foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
@@ -757,7 +781,56 @@ namespace PainTrax.Web.Controllers
 
                 html.Append("</body></html>");
                 DataRow datarow = dataTable.NewRow();
-                UpdateId(ref datarow, name.ToString(), dob.ToString(), filename);
+                // UpdateId(ref datarow, name.ToString(), dob.ToString(), filename);
+                DataTable dt = new DataTable();
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+                string pid = "0";
+                string bdate = "";
+                string adate = "";
+                string sdate = "";
+
+                try
+                {
+                    string doaStr = Regex.Match(filename, @"_(\d{6}).doc?").Groups[1].Value;
+                    adate = DateTime.ParseExact(doaStr, "MMddyy", null).ToString("yyyy-MM-dd");
+                }
+                catch (Exception ex) { }
+
+                try
+                {
+                    if (dob.ToString() != "")
+                        bdate = DateTime.ParseExact(dob.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");
+                } 
+                catch (Exception ex) { }
+
+                try
+                {
+                    if (dos.ToString() != "")
+                        sdate = DateTime.ParseExact(dos.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");
+                }
+                catch (Exception ex) { }
+
+                string[] fullname = name.ToString().Trim().Split(' ');
+                
+                if (fullname.Length > 1)
+                {
+                    //                 dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and dob='{bdate}' and doa='{adate}' and cmp_id={cmpid}");
+                    dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and   doe='{sdate}' and cmp_id={cmpid}");
+                    if (dt.Rows.Count > 0)
+                    {
+                        datarow["Patient_id"] = dt.Rows[0]["patient_id"];
+                        try { datarow["Patient_ie_id"] = dt.Rows[0]["id"]; } catch { }
+                    }
+                }
+
+                datarow["FName"] = fullname.Length > 0 ? fullname[0].ToString().Trim() : "";
+                datarow["LName"] = fullname.Length > 1 ? fullname[1].ToString().Trim() : "";
+                datarow["MName"] = fullname.Length > 2 && !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
+                datarow["Name"] = name;
+                datarow["DOA"] = adate;
+                datarow["DOB"] = bdate;
+                datarow["DOS"] = sdate;
+
                 datarow["History"] = history.ToString().Trim();
                 datarow["CC"] = cc.ToString().Trim();
                 datarow["ROS"] = ros.ToString().Trim();
@@ -773,6 +846,7 @@ namespace PainTrax.Web.Controllers
                 datarow["Plan"] = plan.ToString().Trim();
                 datarow["Current Medications"] = curmedications.ToString().Trim();
                 datarow["Care"] = care.ToString().Trim();
+                datarow["Goals"] = goals.ToString().Trim();
                 datarow["Precautions"] = precautions.ToString().Trim();
                 datarow["Follow up"] = followup.ToString().Trim();
 
@@ -787,6 +861,7 @@ namespace PainTrax.Web.Controllers
                 Body body = wordDoc.MainDocumentPart.Document.Body;
                 StringBuilder html = new StringBuilder();
                 StringBuilder name = new StringBuilder();
+                StringBuilder dob = new StringBuilder();
                 StringBuilder doe = new StringBuilder();
                 StringBuilder doie = new StringBuilder();
                 StringBuilder doa = new StringBuilder();
@@ -1185,10 +1260,66 @@ namespace PainTrax.Web.Controllers
 
                 html.Append("</body></html>");
                 DataRow datarow = dataTable.NewRow();
+
+
+
                 UpdateId(ref datarow, name.ToString(), "", filename, "FU", doe.ToString());
-                datarow["DOA"] = DateTime.ParseExact(doa.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");
-                datarow["DOE"] = DateTime.ParseExact(doe.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");
-                datarow["DO1E"] = DateTime.ParseExact(doie.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");
+                string adate = "";
+                string edate = "";
+                string e1date = "";
+                try
+                {
+                    if (doa.ToString() != "")
+                        adate = DateTime.ParseExact(doa.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");
+                }
+                catch (Exception ex) { }
+
+                try
+                {
+                    if (doe.ToString() != "")
+                        edate = DateTime.ParseExact(doe.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");
+                }
+                catch (Exception ex) { }
+
+                try
+                {
+                    if (doie.ToString() != "")
+                        e1date = DateTime.ParseExact(doie.ToString().Trim(), "M/d/yyyy", null).ToString("yyyy-MM-dd");
+                }
+                catch (Exception ex) { }
+
+                string formattedDOB = "";
+                try
+                {
+                    string dobStr = Regex.Match(filename, @"_(\d{6})_FU").Groups[1].Value;
+                    formattedDOB = DateTime.ParseExact(dobStr, "MMddyy", null).ToString("yyyy-MM-dd");
+                }
+                catch (Exception ex) { }
+
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+                string[] fullname = name.ToString().Trim().Split(' ');
+                DataTable dt = new DataTable();
+                if (fullname.Length > 1)
+                {
+                    //                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{sdate}'  and DATE(vm_patient_fu.doa)= '{adate}' and vm_patient_ie.cmp_id = {cmpid}");
+                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{edate}'   and vm_patient_ie.cmp_id = {cmpid}");
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        datarow["Patient_id"] = dt.Rows[0]["patient_id"];
+                        try { datarow["Patient_ie_id"] = dt.Rows[0]["patientIE_ID"]; } catch { }
+                        try { datarow["Patient_fu_id"] = dt.Rows[0]["patientFU"]; } catch { }
+                    }
+
+                }
+                datarow["FName"] = fullname.Length > 0 ? fullname[0].ToString().Trim() : "";
+                datarow["LName"] = fullname.Length > 1 ? fullname[1].ToString().Trim() : "";
+                datarow["MName"] = fullname.Length > 2 && !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
+                datarow["Name"] = name;
+                datarow["DOB"] = formattedDOB;
+                datarow["DOA"] = adate;
+                datarow["DOE"] = edate;
+               // datarow["DO1E"] = e1date;
                 datarow["CC"] = cc.ToString().Trim();
                 datarow["ROS"] = ros.ToString().Trim();
                 datarow["Past Medical"] = pastmedical.ToString().Trim();

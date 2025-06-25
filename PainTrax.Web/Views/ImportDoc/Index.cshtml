@@ -1,11 +1,13 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using PainTrax.Web.Helper;
 @{
     ViewData["Title"] = "Import Document";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@{
+    var clientCode = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionCmpName);
+}
 <main id="main" class="main">
 
     <div class="pagetitle">
@@ -26,121 +28,122 @@
 
                 <div class="card">
                     <div class="card-body">
-                        @*   @if (TempData["Message"] != null)
+                        <br/>
+                        @if (clientCode.ToLower() == "ppcpc")
                         {
-                        <div class="alert alert-info">
-                        @Html.Raw(TempData["Message"])
-                        </div>
-                        } *@
-                        <h5>PPC Import IE Document</h5>
-                        <!-- Upload File Form -->
-                        <form asp-action="UploadFile" method="post" enctype="multipart/form-data" class="form-inline mb-3">
-                            <div class="row">
+                            <h5>PPC Import IE Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="UploadFile" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
 
-                                <div class="col-4">
-                                    <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
-                                </div>
-                                <div class="col-2">
-                                    <button type="submit" class="btn btn-primary">Upload File</button>
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
 
                                 </div>
+                            </form>
+                            <h5>PPC Import FU Document</h5>
 
-                            </div>
-                        </form>
-                        <h5>PPC Import FU Document</h5>
+                            <form asp-action="UploadFileFU" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
 
-                        <form asp-action="UploadFileFU" method="post" enctype="multipart/form-data" class="form-inline mb-3">
-                            <div class="row">
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
 
-                                <div class="col-4">
-                                    <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
-                                </div>
-                                <div class="col-2">
-                                    <button type="submit" class="btn btn-primary">Upload File</button>
-
-                                </div>
-
-                            </div>
-                        </form>
-
-                        <h5>IPMC Import IE Document</h5>
-                        <!-- Upload File Form -->
-                        <form asp-action="IPMCUploadFile" method="post" enctype="multipart/form-data" class="form-inline mb-3">
-                            <div class="row">
-
-                                <div class="col-4">
-                                    <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
-                                </div>
-                                <div class="col-2">
-                                    <button type="submit" class="btn btn-primary">Upload File</button>
+                                    </div>
 
                                 </div>
+                            </form>
+                        }
+                         @if (clientCode.ToLower() == "ipmc")
+                        {
+                            <h5>IPMC Import IE Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="IPMCUploadFile" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
 
-                            </div>
-                        </form>
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
 
-                        <h5>IPMC Import FU Document</h5>
-                        <form asp-action="IPMCUploadFileFU" method="post" enctype="multipart/form-data" class="form-inline mb-3">
-                            <div class="row">
-
-                                <div class="col-4">
-                                    <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
-                                </div>
-                                <div class="col-2">
-                                    <button type="submit" class="btn btn-primary">Upload File</button>
-
-                                </div>
-
-                            </div>
-                        </form>
-
-                        <h5>MNPLLC Import IE Document</h5>
-                        <!-- Upload File Form -->
-                        <form asp-action="MNPLLCUploadFile" method="post" enctype="multipart/form-data" class="form-inline mb-3">
-                            <div class="row">
-
-                                <div class="col-4">
-                                    <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
-                                </div>
-                                <div class="col-2">
-                                    <button type="submit" class="btn btn-primary">Upload File</button>
+                                    </div>
 
                                 </div>
+                            </form>
 
-                            </div>
-                        </form>
+                            <h5>IPMC Import FU Document</h5>
+                            <form asp-action="IPMCUploadFileFU" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
 
-                        <h5>MNPLLC Import FU Document</h5>
-                        <!-- Upload File Form -->
-                        <form asp-action="MNPLLCUploadFileFU" method="post" enctype="multipart/form-data" class="form-inline mb-3">
-                            <div class="row">
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
 
-                                <div class="col-4">
-                                    <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
-                                </div>
-                                <div class="col-2">
-                                    <button type="submit" class="btn btn-primary">Upload File</button>
-
-                                </div>
-
-                            </div>
-                        </form>
-                        <h5>MNPLLC Import FU (Updated) Document</h5>
-                        <!-- Upload File Form -->
-                        <form asp-action="MNPLLCUploadFileFUUpdate" method="post" enctype="multipart/form-data" class="form-inline mb-3">
-                            <div class="row">
-
-                                <div class="col-4">
-                                    <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
-                                </div>
-                                <div class="col-2">
-                                    <button type="submit" class="btn btn-primary">Upload File</button>
+                                    </div>
 
                                 </div>
+                            </form>
+                        }
+                        @if (clientCode.ToLower() == "mnpllc")
+                        {
+                            <h5>MNPLLC Import IE Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="MNPLLCUploadFile" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
 
-                            </div>
-                        </form>
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
 
+                                    </div>
+
+                                </div>
+                            </form>
+
+                            <h5>MNPLLC Import FU Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="MNPLLCUploadFileFU" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                            <h5>MNPLLC Import FU (Updated) Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="MNPLLCUploadFileFUUpdate" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        }
                     </div>
                 </div>
             </div>

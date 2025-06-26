@@ -2993,7 +2993,10 @@ namespace PainTrax.Web.Controllers
                 {
                     if (patientData.doa == null)
                     {
-                        docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
+                        if (patientData.account_no != null)
+                            docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no  + ".docx";
+                        else
+                            docName = patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
                     }
 
                     else if (patientData.account_no != null)

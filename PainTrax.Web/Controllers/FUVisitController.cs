@@ -2165,6 +2165,10 @@ namespace PainTrax.Web.Controllers
 
                 if (locData != null && locData.Count > 0)
                 {
+                    if (locData[0].nameofpractice != null)
+                        body = body.Replace("#drFLName", locData[0].drfname + " " + locData[0].drlname);
+                    else
+                        body = body.Replace("#drFLName", "");
                     body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
                     body = body.Replace("#address", locData[0].address);
                     //body = body.Replace("#Address", locData[0].address);
@@ -2358,6 +2362,10 @@ namespace PainTrax.Web.Controllers
 
                 if (locData != null && locData.Count > 0)
                 {
+                    if (locData[0].nameofpractice != null)
+                        body = body.Replace("#drFLName", locData[0].drfname + " " + locData[0].drlname);
+                    else
+                        body = body.Replace("#drFLName", "");
                     body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
                     body = body.Replace("#address", locData[0].address);
                     //body = body.Replace("#Address", locData[0].address);
@@ -2494,6 +2502,10 @@ namespace PainTrax.Web.Controllers
 
                 if (locData != null && locData.Count > 0)
                 {
+                    if (locData[0].nameofpractice != null)
+                        body = body.Replace("#drFLName", locData[0].drfname + " " + locData[0].drlname);
+                    else
+                        body = body.Replace("#drFLName", "");
                     body = body.Replace("#drName", locData[0].nameofpractice == null ? "" : (locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice));
                     body = body.Replace("#address", locData[0].address);
                     //body = body.Replace("#Address", locData[0].address);
@@ -2550,15 +2562,16 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#CC", cc);
                     body = body.Replace("#PE", pe);
                     var history = string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history;
-
+                    var hstryPresentIllness = string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history;
 
                     history = history.Replace("#dos", Common.commonDate(patientData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
                     history = history.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
                     //  history.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
                     history = history.Replace("#patientname", gender + " " + patientData.lname + " " + patientData.fname + " " + patientData.lname);
                     history = history.Replace("#accidenttype", patientData.accidentType);
-
+                    history = history.Replace("#accidenttype", patientData.accidentType);
                     body = body.Replace("#history", history);
+
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
                     body = body.Replace("#DD", string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd);
                     body = body.Replace("#WorkStatus", string.IsNullOrEmpty(page1Data.work_status) ? "" : page1Data.work_status);
@@ -2575,6 +2588,8 @@ namespace PainTrax.Web.Controllers
 
                     body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart) + " pain.");
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
+                    hstryPresentIllness = hstryPresentIllness.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
+                    body = body.Replace("#hstryPresentIllness", hstryPresentIllness);
 
                     string assessment = "";
                     if (!string.IsNullOrEmpty(page1Data.assessment))

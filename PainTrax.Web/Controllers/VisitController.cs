@@ -2435,6 +2435,11 @@ namespace PainTrax.Web.Controllers
                 if (locData != null && locData.Count > 0)
                 {
                     if (locData[0].nameofpractice != null)
+                        body = body.Replace("#drFLName", locData[0].drfname + " " + locData[0].drlname);
+                    else                    
+                        body = body.Replace("#drFLName", "");
+                    
+                    if (locData[0].nameofpractice != null)
                         body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : "Dr. " + locData[0].nameofpractice);
                     else
                         body = body.Replace("#drName", "");

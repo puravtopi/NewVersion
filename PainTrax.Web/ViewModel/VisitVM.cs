@@ -17,6 +17,7 @@ namespace PainTrax.Web.ViewModel
 
         //[DisplayFormat(DataFormatString = "{0:MM/dd/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? dos { get; set; }
+        public DateTime? old_dos { get; set; }
 
         public DateTime? doi { get; set; }
 

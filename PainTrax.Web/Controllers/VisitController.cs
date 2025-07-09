@@ -228,6 +228,7 @@ namespace PainTrax.Web.Controllers
                         obj.location = ieData.location;
                         obj.doa = ieData.doa;
                         obj.dos = ieData.doe;
+                        obj.old_dos = ieData.doe;
                         obj.dov = ieData.doe;
                         obj.prime_claim_no = ieData.primary_claim_no;
                         obj.prime_policy_no = ieData.primary_policy_no;
@@ -887,6 +888,11 @@ namespace PainTrax.Web.Controllers
                     objIE.id = model.id.Value;
                     _ieService.Update(objIE);
                     ie = model.id.Value;
+                    if (model.old_dos != null)
+                    {
+                        _ieService.UpdateProcedureExecuteDate(model.old_dos.Value.ToString("yyyy-MM-dd"),
+                        model.dos.Value.ToString("yyyy-MM-dd"), ie.ToString());
+                    }
                 }
                 else
                     ie = _ieService.Insert(objIE);
@@ -3063,6 +3069,8 @@ namespace PainTrax.Web.Controllers
 
                     string filepathTo = filePath;
                     AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
+                    if (DoesFooterExist(filepathFrom))
+                        AddFooterFromTo(filepathFrom, filepathTo, patientName, dos);
                 }
                 else
                 {
@@ -3073,6 +3081,8 @@ namespace PainTrax.Web.Controllers
 
                         string filepathTo = filePath;
                         AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
+                        if (DoesFooterExist(filepathFrom))
+                            AddFooterFromTo(filepathFrom, filepathTo, patientName, dos);
                     }
                     catch (Exception ex)
                     {
@@ -3279,7 +3289,8 @@ namespace PainTrax.Web.Controllers
 
                             }
                         }
-                        strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + pocDesc + "</li>";
+                        //strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + " </b>" + pocDesc + "</li>";
+                        strPoc = strPoc + "<li><b>" + heading + " </b>" + pocDesc + "</li>";
                     }
                 }
             }
@@ -3393,7 +3404,8 @@ namespace PainTrax.Web.Controllers
                                 inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
                             }
                         }
-                        strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + pocDesc + "</li>";
+                        //strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + pocDesc + "</li>";
+                        strPoc = strPoc + "<li><b>" + heading + " </b>" + pocDesc + "</li>";
                     }
                 }
             }
@@ -4352,6 +4364,137 @@ namespace PainTrax.Web.Controllers
             }
             return View("Index");
         }
+
+        public bool DoesFooterExist(string filePath)
+        {
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false)) // Open as read-only
+            {
+                return wordDoc.MainDocumentPart.FooterParts.Any();
+            }
+        }
+        public void AddFooterFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "")
+        {
+            // Replace header in target document with header of source document.
+            using (WordprocessingDocument
+                wdDoc = WordprocessingDocument.Open(filepathTo, true))
+            {
+                MainDocumentPart mainPart = wdDoc.MainDocumentPart;
+
+                // Delete the existing footer part.
+                mainPart.DeleteParts(mainPart.FooterParts);
+
+                // Create a new footer part.
+                DocumentFormat.OpenXml.Packaging.FooterPart footerPart =
+            mainPart.AddNewPart<FooterPart>();
+                // Get Id of the footerPart.
+                string rId = mainPart.GetIdOfPart(footerPart);
+
+                // Feed target headerPart with source headerPart.
+                using (WordprocessingDocument wdDocSource =
+                    WordprocessingDocument.Open(filepathFrom, true))
+                {
+                    DocumentFormat.OpenXml.Packaging.FooterPart firstFooter =
+            wdDocSource.MainDocumentPart.FooterParts.FirstOrDefault();
+
+
+
+                    if (firstFooter != null)
+                    {
+                        footerPart.FeedData(firstFooter.GetStream());
+                    }
+                    Dictionary<string, string> imageRelMapping = new Dictionary<string, string>();
+
+                    foreach (var imagePart in firstFooter.ImageParts)
+                    {
+                        // Add a new image part to the target footer
+                        ImagePart newImagePart = footerPart.AddImagePart(imagePart.ContentType);
+
+                        // Copy the image data
+                        using (Stream imageStream = imagePart.GetStream(FileMode.Open, FileAccess.Read))
+                        {
+                            newImagePart.FeedData(imageStream);
+                        }
+
+                        // Map the old relationship ID to the new image part ID
+                        string oldRelId = firstFooter.GetIdOfPart(imagePart);
+                        string newRelId = footerPart.GetIdOfPart(newImagePart);
+                        imageRelMapping[oldRelId] = newRelId;
+                    }
+
+
+
+                    // Update relationships in header XML
+                    UpdateFooterXml(footerPart, imageRelMapping);
+                }
+
+                /*   int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+ 
+                    var restfooterPart = mainPart.AddNewPart<FooterPart>("RestFooter");
+                   // restfooterPart.Footer = CreateHeaderWithPageNumber(patientName, "");
+                    if (cmpid == 7 || cmpid == 13)
+                    {
+                        if (!string.IsNullOrEmpty(dos))
+                        {
+                            string _dos = Common.commonDate(Convert.ToDateTime(dos), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
+                     //       restfooterPart.Footer = CreateHeaderWithPageNumber(patientName, _dos);
+                        }
+                    }
+                    else
+                    {
+ 
+                        //restfooterPart.Footer = CreateHeaderWithPageNumber(patientName, "");
+                    }
+                */
+
+                //  restheaderPart.Header = new Header(new Paragraph("Purav\nSandip"));
+                // string restId = mainPart.GetIdOfPart(restfooterPart);
+                // Get SectionProperties and Replace HeaderReference with new Id.
+                IEnumerable<DocumentFormat.OpenXml.Wordprocessing.SectionProperties> sectPrs = mainPart.Document.Body.Elements<SectionProperties>();
+                foreach (var sectPr in sectPrs)
+                {
+                    // Delete existing references to footers.
+                    sectPr.RemoveAllChildren<FooterReference>();
+                    sectPr.Append(new TitlePage());
+                    // Create the new footer reference node.
+                    sectPr.PrependChild<FooterReference>(new FooterReference() { Type = HeaderFooterValues.First, Id = rId });
+                    sectPr.PrependChild<FooterReference>(new FooterReference() { Type = HeaderFooterValues.Default, Id = rId });
+                }
+
+
+            }
+        }
+
+
+        // Method to update header XML to reference new image relationships
+        private static void UpdateFooterXml(FooterPart footerPart, Dictionary<string, string> imageRelMapping)
+        {
+            string headerXml;
+
+            // Read the existing header XML
+            using (StreamReader reader = new StreamReader(footerPart.GetStream(FileMode.Open, FileAccess.Read)))
+            {
+                headerXml = reader.ReadToEnd();
+            }
+
+            // Replace old relationship IDs with new ones
+            foreach (var kvp in imageRelMapping)
+            {
+                headerXml = headerXml.Replace($"r:id=\"{kvp.Key}\"", $"r:id=\"{kvp.Value}\"");
+            }
+
+            // Write the updated XML back to the header part
+            using (MemoryStream memStream = new MemoryStream())
+            {
+                using (StreamWriter writer = new StreamWriter(memStream))
+                {
+                    writer.Write(headerXml);
+                    writer.Flush();
+                    memStream.Position = 0;
+                    footerPart.FeedData(memStream);
+                }
+            }
+        }
+
 
 
     }

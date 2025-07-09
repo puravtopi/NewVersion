@@ -167,6 +167,7 @@
                                         <input type="hidden" value="@Model.type" id="hdType" />
 
                                         <input type="hidden" value="@(Model.doi!=null?Model.doi.Value.ToString("MM/dd/yyyy"):"")" id="hddoe" />
+                                        <input type="hidden" value="@(Model.old_dos!=null?Model.old_dos.Value.ToString("MM/dd/yyyy"):"")" id="hdolddos" />
                                         <input type="hidden" value="@(Model.doa!=null?Model.doa.Value.ToString("MM/dd/yyyy"):"")" id="hddoa" />
                                         <input type="hidden" value="@Model.compensation" id="hdcasetype" />
                                         <input type="hidden" value="@PainTrax.Web.Helper.EnumHelper.GetDisplayName(Enum.Parse<PainTrax.Web.Helper.EnumHelper.Gender>(Model.gender))" id="hdgender" />
@@ -1317,6 +1318,7 @@
             "locationid": $("#locationid").val(),
             "providerid": $("#providerid").val(),
             "dos": $("#hdDOS").val(),
+            "old_dos": $("#hdolddos").val(),
             "dov": $("#dov").val(),
             "doa": $("#doa").val(),
             "compensation": $("#compensation").val(),

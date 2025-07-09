@@ -836,4 +836,19 @@ poc_assesment=@poc_assesment
         Execute(cm);
     }
     #endregion
+
+    #region POC
+    public int UpdateProcedureExecuteDate(string fDate,string tDate,string ieId)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_procedures_details
+SET Executed = @tDate
+WHERE Executed = @fDate and PatientIE_ID=@ieId;Select 1;", conn);
+
+        cm.Parameters.AddWithValue("@tDate", tDate);
+        cm.Parameters.AddWithValue("@fDate", fDate);
+        cm.Parameters.AddWithValue("@ieId", ieId);
+        var result = ExecuteScalar(cm);
+        return Convert.ToInt32(result);
+    }
+    #endregion
 }

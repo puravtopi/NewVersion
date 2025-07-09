@@ -144,4 +144,19 @@ public class PatientFUService : ParentService
         }
     }
 
+    #region POC
+    public int UpdateProcedureExecuteDate(string fDate, string tDate, string fuId)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_procedures_details
+SET Executed = @tDate
+WHERE Executed = @fDate and PatientFU_ID=@fuId;Select 1;", conn);
+
+        cm.Parameters.AddWithValue("@tDate", tDate);
+        cm.Parameters.AddWithValue("@fDate", fDate);
+        cm.Parameters.AddWithValue("@fuId", fuId);
+        var result = ExecuteScalar(cm);
+        return Convert.ToInt32(result);
+    }
+    #endregion
+
 }

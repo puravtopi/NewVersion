@@ -306,14 +306,14 @@ namespace PainTrax.Web.Helper
             var data = GetPage1Feilds();
             var list = new List<SelectListItem>();
 
-
+            string[] colNameArray = colNames.Split(',');
             foreach (var item in data)
             {
                 list.Add(new SelectListItem
                 {
                     Value = item.Value,
                     Text = item.Text,
-                    Selected = colNames.Contains(item.Value)
+                    Selected = colNameArray.Contains(item.Value, StringComparer.OrdinalIgnoreCase)
                 });
             }
 

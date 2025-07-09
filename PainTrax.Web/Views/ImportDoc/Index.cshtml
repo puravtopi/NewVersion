@@ -28,7 +28,7 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <br/>
+                        <br />
                         @if (clientCode.ToLower() == "ppcpc")
                         {
                             <h5>PPC Import IE Document</h5>
@@ -61,8 +61,24 @@
 
                                 </div>
                             </form>
+                            <h5>PPC Import FU (Updated) Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="UploadFileFUUpdate" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+
                         }
-                         @if (clientCode.ToLower() == "ipmc")
+                        @if (clientCode.ToLower() == "ipmc")
                         {
                             <h5>IPMC Import IE Document</h5>
                             <!-- Upload File Form -->

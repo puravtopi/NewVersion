@@ -300,6 +300,8 @@
     <input type="hidden" id="hdnLname" />
     <input type="hidden" id="hdnDOI" />
     <input type="hidden" id="hdnaccidentType" />
+    <input type="hidden" id="hdnDOAcc" />
+    
 }
 
 
@@ -571,8 +573,13 @@
                         var FName = $("#hdnFname").val();
 
                          var Age = $("#hdnAge").val();
-
+                         var DOAcc = $("#hdnDOAcc").val();
                          var DOI = $("#hdnDOI").val();
+
+                          if (DOAcc == "") { DOI = "___"; }                       
+                        else { DOI = $("#hdnDOI").val(); }
+
+                         
 
 
 
@@ -694,6 +701,8 @@
                     $('#hdnGender').val(data.data.gender);
                     $('#hdnFname').val(data.data.fname);
                     $('#hdnLname').val(data.data.lname);
+
+                    $('#hdnDOAcc').val(data.data.doa);
 
                     let dateObjdoi = new Date(data.data.doa);
                     if(dateObjdoi)

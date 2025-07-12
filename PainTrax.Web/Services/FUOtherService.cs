@@ -62,7 +62,7 @@ public class FUOtherService : ParentService
         cm.Parameters.AddWithValue("@note2", data.note2);
         cm.Parameters.AddWithValue("@note3", data.note3);
         cm.Parameters.AddWithValue("@treatment_delimit", data.treatment_delimit);
-        cm.Parameters.AddWithValue("@treatment_delimit_desc", data.treatment_delimit_desc.TrimStart('^'));
+        cm.Parameters.AddWithValue("@treatment_delimit_desc", data.treatment_delimit_desc == null ? "" : data.treatment_delimit_desc.TrimStart('^'));
         cm.Parameters.AddWithValue("@followup_duration", data.followup_duration);
         cm.Parameters.AddWithValue("@followup_date", data.followup_date);
 

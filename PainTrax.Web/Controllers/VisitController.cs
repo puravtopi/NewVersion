@@ -3496,6 +3496,12 @@ namespace PainTrax.Web.Controllers
 
                     // Update relationships in header XML
                     UpdateHeaderXml(headerPart, imageRelMapping);
+
+                    //Dictionary<string, string> textReplacements = new Dictionary<string, string>
+                    //    {
+                    //            { "@drname@", "Dr. Patel" }  // Replace with your dynamic name
+                    //    };
+                    //ReplacePlaceholdersInHeader(headerPart, textReplacements);
                 }
 
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
@@ -4535,6 +4541,66 @@ namespace PainTrax.Web.Controllers
                     footerPart.FeedData(memStream);
                 }
             }
+        }
+
+        private static void ReplacePlaceholdersInHeader(HeaderPart headerPart, Dictionary<string, string> replacements)
+        {
+            var texts = headerPart.Header.Descendants<Text>().ToList();
+
+            for (int i = 0; i < texts.Count; i++)
+            {
+                for (int window = 1; window <= 10 && i + window <= texts.Count; window++)
+                {
+                    var group = texts.Skip(i).Take(window).ToList();
+                    string combined = string.Join("", group.Select(t => t.Text));
+
+                    foreach (var kvp in replacements)
+                    {
+                        if (combined.Contains(kvp.Key))
+                        {
+                            string newText = combined.Replace(kvp.Key, kvp.Value);
+
+                            // Preserve line breaks from original text
+                            List<string> originalTextParts = group.Select(t => t.Text).ToList();
+
+                            // Split the new text to try to match the original run count
+                            var newParts = new List<string>();
+                            if (originalTextParts.Count == 1)
+                            {
+                                newParts.Add(newText);
+                            }
+                            else
+                            {
+                                // Split based on original run lengths
+                                int totalLen = newText.Length;
+                                int totalOrigLen = originalTextParts.Sum(s => s.Length);
+                                for (int j = 0; j < originalTextParts.Count; j++)
+                                {
+                                    int partLen = (int)Math.Round((double)originalTextParts[j].Length / totalOrigLen * totalLen);
+                                    if (j == originalTextParts.Count - 1)
+                                        newParts.Add(newText); // Remaining
+                                    else
+                                        newParts.Add(newText.Substring(0, Math.Min(partLen, newText.Length)));
+
+                                    if (newText.Length >= partLen)
+                                        newText = newText.Substring(Math.Min(partLen, newText.Length));
+                                }
+                            }
+
+                            // Assign new text to each run (preserving count)
+                            for (int j = 0; j < group.Count; j++)
+                            {
+                                group[j].Text = (j < newParts.Count) ? newParts[j] : "";
+                            }
+
+                            i += window - 1;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            headerPart.Header.Save();
         }
 
     }

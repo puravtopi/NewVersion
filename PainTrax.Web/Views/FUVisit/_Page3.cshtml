@@ -136,10 +136,16 @@
                 </select>
             </div>
 
-            <div class="col-md-9">
+            @* <div class="col-md-9">
                 <select class="form-select" style="width:8%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="diagleftknee_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
                 </select>
                 <textarea class="form-control" rows="2" style="width:90%;display:inline !important" placeholder="Left Knee" asp-for="diagleftknee_text"></textarea>
+            </div> *@
+            <div class="col-md-9">
+
+                <select class="form-select" style="width:8%;display:inline !important;vertical-align:top" aria-label="Default select example" asp-for="diagrightknee_comma" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.StudyComma>()">
+                </select>
+                <textarea class="form-control" rows="2" style="width:90%;display:inline !important" placeholder="Right Knee" asp-for="diagrightknee_text"></textarea>
             </div>
             
 

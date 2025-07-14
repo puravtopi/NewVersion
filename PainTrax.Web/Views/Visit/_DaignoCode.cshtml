@@ -84,7 +84,7 @@
             if (myContentDaignosis.indexOf(row.cells[2].firstChild.value) < 0) {
 
             daignoCodeDetails += "<li>" + row.cells[1].innerHTML;
-            daignoCodeDetails += row.cells[2].firstChild.value;
+            daignoCodeDetails += "  " +row.cells[2].firstChild.value;
             daignoCodeDetails += "</li>";
              }
         });

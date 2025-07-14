@@ -2802,7 +2802,7 @@ namespace PainTrax.Web.Controllers
 
                 if (data != null)
                 {
-                    body = body.Replace("#PrescribedMedications", this.removePtag(data.discharge_medications));
+                    body = body.Replace("#PrescribedMedications", data.discharge_medications);
                 }
                 else
                 {
@@ -2909,7 +2909,7 @@ namespace PainTrax.Web.Controllers
         {
             htmlContent = htmlContent.Replace("<p>&nbsp;</p>", "");
             //  string htmlContent = "<p>This is a <strong>sample</strong> HTML content.</p>";
-            string filePath = "", docName = "", patientName = "", injDocName = "", dos = "";
+            string filePath = "", docName = "", patientName = "", injDocName = "", dos = "",dob="";
             string[] splitContent;
             string injHtmlContent = "";
             if (SessionDiffDoc == "true")
@@ -3035,6 +3035,7 @@ namespace PainTrax.Web.Controllers
                 patientName = patientData.lname + ", " + patientData.fname;
 
                 dos = fuData.doe == null ? "" : fuData.doe.Value.ToShortDateString();
+                dob = patientData.dob == null ? "" : patientData.dob.Value.ToShortDateString();
 
                 string subPath = "Report/" + cmpid; // Your code goes here
 
@@ -3070,7 +3071,7 @@ namespace PainTrax.Web.Controllers
             }
 
 
-            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos, injFileName = injDocName });
+            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos, dob=dob, injFileName = injDocName });
         }
 
         public MemoryStream ConvertHtmlToWord(string htmlContent)
@@ -3115,7 +3116,7 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpGet]
-        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "", string dos = "", string injFileName = "")
+        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "", string dos = "", string dob = "", string injFileName = "")
         {
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
@@ -3131,7 +3132,7 @@ namespace PainTrax.Web.Controllers
                     string filepathTo = filePath;
                     AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
                     if (DoesFooterExist(filepathFrom))
-                        AddFooterFromTo(filepathFrom, filepathTo, patientName, dos);
+                        AddFooterFromTo(filepathFrom, filepathTo, patientName, dos, dob);
 
                 }
                 else
@@ -3144,7 +3145,7 @@ namespace PainTrax.Web.Controllers
                         string filepathTo = filePath;
                         AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
                         if (DoesFooterExist(filepathFrom))
-                            AddFooterFromTo(filepathFrom, filepathTo, patientName, dos);
+                            AddFooterFromTo(filepathFrom, filepathTo, patientName, dos, dob);
                     }
                     catch (Exception ex)
                     {
@@ -3307,6 +3308,58 @@ namespace PainTrax.Web.Controllers
                        ),
                        new Break(), // Line break
 
+                       new Run(
+                           new Text("Page ") // Static "Page " text
+                       ),
+                       new Run(
+                           new SimpleField() // Dynamic page number field
+                           {
+                               Instruction = "PAGE", // Specifies the field type
+                           }
+                       )
+                   )
+               );
+            }
+        }
+
+        public Footer CreateFooterWithPageNumber(string text1, string text2, string text3)
+        {
+            if (text2 != "")
+            {
+                return new Footer(
+                    new Paragraph(
+                        new Run(
+                            new Text(text1) // First line
+                        ),
+                          new Run(new TabChar()), new Run(new TabChar()), new Run(new TabChar()),
+                        new Run(
+                            new Text(text2) // Second line
+                        ),
+                          new Run(new TabChar()), new Run(new TabChar()), new Run(new TabChar()),
+                        new Run(
+                            new Text(text3) // Second line
+                        ),
+                          new Run(new TabChar()), new Run(new TabChar()), new Run(new TabChar()),
+                        new Run(
+                            new Text("Page ") // Static "Page " text
+                        ),
+                        new Run(
+                            new SimpleField() // Dynamic page number field
+                            {
+                                Instruction = "PAGE", // Specifies the field type
+                            }
+                        )
+                    )
+                );
+            }
+            else
+            {
+                return new Footer(
+                   new Paragraph(
+                       new Run(
+                           new Text(text1) // First line
+                       ),
+                          new Run(new TabChar()), new Run(new TabChar()), new Run(new TabChar()),
                        new Run(
                            new Text("Page ") // Static "Page " text
                        ),
@@ -3498,7 +3551,7 @@ namespace PainTrax.Web.Controllers
 
                             }
                         }
-                       // strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + pocDesc + "</li>";
+                        // strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + pocDesc + "</li>";
                         strPoc = strPoc + "<li><b>" + heading + " </b>" + pocDesc + "</li>";
                     }
                 }
@@ -4616,7 +4669,6 @@ namespace PainTrax.Web.Controllers
             return strDaignosis;
 
         }
-
         public bool DoesFooterExist(string filePath)
         {
             using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(filePath, false)) // Open as read-only
@@ -4624,7 +4676,7 @@ namespace PainTrax.Web.Controllers
                 return wordDoc.MainDocumentPart.FooterParts.Any();
             }
         }
-        public void AddFooterFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "")
+        public void AddFooterFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "", string dob = "")
         {
             // Replace header in target document with header of source document.
             using (WordprocessingDocument
@@ -4679,27 +4731,36 @@ namespace PainTrax.Web.Controllers
                     UpdateFooterXml(footerPart, imageRelMapping);
                 }
 
-                /*   int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
- 
-                    var restfooterPart = mainPart.AddNewPart<FooterPart>("RestFooter");
-                   // restfooterPart.Footer = CreateHeaderWithPageNumber(patientName, "");
-                    if (cmpid == 7 || cmpid == 13)
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+                var restfooterPart = mainPart.AddNewPart<FooterPart>("RestFooter");
+                // restfooterPart.Footer = CreateHeaderWithPageNumber(patientName, "");
+                if (cmpid == 7 || cmpid == 13)
+                {
+                    if (!string.IsNullOrEmpty(dos))
                     {
-                        if (!string.IsNullOrEmpty(dos))
-                        {
-                            string _dos = Common.commonDate(Convert.ToDateTime(dos), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
-                     //       restfooterPart.Footer = CreateHeaderWithPageNumber(patientName, _dos);
-                        }
+                        string _dos = Common.commonDate(Convert.ToDateTime(dos), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
+                        restfooterPart.Footer = CreateFooterWithPageNumber(patientName, _dos, "");
                     }
-                    else
+                }
+                else if (cmpid == 15)
+                {
+                    if (!string.IsNullOrEmpty(dos))
                     {
- 
-                        //restfooterPart.Footer = CreateHeaderWithPageNumber(patientName, "");
+                        string _dos = Common.commonDate(Convert.ToDateTime(dos), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
+                        string _dob = Common.commonDate(Convert.ToDateTime(dob), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
+                        restfooterPart.Footer = CreateFooterWithPageNumber(patientName, _dos, _dob);
                     }
-                */
+                }
+                else
+                {
+
+                    restfooterPart.Footer = CreateFooterWithPageNumber(patientName, "", "");
+                }
+
 
                 //  restheaderPart.Header = new Header(new Paragraph("Purav\nSandip"));
-                // string restId = mainPart.GetIdOfPart(restfooterPart);
+                string restId = mainPart.GetIdOfPart(restfooterPart);
                 // Get SectionProperties and Replace HeaderReference with new Id.
                 IEnumerable<DocumentFormat.OpenXml.Wordprocessing.SectionProperties> sectPrs = mainPart.Document.Body.Elements<SectionProperties>();
                 foreach (var sectPr in sectPrs)
@@ -4709,14 +4770,12 @@ namespace PainTrax.Web.Controllers
                     sectPr.Append(new TitlePage());
                     // Create the new footer reference node.
                     sectPr.PrependChild<FooterReference>(new FooterReference() { Type = HeaderFooterValues.First, Id = rId });
-                    sectPr.PrependChild<FooterReference>(new FooterReference() { Type = HeaderFooterValues.Default, Id = rId });
+                    sectPr.PrependChild<FooterReference>(new FooterReference() { Type = HeaderFooterValues.Default, Id = restId });
                 }
 
 
             }
         }
-
-
         // Method to update header XML to reference new image relationships
         private static void UpdateFooterXml(FooterPart footerPart, Dictionary<string, string> imageRelMapping)
         {

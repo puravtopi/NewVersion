@@ -3970,6 +3970,31 @@ namespace PainTrax.Web.Controllers
                         strDaignosis = strDaignosis + " of the lumbar spine is normal. ";
                     }
                 }
+                if (data.diagrightshoulder_date != null)
+                {
+
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagrightshoulder_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagrightshoulder_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagrightshoulder_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagrightshoulder_text))
+                    {
+                        strCommaValue = "";
+                        if (data.diagrightshoulder_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagrightshoulder_comma));
+
+                        strDaignosis = strDaignosis + " of the right shoulder " + strCommaValue + " " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                    }
+                    else
+                    {
+                        strDaignosis = strDaignosis + " of the right shoulder is normal. ";
+                    }
+
+                }
 
                 if (data.diagleftshoulder_date != null)
                 {
@@ -3997,56 +4022,7 @@ namespace PainTrax.Web.Controllers
 
                 }
 
-                if (data.diagrightshoulder_date != null)
-                {
-
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagrightshoulder_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.diagrightshoulder_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagrightshoulder_study));
-                        strDaignosis = strDaignosis + " " + study;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diagrightshoulder_text))
-                    {
-                        strCommaValue = "";
-                        if (data.diagrightshoulder_comma != null)
-                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagrightshoulder_comma));
-
-                        strDaignosis = strDaignosis + " of the right shoulder " + strCommaValue + " " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
-                    }
-                    else
-                    {
-                        strDaignosis = strDaignosis + " of the right shoulder is normal. ";
-                    }
-
-                }
-
-
-                if (data.diagleftknee_date != null)
-                {
-                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftknee_date.Value.ToString("MM/dd/yyyy") + " - ";
-
-                    if (!string.IsNullOrEmpty(data.diagleftknee_study))
-                    {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagleftknee_study));
-                        strDaignosis = strDaignosis + " " + study;
-                    }
-
-                    if (!string.IsNullOrEmpty(data.diagleftknee_text))
-                    {
-                        strCommaValue = "";
-                        if (data.diagleftknee_comma != null)
-                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagleftknee_comma));
-
-                        strDaignosis = strDaignosis + " of the left knee " + strCommaValue + " " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
-                    }
-                    else
-                    {
-                        strDaignosis = strDaignosis + " of the left knee is normal. ";
-                    }
-                }
+                
 
                 if (data.diagrightknee_date != null)
                 {
@@ -4071,6 +4047,31 @@ namespace PainTrax.Web.Controllers
                         strDaignosis = strDaignosis + " of the right knee is normal. ";
                     }
                 }
+                if (data.diagleftknee_date != null)
+                {
+                    strDaignosis = (!string.IsNullOrEmpty(strDaignosis) ? (strDaignosis + "<br/>") : "") + data.diagleftknee_date.Value.ToString("MM/dd/yyyy") + " - ";
+
+                    if (!string.IsNullOrEmpty(data.diagleftknee_study))
+                    {
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study1>(data.diagleftknee_study));
+                        strDaignosis = strDaignosis + " " + study;
+                    }
+
+                    if (!string.IsNullOrEmpty(data.diagleftknee_text))
+                    {
+                        strCommaValue = "";
+                        if (data.diagleftknee_comma != null)
+                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagleftknee_comma));
+
+                        strDaignosis = strDaignosis + " of the left knee " + strCommaValue + " " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
+                    }
+                    else
+                    {
+                        strDaignosis = strDaignosis + " of the left knee is normal. ";
+                    }
+                }
+
+                
 
                 if (data.other1_date != null)
                 {

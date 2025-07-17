@@ -3884,7 +3884,7 @@ namespace PainTrax.Web.Controllers
                         if (data.diagleftshoulder_comma != null)
                             strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagleftshoulder_comma));
 
-                        strDaignosis = strDaignosis + " of the left shoulder " + strCommaValue + " " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the left shoulder" + strCommaValue + " " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {

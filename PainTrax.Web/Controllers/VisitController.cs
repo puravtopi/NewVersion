@@ -2436,9 +2436,9 @@ namespace PainTrax.Web.Controllers
                 {
                     if (locData[0].nameofpractice != null)
                         body = body.Replace("#drFLName", locData[0].drfname + " " + locData[0].drlname);
-                    else                    
+                    else
                         body = body.Replace("#drFLName", "");
-                    
+
                     if (locData[0].nameofpractice != null)
                         body = body.Replace("#drName", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : "Dr. " + locData[0].nameofpractice);
                     else
@@ -2453,7 +2453,8 @@ namespace PainTrax.Web.Controllers
                         body = body.Replace("#Nameofpractice", locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice);
                     else
                         body = body.Replace("#Nameofpractice", "");
-                    string formattedphone =  Regex.Replace(locData[0].telephone, @"(\d{3})-(\d{3})-(\d{4})", "($1) $2-$3");
+
+                    string formattedphone = locData[0].telephone != null ? Regex.Replace(locData[0].telephone, @"(\d{3})-(\d{3})-(\d{4})", "($1) $2-$3") : "";
                     body = body.Replace("#Phone", formattedphone);
                     //body = body.Replace("#Location", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
                 }
@@ -2569,8 +2570,6 @@ namespace PainTrax.Web.Controllers
                             assessment = assessment.Replace("#accidenttype", patientData.accidentType);
                         }
                     }
-
-
 
                     if (dataPOC != null)
                     {
@@ -2756,8 +2755,6 @@ namespace PainTrax.Web.Controllers
 
                 body = body.Replace("#Diagnostic", this.removePtag(strDiagnostic));
 
-
-
                 var data = _ieService.GetOnePage3(id);
 
                 if (data != null)
@@ -2811,6 +2808,7 @@ namespace PainTrax.Web.Controllers
 
                     body = body.Replace("#ProviderName", userData.providername);
                     body = body.Replace("#AssProviderName", userData.assistant_providername);
+                    ViewBag.ProviderName = userData.providername;
                 }
                 else
                     body = body.Replace("#Sign", "");
@@ -2922,11 +2920,11 @@ namespace PainTrax.Web.Controllers
 
 
         [HttpPost]
-        public IActionResult DownloadWord(string htmlContent, int ieId, int id)
+        public IActionResult DownloadWord(string htmlContent, int ieId, string provName)
         {
             htmlContent = htmlContent.Replace("<p>&nbsp;</p>", "");
 
-            string filePath = "", docName = "", patientName = "", injDocName = "", dos = "",dob="";
+            string filePath = "", docName = "", patientName = "", injDocName = "", dos = "", dob = "";
             string[] splitContent;
             string injHtmlContent = "";
             if (SessionDiffDoc == "true")
@@ -3055,12 +3053,12 @@ namespace PainTrax.Web.Controllers
 
             }
 
-            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos,dob=dob, injFileName = injDocName });
+            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos, dob = dob, injFileName = injDocName, provName= provName });
 
         }
 
         [HttpGet]
-        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "", string dos = "",string dob="", string injFileName = "")
+        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "", string dos = "", string dob = "", string injFileName = "",string provName="")
         {
 
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
@@ -3075,9 +3073,9 @@ namespace PainTrax.Web.Controllers
 
 
                     string filepathTo = filePath;
-                    AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
+                    AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos, provName);
                     if (DoesFooterExist(filepathFrom))
-                        AddFooterFromTo(filepathFrom, filepathTo, patientName, dos,dob);
+                        AddFooterFromTo(filepathFrom, filepathTo, patientName, dos, dob);
                 }
                 else
                 {
@@ -3087,9 +3085,9 @@ namespace PainTrax.Web.Controllers
 
 
                         string filepathTo = filePath;
-                        AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
+                        AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos, provName);
                         if (DoesFooterExist(filepathFrom))
-                            AddFooterFromTo(filepathFrom, filepathTo, patientName, dos,dob);
+                            AddFooterFromTo(filepathFrom, filepathTo, patientName, dos, dob);
                     }
                     catch (Exception ex)
                     {
@@ -3429,7 +3427,7 @@ namespace PainTrax.Web.Controllers
             return pocDetails;
         }
 
-        public void AddHeaderFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "")
+        public void AddHeaderFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "",string provName="")
         {
             // Replace header in target document with header of source document.
             using (WordprocessingDocument
@@ -3495,7 +3493,7 @@ namespace PainTrax.Web.Controllers
                     }
 
                     // Update relationships in header XML
-                    UpdateHeaderXml(headerPart, imageRelMapping);
+                    UpdateHeaderXml(headerPart, imageRelMapping, provName);
 
                     //Dictionary<string, string> textReplacements = new Dictionary<string, string>
                     //    {
@@ -3543,7 +3541,7 @@ namespace PainTrax.Web.Controllers
 
 
         // Method to update header XML to reference new image relationships
-        private static void UpdateHeaderXml(HeaderPart headerPart, Dictionary<string, string> imageRelMapping)
+        private static void UpdateHeaderXml(HeaderPart headerPart, Dictionary<string, string> imageRelMapping,string provName)
         {
             string headerXml;
 
@@ -3558,6 +3556,12 @@ namespace PainTrax.Web.Controllers
             {
                 headerXml = headerXml.Replace($"r:id=\"{kvp.Key}\"", $"r:id=\"{kvp.Value}\"");
             }
+            //this 2 lines
+            headerXml = headerXml
+                     .Replace("<w:t>@</w:t><w:t>drname</w:t><w:t>@</w:t>", "<w:t>@drname@</w:t>");
+
+            // Step 3: Replace placeholders
+            headerXml = headerXml.Replace("@drname@", provName);
 
             // Write the updated XML back to the header part
             using (MemoryStream memStream = new MemoryStream())
@@ -3648,9 +3652,9 @@ namespace PainTrax.Web.Controllers
             }
 
             paragraph.Append(
-                new Run(new Text("Page "){ Space = SpaceProcessingModeValues.Preserve }),
+                new Run(new Text("Page ") { Space = SpaceProcessingModeValues.Preserve }),
                 new Run(new SimpleField() { Instruction = "PAGE" }),
-                new Run(new Text(" of "){ Space = SpaceProcessingModeValues.Preserve }),
+                new Run(new Text(" of ") { Space = SpaceProcessingModeValues.Preserve }),
                 new Run(new SimpleField() { Instruction = "NUMPAGES" })
             );
 
@@ -3937,7 +3941,7 @@ namespace PainTrax.Web.Controllers
                     {
                         strDaignosis = strDaignosis + " of the left knee is normal. ";
                     }
-                }                
+                }
 
                 if (data.other1_date != null)
                 {
@@ -4471,9 +4475,9 @@ namespace PainTrax.Web.Controllers
                     UpdateFooterXml(footerPart, imageRelMapping);
                 }
 
-                   int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
- 
-                    var restfooterPart = mainPart.AddNewPart<FooterPart>("RestFooter");
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+                var restfooterPart = mainPart.AddNewPart<FooterPart>("RestFooter");
                 // restfooterPart.Footer = CreateHeaderWithPageNumber(patientName, "");
                 if (cmpid == 7 || cmpid == 13)
                 {
@@ -4497,10 +4501,10 @@ namespace PainTrax.Web.Controllers
 
                     restfooterPart.Footer = CreateFooterWithPageNumber(patientName, "", "");
                 }
-                
+
 
                 //  restheaderPart.Header = new Header(new Paragraph("Purav\nSandip"));
-                 string restId = mainPart.GetIdOfPart(restfooterPart);
+                string restId = mainPart.GetIdOfPart(restfooterPart);
                 // Get SectionProperties and Replace HeaderReference with new Id.
                 IEnumerable<DocumentFormat.OpenXml.Wordprocessing.SectionProperties> sectPrs = mainPart.Document.Body.Elements<SectionProperties>();
                 foreach (var sectPr in sectPrs)

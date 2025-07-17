@@ -71,11 +71,12 @@
 
         var ieId = '@ViewBag.ieId';
         var locId = '@ViewBag.locId';
+        var provName = '@ViewBag.ProviderName';
 
         $.ajax({
             type: "Post",
             url: url,
-            data: { "htmlContent": markup, "ieId": ieId },
+            data: { "htmlContent": markup, "ieId": ieId, "provName": provName },
             beforeSend: function () { $("#overlay").fadeIn(300); },
             complete: function () {
                 setTimeout(function () {
@@ -84,7 +85,7 @@
             },
             contentType: "application/x-www-form-urlencoded",
             success: function (data, status, xhr) {
-                var downloadUrl = '@Url.Action("DownloadFile", "Visit")?filePath=' + data.filePath + "&fileName=" + data.fileName + "&locId=" + locId + "&patientName=" + data.patientName + "&signatureUrl=" + data.signatureUrl + "&dos=" + data.dos + "&dob=" + data.dob + "&injFileName=" + data.injFileName;
+                var downloadUrl = '@Url.Action("DownloadFile", "Visit")?filePath=' + data.filePath + "&fileName=" + data.fileName + "&locId=" + locId + "&patientName=" + data.patientName + "&signatureUrl=" + data.signatureUrl + "&dos=" + data.dos + "&dob=" + data.dob + "&injFileName=" + data.injFileName + "&provName=" + data.provName;
                 window.location = downloadUrl;
             },
             error: function (xhr, status, error) {

@@ -246,7 +246,7 @@ namespace PainTrax.Web.Controllers
                                 psh = dt.Rows[i]["Past Surgical"].ToString(),
                                 social_history = dt.Rows[i]["Social History"].ToString(),
                                 assessment = this.getAssement(dt.Rows[i]["Diagnoses"].ToString()),
-                                appt_reason = dt.Rows[i]["Reason"].ToString(),
+                                //appt_reason = dt.Rows[i]["Reason"].ToString(),
                                 //occupation = dt.Rows[i]["Occupation"].ToString(),
                                 //impairment_rating = dt.Rows[i]["Tylenol"].ToString(),
 

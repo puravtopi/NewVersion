@@ -1465,7 +1465,7 @@
     }
 
     function fnUpdateSidePanel() {
-
+        debugger
         var fullname = $("#lname").val() + ' ' + $("#fname").val();
         $('#pdName').text(fullname);
 
@@ -1477,6 +1477,7 @@
         $('#pdGender').text($("#gender option:selected").text());
 
         var dob = $('#dob').val();
+        
         if (dob) {
             var today = new Date();
             var birthDate = new Date(dob);
@@ -1487,8 +1488,8 @@
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
                 age--;
             }
-
-            $('#pdAge').text(age);
+         
+            $('#pdAGE').text(age);
             $('#pdDOB').text(fngetAGE(dob));
         }
 

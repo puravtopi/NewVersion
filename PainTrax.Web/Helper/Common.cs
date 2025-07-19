@@ -554,7 +554,8 @@ namespace PainTrax.Web.Helper
                 new SelectListItem{ Text="Impairment Rating", Value = "impairment_rating",Selected=false },
                 new SelectListItem{ Text="Reason", Value = "appt_reason",Selected=false },
                 new SelectListItem{ Text="Vital", Value = "vital",Selected=false },
-                new SelectListItem{ Text="POC assessment", Value = "poc_assesment",Selected=false }
+                new SelectListItem{ Text="POC assessment", Value = "poc_assesment",Selected=false },
+                new SelectListItem{ Text="Procedure Performed", Value = "procedure_performed",Selected=false }
                
 
 

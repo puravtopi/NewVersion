@@ -56,4 +56,6 @@ public class vm_patient_fu{
     public bool? mc {get;set;}
     public int? age {get;set;}
 
+    public string? procedure_performed { get; set; }
+
 }

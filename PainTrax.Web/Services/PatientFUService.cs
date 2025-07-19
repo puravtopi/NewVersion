@@ -45,8 +45,8 @@ public class PatientFUService : ParentService
     public int Insert(tbl_patient_fu data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_patient_fu
-		(patient_id,provider_id,patientIE_ID,doe,created_date,created_by,updated_date,updated_by,is_active,cmp_id,extra_comments,type,accident_type,physicianid,location_id)Values
-				(@patient_id,@provider_id,@patientIE_ID,@doe,@created_date,@created_by,@updated_date,@updated_by,@is_active,@cmp_id,@extra_comments,@type,@accident_type,@physicianid,@location_id);select @@identity;", conn);
+		(patient_id,provider_id,patientIE_ID,doe,created_date,created_by,updated_date,updated_by,is_active,cmp_id,extra_comments,type,accident_type,physicianid,location_id,procedure_performed)Values
+				(@patient_id,@provider_id,@patientIE_ID,@doe,@created_date,@created_by,@updated_date,@updated_by,@is_active,@cmp_id,@extra_comments,@type,@accident_type,@physicianid,@location_id,@procedure_performed);select @@identity;", conn);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
         cm.Parameters.AddWithValue("@provider_id", data.provider_id);
 
@@ -63,6 +63,7 @@ public class PatientFUService : ParentService
         cm.Parameters.AddWithValue("@accident_type", data.accident_type);
         cm.Parameters.AddWithValue("@physicianid", data.physicianid);
         cm.Parameters.AddWithValue("@location_id", data.location_id);
+        cm.Parameters.AddWithValue("@procedure_performed", data.procedure_performed);
 
         var result = ExecuteScalar(cm);
         return result;
@@ -156,6 +157,16 @@ WHERE Executed = @fDate and PatientFU_ID=@fuId;Select 1;", conn);
         cm.Parameters.AddWithValue("@fuId", fuId);
         var result = ExecuteScalar(cm);
         return Convert.ToInt32(result);
+    }
+
+    public void UpdateProcedurePerformed(string id, string procedure_performed)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient_fu SET
+		procedure_performed=@procedure_performed	
+        where id=@id", conn);
+        cm.Parameters.AddWithValue("@id", id);
+        cm.Parameters.AddWithValue("@procedure_performed", procedure_performed);
+        Execute(cm);
     }
     #endregion
 

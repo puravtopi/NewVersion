@@ -147,6 +147,7 @@ namespace PainTrax.Web.Controllers
                     obj.providerid = fuData.provider_id;
                     obj.locationid = fuData.location_id == null ? ieData.location_id : fuData.location_id;
                     obj.type = fuData.type;
+                    obj.procedure_performed = fuData.procedure_performed;
                     if (ieData.primary_ins_cmp_id != null)
                     {
                         var primaryCmp = _inscosservices.GetOne(ieData.primary_ins_cmp_id.Value);
@@ -1240,20 +1241,14 @@ namespace PainTrax.Web.Controllers
         {
 
             var data = 1;
-            //if (model.id > 0)
-            //{
-            //    data = model.id.Value;
-            //    _ieService.UpdateComment(model);
-            //}
-            //else
-            try
+            if (model.id > 0)
             {
-                _fuCommentService.Insert(model);
+                data = model.id.Value;
+                _fuCommentService.Update(model);
             }
-            catch (Exception ex)
-            {
-                SaveLog(ex, "SaveComment");
-            }
+            else
+               _fuCommentService.Insert(model);
+
             return Json(data);
         }
 
@@ -2495,6 +2490,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#location", patientData.location);
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
                     body = body.Replace("#gender", gender);
+                    body = body.Replace("#pp", fuData.procedure_performed);
                     body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
 
 
@@ -2823,9 +2819,9 @@ namespace PainTrax.Web.Controllers
 
                 int? providorId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
 
-                if (patientData.provider_id != null)
+                if (fuData.provider_id != null)
                 {
-                    signUserId = patientData.provider_id.Value;
+                    signUserId = fuData.provider_id.Value;
                 }
                 else if (providorId != null)
                 {
@@ -2854,6 +2850,7 @@ namespace PainTrax.Web.Controllers
 
                     body = body.Replace("#ProviderName", userData.providername);
                     body = body.Replace("#AssProviderName", userData.assistant_providername);
+                    ViewBag.ProviderName = userData.providername;
                 }
                 else
                     body = body.Replace("#Sign", "");
@@ -2905,7 +2902,7 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult DownloadWord(string htmlContent, int ieId, int fuId)
+        public IActionResult DownloadWord(string htmlContent, int ieId, int fuId,string provName="")
         {
             htmlContent = htmlContent.Replace("<p>&nbsp;</p>", "");
             //  string htmlContent = "<p>This is a <strong>sample</strong> HTML content.</p>";
@@ -3071,7 +3068,7 @@ namespace PainTrax.Web.Controllers
             }
 
 
-            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos, dob=dob, injFileName = injDocName });
+            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos, dob=dob, injFileName = injDocName, provName= provName });
         }
 
         public MemoryStream ConvertHtmlToWord(string htmlContent)
@@ -4804,6 +4801,16 @@ namespace PainTrax.Web.Controllers
                     footerPart.FeedData(memStream);
                 }
             }
+        }
+
+
+
+        [HttpGet]
+        public JsonResult SaveProcedurePerformed(int eId, string pp)
+        {
+            _patientFuservices.UpdateProcedurePerformed(eId.ToString(), pp);
+
+            return Json(1);
         }
         #endregion
     }

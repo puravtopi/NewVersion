@@ -678,10 +678,39 @@ namespace PainTrax.Web.Controllers
 
                 string[] fullname = name.ToString().Trim().Split(' ');
 
+                string lastName = "", firstName = "", middleName = "";
+                var match = Regex.Match(filename, @"^(.*?),\s+([A-Za-z]+)(?:\s+([A-Za-z]+))?\s+(.*)$");
+                if (match.Success)
+                {
+                    lastName = match.Groups[1].Value.Trim();
+                    firstName = match.Groups[2].Value.Trim();
+                    middleName = match.Groups[3].Success ? match.Groups[3].Value.Trim() : "";
+                    if (middleName.Length > 1)
+                    {
+                        firstName += " " + middleName;
+                        middleName = "";
+                    }
+                }
+                else if (fullname.Length > 1)
+                {
+                    lastName = fullname[1];
+                    firstName = fullname[0];
+                    if (fullname.Length > 2)
+                    {
+                        middleName = !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
+                        if (middleName.Length > 1)
+                        {
+                            firstName += " " + middleName;
+                            middleName = "";
+                        }
+                    }
+                }
+
                 if (fullname.Length > 1)
                 {
                     //                 dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and dob='{bdate}' and doa='{adate}' and cmp_id={cmpid}");
-                    dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and   doe='{sdate}' and cmp_id={cmpid}");
+                    //dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and   doe='{sdate}' and cmp_id={cmpid}");
+                    dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{firstName}' and lname='{lastName}' and   doe='{sdate}' and cmp_id={cmpid}");
                     if (dt.Rows.Count > 0)
                     {
                         datarow["Patient_id"] = dt.Rows[0]["patient_id"];
@@ -689,9 +718,9 @@ namespace PainTrax.Web.Controllers
                     }
                 }
 
-                datarow["FName"] = fullname.Length > 0 ? fullname[0].ToString().Trim() : "";
-                datarow["LName"] = fullname.Length > 1 ? fullname[1].ToString().Trim() : "";
-                datarow["MName"] = fullname.Length > 2 && !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
+                datarow["FName"] = firstName;
+                datarow["LName"] = lastName;
+                datarow["MName"] = middleName;
                 datarow["Name"] = name;
                 datarow["DOA"] = adate;
                 datarow["DOB"] = bdate;
@@ -1376,11 +1405,41 @@ namespace PainTrax.Web.Controllers
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 string[] fullname = name.ToString().Trim().Split(' ');
                 DataTable dt = new DataTable();
+
+                string lastName = "", firstName = "", middleName = "";
+                var match = Regex.Match(filename, @"^(.*?),\s+([A-Za-z]+)(?:\s+([A-Za-z]+))?\s+(.*)$");
+                if (match.Success)
+                {
+                    lastName = match.Groups[1].Value.Trim();
+                    firstName = match.Groups[2].Value.Trim();
+                    middleName = match.Groups[3].Success ? match.Groups[3].Value.Trim() : "";
+                    if (middleName.Length > 1)
+                    {
+                        firstName += " " + middleName;
+                        middleName = "";
+                    }
+                }
+                else if (fullname.Length > 1)
+                {
+                    lastName = fullname[1];
+                    firstName = fullname[0];
+                    if (fullname.Length > 2)
+                    {
+                        middleName = !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
+                        if (middleName.Length > 1)
+                        {
+                            firstName += " " + middleName;
+                            middleName = "";
+                        }
+                    }
+
+                }
+
                 if (fullname.Length > 1)
                 {
                     //                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{sdate}'  and DATE(vm_patient_fu.doa)= '{adate}' and vm_patient_ie.cmp_id = {cmpid}");
-                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{edate}'   and vm_patient_ie.cmp_id = {cmpid}");
-
+                    //dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{edate}'   and vm_patient_ie.cmp_id = {cmpid}");
+                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{firstName}' and vm_patient_fu.lname = '{lastName}'  and DATE(vm_patient_fu.doe)= '{edate}'   and vm_patient_ie.cmp_id = {cmpid}");
                     if (dt.Rows.Count > 0)
                     {
                         datarow["Patient_id"] = dt.Rows[0]["patient_id"];
@@ -1389,9 +1448,9 @@ namespace PainTrax.Web.Controllers
                     }
 
                 }
-                datarow["FName"] = fullname.Length > 0 ? fullname[0].ToString().Trim() : "";
-                datarow["LName"] = fullname.Length > 1 ? fullname[1].ToString().Trim() : "";
-                datarow["MName"] = fullname.Length > 2 && !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
+                datarow["FName"] = firstName;
+                datarow["LName"] = lastName;
+                datarow["MName"] = middleName;
                 datarow["Name"] = name;
                 datarow["DOB"] = formattedDOB;
                 datarow["DOA"] = adate;
@@ -2151,11 +2210,41 @@ namespace PainTrax.Web.Controllers
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
                 string[] fullname = name.ToString().Trim().Split(' ');
                 DataTable dt = new DataTable();
+
+                string lastName = "", firstName = "", middleName = "";
+                var match = Regex.Match(filename, @"^(.*?),\s+([A-Za-z]+)(?:\s+([A-Za-z]+))?\s+(.*)$");
+                if (match.Success)
+                {
+                    lastName = match.Groups[1].Value.Trim();
+                    firstName = match.Groups[2].Value.Trim();
+                    middleName = match.Groups[3].Success ? match.Groups[3].Value.Trim() : "";
+                    if (middleName.Length > 1)
+                    {
+                        firstName += " " + middleName;
+                        middleName = "";
+                    }
+                }
+                else if (fullname.Length > 1)
+                {
+                    lastName = fullname[1];
+                    firstName = fullname[0];
+                    if (fullname.Length > 2)
+                    {
+                        middleName = !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
+                        if (middleName.Length > 1)
+                        {
+                            firstName += " " + middleName;
+                            middleName = "";
+                        }
+                    }
+
+                }
+
                 if (fullname.Length > 1)
                 {
                     //                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{sdate}'  and DATE(vm_patient_fu.doa)= '{adate}' and vm_patient_ie.cmp_id = {cmpid}");
-                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{edate}'   and vm_patient_ie.cmp_id = {cmpid}");
-
+                    //dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{edate}'   and vm_patient_ie.cmp_id = {cmpid}");
+                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{firstName}' and vm_patient_fu.lname = '{lastName}'  and DATE(vm_patient_fu.doe)= '{edate}'   and vm_patient_ie.cmp_id = {cmpid}");
                     if (dt.Rows.Count > 0)
                     {
                         datarow["Patient_id"] = dt.Rows[0]["patient_id"];
@@ -2164,9 +2253,9 @@ namespace PainTrax.Web.Controllers
                     }
 
                 }
-                datarow["FName"] = fullname.Length > 0 ? fullname[0].ToString().Trim() : "";
-                datarow["LName"] = fullname.Length > 1 ? fullname[1].ToString().Trim() : "";
-                datarow["MName"] = fullname.Length > 2 && !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
+                datarow["FName"] = firstName;
+                datarow["LName"] = lastName;
+                datarow["MName"] = middleName;
                 datarow["Name"] = name;
                 datarow["DOB"] = formattedDOB;
                 datarow["DOA"] = adate;
@@ -3043,10 +3132,40 @@ namespace PainTrax.Web.Controllers
 
                 string[] fullname = name.ToString().Trim().Split(' ');
                 DataTable dt = new DataTable();
+                string lastName = "", firstName = "", middleName = "";
+                var match = Regex.Match(filename, @"^(.*?),\s+([A-Za-z]+)(?:\s+([A-Za-z]+))?\s+(.*)$");
+                if (match.Success)
+                {
+                    lastName = match.Groups[1].Value.Trim();
+                    firstName = match.Groups[2].Value.Trim();
+                    middleName = match.Groups[3].Success ? match.Groups[3].Value.Trim() : "";
+                    if (middleName.Length > 1)
+                    {
+                        firstName += " " + middleName;
+                        middleName = "";
+                    }
+                }
+                else if (fullname.Length > 1)
+                {
+                    lastName = fullname[1];
+                    firstName = fullname[0];
+                    if (fullname.Length > 2)
+                    {
+                        middleName = !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
+                        if (middleName.Length > 1)
+                        {
+                            firstName += " " + middleName;
+                            middleName = "";
+                        }
+                    }
+
+                }
+
                 if (fullname.Length > 1)
                 {
                     //                 dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and dob='{bdate}' and doa='{adate}' and cmp_id={cmpid}");
-                    dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and   doe='{sdate}' and cmp_id={cmpid}");
+                    //dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{fullname[0]}' and lname='{fullname[1]}' and   doe='{sdate}' and cmp_id={cmpid}");
+                    dt = _pareentservices.GetData($"select * from vm_patient_ie where  fname='{firstName}' and lname='{lastName}' and   doe='{sdate}' and cmp_id={cmpid}");
                     if (dt.Rows.Count > 0)
                     {
                         datarow["Patient_id"] = dt.Rows[0]["patient_id"];
@@ -3054,9 +3173,10 @@ namespace PainTrax.Web.Controllers
                     }
                 }
 
-                datarow["FName"] = fullname.Length > 0 ? fullname[0].ToString().Trim() : "";
-                datarow["LName"] = fullname.Length > 1 ? fullname[1].ToString().Trim() : "";
-                datarow["MName"] = fullname.Length > 2 && !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
+
+                datarow["FName"] = firstName;
+                datarow["LName"] = lastName;
+                datarow["MName"] = middleName;
                 datarow["DOA"] = adate;
                 datarow["DOB"] = bdate;
                 datarow["DOS"] = sdate;
@@ -3597,11 +3717,40 @@ namespace PainTrax.Web.Controllers
 
                 string[] fullname = name.ToString().Trim().Split(' ');
                 DataTable dt = new DataTable();
+                string lastName = "", firstName = "", middleName = "";
+                var match = Regex.Match(filename, @"^(.*?),\s+([A-Za-z]+)(?:\s+([A-Za-z]+))?\s+(.*)$");
+                if (match.Success)
+                {
+                    lastName = match.Groups[1].Value.Trim();
+                    firstName = match.Groups[2].Value.Trim();
+                    middleName = match.Groups[3].Success ? match.Groups[3].Value.Trim() : "";
+                    if (middleName.Length > 1)
+                    {
+                        firstName += " " + middleName;
+                        middleName = "";
+                    }
+                }
+                else if (fullname.Length > 1)
+                {
+                    lastName = fullname[1];
+                    firstName = fullname[0];
+                    if (fullname.Length > 2)
+                    {
+                        middleName = !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
+                        if (middleName.Length > 1)
+                        {
+                            firstName += " " + middleName;
+                            middleName = "";
+                        }
+                    }
+
+                }
+
                 if (fullname.Length > 1)
                 {
                     //                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{sdate}'  and DATE(vm_patient_fu.doa)= '{adate}' and vm_patient_ie.cmp_id = {cmpid}");
-                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{sdate}'   and vm_patient_ie.cmp_id = {cmpid}");
-
+                    //dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{fullname[0]}' and vm_patient_fu.lname = '{fullname[1]}'  and DATE(vm_patient_fu.doe)= '{sdate}'   and vm_patient_ie.cmp_id = {cmpid}");
+                    dt = _pareentservices.GetData($"select vm_patient_fu.*,vm_patient_ie.patient_id from vm_patient_fu inner join vm_patient_ie on vm_patient_fu.patientIE_ID = vm_patient_ie.id where vm_patient_fu.fname = '{firstName}' and vm_patient_fu.lname = '{lastName}'  and DATE(vm_patient_fu.doe)= '{sdate}'   and vm_patient_ie.cmp_id = {cmpid}");
                     if (dt.Rows.Count > 0)
                     {
                         datarow["Patient_id"] = dt.Rows[0]["patient_id"];
@@ -3610,9 +3759,9 @@ namespace PainTrax.Web.Controllers
                     }
 
                 }
-                datarow["FName"] = fullname.Length > 0 ? fullname[0].ToString().Trim() : "";
-                datarow["LName"] = fullname.Length > 1 ? fullname[1].ToString().Trim() : "";
-                datarow["MName"] = fullname.Length > 2 && !fullname[2].ToString().StartsWith("[") ? fullname[2].ToString().Trim() : "";
+                datarow["FName"] = firstName;
+                datarow["LName"] = lastName;
+                datarow["MName"] = middleName;
                 datarow["DOA"] = adate;
                 datarow["DOB"] = bdate;
                 datarow["DOS"] = sdate;

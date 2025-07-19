@@ -848,6 +848,20 @@
                         </div>
                     </div>
                 </div>
+                 <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Procedure Performed</h5>
+                        <div class="col-lg-12" >
+                         <div class="row mb-3">
+                                 <div class="col-sm-12">
+                                      <textarea class="form-control" asp-for="procedure_performed"  rows="5"></textarea>
+                                      <br>
+                                     <button type="button" class="btn btn-secondary" onclick="fnSaveProcedurePerformd()">Save</button>
+                                  </div>
+                         </div>
+                        </div>
+                     </div>
+                 </div>
             </div>
         </div>
 
@@ -1006,6 +1020,28 @@
             url,
             '_blank' // <- This is what makes it open in a new window.
         );
+    }
+
+    function fnSaveProcedurePerformd(){
+         var id =  $("#hdIEId").val();
+         if(id!=null && id!=undefined){
+         var pp= $("#procedure_performed").val();
+            $.ajax({
+                url: '@Url.Action("SaveProcedurePerformed", "Visit")',
+                type: 'GET',
+                data: { eId: id,pp:pp },
+                success: function (data) {
+                     $('#myModalMessage').modal('show');
+                     $('#messBody').html("Details Saved.");
+                },
+                error: function (xhr, status, error) {
+                    alert("Error fetching physicians: " + error);
+                }
+            });
+         }
+         else{
+          alert("Please Create Initial First.");
+         }
     }
 </script>
 

@@ -123,6 +123,12 @@
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="ps-tab" data-bs-target="#bordered-ps" role="tab" aria-controls="contact" aria-selected="false">POC Summary</a>
                                     </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="ps-tab" data-bs-target="#bordered-doc" role="tab" aria-controls="contact" aria-selected="false">Documents</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="ps-tab" data-bs-target="#bordered-comments" role="tab" aria-controls="contact" aria-selected="false">Comments</a>
+                                    </li>
 
                                 </ul>
                             </div>
@@ -691,6 +697,14 @@
                                         <div class="col-lg-12" id="pocsummary">
                                         </div>
                                     </div>
+                                    <div class="tab-pane fade" id="bordered-doc" role="tabpanel" aria-labelledby="doc-tab">
+                                        <div class="col-lg-12">
+                                            @Html.Partial("_documents", Model)
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="bordered-comments" role="tabpanel" aria-labelledby="comments-tab">
+                                        @Html.Partial("_Comments", Model.Comment)
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -914,6 +928,20 @@
                         </div>
                     </div>
                 </div>
+                 <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Procedure Performed</h5>
+                        <div class="col-lg-12" >
+                         <div class="row mb-3">
+                                 <div class="col-sm-12">
+                                      <textarea class="form-control" asp-for="procedure_performed"  rows="5"></textarea>
+                                      <br>
+                                     <button type="button" class="btn btn-secondary" onclick="fnSaveProcedurePerformd()">Save</button>
+                                  </div>
+                         </div>
+                        </div>
+                     </div>
+                 </div>
             </div>
         </div>
 
@@ -1086,7 +1114,27 @@
             );
         }
     }
-
+    function fnSaveProcedurePerformd(){
+         var id =  $("#hdFUId").val();
+         if(id!=null && id!=undefined){
+         var pp= $("#procedure_performed").val();
+            $.ajax({
+                url: '@Url.Action("SaveProcedurePerformed", "FUVisit")',
+                type: 'GET',
+                data: { eId: id,pp:pp },
+                success: function (data) {
+                     $('#myModalMessage').modal('show');
+                     $('#messBody').html("Details Saved.");
+                },
+                error: function (xhr, status, error) {
+                    alert("Error fetching physicians: " + error);
+                }
+            });
+         }
+         else{
+          alert("Please Create FU First.");
+         }
+    }
 </script>
 
 
@@ -1213,11 +1261,12 @@
             else if (id === "bordered-other") {
                 fnOtherSave(null);
             }
-
+            else if (id === "bordered-comments") {
+                fnSaveComment(null);
+            }
         })
 
     });
-
 
     $('#borderedTab a').on('click', function (e) {
 
@@ -1232,7 +1281,6 @@
             $('#printButtonSOAP').hide();
 
         if (id === "bordered-home") {
-
             if (isDetaildValid()) {
 
 
@@ -1271,9 +1319,6 @@
                     fnDetailsSave(t);
                 }
             }
-
-
-
         }
         else if (id === "bordered-profile") {
             fnPage1Save(t);
@@ -1301,9 +1346,10 @@
 
         }
         else if (id === "bordered-ps") {
-
-
             $(t).tab('show');
+        }
+        else if (id === "bordered-comments") {
+            fnSaveComment(t);
         }
 
     });

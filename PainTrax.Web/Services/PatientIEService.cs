@@ -211,6 +211,17 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@pid", pid);
         Execute(cm);
     }
+
+    public void UpdateProcedurePerformed(string id,string procedure_performed)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient_ie SET
+		procedure_performed=@procedure_performed	
+        where id=@id", conn);
+        cm.Parameters.AddWithValue("@id", id);
+        cm.Parameters.AddWithValue("@procedure_performed", procedure_performed);
+        Execute(cm);
+    }
+
     #endregion
 
     #region Page1

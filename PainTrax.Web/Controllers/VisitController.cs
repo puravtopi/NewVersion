@@ -244,6 +244,7 @@ namespace PainTrax.Web.Controllers
                         obj.compensation = ieData.compensation;
                         obj.accidentType = ieData.accidentType;
                         obj.state = ieData.state;
+                        obj.procedure_performed = ieData.procedure_performed;
                         patientId = ieData.patientId.Value;
                         HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, patientId);
 
@@ -1492,6 +1493,14 @@ namespace PainTrax.Web.Controllers
 
             return Json(physicianList);
         }
+
+        [HttpGet]
+        public JsonResult SaveProcedurePerformed(int eId,string pp)
+        {
+            _ieService.UpdateProcedurePerformed(eId.ToString(),pp);
+           
+            return Json(1);
+        }
         #endregion
 
         #region FU method
@@ -2415,6 +2424,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#fn", patientData.fname);
                     body = body.Replace("#ln", patientData.lname);
                     body = body.Replace("#gender", gender);
+                    body = body.Replace("#pp", patientData.procedure_performed);
 
                     body = body.Replace("#doi", Common.commonDate(patientData.doa));
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
@@ -4116,7 +4126,8 @@ namespace PainTrax.Web.Controllers
                     extra_comments = "",
                     type = type,
                     accident_type = ieData.accident_type,
-                    provider_id = ieData.provider_id
+                    provider_id = ieData.provider_id,
+                    procedure_performed= ieData.procedure_performed
 
                 };
                 fu_id = _patientFUservices.Insert(objFU);
@@ -4239,7 +4250,8 @@ namespace PainTrax.Web.Controllers
                     type = type,
                     accident_type = fuData.accident_type,
                     provider_id = fuData.provider_id,
-                    final_save = false
+                    final_save = false,
+                    procedure_performed= fuData.procedure_performed
 
                 };
                 fu_id = _patientFUservices.Insert(objFU);

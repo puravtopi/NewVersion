@@ -23,6 +23,8 @@ public class tbl_patient_fu{
     public string? accident_type { get; set; }
     public bool? final_save { get; set; }
 
+    public string? procedure_performed { get; set; }
+
 
 
 }

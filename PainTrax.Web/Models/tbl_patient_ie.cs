@@ -35,4 +35,6 @@ public class tbl_patient_ie{
 	public string? state { get; set; }
 	public int? physicianid { get;set;}
 
+    public string? procedure_performed { get; set; }
+
 }

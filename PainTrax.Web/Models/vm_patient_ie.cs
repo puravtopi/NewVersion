@@ -61,5 +61,6 @@ public class vm_patient_ie
     public bool? mc { get; set; }
     public bool? isFU { get; set; }
     public int? age { get; set; }
+    public string? procedure_performed { get; set; }
 
 }

@@ -577,7 +577,7 @@
                          var DOI = $("#hdnDOI").val();
 
                           if (DOAcc == "") { DOI = "___"; }                       
-                        else { DOI = $("#hdnDOI").val(); }
+                        else { DOI = "#doi"; }
 
                          
 
@@ -613,7 +613,8 @@
                     $('#assessment').val(assessment);
                     ckAssessment.data.set(assessment);
 
-                    history = history.replaceAll("#dos", DOS).replace("#gender", genderMrMs).replace("#fn", FName).replace("#ln", LName).replace("#age", Age).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
+                    // history = history.replaceAll("#dos", DOS).replace("#gender", genderMrMs).replace("#fn", FName).replace("#ln", LName).replace("#age", Age).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
+                    history = history.replaceAll("#dos", DOS).replace("#gender", genderMrMs).replace("#fn", FName).replace("#ln", LName).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
 
                         $('#txtHistory').val(history);
 

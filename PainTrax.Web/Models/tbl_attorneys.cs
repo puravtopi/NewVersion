@@ -21,8 +21,8 @@ namespace PainTrax.Web.Models
 		public int? old_id { get; set; }
 		public int? cmp_id { get; set; }
 
-        /*public string label { get; set; }
-        public string val { get; set; }*/
+        public string? label { get; set; }
+        public string? val { get; set; }
 
     }
 }

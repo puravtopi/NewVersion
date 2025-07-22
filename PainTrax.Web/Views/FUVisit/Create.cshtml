@@ -1264,6 +1264,9 @@
             else if (id === "bordered-comments") {
                 fnSaveComment(null);
             }
+            else if (id === "bordered-doc") {
+                $(t).tab('show');
+            }
         })
 
     });
@@ -1350,6 +1353,9 @@
         }
         else if (id === "bordered-comments") {
             fnSaveComment(t);
+        }
+        else if (id === "bordered-doc") {
+            $(t).tab('show');
         }
 
     });

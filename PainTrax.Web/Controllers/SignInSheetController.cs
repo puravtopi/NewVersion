@@ -84,7 +84,7 @@ namespace PainTrax.Web.Controllers
             }
 
 
-            ViewBag.SelectedDate = HttpContext.Session.GetString(SessionKeys.Sessiondldoe);
+            ViewBag.SelectedDate = Convert.ToDateTime(HttpContext.Session.GetString(SessionKeys.Sessiondldoe)).ToString("MM/dd/yyyy");
             ViewBag.SelectedLocation = LocationName;
             return View(objPro);
         }

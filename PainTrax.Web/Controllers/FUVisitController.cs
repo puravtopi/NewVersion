@@ -349,12 +349,11 @@ namespace PainTrax.Web.Controllers
                         obj.Other.listTreatmentMaster = _data;
                     }
 
-                    var pageComment = _fuCommentService.GetOne(patientFUId);
+                    var pageComment = _ieService.GetOneComment(patientIEId);
 
                     if (pageComment != null)
                     {
-                        var commentIEData = _mapper.Map<tbl_ie_comment>(pageComment);
-                        obj.Comment = commentIEData;
+                        obj.Comment = pageComment;
                     }
                     else
                         obj.Comment = new tbl_ie_comment();
@@ -1237,17 +1236,17 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveComment(tbl_fu_comment model)
+        public IActionResult SaveComment(tbl_ie_comment model)
         {
 
             var data = 1;
             if (model.id > 0)
             {
                 data = model.id.Value;
-                _fuCommentService.Update(model);
+                _ieService.UpdateComment(model);
             }
-            else
-               _fuCommentService.Insert(model);
+            //else
+            //   _fuCommentService.Insert(model);
 
             return Json(data);
         }
@@ -2856,12 +2855,13 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#Sign", "");
 
 
+                body=HtmlCleaner.CleanHtmlContent(body);
+
                 if (SessionDiffDoc == "true")
                 {
                     body += "<br><br><!--Diff Doc-->";
                     body += injectionHtml;
                 }
-
 
                 ViewBag.content = body;
 

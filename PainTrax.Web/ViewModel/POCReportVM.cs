@@ -12,6 +12,7 @@ namespace PainTrax.Web.ViewModel
         public string gender { get; set; }
         public string name { get; set; }
         public DateTime? dob { get; set; }
+        public DateTime? doe { get; set; }
         public DateTime? doa { get; set; }
         public string mc { get; set; }
         public string phone { get; set; }
@@ -27,6 +28,7 @@ namespace PainTrax.Web.ViewModel
         public string mcode { get; set; }
         public string sides { get; set; }
         public string level { get; set; }
+        public string providerName { get; set; }
         public DateTime? requested { get; set; }
         public DateTime? executed { get; set; }
         public DateTime? scheduled { get; set; }

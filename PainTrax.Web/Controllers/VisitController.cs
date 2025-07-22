@@ -2823,6 +2823,7 @@ namespace PainTrax.Web.Controllers
                 else
                     body = body.Replace("#Sign", "");
 
+                body = HtmlCleaner.CleanHtmlContent(body);
 
                 if (SessionDiffDoc == "true")
                 {
@@ -2831,7 +2832,7 @@ namespace PainTrax.Web.Controllers
                 }
 
 
-                ViewBag.content = body;
+                ViewBag.content = body; 
 
             }
             catch (Exception ex)

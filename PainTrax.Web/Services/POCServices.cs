@@ -436,8 +436,8 @@ namespace PainTrax.Web.Services
         public List<POCReportVM> GetPOCReport(string cnd)
         {
             string query = "SELECT pm.id,replace(pm.lname, ' ','') AS lname,replace(pm.fname, ' ','') AS fname, tp.ProcedureDetail_ID,CONCAT(pm.lname,', ',pm.fname)as 'Name',CASE when pm.MC=1 THEN 'Yes' ELSE 'No' END as MC," +
-            "ie.Compensation AS 'CaseType' ,ie.doa,pm.dob,pm.mobile AS Phone,ie.primary_policy_no,ie.primary_claim_no,ins.cmpname,tp.sides,tp.level," +
-            "lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE ," +
+            "ie.Compensation AS 'CaseType' ,ie.doa,pm.dob,ie.doe,pm.mobile AS Phone,ie.primary_policy_no,ie.primary_claim_no,ins.cmpname,tp.sides,tp.level," +
+            "lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE ,CONCAT(u.fname,' ',u.lname) as providerName, " +
             "tp.Requested,p1.allergies,p1.note," +
             "tp.Executed," +
             "CASE when pm.gender = '1' THEN 'Male' when pm.gender = '2' then 'Female' when pm.gender = '3' then 'Other'  ELSE '' END AS gender," +
@@ -447,7 +447,8 @@ namespace PainTrax.Web.Services
             " INNER JOIN tbl_ie_page1 p1 ON ie.id = p1.ie_id " +
             " inner join tbl_Patient pm on pm.id = ie.Patient_ID" +
             " inner join tbl_locations lc ON ie.Location_ID = lc.id" +
-            " LEFT JOIN tbl_inscos ins ON ie.primary_ins_cmp_id = ins.id";
+            " LEFT JOIN tbl_inscos ins ON ie.primary_ins_cmp_id = ins.id"+
+            " LEFT JOIN tbl_users u ON ie.provider_id = u.id";
             // query += " where  (tp.Scheduled>='" + DateTime.Now.Date.ToString("yyyy/MM/dd") + "')";
 
             if (!string.IsNullOrEmpty(cnd))

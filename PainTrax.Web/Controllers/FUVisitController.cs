@@ -2297,7 +2297,7 @@ namespace PainTrax.Web.Controllers
 
                         body = body.Replace("#ProviderName", providerData.providername);
                         body = body.Replace("#AssProviderName", providerData.assistant_providername);
-                    }
+                }
                     else
                         body = body.Replace("#Sign", "");
                 }
@@ -2564,7 +2564,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#CC", cc);
                     body = body.Replace("#PE", pe);
                     var history = string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history;
-                    var hstryPresentIllness = string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history;
+                    var hstryPresentIllness = string.IsNullOrEmpty(page1Data.history) ? "" : "<b>HISTORY OF PRESENT ILLNESS:</b>" + page1Data.history;
 
                     history = history.Replace("#dos", Common.commonDate(patientData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
                     history = history.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
@@ -4436,7 +4436,7 @@ namespace PainTrax.Web.Controllers
                         if (data.diagrightshoulder_comma != null)
                             strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagrightshoulder_comma));
 
-                        strDaignosis = strDaignosis + " of the right shoulder " + strCommaValue + " " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the right shoulder" + strCommaValue + " " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -4461,7 +4461,7 @@ namespace PainTrax.Web.Controllers
                         if (data.diagleftshoulder_comma != null)
                             strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagleftshoulder_comma));
 
-                        strDaignosis = strDaignosis + " of the left shoulder  " + strCommaValue + " " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the left shoulder" + strCommaValue + " " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -4487,7 +4487,7 @@ namespace PainTrax.Web.Controllers
                         if (data.diagrightknee_comma != null)
                             strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagrightknee_comma));
 
-                        strDaignosis = strDaignosis + " of the right knee " + strCommaValue + " " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the right knee" + strCommaValue + " " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
@@ -4511,7 +4511,7 @@ namespace PainTrax.Web.Controllers
                         if (data.diagleftknee_comma != null)
                             strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagleftknee_comma));
 
-                        strDaignosis = strDaignosis + " of the left knee " + strCommaValue + " " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the left knee" + strCommaValue + " " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {

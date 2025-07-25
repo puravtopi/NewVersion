@@ -146,7 +146,7 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult TransferToResheduled(string ids)
+        public IActionResult TransferToResheduled(string ids,string sDate="")
         {
             ids = ids.TrimStart(',');
 
@@ -156,7 +156,7 @@ namespace PainTrax.Web.Controllers
 
                 for (int i = 0; i < arrayId.Length; i++)
                 {
-                    _services.TransferToReschedules(arrayId[i]);
+                    _services.TransferToReschedules(arrayId[i],sDate);
                 }
             }
             return Json(1);
@@ -202,7 +202,8 @@ namespace PainTrax.Web.Controllers
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var user in data)
                 {
-                    dt.Rows.Add(user.gender,user.name, user.providerName, user.casetype, user.doe == null ? "" : user.doe.Value.ToShortDateString(), user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.sides, user.level, user.phone, user.location,user.cmpname, user.primary_claim_no, user.primary_policy_no, user.mc, user.allergies, user.requested == null ? "" : user.requested.Value.ToShortDateString(), user.scheduled == null ? "" : user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString(), user.note);
+                    var sex = string.IsNullOrEmpty(user.gender) ? "" : (user.gender.ToLower() == "male" ? "M" : "F");
+                    dt.Rows.Add(sex,user.name, user.providerName, user.casetype, user.doe == null ? "" : user.doe.Value.ToShortDateString(), user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.sides, user.level, user.phone, user.location,user.cmpname, user.primary_claim_no, user.primary_policy_no, user.mc, user.allergies, user.requested == null ? "" : user.requested.Value.ToShortDateString(), user.scheduled == null ? "" : user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString(), user.note);
                 }
 
                 // Create a new Excel file

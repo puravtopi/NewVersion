@@ -45,7 +45,7 @@ namespace PainTrax.Web.Controllers
                 int pageSize = length != null ? Convert.ToInt32(length) : 0;
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
-                string cnd = string.IsNullOrEmpty(searchValue) ? "" : " and  (tag like '%" + searchValue + "%' or desc '%" + searchValue + "%')";
+                string cnd = string.IsNullOrEmpty(searchValue) ? "" : " and  (tag like '%" + searchValue + "%' or `desc` like '%" + searchValue + "%')";
                 var Data = _services.GetAll(cnd);
 
                 //Sorting

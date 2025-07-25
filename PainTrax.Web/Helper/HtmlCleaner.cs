@@ -11,7 +11,7 @@ public class HtmlCleaner
 
         RemoveVisuallyEmptyParagraphs(doc);
         ConvertParagraphsToBreaks(doc);
-        RemoveExtraBreakTags(doc);
+        //RemoveExtraBreakTags(doc);
      
         return doc.DocumentNode.OuterHtml;
 
@@ -72,7 +72,9 @@ public class HtmlCleaner
 
             // Add a <br/> after the paragraph content
             var brNode = doc.CreateElement("br");
+            var brNode1 = doc.CreateElement("br");
             newFragment.AppendChild(brNode);
+            newFragment.AppendChild(brNode1);
 
             // Replace the <p> with the new fragment
             p.ParentNode.ReplaceChild(newFragment, p);

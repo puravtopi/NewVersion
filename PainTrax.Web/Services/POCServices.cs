@@ -447,7 +447,7 @@ namespace PainTrax.Web.Services
             " INNER JOIN tbl_ie_page1 p1 ON ie.id = p1.ie_id " +
             " inner join tbl_Patient pm on pm.id = ie.Patient_ID" +
             " inner join tbl_locations lc ON ie.Location_ID = lc.id" +
-            " LEFT JOIN tbl_inscos ins ON ie.primary_ins_cmp_id = ins.id"+
+            " LEFT JOIN tbl_inscos ins ON ie.primary_ins_cmp_id = ins.id" +
             " LEFT JOIN tbl_users u ON ie.provider_id = u.id";
             // query += " where  (tp.Scheduled>='" + DateTime.Now.Date.ToString("yyyy/MM/dd") + "')";
 
@@ -471,9 +471,12 @@ namespace PainTrax.Web.Services
             Execute(cm);
         }
 
-        public void TransferToReschedules(string id)
+        public void TransferToReschedules(string id, string sDate = "")
         {
             string query = "update tbl_Procedures_Details set Scheduled=null where ProcedureDetail_ID=" + id;
+            if (sDate != "")
+                query = "update tbl_Procedures_Details set Scheduled='" + sDate + "' where ProcedureDetail_ID=" + id;
+
             MySqlCommand cm = new MySqlCommand(query, conn);
 
             Execute(cm);

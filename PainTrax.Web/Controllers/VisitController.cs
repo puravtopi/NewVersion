@@ -655,7 +655,7 @@ namespace PainTrax.Web.Controllers
 
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
-                int age = calculateAge(model.dob.Value);
+                int age = calculateAge(model.dob.Value, model.dos);
 
                 tbl_patient objPatient = new tbl_patient()
                 {
@@ -1495,10 +1495,10 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpGet]
-        public JsonResult SaveProcedurePerformed(int eId,string pp)
+        public JsonResult SaveProcedurePerformed(int eId, string pp)
         {
-            _ieService.UpdateProcedurePerformed(eId.ToString(),pp);
-           
+            _ieService.UpdateProcedurePerformed(eId.ToString(), pp);
+
             return Json(1);
         }
         #endregion
@@ -2699,6 +2699,9 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#fup", "");
                     body = body.Replace("#FollowUp", "");
                     body = body.Replace("#Treatment", "");
+                    body = body.Replace("#note1", "");
+                    body = body.Replace("#note2", "");
+                    body = body.Replace("#note3", "");
                 }
 
 
@@ -2831,8 +2834,9 @@ namespace PainTrax.Web.Controllers
                     body += injectionHtml;
                 }
 
+                body = body.Replace("#br", "<br/>");
 
-                ViewBag.content = body; 
+                ViewBag.content = body;
 
             }
             catch (Exception ex)
@@ -3064,12 +3068,12 @@ namespace PainTrax.Web.Controllers
 
             }
 
-            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos, dob = dob, injFileName = injDocName, provName= provName });
+            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos, dob = dob, injFileName = injDocName, provName = provName });
 
         }
 
         [HttpGet]
-        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "", string dos = "", string dob = "", string injFileName = "",string provName="")
+        public virtual ActionResult DownloadFile(string filePath, string fileName, int locId = 0, string patientName = "", string signatureUrl = "", string dos = "", string dob = "", string injFileName = "", string provName = "")
         {
 
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
@@ -3146,9 +3150,9 @@ namespace PainTrax.Web.Controllers
 
         }
 
-        private int calculateAge(DateTime bday)
+        private int calculateAge(DateTime bday, DateTime? dos)
         {
-            DateTime today = DateTime.Today;
+            DateTime today = dos == null ? DateTime.Today : dos.Value;
 
             int age = today.Year - bday.Year;
 
@@ -3438,7 +3442,7 @@ namespace PainTrax.Web.Controllers
             return pocDetails;
         }
 
-        public void AddHeaderFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "",string provName="")
+        public void AddHeaderFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "", string provName = "")
         {
             // Replace header in target document with header of source document.
             using (WordprocessingDocument
@@ -3552,7 +3556,7 @@ namespace PainTrax.Web.Controllers
 
 
         // Method to update header XML to reference new image relationships
-        private static void UpdateHeaderXml(HeaderPart headerPart, Dictionary<string, string> imageRelMapping,string provName)
+        private static void UpdateHeaderXml(HeaderPart headerPart, Dictionary<string, string> imageRelMapping, string provName)
         {
             string headerXml;
 
@@ -3648,7 +3652,7 @@ namespace PainTrax.Web.Controllers
             if (!string.IsNullOrEmpty(text2))
             {
                 paragraph.Append(
-                    new Run(new TabChar()), new Run(new TabChar()), new Run(new TabChar()),
+                    new Run(new TabChar()), new Run(new TabChar()),
                     new Run(new Text(text2)),
                     new Run(new TabChar()), new Run(new TabChar()),
                     new Run(new Text(text3)),
@@ -3696,14 +3700,15 @@ namespace PainTrax.Web.Controllers
 
         private string removePtag(string content)
         {
-            if (!string.IsNullOrEmpty(content))
-            {
-                Regex rgx = new Regex("<p>|</p>");
-                string res = rgx.Replace(content, "", 2);
-                return res;
-            }
-            else
-                return "";
+            //if (!string.IsNullOrEmpty(content))
+            //{
+            //    Regex rgx = new Regex("<p>|</p>");
+            //    string res = rgx.Replace(content, "", 2);
+            //    return res;
+            //}
+            //else
+            //    return "";
+            return content;
         }
 
         private string getDiagnostic(int id)
@@ -3735,7 +3740,7 @@ namespace PainTrax.Web.Controllers
                     strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text + ", ";
 
 
-                    stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                    stradddaigno = stradddaigno + "Cervical " + (string.IsNullOrEmpty(data.diagcervialbulge_text) ? "" : data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diagcervialbulge_text))
                         isnormal = false;
                     //}
@@ -3782,7 +3787,7 @@ namespace PainTrax.Web.Controllers
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagthoracicbulge_comma));
                     strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text + ", ";
 
-                    stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                    stradddaigno = stradddaigno + "Thoracic " + (string.IsNullOrEmpty(data.diagthoracicbulge_text) ? "" : data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
                         isnormal = false;
                     //}
@@ -3828,7 +3833,7 @@ namespace PainTrax.Web.Controllers
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
                     strDaignosis = strDaignosis + " of the lumbar spine" + strCommaValue + " " + data.diaglumberbulge_text + ", ";
 
-                    stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                    stradddaigno = stradddaigno + "Lumbar " + (!string.IsNullOrEmpty(data.diaglumberbulge_text) ? "" : data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
                         isnormal = false;
                     //}
@@ -4128,7 +4133,7 @@ namespace PainTrax.Web.Controllers
                     type = type,
                     accident_type = ieData.accident_type,
                     provider_id = ieData.provider_id,
-                    procedure_performed= ieData.procedure_performed
+                    procedure_performed = ieData.procedure_performed
 
                 };
                 fu_id = _patientFUservices.Insert(objFU);
@@ -4252,7 +4257,7 @@ namespace PainTrax.Web.Controllers
                     accident_type = fuData.accident_type,
                     provider_id = fuData.provider_id,
                     final_save = false,
-                    procedure_performed= fuData.procedure_performed
+                    procedure_performed = fuData.procedure_performed
 
                 };
                 fu_id = _patientFUservices.Insert(objFU);

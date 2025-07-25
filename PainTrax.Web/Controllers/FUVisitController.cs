@@ -691,7 +691,7 @@ namespace PainTrax.Web.Controllers
 
                     int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                     int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
-                    int age = calculateAge(model.dob.Value);
+                    int age = calculateAge(model.dob.Value, model.dov);
 
                     tbl_patient objPatient = new tbl_patient()
                     {
@@ -2855,14 +2855,14 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#Sign", "");
 
 
-                body=HtmlCleaner.CleanHtmlContent(body);
+                body = HtmlCleaner.CleanHtmlContent(body);
 
                 if (SessionDiffDoc == "true")
                 {
                     body += "<br><br><!--Diff Doc-->";
                     body += injectionHtml;
                 }
-
+                body = body.Replace("#br", "<br/>");
                 ViewBag.content = body;
 
             }
@@ -2902,11 +2902,11 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult DownloadWord(string htmlContent, int ieId, int fuId,string provName="")
+        public IActionResult DownloadWord(string htmlContent, int ieId, int fuId, string provName = "")
         {
             htmlContent = htmlContent.Replace("<p>&nbsp;</p>", "");
             //  string htmlContent = "<p>This is a <strong>sample</strong> HTML content.</p>";
-            string filePath = "", docName = "", patientName = "", injDocName = "", dos = "",dob="";
+            string filePath = "", docName = "", patientName = "", injDocName = "", dos = "", dob = "";
             string[] splitContent;
             string injHtmlContent = "";
             if (SessionDiffDoc == "true")
@@ -3068,7 +3068,7 @@ namespace PainTrax.Web.Controllers
             }
 
 
-            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos, dob=dob, injFileName = injDocName, provName= provName });
+            return Json(new { filePath = filePath, fileName = docName, patientName = patientName, dos = dos, dob = dob, injFileName = injDocName, provName = provName });
         }
 
         public MemoryStream ConvertHtmlToWord(string htmlContent)
@@ -3374,14 +3374,14 @@ namespace PainTrax.Web.Controllers
         #endregion
 
         #region Private Method
-        private int calculateAge(DateTime bday)
+        private int calculateAge(DateTime bday, DateTime? dos)
         {
-            DateTime today = DateTime.Today;
+            DateTime today = dos == null ? DateTime.Today : dos.Value;
 
             int age = today.Year - bday.Year;
 
             if (today.Month < bday.Month ||
-            ((today.Month == bday.Month) && (today.Day < bday.Day)))
+       ((today.Month == bday.Month) && (today.Day < bday.Day)))
             {
                 age--;  //birthday in current year not yet reached, we are 1 year younger ;)
                         //+ no birthday for 29.2. guys ... sorry, just wrong date for birth
@@ -3898,7 +3898,7 @@ namespace PainTrax.Web.Controllers
                     strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text + ", ";
 
 
-                    stradddaigno = stradddaigno + "Cervical " + data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                    stradddaigno = stradddaigno + "Cervical " + (string.IsNullOrEmpty(data.diagcervialbulge_text) ? "" : data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diagcervialbulge_text))
                         isnormal = false;
                     //}
@@ -3945,7 +3945,7 @@ namespace PainTrax.Web.Controllers
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagthoracicbulge_comma));
                     strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text + ", ";
 
-                    stradddaigno = stradddaigno + "Thoracic " + data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                    stradddaigno = stradddaigno + "Thoracic " + (string.IsNullOrEmpty(data.diagthoracicbulge_text) ? "" : data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
                         isnormal = false;
                     //}
@@ -3992,7 +3992,7 @@ namespace PainTrax.Web.Controllers
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
                     strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text + ", ";
 
-                    stradddaigno = stradddaigno + "Lumbar " + data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.') + ".<br/>";
+                    stradddaigno = stradddaigno + "Lumbar " + (string.IsNullOrEmpty(data.diaglumberbulge_text) ? "" : data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
                         isnormal = false;
                     //}
@@ -4072,7 +4072,7 @@ namespace PainTrax.Web.Controllers
 
                 }
 
-                
+
 
                 if (data.diagrightknee_date != null)
                 {
@@ -4121,7 +4121,7 @@ namespace PainTrax.Web.Controllers
                     }
                 }
 
-                
+
 
                 if (data.other1_date != null)
                 {
@@ -4519,7 +4519,7 @@ namespace PainTrax.Web.Controllers
                     }
                 }
 
-               
+
 
                 if (data.other1_date != null)
                 {

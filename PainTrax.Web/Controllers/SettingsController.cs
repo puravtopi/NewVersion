@@ -24,7 +24,7 @@ namespace PainTrax.Web.Controllers
                                ILogger<LocationController> logger, IConfiguration configuration)
         {
             _mapper = mapper;
-          
+
             Environment = environment;
             Configuration = configuration;
         }
@@ -88,7 +88,7 @@ namespace PainTrax.Web.Controllers
                 HttpContext.Session.SetString(SessionKeys.SessionDaignosisFoundStatment, model.foundStatment == null ? "" : model.foundStatment);
                 HttpContext.Session.SetString(SessionKeys.SessionDaignosisNotFoundStatment, model.notfoundStatment == null ? "" : model.notfoundStatment);
                 HttpContext.Session.SetString(SessionKeys.SessionInjectionAsSeparateBlock, model.injectionAsSeparateBlock.ToString().ToLower());
-                HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, model.header_template.ToString().ToLower());
+                HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, model.header_template == null ? "" : model.header_template.ToString().ToLower());
                 HttpContext.Session.SetString(SessionKeys.SessionFontFamily, model.font_family.ToString().ToLower());
                 HttpContext.Session.SetString(SessionKeys.SessionFontSize, model.font_size.ToString().ToLower());
                 HttpContext.Session.SetString(SessionKeys.SessionPreop, model.show_preop.ToString());

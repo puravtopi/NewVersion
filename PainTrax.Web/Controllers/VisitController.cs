@@ -2424,7 +2424,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#fn", patientData.fname);
                     body = body.Replace("#ln", patientData.lname);
                     body = body.Replace("#gender", gender);
-                    body = body.Replace("#pp", patientData.procedure_performed);
+                    body = body.Replace("#pp", string.IsNullOrEmpty(patientData.procedure_performed) ? "" : patientData.procedure_performed.Replace("^", "<br/>"));
 
                     body = body.Replace("#doi", Common.commonDate(patientData.doa));
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
@@ -2522,8 +2522,8 @@ namespace PainTrax.Web.Controllers
 
 
                     body = body.Replace("#Reason", string.IsNullOrEmpty(page1Data.appt_reason) ? "" : this.removePtag(page1Data.appt_reason));
-                    body = body.Replace("#CC", cc);
-                    body = body.Replace("#PE", pe);
+                    body = body.Replace("#CC", HtmlCleaner.ClearPE(cc));
+                    body = body.Replace("#PE", HtmlCleaner.ClearPE(pe));
 
                     var history = string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history;
 
@@ -2826,7 +2826,9 @@ namespace PainTrax.Web.Controllers
                 else
                     body = body.Replace("#Sign", "");
 
-                body = HtmlCleaner.CleanHtmlContent(body);
+                //body = body.Replace("<ol>", "<ol style='margin:0;padding:0;'>");
+
+                //body = HtmlCleaner.CleanHtmlContent(body);
 
                 if (SessionDiffDoc == "true")
                 {
@@ -2834,9 +2836,9 @@ namespace PainTrax.Web.Controllers
                     body += injectionHtml;
                 }
 
-                body = body.Replace("#br", "<br/>");
+                string updatedHtml = HtmlCleaner.ClearHTML(body);
 
-                ViewBag.content = body;
+                ViewBag.content = updatedHtml;
 
             }
             catch (Exception ex)
@@ -2931,8 +2933,6 @@ namespace PainTrax.Web.Controllers
             }
             return memoryStream;
         }
-
-
 
         [HttpPost]
         public IActionResult DownloadWord(string htmlContent, int ieId, string provName)
@@ -3599,14 +3599,23 @@ namespace PainTrax.Web.Controllers
                 return new Header(
                     new Paragraph(
                         new Run(
+                            new RunProperties(
+                    new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                ),
                             new Text(text1) // First line
                         ),
                         new Break(), // Line break
                         new Run(
+                            new RunProperties(
+                    new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                ),
                             new Text(text2) // Second line
                         ),
                         new Break(), // Another line break if needed
                         new Run(
+                            new RunProperties(
+                    new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                ),
                             new Text("Page ") // Static "Page " text
                         ),
                         new Run(

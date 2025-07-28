@@ -10,9 +10,9 @@ public class HtmlCleaner
         doc.LoadHtml(html);
 
         RemoveVisuallyEmptyParagraphs(doc);
+        RemoveExtraBreakTags(doc);
         ConvertParagraphsToBreaks(doc);
-        //RemoveExtraBreakTags(doc);
-     
+
         return doc.DocumentNode.OuterHtml;
 
     }
@@ -50,7 +50,7 @@ public class HtmlCleaner
 
         // Normalize <br> tags
         html = Regex.Replace(html, @"(<br\s*/?>\s*){2,}", "<br>"); // keep one <br>
-        html = Regex.Replace(html, @"(&nbsp;\s*){2,}", "&nbsp;"); // keep one &nbsp;
+        //html = Regex.Replace(html, @"(&nbsp;\s*){2,}", "&nbsp;"); // keep one &nbsp;
         html = Regex.Replace(html, @"</p>\s*<br\s*/?>", "</p>", RegexOptions.IgnoreCase);
 
         doc.LoadHtml(html); // Reload cleaned HTML back into doc
@@ -79,8 +79,42 @@ public class HtmlCleaner
             // Replace the <p> with the new fragment
             p.ParentNode.ReplaceChild(newFragment, p);
         }
+
     }
 
+    public static string ClearPE(string html)
+    {
 
+        html = Regex.Replace(html, @"<p>(\s|&nbsp;)*<\/p>", "<br/>", RegexOptions.IgnoreCase);
 
+        // Step 2: Replace <p> with nothing and </p> with <br/>
+        html = Regex.Replace(html, @"<p[^>]*>", "", RegexOptions.IgnoreCase);
+        html = Regex.Replace(html, @"<\/p>", "<br/>", RegexOptions.IgnoreCase);
+
+        return html;
+
+    }
+    public static string ClearHTML(string body)
+    {
+        body = body.Replace("#br", "<br/>");
+        body = body.Replace("<p>&nbsp;</p>", "");
+        body = body.Replace("<p></p>", "");
+        body = body.Replace("<br>&nbsp;", "<br/>");
+        string updatedHtml = Regex.Replace(body, @"(<br\s*/?>\s*){2,}", "<br/><br/>");
+
+        updatedHtml = updatedHtml.Replace("</p><br/><br/>", "</p>");
+        updatedHtml = updatedHtml.Replace("</p>&nbsp;<br/><br/>", "</p>");
+        updatedHtml = updatedHtml.Replace("<br/><p><br></p>", "");
+        updatedHtml = updatedHtml.Replace("<br><p><br></p>", "");
+        updatedHtml = updatedHtml.Replace("<br><p>", "<p>");
+        updatedHtml = updatedHtml.Replace("<br><br></p>", "</p>");
+        updatedHtml = updatedHtml.Replace("<br/><br/></p>", "</p>");
+        updatedHtml = updatedHtml.Replace("<br/></p>", "</p>");
+        updatedHtml = updatedHtml.Replace("<br></p>", "</p>");
+        updatedHtml = updatedHtml.Replace("<p><br>", "<p>");
+        updatedHtml = updatedHtml.Replace("</p><br>", "</p>");
+        updatedHtml = updatedHtml.Replace("</figure><br/><br/>", "</figure>");
+
+        return updatedHtml;
+    }
 }

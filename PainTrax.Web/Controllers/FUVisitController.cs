@@ -2489,7 +2489,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#location", patientData.location);
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
                     body = body.Replace("#gender", gender);
-                    body = body.Replace("#pp", fuData.procedure_performed);
+                    body = body.Replace("#pp", string.IsNullOrEmpty(fuData.procedure_performed) ? "" : fuData.procedure_performed.Replace("^", "<br/>"));
                     body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
 
 
@@ -2561,8 +2561,8 @@ namespace PainTrax.Web.Controllers
                     }
 
 
-                    body = body.Replace("#CC", cc);
-                    body = body.Replace("#PE", pe);
+                    body = body.Replace("#CC", HtmlCleaner.ClearPE(cc));
+                    body = body.Replace("#PE", HtmlCleaner.ClearPE(pe));
                     var history = string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history;
                     var hstryPresentIllness = string.IsNullOrEmpty(page1Data.history) ? "" : "<b>HISTORY OF PRESENT ILLNESS:</b>" + page1Data.history;
 
@@ -2862,8 +2862,10 @@ namespace PainTrax.Web.Controllers
                     body += "<br><br><!--Diff Doc-->";
                     body += injectionHtml;
                 }
-                body = body.Replace("#br", "<br/>");
-                ViewBag.content = body;
+
+                string updatedHtml = HtmlCleaner.ClearHTML(body);
+
+                ViewBag.content = updatedHtml;
 
             }
             catch (Exception ex)

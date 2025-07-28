@@ -42,7 +42,7 @@
                                                 <option value="50">50</option>
                                                 <option value="100">100</option>
                                             </select>
-                                            <span asp-validation-for="page_size" class="text-danger"></span>
+                                         @*    <span asp-validation-for="page_size" class="text-danger"></span> *@
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -376,10 +376,3 @@
 </script>
 
 
-@section Scripts {
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
-}

@@ -2443,6 +2443,7 @@ namespace PainTrax.Web.Controllers
                     else
                         body = body.Replace("#Sign", "");
                 }
+                    body = body.Replace("#br", "<br/>");
                 ViewBag.content = body;
             }
             catch (Exception ex)
@@ -2564,7 +2565,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#CC", cc);
                     body = body.Replace("#PE", pe);
                     var history = string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history;
-                    var hstryPresentIllness = string.IsNullOrEmpty(page1Data.history) ? "" : "<b>HISTORY OF PRESENT ILLNESS:</b>" + page1Data.history;
+                    var hstryPresentIllness = string.IsNullOrEmpty(page1Data.history) ? "" : "<p><b>HISTORY OF PRESENT ILLNESS:</b>" + page1Data.history.Replace("<p>", "<span>").Replace("</p>", "</span>") + "</p>";
 
                     history = history.Replace("#dos", Common.commonDate(patientData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
                     history = history.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));

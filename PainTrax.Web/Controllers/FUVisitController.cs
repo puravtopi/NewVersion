@@ -2042,6 +2042,7 @@ namespace PainTrax.Web.Controllers
 
 
             bodyparts = bodyparts.Replace("_", " ");
+            bodyparts = bodyparts.TrimEnd();
             ViewBag.BodyPart = bodyparts.ToUpper();
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 

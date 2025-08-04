@@ -129,6 +129,7 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionPreop, setting.show_preop == null ? "true" : setting.show_preop.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionGAIT, setting.gait_default==null?"": setting.gait_default.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionFUDate, setting.fu_default==null?"": setting.fu_default.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionSideCase, setting.casetype==null?"U": setting.casetype.ToString());
 
                     }
                     else
@@ -141,7 +142,7 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, "");
                         HttpContext.Session.SetString(SessionKeys.SessionPreop, "true");
                         HttpContext.Session.SetString(SessionKeys.SessionPostop, "true");
-
+                        HttpContext.Session.SetString(SessionKeys.SessionSideCase,"U");
 
                     }
 

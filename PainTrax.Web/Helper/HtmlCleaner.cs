@@ -103,6 +103,7 @@ public class HtmlCleaner
         string updatedHtml = Regex.Replace(body, @"(<br\s*/?>\s*){2,}", "<br/><br/>");
 
         updatedHtml = updatedHtml.Replace("</p><br/><br/>", "</p>");
+        updatedHtml = updatedHtml.Replace("</p><br><br>", "</p>");
         updatedHtml = updatedHtml.Replace("</p>&nbsp;<br/><br/>", "</p>");
         updatedHtml = updatedHtml.Replace("<br/><p><br></p>", "");
         updatedHtml = updatedHtml.Replace("<br><p><br></p>", "");
@@ -114,6 +115,8 @@ public class HtmlCleaner
         updatedHtml = updatedHtml.Replace("<p><br>", "<p>");
         updatedHtml = updatedHtml.Replace("</p><br>", "</p>");
         updatedHtml = updatedHtml.Replace("</figure><br/><br/>", "</figure>");
+        updatedHtml = updatedHtml.Replace("</ol><br><br>", "</ol>");
+        updatedHtml = updatedHtml.Replace("</ol><br/><br/>", "</ol>");
 
         return updatedHtml;
     }

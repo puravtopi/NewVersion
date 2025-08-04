@@ -33,6 +33,7 @@
         public static string SessionPostop = "postop";
         public static string SessionGAIT = "GAIT";
         public static string SessionFUDate = "FuDate";
+        public static string SessionSideCase = "SideCase";
 
         public static string Sessiondldoe = "dldoe";
         public static string Sessiondldlloc = "dlloc";

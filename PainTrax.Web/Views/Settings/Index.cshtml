@@ -133,6 +133,16 @@
                                         </div>
                                     </div>
                                     <div class="row mb-3">
+                                        <label for="title" asp-for="casetype" class="col-md-4 col-lg-3 col-form-label">Side Case</label>
+                                        <div class="col-md-8 col-lg-9">
+                                            <select class="form-select" asp-for="casetype">
+                                                <option value="U">Upper</option>
+                                                <option value="L">Lower</option>
+                                                <option value="M">Mix</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
                                         <label for="title" asp-for="injectionAsSeparateBlock" class="col-md-4 col-lg-3 col-form-label">Diagnostics Settings</label>
                                         <div class="col-md-1 col-lg-1">
                                             <input type="checkbox" asp-for="isdaignosisshow" />

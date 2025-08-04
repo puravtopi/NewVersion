@@ -93,8 +93,9 @@ namespace PainTrax.Web.Controllers
                 HttpContext.Session.SetString(SessionKeys.SessionFontSize, model.font_size.ToString().ToLower());
                 HttpContext.Session.SetString(SessionKeys.SessionPreop, model.show_preop.ToString());
                 HttpContext.Session.SetString(SessionKeys.SessionPostop, model.show_postop.ToString());
-                HttpContext.Session.SetString(SessionKeys.SessionGAIT, model.gait_default.ToString());
-                HttpContext.Session.SetString(SessionKeys.SessionFUDate, model.fu_default.ToString());
+                HttpContext.Session.SetString(SessionKeys.SessionGAIT, model.gait_default == null ? "" : model.gait_default.ToString());
+                HttpContext.Session.SetString(SessionKeys.SessionFUDate, model.fu_default == null ? "" : model.fu_default.ToString());
+                HttpContext.Session.SetString(SessionKeys.SessionSideCase, model.casetype == null ? "U" : model.casetype.ToString());
 
                 ViewBag.Message = "Settings Updated Successfully";
                 return View(model);

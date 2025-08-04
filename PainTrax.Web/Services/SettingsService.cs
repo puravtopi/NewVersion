@@ -86,6 +86,7 @@ gait_default=@gait_default,
 fu_default=@fu_default,
 show_postop=@show_postop,
 sign_content=@sign_content,
+casetype=@casetype,
 diagcervialbulge_comma=@diagcervialbulge_comma,
 diagthoracicbulge_comma=@diagthoracicbulge_comma,
 diaglumberbulge_comma=@diaglumberbulge_comma,
@@ -119,6 +120,7 @@ other7_comma=@other7_comma
             cm.Parameters.AddWithValue("@sign_content", data.sign_content);
             cm.Parameters.AddWithValue("@gait_default", data.gait_default);
             cm.Parameters.AddWithValue("@fu_default", data.fu_default);
+            cm.Parameters.AddWithValue("@casetype", data.casetype);
             cm.Parameters.AddWithValue("@diagcervialbulge_comma", data.diagcervialbulge_comma);
             cm.Parameters.AddWithValue("@diagthoracicbulge_comma", data.diagthoracicbulge_comma);
             cm.Parameters.AddWithValue("@diaglumberbulge_comma", data.diaglumberbulge_comma);

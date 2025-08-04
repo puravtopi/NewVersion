@@ -41,7 +41,7 @@ public class PatientIEService : ParentService
     public tbl_patient_fu? GetLastFU(int data,string type)
     {
         DataTable dt = new DataTable();
-        MySqlCommand cm = new MySqlCommand("select * from tbl_patient_fu where patientIE_ID=@id and type=@type order by id desc LIMIT 1", conn);
+        MySqlCommand cm = new MySqlCommand("select * from tbl_patient_fu where patientIE_ID=@id and ((@type = 'FU' AND type IN ('FU', 'Tele FU')) OR (@type = 'Tele FU' AND type IN ('FU', 'Tele FU')) OR (@type != 'FU' AND type = @type)) order by id desc LIMIT 1", conn);
         cm.Parameters.AddWithValue("@id", data);
         cm.Parameters.AddWithValue("@type", type);
         var datalist = ConvertDataTable<tbl_patient_fu>(GetData(cm)).FirstOrDefault();

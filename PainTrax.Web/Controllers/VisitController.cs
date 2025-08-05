@@ -1409,6 +1409,7 @@ namespace PainTrax.Web.Controllers
                     assetment = page1Data.assessment;
 
                 bodyparts = bodyparts.Replace("_", " ");
+                bodyparts = bodyparts.TrimEnd();
                 ViewBag.BodyPart = bodyparts.ToUpper();
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 

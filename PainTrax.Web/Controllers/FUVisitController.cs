@@ -2042,6 +2042,7 @@ namespace PainTrax.Web.Controllers
 
 
             bodyparts = bodyparts.Replace("_", " ");
+            bodyparts = bodyparts.TrimEnd();
             ViewBag.BodyPart = bodyparts.ToUpper();
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
@@ -2565,7 +2566,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#CC", HtmlCleaner.ClearPE(cc));
                     body = body.Replace("#PE", HtmlCleaner.ClearPE(pe));
                     var history = string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history;
-                    var hstryPresentIllness = string.IsNullOrEmpty(page1Data.history) ? "" : "<p><b>HISTORY OF PRESENT ILLNESS:</b>" + page1Data.history.Replace("<p>", "<span>").Replace("</p>", "</span>") + "</p>";
+                    var hstryPresentIllness = string.IsNullOrEmpty(page1Data.history) ? "" : "<p><b>HISTORY OF PRESENT ILLNESS: </b>" + page1Data.history.Replace("<p>", "<span>").Replace("</p>", "</span>") + "</p>";
 
                     history = history.Replace("#dos", Common.commonDate(patientData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
                     history = history.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));

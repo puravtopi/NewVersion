@@ -1161,8 +1161,12 @@
         var alertNote = $("#alert_note").val();
 
         if (alertNote != '') {
-            $('#myModalMessage').modal('show');
+            $('.modal-title').text('Alert');
+            var myModal = new bootstrap.Modal(document.getElementById('myModalMessage'));
+            myModal.show();
+            // $('#myModalMessage').modal('show');
             $('#messBody').html("<p>" + alertNote + "</p>");
+
         }
 
         $('#locationid').change(function () {

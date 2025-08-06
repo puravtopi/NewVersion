@@ -2381,7 +2381,7 @@ namespace PainTrax.Web.Controllers
         }
         #endregion
 
-        #region PrintIE
+        #region PrintIE 
 
         public IActionResult IEPrint(int id)
         {
@@ -2547,9 +2547,6 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
 
 
-
-
-
                     body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
                     body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart).ToString().Replace(",", ", "));
 
@@ -2595,7 +2592,13 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#Allergies", this.removePtag(page1Data.allergies));
                     body = body.Replace("#FamilyHistory", this.removePtag(page1Data.family_history));
                     body = body.Replace("#Vital", this.removePtag(page1Data.vital));
-                    body = body.Replace("#Diagnoses", this.removePtag(assessment));
+                    string updatedAssessment = Regex.Replace(
+            assessment,
+            @"<p>",
+            "<p style='margin-bottom: 0rem !important'>",
+            RegexOptions.IgnoreCase
+        );
+                    body = body.Replace("#Diagnoses", this.removePtag(updatedAssessment));
                     body = body.Replace("#Occupation", this.removePtag(page1Data.occupation));
                     body = body.Replace("#PastMedications", this.removePtag(page1Data.medication));
                     body = body.Replace("#DD", this.removePtag(page1Data.dd));
@@ -2799,7 +2802,8 @@ namespace PainTrax.Web.Controllers
                 {
                     signUserId = providorId.Value;
                 }
-
+                body = HtmlCleaner.ClearHTML(body);
+                ViewBag.content = body;
                 if (signUserId > 0)
                 {
                     tbl_users _user = new tbl_users()
@@ -2836,10 +2840,9 @@ namespace PainTrax.Web.Controllers
                     body += "<br><br><!--Diff Doc-->";
                     body += injectionHtml;
                 }
+            
 
-                string updatedHtml = HtmlCleaner.ClearHTML(body);
-
-                ViewBag.content = updatedHtml;
+                ViewBag.content = body;
 
             }
             catch (Exception ex)
@@ -3110,6 +3113,42 @@ namespace PainTrax.Web.Controllers
                     }
                 }
             }
+
+
+            //using (WordprocessingDocument wdDoc = WordprocessingDocument.Open(filePath, true))
+            //{
+            //    var mainPart = wdDoc.MainDocumentPart;
+
+            //    // Loop through all paragraphs in the main document body
+            //    foreach (var para in mainPart.Document.Body.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
+            //    {
+            //        NormalizeParagraphSpacing(para);
+            //    }
+
+            //    // Optionally also update headers and footers
+            //    foreach (var header in mainPart.HeaderParts)
+            //    {
+            //        foreach (var para in header.RootElement.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
+            //        {
+            //            NormalizeParagraphSpacing(para);
+            //        }
+            //        header.RootElement.Save();
+            //    }
+
+            //    foreach (var footer in mainPart.FooterParts)
+            //    {
+            //        foreach (var para in footer.RootElement.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
+            //        {
+            //            NormalizeParagraphSpacing(para);
+            //        }
+            //        footer.RootElement.Save();
+            //    }
+
+            //    mainPart.Document.Save(); // Save document
+            //}
+
+
+
             byte[] data = System.IO.File.ReadAllBytes(filePath);
             byte[] injdata = new byte[0];
             if (System.IO.File.Exists(injFileName))
@@ -3150,6 +3189,29 @@ namespace PainTrax.Web.Controllers
             }
 
         }
+
+        private static void NormalizeParagraphSpacing(DocumentFormat.OpenXml.Wordprocessing.Paragraph para)
+        {
+            var pPr = para.Elements<DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties>().FirstOrDefault();
+            if (pPr == null)
+            {
+                pPr = new DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties();
+                para.PrependChild(pPr);
+            }
+
+            var spacing = pPr.Elements<DocumentFormat.OpenXml.Wordprocessing.SpacingBetweenLines>().FirstOrDefault();
+            if (spacing == null)
+            {
+                spacing = new DocumentFormat.OpenXml.Wordprocessing.SpacingBetweenLines();
+                pPr.Append(spacing);
+            }
+
+            spacing.Before = "0";         // Remove space before
+            spacing.After = "0";          // Remove space after
+            spacing.Line = "240";         // 240 = single line spacing
+            spacing.LineRule = DocumentFormat.OpenXml.Wordprocessing.LineSpacingRuleValues.Auto;
+        }
+
 
         private int calculateAge(DateTime bday, DateTime? dos)
         {
@@ -3472,6 +3534,7 @@ namespace PainTrax.Web.Controllers
 
                     if (firstHeader != null)
                     {
+
                         headerPart.FeedData(firstHeader.GetStream());
                     }
 
@@ -3510,6 +3573,31 @@ namespace PainTrax.Web.Controllers
 
                     // Update relationships in header XML
                     UpdateHeaderXml(headerPart, imageRelMapping, provName);
+
+
+
+                    foreach (var para in headerPart.Header.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
+                    {
+                        // Normalize spacing
+                        var pPr = para.Elements<DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties>().FirstOrDefault();
+                        if (pPr == null)
+                        {
+                            pPr = new DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties();
+                            para.PrependChild(pPr);
+                        }
+
+                        var spacing = pPr.Elements<DocumentFormat.OpenXml.Wordprocessing.SpacingBetweenLines>().FirstOrDefault();
+                        if (spacing == null)
+                        {
+                            spacing = new DocumentFormat.OpenXml.Wordprocessing.SpacingBetweenLines();
+                            pPr.Append(spacing);
+                        }
+
+                        spacing.Before = "0";         // Remove space before
+                        spacing.After = "0";          // Remove space after
+                        spacing.Line = "240";         // 240 = single line spacing
+                        spacing.LineRule = DocumentFormat.OpenXml.Wordprocessing.LineSpacingRuleValues.Auto;
+                    }
 
                     //Dictionary<string, string> textReplacements = new Dictionary<string, string>
                     //    {
@@ -3573,11 +3661,11 @@ namespace PainTrax.Web.Controllers
                 headerXml = headerXml.Replace($"r:id=\"{kvp.Key}\"", $"r:id=\"{kvp.Value}\"");
             }
             //this 2 lines
-            headerXml = headerXml
-                     .Replace("<w:t>@</w:t><w:t>drname</w:t><w:t>@</w:t>", "<w:t>@drname@</w:t>");
+            //headerXml = headerXml
+            //         .Replace("<w:t>@</w:t><w:t>drname</w:t><w:t>@</w:t>", "<w:t>@drname@</w:t>");
 
             // Step 3: Replace placeholders
-            headerXml = headerXml.Replace("@drname@", provName);
+            headerXml = headerXml.Replace("drname", provName == null ? "" : provName);
 
             // Write the updated XML back to the header part
             using (MemoryStream memStream = new MemoryStream())
@@ -3710,14 +3798,14 @@ namespace PainTrax.Web.Controllers
 
         private string removePtag(string content)
         {
-            //if (!string.IsNullOrEmpty(content))
-            //{
-            //    Regex rgx = new Regex("<p>|</p>");
-            //    string res = rgx.Replace(content, "", 2);
-            //    return res;
-            //}
-            //else
-            //    return "";
+            if (!string.IsNullOrEmpty(content))
+            {
+                Regex rgx = new Regex("<p>|</p>");
+                string res = rgx.Replace(content, "", 2);
+                return res;
+            }
+            else
+                return "";
             return content;
         }
 

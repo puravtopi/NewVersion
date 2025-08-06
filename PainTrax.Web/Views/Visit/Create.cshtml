@@ -1056,10 +1056,12 @@
         $("body").addClass("toggle-sidebar");
 
         var alertNote = $("#alert_note").val();
-
+        
         if (alertNote != '') {
             $('.modal-title').text('Alert');
-            $('#myModalMessage').modal('show');
+            var myModal = new bootstrap.Modal(document.getElementById('myModalMessage'));
+            myModal.show();
+           // $('#myModalMessage').modal('show');
             $('#messBody').html("<p>" + alertNote + "</p>");
 
         }

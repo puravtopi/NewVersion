@@ -1245,8 +1245,8 @@ namespace PainTrax.Web.Controllers
                 data = model.id.Value;
                 _ieService.UpdateComment(model);
             }
-            //else
-            //   _fuCommentService.Insert(model);
+            else
+                _ieService.InsertComment(model);
 
             return Json(data);
         }

@@ -85,33 +85,38 @@
                         </div>
                     </div>
                     @{
-                        var cmpCode = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
+                        var sideCase = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionSideCase);
                     }
 
-                   @*  <div class="row mb-3" id="divSide">
+                    <div class="row mb-3" id="divSide">
                         <label id="Sidelbl" class="col-sm-2 col-form-label">Side</label>
                         <div class="col-sm-4">
                             <select id="Side" class="form-control">
-                                @if (cmpCode == "MNPLLC")
+                                @if (sideCase == "U")
                                 {
                                     <option value=" ">--Select--</option>
-                                    <option value="Left">LEFT</option>
-                                    <option value="Right">RIGHT</option>
-                                    <option value="Bilateral">BILATERAL</option>
+                                    <option value="LEFT">LEFT</option>
+                                    <option value="RIGHT">RIGHT</option>
+                                    <option value="BILATERAL">BILATERAL</option>
                                 }
-                                else
+                                else if(sideCase=="M")
                                 {
                                     <option value=" ">--Select--</option>
                                     <option value="Left">Left</option>
                                     <option value="Right">Right</option>
                                     <option value="Bilateral">Bilateral</option>
                                 
+                                }else {
+                                    <option value=" ">--Select--</option>
+                                    <option value="left">left</option>
+                                    <option value="right">right</option>
+                                    <option value="bilateral">bilateral</option>
                                 }
                                
                             </select>
                         </div>
-                    </div> *@
-                    <div class="row mb-3" id="divSide">
+                    </div>
+                   @*  <div class="row mb-3" id="divSide">
                         <label id="Sidelbl" class="col-sm-2 col-form-label">Side</label>
                         <div class="col-sm-4">
                             <select id="Side" class="form-control">
@@ -121,7 +126,7 @@
                                 <option value="Bilateral">BILATERAL</option>
                             </select>
                         </div>
-                    </div>
+                    </div> *@
 
                     <div class="row mb-3" id="divMuscle">
                         <label id="Musclelbl" class="col-sm-2 col-form-label">Muscle</label>

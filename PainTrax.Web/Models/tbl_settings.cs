@@ -21,6 +21,7 @@
         public bool show_preop { get; set; }        
         public bool show_postop { get; set; }
         public string? sign_content { get; set; }
+        public string? casetype { get; set; }
         public string? diagcervialbulge_comma { get; set; }
         public string? diagthoracicbulge_comma { get; set; }
         public string? diaglumberbulge_comma { get; set; }

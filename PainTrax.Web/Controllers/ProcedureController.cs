@@ -216,7 +216,6 @@ namespace PainTrax.Web.Controllers
 
         public IActionResult ImportData(IFormFile postedFile)
         {
-            
             try
             {
                 if (postedFile != null && postedFile.Length > 0)
@@ -238,74 +237,38 @@ namespace PainTrax.Web.Controllers
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         tbl_procedures obj = new tbl_procedures();
+
                         obj.cmp_id = cmpid;
-                        obj.mcode = dt.Rows[i]["MCode"].ToString();
-                        obj.bodypart = dt.Rows[i]["BodyPart"].ToString();
-                        obj.heading = dt.Rows[i]["Heading"].ToString();
-                        obj.ccdesc = dt.Rows[i]["CCDesc"].ToString().Replace("'s", "");
-                        obj.pedesc = dt.Rows[i]["PEDesc"].ToString().Replace("'s", "");
-                        obj.adesc = dt.Rows[i]["ADesc"].ToString().Replace("'s", "");
-                        obj.pdesc = dt.Rows[i]["PDesc"].ToString().Replace("'s", "");
-                        obj.cf = ConvertToBoolean(dt.Rows[i]["cf"]);
-                        obj.pn = ConvertToBoolean(dt.Rows[i]["pn"]);
-                        obj.preselect = ConvertToBoolean(dt.Rows[i]["PreSelect"]);
-                        obj.display_order = string.IsNullOrEmpty(dt.Rows[i]["DisplayOrder"].ToString()) ? 0 : Convert.ToInt16(dt.Rows[i]["DisplayOrder"].ToString());
-                        obj.position = dt.Rows[i]["Position"].ToString();
-                        obj.inhouseprocbit = ConvertToBoolean(dt.Rows[i]["InHouseProcbit"]);
-                        obj.haslevel = ConvertToBoolean(dt.Rows[i]["haslevel"]);
-                        obj.hasmuscle = dt.Rows[i]["Muscle"].ToString();
-                        obj.hasmedication = dt.Rows[i]["HasMedication"].ToString();
-                        obj.inout = ConvertToBoolean(dt.Rows[i]["inout"]);
-                        obj.sides = ConvertToBoolean(dt.Rows[i]["sides"]);
-                        obj.hassubprocedure = dt.Rows[i]["SubProcedure"].ToString();
-                        obj.s_ccdesc = dt.Rows[i]["S_CCDesc"].ToString().Replace("'s", "");
-                        obj.s_pedesc = dt.Rows[i]["S_PEDesc"].ToString().Replace("'s", "");
-                        obj.s_adesc = dt.Rows[i]["S_ADesc"].ToString().Replace("'s", "");
-                        obj.s_pdesc = dt.Rows[i]["S_PDesc"].ToString().Replace("'s", "");
-                        obj.e_ccdesc = dt.Rows[i]["E_CCDesc"].ToString().Replace("'s", "");
-                        obj.e_pedesc = dt.Rows[i]["E_PEDesc"].ToString().Replace("'s", "");
-                        obj.e_adesc = dt.Rows[i]["E_ADesc"].ToString().Replace("'s", "");
-                        obj.e_pdesc = dt.Rows[i]["E_PDesc"].ToString().Replace("'s", "");
-                        obj.s_heading = dt.Rows[i]["S_Heading"].ToString();
-                        obj.e_heading = dt.Rows[i]["E_Heading"].ToString().Replace("'s", "");
-                        obj.levelsdefault = dt.Rows[i]["LevelsDefault"].ToString();
-                        obj.sidesdefault = dt.Rows[i]["SidesDefault"].ToString();            
-                        
-                        
-                        //obj.mcode_desc = dt.Rows[i]["MCodeDesc"].ToString();
-
-
-                        //obj.cmp_id = cmpid;
-                        //obj.position = dt.Rows[i]["Position"].ToString();
-                        //obj.display_order = string.IsNullOrEmpty(dt.Rows[i]["DO"].ToString()) ? 0 : Convert.ToInt16(dt.Rows[i]["DO"].ToString());
-                        //obj.hasmuscle = dt.Rows[i]["Muscle"].ToString();
-                        //obj.hassubprocedure = dt.Rows[i]["SubProcedure"].ToString();
-                        //obj.pedesc = dt.Rows[i]["R_PEDesc"].ToString().Replace("'s", "");
-                        //obj.pdesc = dt.Rows[i]["R_PDesc"].ToString().Replace("'s", "");
-                        //obj.s_ccdesc = dt.Rows[i]["S_CCDesc"].ToString().Replace("'s", "");
-                        //obj.s_adesc = dt.Rows[i]["S_ADesc"].ToString().Replace("'s", "");
-                        //obj.e_heading = dt.Rows[i]["E_Heading"].ToString().Replace("'s", "");
-                        //obj.e_pedesc = dt.Rows[i]["E_PEDesc"].ToString().Replace("'s", "");
-                        //obj.e_pdesc = dt.Rows[i]["E_PDesc"].ToString().Replace("'s", "");
-                        //obj.sidesdefault = dt.Rows[i]["SidesDefault"].ToString();
-                        //obj.inhouseprocbit = ConvertToBoolean(dt.Rows[i]["InHouseProcbit"]);
-                        //obj.sides = ConvertToBoolean(dt.Rows[i]["sides"]);
-                        //obj.haslevel = ConvertToBoolean(dt.Rows[i]["haslevel"]);
-                        //obj.cf = ConvertToBoolean(dt.Rows[i]["cf"]);
-                        //obj.pn = ConvertToBoolean(dt.Rows[i]["pn"]);
-                        //obj.inout = ConvertToBoolean(dt.Rows[i]["inout"]);
-                        //obj.bodypart = dt.Rows[i]["BodyPart"].ToString();
-                        //obj.heading = dt.Rows[i]["Heading"].ToString();
-                        //obj.hasmedication = dt.Rows[i]["HasMedication"].ToString();
-                        //obj.ccdesc = dt.Rows[i]["CCDesc"].ToString().Replace("'s", "");
-                        //obj.adesc = dt.Rows[i]["ADesc"].ToString().Replace("'s", "");
-                        //obj.s_heading = dt.Rows[i]["S_Heading"].ToString();
-                        //obj.s_pedesc = dt.Rows[i]["S_PEDesc"].ToString().Replace("'s", "");
-                        //obj.e_ccdesc = dt.Rows[i]["E_CCDesc"].ToString().Replace("'s", "");
-                        //obj.e_adesc = dt.Rows[i]["E_ADesc"].ToString().Replace("'s", "");
-                        //obj.levelsdefault = dt.Rows[i]["LevelsDefault"].ToString();
-                        //obj.mcode = dt.Rows[i]["MCode"].ToString();
-                        //obj.mcode_desc = dt.Rows[i]["MCodeDesc"].ToString();
+                        obj.position = (dt.Columns.Contains("Position") && dt.Rows[i]["Position"] != DBNull.Value ? dt.Rows[i]["Position"].ToString() : "");
+                        obj.display_order = (dt.Columns.Contains("DO") && dt.Rows[i]["DO"] != DBNull.Value ? Convert.ToInt16(dt.Rows[i]["DO"].ToString()) : 0);
+                        obj.hasmuscle = (dt.Columns.Contains("Muscle") && dt.Rows[i]["Muscle"] != DBNull.Value ? dt.Rows[i]["Muscle"].ToString() : "");
+                        obj.hassubprocedure = (dt.Columns.Contains("SubProcedure") && dt.Rows[i]["SubProcedure"] != DBNull.Value ? dt.Rows[i]["SubProcedure"].ToString() : "");
+                        obj.pedesc = (dt.Columns.Contains("R_PEDesc") && dt.Rows[i]["R_PEDesc"] != DBNull.Value ? dt.Rows[i]["R_PEDesc"].ToString().Replace("'s", "") : "");
+                        obj.pdesc = (dt.Columns.Contains("R_PDesc") && dt.Rows[i]["R_PDesc"] != DBNull.Value ? dt.Rows[i]["R_PDesc"].ToString().Replace("'s", "") : "");
+                        obj.s_ccdesc = (dt.Columns.Contains("S_CCDesc") && dt.Rows[i]["S_CCDesc"] != DBNull.Value ? dt.Rows[i]["S_CCDesc"].ToString().Replace("'s", "") : ""); 
+                        obj.s_adesc = (dt.Columns.Contains("S_ADesc") && dt.Rows[i]["S_ADesc"] != DBNull.Value ? dt.Rows[i]["S_ADesc"].ToString().Replace("'s", "") : "");
+                        obj.e_heading = (dt.Columns.Contains("E_Heading") && dt.Rows[i]["E_Heading"] != DBNull.Value ? dt.Rows[i]["E_Heading"].ToString().Replace("'s", "") : ""); 
+                        obj.e_pedesc = (dt.Columns.Contains("E_PEDesc") && dt.Rows[i]["E_PEDesc"] != DBNull.Value ? dt.Rows[i]["E_PEDesc"].ToString().Replace("'s", "") : "");
+                        obj.e_pdesc = (dt.Columns.Contains("E_PDesc") && dt.Rows[i]["E_PDesc"] != DBNull.Value ? dt.Rows[i]["E_PDesc"].ToString().Replace("'s", "") : "");
+                        obj.sidesdefault = (dt.Columns.Contains("SidesDefault") && dt.Rows[i]["SidesDefault"] != DBNull.Value ? dt.Rows[i]["SidesDefault"].ToString() : ""); 
+                        obj.inhouseprocbit = (dt.Columns.Contains("InHouseProcbit") && dt.Rows[i]["InHouseProcbit"] != DBNull.Value ? ConvertToBoolean(dt.Rows[i]["InHouseProcbit"]) : false);
+                        obj.sides = (dt.Columns.Contains("sides") && dt.Rows[i]["sides"] != DBNull.Value ? ConvertToBoolean(dt.Rows[i]["sides"]) : false);
+                        obj.haslevel = (dt.Columns.Contains("haslevel") && dt.Rows[i]["haslevel"] != DBNull.Value ? ConvertToBoolean(dt.Rows[i]["haslevel"]) : false);
+                        obj.cf = (dt.Columns.Contains("cf") && dt.Rows[i]["cf"] != DBNull.Value ? ConvertToBoolean(dt.Rows[i]["cf"]) : false); 
+                        obj.pn = (dt.Columns.Contains("pn") && dt.Rows[i]["pn"] != DBNull.Value ? ConvertToBoolean(dt.Rows[i]["pn"]) : false); 
+                        obj.inout = (dt.Columns.Contains("inout") && dt.Rows[i]["inout"] != DBNull.Value ? ConvertToBoolean(dt.Rows[i]["inout"]) : false); 
+                        obj.bodypart = (dt.Columns.Contains("BodyPart") && dt.Rows[i]["BodyPart"] != DBNull.Value ? dt.Rows[i]["BodyPart"].ToString() : "");
+                        obj.heading = (dt.Columns.Contains("Heading") && dt.Rows[i]["Heading"] != DBNull.Value ? dt.Rows[i]["Heading"].ToString() : "");
+                        obj.hasmedication = (dt.Columns.Contains("HasMedication") && dt.Rows[i]["HasMedication"] != DBNull.Value ? dt.Rows[i]["HasMedication"].ToString() : ""); 
+                        obj.ccdesc = (dt.Columns.Contains("CCDesc") && dt.Rows[i]["CCDesc"] != DBNull.Value ? dt.Rows[i]["CCDesc"].ToString().Replace("'s", "") : ""); 
+                        obj.adesc = (dt.Columns.Contains("ADesc") && dt.Rows[i]["ADesc"] != DBNull.Value ? dt.Rows[i]["ADesc"].ToString().Replace("'s", "") : "");
+                        obj.s_heading = (dt.Columns.Contains("S_Heading") && dt.Rows[i]["S_Heading"] != DBNull.Value ? dt.Rows[i]["S_Heading"].ToString().Replace("'s", "") : ""); 
+                        obj.s_pedesc = (dt.Columns.Contains("S_PEDesc") && dt.Rows[i]["S_PEDesc"] != DBNull.Value ? dt.Rows[i]["S_PEDesc"].ToString().Replace("'s", "") : "");
+                        obj.e_ccdesc = (dt.Columns.Contains("E_CCDesc") && dt.Rows[i]["E_CCDesc"] != DBNull.Value ? dt.Rows[i]["E_CCDesc"].ToString().Replace("'s", "") : "");
+                        obj.e_adesc = (dt.Columns.Contains("E_ADesc") && dt.Rows[i]["E_ADesc"] != DBNull.Value ? dt.Rows[i]["E_ADesc"].ToString().Replace("'s", "") : ""); 
+                        obj.levelsdefault = (dt.Columns.Contains("LevelsDefault") && dt.Rows[i]["LevelsDefault"] != DBNull.Value ? dt.Rows[i]["LevelsDefault"].ToString() : "");
+                        obj.mcode = (dt.Columns.Contains("MCode") && dt.Rows[i]["MCode"] != DBNull.Value ? dt.Rows[i]["MCode"].ToString() : "");
+                        obj.mcode_desc = (dt.Columns.Contains("MCodeDesc") && dt.Rows[i]["MCodeDesc"] != DBNull.Value ? dt.Rows[i]["MCodeDesc"].ToString() : "");
 
 
                         _services.Insert(obj);

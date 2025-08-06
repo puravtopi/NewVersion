@@ -2333,6 +2333,7 @@ namespace PainTrax.Web.Controllers
 
                 var templateData = _printService.GetTemplate(cmpid, fuData.type);
                 var gender = "";
+                var page1Data = _fuPage1services.GetOne(fuid);
                 var postData = _fuPostService.GetOne(fuid);
                 body = templateData.content;
                 var data = getPOCDate(fuid, ieid);
@@ -2396,6 +2397,15 @@ namespace PainTrax.Web.Controllers
 
                     body = body.Replace("#PhysicalExamination", string.IsNullOrEmpty(postData.txtPhysicalExamination) ? "" : this.removePtag(postData.txtPhysicalExamination));
                     body = body.Replace("#TREATMENT", string.IsNullOrEmpty(postData.txtExaminedResult) ? "" : this.removePtag(postData.txtExaminedResult));
+                    if (patientData.compensation == "WC")
+                    {
+                        var dd = string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd;
+                        var workstatus = string.IsNullOrEmpty(page1Data.work_status) ? "" : page1Data.work_status;
+                        var impart = "<p><b>IMPAIRMENT RATING: </b>" + dd + "" + workstatus + "</p>";
+
+                        body = body.Replace("#impart", impart);
+
+                    }
 
                     ViewBag.ieId = patientData.id;
                     ViewBag.fuId = fuid;

@@ -96,6 +96,7 @@ namespace PainTrax.Web.Controllers
                 HttpContext.Session.SetString(SessionKeys.SessionGAIT, model.gait_default == null ? "" : model.gait_default.ToString());
                 HttpContext.Session.SetString(SessionKeys.SessionFUDate, model.fu_default == null ? "" : model.fu_default.ToString());
                 HttpContext.Session.SetString(SessionKeys.SessionSideCase, model.casetype == null ? "U" : model.casetype.ToString());
+                HttpContext.Session.SetString(SessionKeys.SessionShowTableBorder, model.table_border.ToString());
 
                 ViewBag.Message = "Settings Updated Successfully";
                 return View(model);

@@ -2544,7 +2544,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#fn", patientData.fname);
                     body = body.Replace("#ln", patientData.lname);
                     body = body.Replace("#gender", Common.GetMrMrsFromSex(patientData.gender));
-                    body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
+                    body = body.Replace("#sex", char.ToUpper(sex[0]) + sex.Substring(1));
 
 
                     body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
@@ -2831,7 +2831,17 @@ namespace PainTrax.Web.Controllers
                 else
                     body = body.Replace("#Sign", "");
 
-                //body = body.Replace("<ol>", "<ol style='margin:0;padding:0;'>");
+                body = body.Replace("<ol>", "<ol style='font-family: 'Times New Roman', Times, serif;'>");
+
+                if (HttpContext.Session.GetString(SessionKeys.SessionShowTableBorder).ToLower() == "false")
+                {
+                    body = body.Replace("<table>", "<table style='width:100%;border:none;'>");
+                    body = body.Replace("<tr>", "<tr style='border:none;'>");
+                    body = body.Replace("<td>", "<td style='border:none;'>");
+                }
+                else {
+                    body = body.Replace("<table>", "<table style='width:100%;'>");
+                }
 
                 //body = HtmlCleaner.CleanHtmlContent(body);
 
@@ -2840,7 +2850,7 @@ namespace PainTrax.Web.Controllers
                     body += "<br><br><!--Diff Doc-->";
                     body += injectionHtml;
                 }
-            
+
 
                 ViewBag.content = body;
 
@@ -3114,38 +3124,37 @@ namespace PainTrax.Web.Controllers
                 }
             }
 
+            /*using (WordprocessingDocument wdDoc = WordprocessingDocument.Open(filePath, true))
+            {
+                var mainPart = wdDoc.MainDocumentPart;
 
-            //using (WordprocessingDocument wdDoc = WordprocessingDocument.Open(filePath, true))
-            //{
-            //    var mainPart = wdDoc.MainDocumentPart;
+                // Loop through all paragraphs in the main document body
+                foreach (var para in mainPart.Document.Body.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
+                {
+                    NormalizeParagraphSpacing(para);
+                }
 
-            //    // Loop through all paragraphs in the main document body
-            //    foreach (var para in mainPart.Document.Body.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
-            //    {
-            //        NormalizeParagraphSpacing(para);
-            //    }
+                // Optionally also update headers and footers
+                foreach (var header in mainPart.HeaderParts)
+                {
+                    foreach (var para in header.RootElement.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
+                    {
+                        NormalizeParagraphSpacing(para);
+                    }
+                    header.RootElement.Save();
+                }
 
-            //    // Optionally also update headers and footers
-            //    foreach (var header in mainPart.HeaderParts)
-            //    {
-            //        foreach (var para in header.RootElement.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
-            //        {
-            //            NormalizeParagraphSpacing(para);
-            //        }
-            //        header.RootElement.Save();
-            //    }
+                foreach (var footer in mainPart.FooterParts)
+                {
+                    foreach (var para in footer.RootElement.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
+                    {
+                        NormalizeParagraphSpacing(para);
+                    }
+                    footer.RootElement.Save();
+                }
 
-            //    foreach (var footer in mainPart.FooterParts)
-            //    {
-            //        foreach (var para in footer.RootElement.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
-            //        {
-            //            NormalizeParagraphSpacing(para);
-            //        }
-            //        footer.RootElement.Save();
-            //    }
-
-            //    mainPart.Document.Save(); // Save document
-            //}
+                mainPart.Document.Save(); // Save document
+            }*/
 
 
 
@@ -3721,14 +3730,24 @@ namespace PainTrax.Web.Controllers
                 return new Header(
                    new Paragraph(
                        new Run(
+                            new RunProperties(
+                    new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                ),
                            new Text(text1) // First line
                        ),
                        new Break(), // Line break
 
                        new Run(
+                            new RunProperties(
+                    new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                ),
                            new Text("Page ") // Static "Page " text
                        ),
                        new Run(
+                            new RunProperties(
+                    new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+
+                ),
                            new SimpleField() // Dynamic page number field
                            {
                                Instruction = "PAGE", // Specifies the field type
@@ -3744,16 +3763,19 @@ namespace PainTrax.Web.Controllers
             Paragraph paragraph = new Paragraph();
 
             paragraph.Append(
-                new Run(new Text(text1))
+                new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = "20" }), new Text(text1))
             );
 
             if (!string.IsNullOrEmpty(text2))
             {
                 paragraph.Append(
                     new Run(new TabChar()), new Run(new TabChar()),
-                    new Run(new Text(text2)),
+                    new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = "20" }), new Text(text2)),
                     new Run(new TabChar()), new Run(new TabChar()),
-                    new Run(new Text(text3)),
+                    new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = "20" }), new Text(text3)),
                     new Run(new TabChar()), new Run(new TabChar()), new Run(new TabChar())
                 );
             }
@@ -3765,10 +3787,14 @@ namespace PainTrax.Web.Controllers
             }
 
             paragraph.Append(
-                new Run(new Text("Page ") { Space = SpaceProcessingModeValues.Preserve }),
-                new Run(new SimpleField() { Instruction = "PAGE" }),
-                new Run(new Text(" of ") { Space = SpaceProcessingModeValues.Preserve }),
-                new Run(new SimpleField() { Instruction = "NUMPAGES" })
+                new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = "20" }), new Text("Page ") { Space = SpaceProcessingModeValues.Preserve }),
+                new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = "20" }), new SimpleField() { Instruction = "PAGE" }),
+                new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = "20" }), new Text(" of ") { Space = SpaceProcessingModeValues.Preserve }),
+                new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = "20" }), new SimpleField() { Instruction = "NUMPAGES" })
             );
 
             return new Footer(paragraph);
@@ -3863,7 +3889,7 @@ namespace PainTrax.Web.Controllers
 
                     if (isnormal)
                     {
-                        strDaignosis = strDaignosis + " of the cervical spine is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
                 }
 
@@ -3910,7 +3936,7 @@ namespace PainTrax.Web.Controllers
 
                     if (isnormal)
                     {
-                        strDaignosis = strDaignosis + " of the thoracic spine is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
                 }
                 if (data.diaglumberbulge_date != null)
@@ -3956,7 +3982,7 @@ namespace PainTrax.Web.Controllers
 
                     if (isnormal)
                     {
-                        strDaignosis = strDaignosis + " of the lumbar spine is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
                 }
                 if (data.diagrightshoulder_date != null)
@@ -3980,7 +4006,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " of the right shoulder is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
 
                 }
@@ -4006,7 +4032,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " of the left shoulder is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
 
                 }
@@ -4030,7 +4056,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " of the right knee is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
                 }
                 if (data.diagleftknee_date != null)
@@ -4053,7 +4079,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " of the left knee is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
                 }
 

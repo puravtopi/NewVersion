@@ -20,6 +20,7 @@
         public string? fu_default { get; set; }        
         public bool show_preop { get; set; }        
         public bool show_postop { get; set; }
+        public bool table_border { get; set; }
         public string? sign_content { get; set; }
         public string? casetype { get; set; }
         public string? diagcervialbulge_comma { get; set; }

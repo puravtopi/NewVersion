@@ -87,6 +87,7 @@ fu_default=@fu_default,
 show_postop=@show_postop,
 sign_content=@sign_content,
 casetype=@casetype,
+table_border=@table_border,
 diagcervialbulge_comma=@diagcervialbulge_comma,
 diagthoracicbulge_comma=@diagthoracicbulge_comma,
 diaglumberbulge_comma=@diaglumberbulge_comma,
@@ -136,6 +137,7 @@ other7_comma=@other7_comma
             cm.Parameters.AddWithValue("@other5_comma", data.other5_comma);
             cm.Parameters.AddWithValue("@other6_comma", data.other6_comma);
             cm.Parameters.AddWithValue("@other7_comma", data.other7_comma);
+            cm.Parameters.AddWithValue("@table_border", data.table_border);
 
             Execute(cm);
         }

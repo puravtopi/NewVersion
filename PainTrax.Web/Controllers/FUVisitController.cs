@@ -2298,7 +2298,7 @@ namespace PainTrax.Web.Controllers
 
                         body = body.Replace("#ProviderName", providerData.providername);
                         body = body.Replace("#AssProviderName", providerData.assistant_providername);
-                }
+                    }
                     else
                         body = body.Replace("#Sign", "");
                 }
@@ -2444,7 +2444,7 @@ namespace PainTrax.Web.Controllers
                     else
                         body = body.Replace("#Sign", "");
                 }
-                    body = body.Replace("#br", "<br/>");
+                body = body.Replace("#br", "<br/>");
                 ViewBag.content = body;
             }
             catch (Exception ex)
@@ -2856,7 +2856,17 @@ namespace PainTrax.Web.Controllers
                 else
                     body = body.Replace("#Sign", "");
 
-
+                body = body.Replace("<ol>", "<ol style='font-family: 'Times New Roman', Times, serif;'>");
+                if (HttpContext.Session.GetString(SessionKeys.SessionShowTableBorder) == "false")
+                {
+                    body = body.Replace("<table>", "<table style='width:100%;border:none;'>");
+                    body = body.Replace("<tr>", "<tr style='border:none;'>");
+                    body = body.Replace("<td>", "<td style='border:none;'>");
+                }
+                else
+                {
+                    body = body.Replace("<table>", "<table style='width:100%;'>");
+                }
                 body = HtmlCleaner.CleanHtmlContent(body);
 
                 if (SessionDiffDoc == "true")
@@ -3927,7 +3937,7 @@ namespace PainTrax.Web.Controllers
 
                     if (isnormal)
                     {
-                        strDaignosis = strDaignosis + " of the cervical spine is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
                 }
 
@@ -3974,7 +3984,7 @@ namespace PainTrax.Web.Controllers
 
                     if (isnormal)
                     {
-                        strDaignosis = strDaignosis + " of the thoracic spine is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
                 }
 
@@ -4021,7 +4031,7 @@ namespace PainTrax.Web.Controllers
 
                     if (isnormal)
                     {
-                        strDaignosis = strDaignosis + " of the lumbar spine is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
                 }
                 if (data.diagrightshoulder_date != null)
@@ -4045,7 +4055,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " of the right shoulder is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
 
                 }
@@ -4071,7 +4081,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " of the left shoulder is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
 
                 }
@@ -4098,7 +4108,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " of the right knee is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
                 }
                 if (data.diagleftknee_date != null)
@@ -4121,7 +4131,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " of the left knee is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
                 }
 

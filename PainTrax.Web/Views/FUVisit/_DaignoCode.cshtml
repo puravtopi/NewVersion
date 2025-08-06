@@ -30,7 +30,9 @@
                                     <tr>
                                         <th scope="row"><input type="checkbox" @isChecked /></th>
                                         <td>@item.DiagCode</td>
-                                        <td><input type="text" class="form-control" value="@item.Description" /></td>
+                                        <td><input type="text" class="form-control" value="@item.Description" />
+                                            <input type="hidden" id="cmpid" value="@item.cmp_id" />
+                                        </td>
 
                                     </tr>
                                 }
@@ -96,11 +98,28 @@
 
         //var daignoCodeDetails = "<ul style='list-style-type: none;'>";
         var daignoCodeDetails = "";
+        var htmlDaignosis = "";
 
+         var cmpid = $("#cmpid").val();
 
         var myContentDaignosis = ckAssessment.getData();
+        if (cmpid === "13") {
+             daignoCodeDetails = "<ol>";
+             $("#tblDiagnoCode input[type=checkbox]:checked").each(function () {
 
+            debugger;
+            var row = $(this).closest("tr")[0];
 
+            if (myContentDaignosis.indexOf(row.cells[2].firstChild.value) < 0) {
+
+            daignoCodeDetails += "<li>" + row.cells[1].innerHTML;
+            daignoCodeDetails += "  " +row.cells[2].firstChild.value;
+            daignoCodeDetails += "</li>";
+             }
+        });
+        htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ol>";
+         }
+         else{
         $("#tblDiagnoCode input[type=checkbox]:checked").each(function () {
 
             debugger
@@ -117,10 +136,11 @@
                 daignoCodeDetails += "</p>";
             }
         });
-
+        htmlDaignosis = myContentDaignosis + daignoCodeDetails ;
+        }
 
         // var htmlDaignosis = myContentDaignosis + daignoCodeDetails + "</ul>";
-        var htmlDaignosis = myContentDaignosis + daignoCodeDetails;
+        //var htmlDaignosis = myContentDaignosis + daignoCodeDetails;
         ckAssessment.data.set(htmlDaignosis);
 
         $('#daignoCodeModal').modal('hide');

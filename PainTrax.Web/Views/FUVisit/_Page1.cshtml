@@ -45,22 +45,15 @@
             </div>
         </label>
         <div class="col-sm-10">
-            @if (Model.cmp_id == 13)
-            {
-                <div class="col-sm-10" style="height: fit-content;">
-                    <textarea id="txtHistory">@(@Model.history ?? "The patient presents today for follow up with continued pain in the ______ and for evaluation of pain in the _____.")</textarea>
-                </div>
-            }
-            else
-            {
-                <div class="col-sm-10" style="height: fit-content;">
-                    <textarea id="txtHistory">@(@Model.history)</textarea>
-                </div>
-            }
-           @*  <div class="col-sm-10" style="height: fit-content;"> *@
-                @* <textarea id="txtHistory">@Model.history</textarea> *@
-              @*   <textarea id="txtHistory">@(@Model.history ?? "The patient presents today for follow up with continued pain in the ______ and for evaluation of pain in the _____.")</textarea> *@
-                @* <textarea id="txtHistory">@(@Model.history)</textarea> *@
+          
+            <div class="col-sm-10" style="height: fit-content;">
+              
+                @{
+                    var hst = Model.history;
+                    if (Model.cmp_id == 13)
+                        hst = Model.history ?? "The patient presents today for follow up with continued pain in the ______ and for evaluation of pain in the _____.";
+                }
+                <textarea id="txtHistory">@hst</textarea>
             </div>
         </div>
     </div>

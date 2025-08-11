@@ -384,7 +384,44 @@ namespace PainTrax.Web.Controllers
                         obj.age = patientData.age;
                         obj.physicianid = patientData.physicianid;
                     }
+                    //for documents
+                    {
 
+                        HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, ieData.patient_id.Value);
+
+                        var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments");
+                        bool folderExists = Directory.Exists(FolderPath);
+                        if (!folderExists)
+                            Directory.CreateDirectory(FolderPath);
+
+                        string[] dirs = Directory.GetDirectories(FolderPath, "*", SearchOption.TopDirectoryOnly);
+
+                        List<TreeViewNode> nodes = new List<TreeViewNode>();
+
+                        int i = 0;
+                        foreach (var item in dirs)
+                        {
+                            i++;
+                            string FolderName = System.IO.Path.GetFileName(item);
+                            var FolderPathFile = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", FolderName.ToString(), ieData.patient_id.Value.ToString());
+                            int j = 0;
+
+                            bool folderExistsNew = Directory.Exists(FolderPathFile);
+                            if (!folderExistsNew)
+                                Directory.CreateDirectory(FolderPathFile);
+
+                            foreach (var item1 in Directory.GetFiles(FolderPathFile))
+                            {
+                                j++;
+                                nodes.Add(new TreeViewNode { id = j.ToString() + "-" + i.ToString() + "~" + FolderName.ToString() + "$" + System.IO.Path.GetFileName(item1), parent = i.ToString(), text = System.IO.Path.GetFileName(item1) });
+                            }
+
+                            nodes.Add(new TreeViewNode { id = i.ToString(), parent = "#", text = FolderName.ToString() + "(" + j + ")" });
+                        }
+
+                        obj.doc_json = JsonConvert.SerializeObject(nodes, Formatting.Indented);
+
+                    }
                 }
                 else if (id > 0)
                 {
@@ -624,6 +661,44 @@ namespace PainTrax.Web.Controllers
                         obj.vaccinated = patientData.vaccinated;
                         obj.patientid = patientData.id;
                         obj.physicianid = patientData.physicianid;
+                    }
+                    //for documents
+                    {
+
+                        HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, ieData.patient_id.Value);
+
+                        var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments");
+                        bool folderExists = Directory.Exists(FolderPath);
+                        if (!folderExists)
+                            Directory.CreateDirectory(FolderPath);
+
+                        string[] dirs = Directory.GetDirectories(FolderPath, "*", SearchOption.TopDirectoryOnly);
+
+                        List<TreeViewNode> nodes = new List<TreeViewNode>();
+
+                        int i = 0;
+                        foreach (var item in dirs)
+                        {
+                            i++;
+                            string FolderName = System.IO.Path.GetFileName(item);
+                            var FolderPathFile = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", FolderName.ToString(), ieData.patient_id.Value.ToString());
+                            int j = 0;
+
+                            bool folderExistsNew = Directory.Exists(FolderPathFile);
+                            if (!folderExistsNew)
+                                Directory.CreateDirectory(FolderPathFile);
+
+                            foreach (var item1 in Directory.GetFiles(FolderPathFile))
+                            {
+                                j++;
+                                nodes.Add(new TreeViewNode { id = j.ToString() + "-" + i.ToString() + "~" + FolderName.ToString() + "$" + System.IO.Path.GetFileName(item1), parent = i.ToString(), text = System.IO.Path.GetFileName(item1) });
+                            }
+
+                            nodes.Add(new TreeViewNode { id = i.ToString(), parent = "#", text = FolderName.ToString() + "(" + j + ")" });
+                        }
+
+                        obj.doc_json = JsonConvert.SerializeObject(nodes, Formatting.Indented);
+
                     }
                 }
                 else

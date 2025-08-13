@@ -1279,8 +1279,9 @@
 
         var id = $('.tab-content .active').attr('id');
         e.preventDefault();
+        var currentPaneId = $('.tab-content .active').attr('id'); // current pane ID (leaving)
         var t = this;
-
+        var nextTabLink = this;
         var selectedTabId = $(this).attr('id');
         if (selectedTabId === 'home-tab')
             $('#printButtonSOAP').show();
@@ -1361,8 +1362,20 @@
         else if (id === "bordered-doc") {
             $(t).tab('show');
         }
+        // ===== LOAD logic for the tab you are going to =====
+    if ($(nextTabLink).data('bs-target') === "#bordered-comments") {
+        loadCommentPartial($("#id").val());
+    }
+
+    // Switch to the next tab
+    $(t).tab('show');
 
     });
+    function loadCommentPartial(ieId) {
+        $.get('@Url.Action("LoadCommentPartial", "FUVisit")', { ie_id: ieId }, function (html) {
+            $("#commentPartialContainer").html(html);
+        });
+    }
 
     function fnDetailsSave(t) {
         var url = '@Url.Action("SaveDetails", "FUVisit")';

@@ -232,24 +232,42 @@ namespace PainTrax.Web.Controllers
 
                         for (int i = 0; i < dt.Rows.Count; i++)
                         {
+                            //tbl_ie_page1 obj = new tbl_ie_page1()
+                            //{
+                            //    cmp_id = cmpid,
+                            //    allergies = dt.Rows[i]["Allergies"].ToString(),
+                            //    cc = dt.Rows[i]["CC"].ToString(),
+                            //    history = dt.Rows[i]["History"].ToString(),
+                            //    ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
+                            //    medication = dt.Rows[i]["Medications"].ToString(),
+                            //    patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
+                            //    pe = dt.Rows[i]["Physical Exam"].ToString(),
+                            //    pmh = dt.Rows[i]["Past Medical"].ToString(),
+                            //    psh = dt.Rows[i]["Past Surgical"].ToString(),
+                            //    social_history = dt.Rows[i]["Social History"].ToString(),
+                            //    assessment = this.getAssement(dt.Rows[i]["Diagnoses"].ToString()),
+                            //    //appt_reason = dt.Rows[i]["Reason"].ToString(),
+                            //    //occupation = dt.Rows[i]["Occupation"].ToString(),
+                            //    //impairment_rating = dt.Rows[i]["Tylenol"].ToString(),
+
+                            //};
                             tbl_ie_page1 obj = new tbl_ie_page1()
                             {
                                 cmp_id = cmpid,
-                                allergies = dt.Rows[i]["Allergies"].ToString(),
-                                cc = dt.Rows[i]["CC"].ToString(),
-                                history = dt.Rows[i]["History"].ToString(),
-                                ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
-                                medication = dt.Rows[i]["Medications"].ToString(),
-                                patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
-                                pe = dt.Rows[i]["Physical Exam"].ToString(),
-                                pmh = dt.Rows[i]["Past Medical"].ToString(),
-                                psh = dt.Rows[i]["Past Surgical"].ToString(),
-                                social_history = dt.Rows[i]["Social History"].ToString(),
-                                assessment = this.getAssement(dt.Rows[i]["Diagnoses"].ToString()),
-                                //appt_reason = dt.Rows[i]["Reason"].ToString(),
-                                //occupation = dt.Rows[i]["Occupation"].ToString(),
-                                //impairment_rating = dt.Rows[i]["Tylenol"].ToString(),
-
+                                allergies = dt.Columns.Contains("Allergies") ? dt.Rows[i]["Allergies"]?.ToString() ?? string.Empty : string.Empty,
+                                cc = dt.Columns.Contains("CC") ? dt.Rows[i]["CC"]?.ToString() ?? string.Empty : string.Empty,
+                                history = dt.Columns.Contains("History") ? dt.Rows[i]["History"]?.ToString() ?? string.Empty : string.Empty,
+                                ie_id = dt.Columns.Contains("Patient_ie_id") ? Convert.ToInt32(dt.Rows[i]["Patient_ie_id"] ?? 0) : 0,
+                                medication = dt.Columns.Contains("Medications") ? dt.Rows[i]["Medications"]?.ToString() ?? string.Empty : string.Empty,
+                                patient_id = dt.Columns.Contains("Patient_id") ? Convert.ToInt32(dt.Rows[i]["Patient_id"] ?? 0) : 0,
+                                pe = dt.Columns.Contains("Physical Exam") ? dt.Rows[i]["Physical Exam"]?.ToString() ?? string.Empty : string.Empty,
+                                pmh = dt.Columns.Contains("Past Medical") ? dt.Rows[i]["Past Medical"]?.ToString() ?? string.Empty : string.Empty,
+                                psh = dt.Columns.Contains("Past Surgical") ? dt.Rows[i]["Past Surgical"]?.ToString() ?? string.Empty : string.Empty,
+                                social_history = dt.Columns.Contains("Social History") ? dt.Rows[i]["Social History"]?.ToString() ?? string.Empty : string.Empty,
+                                assessment = dt.Columns.Contains("Diagnoses") ? this.getAssement(dt.Rows[i]["Diagnoses"]?.ToString() ?? string.Empty) : string.Empty,
+                                appt_reason = dt.Columns.Contains("Reason") ? dt.Rows[i]["Reason"]?.ToString() ?? string.Empty : string.Empty,
+                                occupation = dt.Columns.Contains("Occupation") ? dt.Rows[i]["Occupation"]?.ToString() ?? string.Empty : string.Empty,
+                                impairment_rating = dt.Columns.Contains("Tylenol") ? dt.Rows[i]["Tylenol"]?.ToString() ?? string.Empty : string.Empty,
                             };
                             _patientimportservice.InsertPage1(obj);
 
@@ -341,25 +359,45 @@ namespace PainTrax.Web.Controllers
 
                         for (int i = 0; i < dt.Rows.Count; i++)
                         {
+                            //tbl_fu_page1 obj = new tbl_fu_page1()
+                            //{
+                            //    cmp_id = cmpid,
+                            //    allergies = dt.Rows[i]["Allergies"].ToString(),
+                            //    cc = dt.Rows[i]["CC"].ToString(),
+                            //    //history = dt.Rows[i]["History"].ToString(),
+                            //    ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
+                            //    medication = dt.Rows[i]["Medications"].ToString(),
+                            //    patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
+                            //    pe = dt.Rows[i]["Physical Exam"].ToString(),
+                            //    pmh = dt.Rows[i]["Past Medical"].ToString(),
+                            //    psh = dt.Rows[i]["Past Surgical"].ToString(),
+                            //    social_history = dt.Rows[i]["Social History"].ToString(),
+                            //    assessment = this.getAssement(dt.Rows[i]["Diagnoses"].ToString()),
+                            //    appt_reason = dt.Rows[i]["Reason"].ToString(),
+                            //    //occupation = dt.Rows[i]["Occupation"].ToString(),
+                            //    //impairment_rating = dt.Rows[i]["Tylenol"].ToString(),
+                            //    fu_id = Convert.ToInt32(dt.Rows[i]["Patient_fu_id"].ToString()),
+
+                            //};
+
                             tbl_fu_page1 obj = new tbl_fu_page1()
                             {
                                 cmp_id = cmpid,
-                                allergies = dt.Rows[i]["Allergies"].ToString(),
-                                cc = dt.Rows[i]["CC"].ToString(),
-                                //history = dt.Rows[i]["History"].ToString(),
-                                ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
-                                medication = dt.Rows[i]["Medications"].ToString(),
-                                patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
-                                pe = dt.Rows[i]["Physical Exam"].ToString(),
-                                pmh = dt.Rows[i]["Past Medical"].ToString(),
-                                psh = dt.Rows[i]["Past Surgical"].ToString(),
-                                social_history = dt.Rows[i]["Social History"].ToString(),
-                                assessment = this.getAssement(dt.Rows[i]["Diagnoses"].ToString()),
-                                appt_reason = dt.Rows[i]["Reason"].ToString(),
-                                //occupation = dt.Rows[i]["Occupation"].ToString(),
-                                //impairment_rating = dt.Rows[i]["Tylenol"].ToString(),
-                                fu_id = Convert.ToInt32(dt.Rows[i]["Patient_fu_id"].ToString()),
-
+                                allergies = dt.Columns.Contains("Allergies") ? dt.Rows[i]["Allergies"]?.ToString() ?? string.Empty : string.Empty,
+                                cc = dt.Columns.Contains("CC") ? dt.Rows[i]["CC"]?.ToString() ?? string.Empty : string.Empty,
+                                history = dt.Columns.Contains("History") ? dt.Rows[i]["History"]?.ToString() ?? string.Empty : string.Empty,
+                                ie_id = dt.Columns.Contains("Patient_ie_id") ? Convert.ToInt32(dt.Rows[i]["Patient_ie_id"] ?? 0) : 0,
+                                medication = dt.Columns.Contains("Medications") ? dt.Rows[i]["Medications"]?.ToString() ?? string.Empty : string.Empty,
+                                patient_id = dt.Columns.Contains("Patient_id") ? Convert.ToInt32(dt.Rows[i]["Patient_id"] ?? 0) : 0,
+                                pe = dt.Columns.Contains("Physical Exam") ? dt.Rows[i]["Physical Exam"]?.ToString() ?? string.Empty : string.Empty,
+                                pmh = dt.Columns.Contains("Past Medical") ? dt.Rows[i]["Past Medical"]?.ToString() ?? string.Empty : string.Empty,
+                                psh = dt.Columns.Contains("Past Surgical") ? dt.Rows[i]["Past Surgical"]?.ToString() ?? string.Empty : string.Empty,
+                                social_history = dt.Columns.Contains("Social History") ? dt.Rows[i]["Social History"]?.ToString() ?? string.Empty : string.Empty,
+                                assessment = dt.Columns.Contains("Diagnoses") ? this.getAssement(dt.Rows[i]["Diagnoses"]?.ToString() ?? string.Empty) : string.Empty,
+                                appt_reason = dt.Columns.Contains("Reason") ? dt.Rows[i]["Reason"]?.ToString() ?? string.Empty : string.Empty,
+                                occupation = dt.Columns.Contains("Occupation") ? dt.Rows[i]["Occupation"]?.ToString() ?? string.Empty : string.Empty,
+                                impairment_rating = dt.Columns.Contains("Tylenol") ? dt.Rows[i]["Tylenol"]?.ToString() ?? string.Empty : string.Empty,
+                                fu_id = dt.Columns.Contains("Patient_fu_id") ? Convert.ToInt32(dt.Rows[i]["Patient_fu_id"] ?? 0) : 0
                             };
                             _patientimportservice.InsertPage1FU(obj);
 

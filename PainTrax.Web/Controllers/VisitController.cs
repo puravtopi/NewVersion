@@ -2852,7 +2852,8 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("<tr>", "<tr style='border:none;'>");
                     body = body.Replace("<td>", "<td style='border:none;'>");
                 }
-                else {
+                else
+                {
                     body = body.Replace("<table>", "<table style='width:100%;'>");
                 }
 
@@ -3874,7 +3875,7 @@ namespace PainTrax.Web.Controllers
 
                     if (data.diagcervialbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagcervialbulge_comma));
-                    strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text + ", ";
+                    strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text;
 
 
                     stradddaigno = stradddaigno + "Cervical " + (string.IsNullOrEmpty(data.diagcervialbulge_text) ? "" : data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.')) + ".<br/>";
@@ -3922,7 +3923,7 @@ namespace PainTrax.Web.Controllers
                     strCommaValue = "";
                     if (data.diagthoracicbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagthoracicbulge_comma));
-                    strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text + ", ";
+                    strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text;
 
                     stradddaigno = stradddaigno + "Thoracic " + (string.IsNullOrEmpty(data.diagthoracicbulge_text) ? "" : data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
@@ -3968,7 +3969,7 @@ namespace PainTrax.Web.Controllers
                     strCommaValue = "";
                     if (data.diaglumberbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
-                    strDaignosis = strDaignosis + " of the lumbar spine" + strCommaValue + " " + data.diaglumberbulge_text + ", ";
+                    strDaignosis = strDaignosis + " of the lumbar spine" + strCommaValue + " " + data.diaglumberbulge_text;
 
                     stradddaigno = stradddaigno + "Lumbar " + (!string.IsNullOrEmpty(data.diaglumberbulge_text) ? "" : data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
@@ -4019,7 +4020,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " normal study. ";
+                        strDaignosis = strDaignosis + " of the right shoulder is normal study. ";
                     }
 
                 }
@@ -4045,7 +4046,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " normal study. ";
+                        strDaignosis = strDaignosis + " of the left shoulder is normal study. ";
                     }
 
                 }
@@ -4069,7 +4070,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " normal study. ";
+                        strDaignosis = strDaignosis + " of the right knee is normal study. ";
                     }
                 }
                 if (data.diagleftknee_date != null)
@@ -4092,7 +4093,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " normal study. ";
+                        strDaignosis = strDaignosis + " of the left knee is normal study. ";
                     }
                 }
 
@@ -4163,7 +4164,7 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(data.other4_study))
                     {
                         var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other4_study));
-                        strDaignosis = strDaignosis + study ;
+                        strDaignosis = strDaignosis + study;
                     }
 
                     if (!string.IsNullOrEmpty(data.other4_text))
@@ -4183,7 +4184,7 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(data.other5_study))
                     {
                         var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other5_study));
-                        strDaignosis = strDaignosis + study ;
+                        strDaignosis = strDaignosis + study;
                     }
 
                     if (!string.IsNullOrEmpty(data.other5_text))
@@ -4232,7 +4233,7 @@ namespace PainTrax.Web.Controllers
                         if (data.other7_comma != null)
                             strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other7_comma));
 
-                        strDaignosis = strDaignosis + strCommaValue + " " + data.other7_text.TrimEnd('.') + ". " + "<br/>" ;
+                        strDaignosis = strDaignosis + strCommaValue + " " + data.other7_text.TrimEnd('.') + ". " + "<br/>";
                     }
                 }
 
@@ -4269,8 +4270,9 @@ namespace PainTrax.Web.Controllers
                     extra_comments = "",
                     type = type,
                     accident_type = ieData.accident_type,
-                    provider_id = ieData.provider_id,
-                    procedure_performed = ieData.procedure_performed
+                    provider_id = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId),
+                    procedure_performed = ieData.procedure_performed,
+                    location_id = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId),
 
                 };
                 fu_id = _patientFUservices.Insert(objFU);
@@ -4344,7 +4346,7 @@ namespace PainTrax.Web.Controllers
                     SaveLog(ex, "CreateFU");
                     return View("Error");
                 }
-                /*try
+                try
                 {
                     _pocService.ForwardPOCIETOFU(patientIEId, fu_id);
                 }
@@ -4352,7 +4354,7 @@ namespace PainTrax.Web.Controllers
                 {
                     SaveLog(ex, "CreateFU");
                     return View("Error");
-                }*/
+                }
 
                 try
                 {
@@ -4363,7 +4365,13 @@ namespace PainTrax.Web.Controllers
                     {
                         fupageOther.fu_id = fu_id;
                     }
-                    _fuOtherservices.Insert(fupageOther);
+
+                    var isFFExiste = _forwardServices.IsColumnPresent("Other", "followup_duration", cmpid.Value.ToString());
+
+                    if (!isFFExiste)
+                        fupageOther.followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
+
+                    _fuOtherservices.Update(fupageOther);
                 }
                 catch (Exception ex)
                 {
@@ -4392,9 +4400,10 @@ namespace PainTrax.Web.Controllers
                     extra_comments = "",
                     type = type,
                     accident_type = fuData.accident_type,
-                    provider_id = fuData.provider_id,
+                    provider_id = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId),
                     final_save = false,
-                    procedure_performed = fuData.procedure_performed
+                    procedure_performed = fuData.procedure_performed,
+                    location_id= HttpContext.Session.GetInt32(SessionKeys.SessionLocationId),
 
                 };
                 fu_id = _patientFUservices.Insert(objFU);
@@ -4445,6 +4454,28 @@ namespace PainTrax.Web.Controllers
                 {
                     SaveLog(ex, "CreateFU");
 
+                }
+
+                try
+                {
+                    var pageOther = _fuOtherservices.GetOne(fu_id);
+                    var fupageOther = _mapper.Map<tbl_fu_other>(pageOther);
+
+                    if (fupageOther != null)
+                    {
+                        fupageOther.fu_id = fu_id;
+                    }
+
+                    var isFFExiste = _forwardServices.IsColumnPresent("Other", "followup_duration", cmpid.Value.ToString());
+
+                    if (!isFFExiste)
+                        fupageOther.followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
+
+                    _fuOtherservices.Update(fupageOther);
+                }
+                catch (Exception ex)
+                {
+                    SaveLog(ex, "CreateFU");
                 }
             }
             var redirectUrl = Url.Action("Create", "FuVisit", new { patientIEId = patientIEId, patientFUId = fu_id, type = type });

@@ -53,8 +53,8 @@ public class FUOtherService : ParentService
 		treatment_delimit=@treatment_delimit,
 		treatment_delimit_desc=@treatment_delimit_desc,
 		followup_duration=@followup_duration,
-		followup_date=@followup_date where id=@id", conn);
-        cm.Parameters.AddWithValue("@id", data.id);
+		followup_date=@followup_date where fu_id=@fu_id", conn);
+        cm.Parameters.AddWithValue("@fu_id", data.fu_id);
         cm.Parameters.AddWithValue("@ie_id", data.ie_id);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
         cm.Parameters.AddWithValue("@treatment_details", data.treatment_details);

@@ -4012,7 +4012,7 @@ namespace PainTrax.Web.Controllers
 
                     if (data.diagcervialbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagcervialbulge_comma));
-                    strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text + ", ";
+                    strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text ;
 
 
                     stradddaigno = stradddaigno + "Cervical " + (string.IsNullOrEmpty(data.diagcervialbulge_text) ? "" : data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.')) + ".<br/>";
@@ -4060,7 +4060,7 @@ namespace PainTrax.Web.Controllers
                     strCommaValue = "";
                     if (data.diagthoracicbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagthoracicbulge_comma));
-                    strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text + ", ";
+                    strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text ;
 
                     stradddaigno = stradddaigno + "Thoracic " + (string.IsNullOrEmpty(data.diagthoracicbulge_text) ? "" : data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
@@ -4107,7 +4107,7 @@ namespace PainTrax.Web.Controllers
                     strCommaValue = "";
                     if (data.diaglumberbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
-                    strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text + ", ";
+                    strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text ;
 
                     stradddaigno = stradddaigno + "Lumbar " + (string.IsNullOrEmpty(data.diaglumberbulge_text) ? "" : data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
@@ -4158,7 +4158,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " normal study. ";
+                        strDaignosis = strDaignosis + " of the right shoulder is normal study. ";
                     }
 
                 }
@@ -4184,7 +4184,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " normal study. ";
+                        strDaignosis = strDaignosis + "  of the left shoulder is normal study. ";
                     }
 
                 }
@@ -4211,7 +4211,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " normal study. ";
+                        strDaignosis = strDaignosis + " of the right knee is normal study. ";
                     }
                 }
                 if (data.diagleftknee_date != null)
@@ -4234,7 +4234,7 @@ namespace PainTrax.Web.Controllers
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " normal study. ";
+                        strDaignosis = strDaignosis + " of the left knee is normal study. ";
                     }
                 }
 
@@ -4411,7 +4411,7 @@ namespace PainTrax.Web.Controllers
 
                     if (data.diagcervialbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagcervialbulge_comma));
-                    strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text + ", ";
+                    strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text ;
 
 
                     stradddaigno = stradddaigno + "Cervical " + (data.diagcervialbulge_text == null ? "" : data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.')) + ".<br/>";
@@ -4422,7 +4422,7 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(data.diagcervialbulge_hnp1))
                     {
                         strDaignosis = strDaignosis + " HNP at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".";
-                        stradddaigno = stradddaigno + "Cervical herniated nucleus pulposis at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".<br/>";
+                        stradddaigno = stradddaigno + " Cervical herniated nucleus pulposis at " + data.diagcervialbulge_hnp1.TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
 
@@ -4439,7 +4439,7 @@ namespace PainTrax.Web.Controllers
 
                     if (isnormal)
                     {
-                        strDaignosis = strDaignosis + " of the cervical spine is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
                 }
 
@@ -4459,7 +4459,7 @@ namespace PainTrax.Web.Controllers
                     strCommaValue = "";
                     if (data.diagthoracicbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagthoracicbulge_comma));
-                    strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text + ", ";
+                    strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text ;
 
                     stradddaigno = stradddaigno + "Thoracic " + (data.diagthoracicbulge_text == null ? "" : data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
@@ -4486,7 +4486,7 @@ namespace PainTrax.Web.Controllers
 
                     if (isnormal)
                     {
-                        strDaignosis = strDaignosis + " of the thoracic spine is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
                 }
 
@@ -4506,9 +4506,9 @@ namespace PainTrax.Web.Controllers
                     strCommaValue = "";
                     if (data.diaglumberbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
-                    strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text + ", ";
+                    strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text ;
 
-                    stradddaigno = stradddaigno + "Lumbar " + (data.diaglumberbulge_text == null ? "" : data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
+                    stradddaigno = stradddaigno + " Lumbar " + (data.diaglumberbulge_text == null ? "" : data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
                         isnormal = false;
                     //}
@@ -4516,7 +4516,7 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_hnp1))
                     {
                         strDaignosis = strDaignosis + " HNP at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ". ";
-                        stradddaigno = stradddaigno + "Lumbar herniated nucleus pulposis at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ".<br/>";
+                        stradddaigno = stradddaigno + " Lumbar herniated nucleus pulposis at " + data.diaglumberbulge_hnp1.TrimEnd('.') + ".<br/>";
                         isnormal = false;
                     }
 
@@ -4533,7 +4533,7 @@ namespace PainTrax.Web.Controllers
 
                     if (isnormal)
                     {
-                        strDaignosis = strDaignosis + " of the lumbar spine is normal. ";
+                        strDaignosis = strDaignosis + " normal study. ";
                     }
                 }
                 if (data.diagrightshoulder_date != null)
@@ -4553,11 +4553,11 @@ namespace PainTrax.Web.Controllers
                         if (data.diagrightshoulder_comma != null)
                             strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagrightshoulder_comma));
 
-                        strDaignosis = strDaignosis + " of the right shoulder" + strCommaValue + " " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the right shoulder " + strCommaValue + " " + data.diagrightshoulder_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " of the right shoulder is normal. ";
+                        strDaignosis = strDaignosis + " of the right shoulder is normal study. ";
                     }
 
                 }
@@ -4578,11 +4578,11 @@ namespace PainTrax.Web.Controllers
                         if (data.diagleftshoulder_comma != null)
                             strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagleftshoulder_comma));
 
-                        strDaignosis = strDaignosis + " of the left shoulder" + strCommaValue + " " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the left shoulder " + strCommaValue + " " + data.diagleftshoulder_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " of the left shoulder is normal. ";
+                        strDaignosis = strDaignosis + " of the left shoulder is normal study. ";
                     }
 
                 }
@@ -4604,11 +4604,11 @@ namespace PainTrax.Web.Controllers
                         if (data.diagrightknee_comma != null)
                             strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagrightknee_comma));
 
-                        strDaignosis = strDaignosis + " of the right knee" + strCommaValue + " " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the right knee " + strCommaValue + " " + data.diagrightknee_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " of the right knee is normal. ";
+                        strDaignosis = strDaignosis + " of the right knee is normal study. ";
                     }
                 }
 
@@ -4628,11 +4628,11 @@ namespace PainTrax.Web.Controllers
                         if (data.diagleftknee_comma != null)
                             strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagleftknee_comma));
 
-                        strDaignosis = strDaignosis + " of the left knee" + strCommaValue + " " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
+                        strDaignosis = strDaignosis + " of the left knee " + strCommaValue + " " + data.diagleftknee_text.TrimEnd('.') + ". " + "<br/>";
                     }
                     else
                     {
-                        strDaignosis = strDaignosis + " of the left knee is normal. ";
+                        strDaignosis = strDaignosis + " of the left knee is normal study. ";
                     }
                 }
 

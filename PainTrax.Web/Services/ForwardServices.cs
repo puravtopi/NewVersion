@@ -74,7 +74,7 @@ namespace PainTrax.Web.Services
                 }
             }
             else
-            {             
+            {
                 var lfu = _fuPage1services.GetOne(lfu_id);
 
                 if (fu_Page1 == null)
@@ -95,9 +95,9 @@ namespace PainTrax.Web.Services
         public tbl_fu_page2? GetOnePage2(int ie_id, int fu_id, int cmp_id, int patient_id, int lfu_id = 0)
         {
             PatientIEService service = new PatientIEService();
-           
+
             tbl_fu_page2 fu_Page2 = new tbl_fu_page2();
-           
+
             fu_Page2 = _fuPage2services.GetOne(fu_id);
 
 
@@ -116,7 +116,7 @@ namespace PainTrax.Web.Services
                     fu_Page2.patient_id = patient_id;
                     _fuPage2services.Insert(fu_Page2);
                 }
-              
+
             }
             else
             {
@@ -139,9 +139,9 @@ namespace PainTrax.Web.Services
         public tbl_fu_ne? GetOneNE(int ie_id, int fu_id, int cmp_id, int patient_id, int lfu_id = 0)
         {
             PatientIEService service = new PatientIEService();
-        
+
             tbl_fu_ne fu_ne = new tbl_fu_ne();
-           
+
             fu_ne = _funeservices.GetOne(fu_id);
             if (lfu_id == 0)
             {
@@ -158,7 +158,8 @@ namespace PainTrax.Web.Services
                     _funeservices.Insert(fu_ne);
                 }
             }
-            else {
+            else
+            {
                 var lfu = _funeservices.GetOne(lfu_id);
                 if (fu_ne == null)
                 {
@@ -174,12 +175,12 @@ namespace PainTrax.Web.Services
             return fu_ne;
         }
 
-        public tbl_fu_other? GetOneOther(int ie_id,  int cmp_id, int fu_id, int patient_id, int lfu_id = 0)
+        public tbl_fu_other? GetOneOther(int ie_id, int cmp_id, int fu_id, int patient_id, int lfu_id = 0)
         {
             PatientIEService service = new PatientIEService();
-           
+
             tbl_fu_other fu_other = new tbl_fu_other();
-          
+
             fu_other = _fuotherservices.GetOne(fu_id);
             if (lfu_id == 0)
             {
@@ -195,19 +196,21 @@ namespace PainTrax.Web.Services
 
                     _fuotherservices.Insert(fu_other);
                 }
-                else {
-                    var lfu = _funeservices.GetOne(lfu_id);
-                    if (fu_other == null)
-                    {
-                        fu_other = new tbl_fu_other();
-                        CopyProperties(lfu, fu_other, cmp_id, "other");
-                        fu_other.ie_id = ie_id;
-                        fu_other.fu_id = fu_id;
-                        fu_other.patient_id = patient_id;
+            }
+            else
+            {
+                var lfu = _fuotherservices.GetOne(lfu_id);
+                if (fu_other == null)
+                {
+                    fu_other = new tbl_fu_other();
+                    CopyProperties(lfu, fu_other, cmp_id, "other");
+                    fu_other.ie_id = ie_id;
+                    fu_other.fu_id = fu_id;
+                    fu_other.patient_id = patient_id;
 
-                        _fuotherservices.Insert(fu_other);
-                    }
+                    _fuotherservices.Insert(fu_other);
                 }
+
             }
             return fu_other;
         }
@@ -215,9 +218,9 @@ namespace PainTrax.Web.Services
         public tbl_fu_page3? GetPage3(int ie_id, int cmp_id, int fu_id, int patient_id, int lfu_id = 0)
         {
             PatientIEService service = new PatientIEService();
-          
+
             tbl_fu_page3 page3fu = new tbl_fu_page3();
-          
+
             page3fu = _fup3services.GetOne(fu_id);
             if (lfu_id == 0)
             {
@@ -235,7 +238,8 @@ namespace PainTrax.Web.Services
                     _fup3services.Insert(page3fu);
                 }
             }
-            else {
+            else
+            {
                 var lfu = _fup3services.GetOne(lfu_id);
                 if (page3fu == null)
                 {
@@ -251,6 +255,14 @@ namespace PainTrax.Web.Services
             return page3fu;
         }
 
+        public bool IsColumnPresent(string tblname, string colname, string cmp_id)
+        {
+            List<tbl_ie_fu_select> dataList = ConvertDataTable<tbl_ie_fu_select>(GetData("select * from tbl_ie_fu_select where tbl_name='" + tblname + "' and tbl_column='" + colname + "' and cmp_id=" + cmp_id));
+            if (dataList.Count > 0)
+                return true;
+            else
+                return false;
+        }
 
         #endregion
     }

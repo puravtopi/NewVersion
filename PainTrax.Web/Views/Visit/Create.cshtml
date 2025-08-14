@@ -1090,7 +1090,7 @@
         }
 
         $("#btnSaveAll").click(function () {
-            
+
 
             // var id = $("#hd-active-tab").val();
             var id = $('.tab-content .active').attr('id');
@@ -1160,12 +1160,12 @@
 
     $('#borderedTab a').on('click', function (e) {
 
-
         var id = $('.tab-content .active').attr('id');
-
+        
         e.preventDefault();
+        var currentPaneId = $('.tab-content .active').attr('id'); // current pane ID (leaving)
         var t = this;
-
+        var nextTabLink = this;
          var selectedTabId = $(this).attr('id');
          if(selectedTabId==='home-tab')
             $('#printButtonSOAP').show();
@@ -1244,11 +1244,23 @@
             $(t).tab('show');
         }
         else if (id === "bordered-comments") {
-            fnSaveComment(t);
+            fnSaveComment(t); 
+           // loadCommentPartial($("#id").val());
         }
+             // ===== LOAD logic for the tab you are going to =====
+    if ($(nextTabLink).data('bs-target') === "#bordered-comments") {
+        loadCommentPartial($("#id").val());
+    }
+
+    // Switch to the next tab
+    $(t).tab('show');
     });
 
-
+        function loadCommentPartial(ieId) {
+        $.get('@Url.Action("LoadCommentPartial", "Visit")', { ie_id: ieId }, function (html) {
+            $("#commentPartialContainer").html(html);
+        });
+    }
 
     function fnDetailsSave(t) {
 

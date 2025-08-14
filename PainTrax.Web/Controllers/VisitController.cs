@@ -1251,6 +1251,11 @@ namespace PainTrax.Web.Controllers
 
             return Json(data);
         }
+        public IActionResult LoadCommentPartial(int ie_id)
+        {
+            var model = _ieService.GetOneComment(ie_id);
+            return PartialView("_Comments", model);
+        }
 
         [HttpPost]
         public IActionResult SaveSign([FromBody] tbl_ie_sign model)

@@ -2936,7 +2936,8 @@ namespace PainTrax.Web.Controllers
                 {
                     signUserId = providorId.Value;
                 }
-
+                body = HtmlCleaner.ClearHTML(body);
+                ViewBag.content = body;
                 if (signUserId > 0)
                 {
                     tbl_users _user = new tbl_users()
@@ -2975,7 +2976,7 @@ namespace PainTrax.Web.Controllers
                 {
                     body = body.Replace("<table>", "<table style='width:100%;'>");
                 }
-                body = HtmlCleaner.CleanHtmlContent(body);
+                //body = HtmlCleaner.CleanHtmlContent(body);
 
                 if (SessionDiffDoc == "true")
                 {
@@ -2983,9 +2984,9 @@ namespace PainTrax.Web.Controllers
                     body += injectionHtml;
                 }
 
-                string updatedHtml = HtmlCleaner.ClearHTML(body);
+               // string updatedHtml = HtmlCleaner.ClearHTML(body);
 
-                ViewBag.content = updatedHtml;
+                ViewBag.content = body;
 
             }
             catch (Exception ex)
@@ -4924,8 +4925,6 @@ namespace PainTrax.Web.Controllers
                 }
             }
         }
-
-
 
         [HttpGet]
         public JsonResult SaveProcedurePerformed(int eId, string pp)

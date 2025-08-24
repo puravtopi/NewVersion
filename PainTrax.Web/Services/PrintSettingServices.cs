@@ -153,14 +153,27 @@ namespace PainTrax.Web.Services
 
         public void SaveTemplate(tbl_template model)
         {
-            MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_template SET
+
+            if (model.id > 0)
+            {
+                MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_template SET
 		content=@content
 		where id=@id", conn);
-            cm.Parameters.AddWithValue("@id", model.id);
-  
-            cm.Parameters.AddWithValue("@content", model.content);
-           
-            Execute(cm);
+                cm.Parameters.AddWithValue("@id", model.id);
+
+                cm.Parameters.AddWithValue("@content", model.content);
+
+                Execute(cm);
+            }
+            else {
+                MySqlCommand cm = new MySqlCommand(@"insert into tbl_template(type,content,cmp_id)Values(@type,@content,@cmp_id);select 1;", conn);
+                cm.Parameters.AddWithValue("@type", model.type);
+
+                cm.Parameters.AddWithValue("@content", model.content);
+                cm.Parameters.AddWithValue("@cmp_id", model.cmp_id);
+
+                Execute(cm);
+            }
         }
     }
 }

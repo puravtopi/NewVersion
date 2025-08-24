@@ -73,6 +73,10 @@ namespace PainTrax.Web.Controllers
         {
             ViewBag.pageSize = HttpContext.Session.GetInt32(SessionKeys.SessionPageSize).Value;
             ViewBag.filterCase = f;
+
+
+            ViewBag.visitTypeList = _commonservices.GetVisitType();
+
             return View();
         }
 
@@ -3976,7 +3980,7 @@ namespace PainTrax.Web.Controllers
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
                     strDaignosis = strDaignosis + " of the lumbar spine" + strCommaValue + " " + data.diaglumberbulge_text;
 
-                    stradddaigno = stradddaigno + "Lumbar " + (!string.IsNullOrEmpty(data.diaglumberbulge_text) ? "" : data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
+                    stradddaigno = stradddaigno + "Lumbar " + (string.IsNullOrEmpty(data.diaglumberbulge_text) ? "" : data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
                         isnormal = false;
                     //}
@@ -4351,7 +4355,7 @@ namespace PainTrax.Web.Controllers
                     SaveLog(ex, "CreateFU");
                     return View("Error");
                 }
-                try
+                /*try
                 {
                     _pocService.ForwardPOCIETOFU(patientIEId, fu_id);
                 }
@@ -4359,7 +4363,7 @@ namespace PainTrax.Web.Controllers
                 {
                     SaveLog(ex, "CreateFU");
                     return View("Error");
-                }
+                }*/
 
                 try
                 {

@@ -13,6 +13,7 @@ namespace PainTrax.Web.Controllers
         #region Variables
         private readonly IMapper _mapper;
         private readonly PrintSettingServices _services = new PrintSettingServices();
+        private readonly Common _commonservices = new Common();
         private readonly ILogger<PrintSettingController> _logger;
         #endregion
 
@@ -28,7 +29,7 @@ namespace PainTrax.Web.Controllers
             var data = new List<tbl_print_label>();
             try
             {
-                string s =  "";
+                string s = "";
                 int a = int.Parse(s);
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId).ToString();
                 string cnd = "and cmp_id= " + cmpid;
@@ -55,7 +56,7 @@ namespace PainTrax.Web.Controllers
             {
                 data = _services.GetOne(Id);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 SaveLog(ex, "GetDetails");
             }
@@ -68,15 +69,15 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
-                _services.Update(model);                
+                _services.Update(model);
             }
             catch (Exception ex)
             {
                 SaveLog(ex, "UpdateDetails");
             }
             return Json(1);
-        }           
-        
+        }
+
 
         [HttpPost]
         public IActionResult SaveTemplate(tbl_template model)
@@ -84,7 +85,7 @@ namespace PainTrax.Web.Controllers
             try
             {
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-                //model.cmp_id = cmpid.Value;
+                model.cmp_id = cmpid.Value;
                 //model.type = "IE";
                 _services.SaveTemplate(model);
             }
@@ -143,6 +144,8 @@ namespace PainTrax.Web.Controllers
 
         public IActionResult Templates()
         {
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            ViewBag.visitTypeList = _commonservices.GetVisitTypeForTemplate(cmpid);
             return View();
         }
 
@@ -190,14 +193,22 @@ namespace PainTrax.Web.Controllers
             }
 
         }
-        public IActionResult ModifyTemplate(int id)
+        public IActionResult ModifyTemplate(int id, string type = "")
         {
-                          
-            var data = _services.GetOneTemplate(id);
-
-            //ViewBag.template = data.content;
-
-            return View(data);
+            if (type == "")
+            {
+                var data = _services.GetOneTemplate(id);
+                return View(data);
+            }
+            else
+            {
+                tbl_template objTemplate = new tbl_template()
+                {
+                    id=0,
+                    type = type
+                };
+                return View(objTemplate);
+            }
 
         }
 

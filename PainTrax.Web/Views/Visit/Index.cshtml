@@ -162,7 +162,8 @@
                 <div class="modal-body">
                     <input type="hidden" id="type_ie_id" />
                     <input type="hidden" id="type_patient_id" />
-                    <select id="ddlfuType" class="form-select" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.VisitType>()"></select>
+                   @*  <select id="ddlfuType" class="form-select" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.VisitType>()"></select> *@
+                    <select id="ddlfuType" class="form-select" asp-items="@ViewBag.visitTypeList"></select>
                     <br />
                     <p id="p_error" style="color:red"></p>
                 </div>

@@ -18,6 +18,7 @@ namespace PainTrax.Web.Helper
         private readonly AccidentTypeService _accidentTypeService = new AccidentTypeService();
         private readonly StateService _stateService = new StateService();
         private readonly ReferringPhysicianService _physicianService = new ReferringPhysicianService();
+        private readonly VisitTypeService _visitTypeService = new VisitTypeService();
 
         public List<SelectListItem> GetDesignation(int cmp_id)
         {
@@ -188,7 +189,7 @@ namespace PainTrax.Web.Helper
                 list.Add(new SelectListItem
                 {
                     Text = item.state_name + "-" + item.fullname,
-                    Value = item.state_name 
+                    Value = item.state_name
                 });
             }
 
@@ -556,7 +557,7 @@ namespace PainTrax.Web.Helper
                 new SelectListItem{ Text="Vital", Value = "vital",Selected=false },
                 new SelectListItem{ Text="POC assessment", Value = "poc_assesment",Selected=false },
                 new SelectListItem{ Text="Procedure Performed", Value = "procedure_performed",Selected=false }
-               
+
 
 
                           };
@@ -701,6 +702,49 @@ namespace PainTrax.Web.Helper
             };
             return returnstatus;
 
+        }
+
+        public List<SelectListItem> GetVisitType()
+        {
+            string cnd = " and type<>'IE'";
+            var data = _visitTypeService.GetAll(cnd);
+            var list = new List<SelectListItem>();
+
+
+
+            foreach (var item in data)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = item.type,
+                    Value = item.type.ToString()
+                });
+            }
+
+            return list;
+        }
+
+        public List<SelectListItem> GetVisitTypeForTemplate(string cmpid)
+        {
+            string cnd = " and type<>'IE' and type not in (select type from tbl_template where cmp_id=" + cmpid + ")";
+
+
+
+            var data = _visitTypeService.GetAll(cnd);
+            var list = new List<SelectListItem>();
+
+
+
+            foreach (var item in data)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = item.type,
+                    Value = item.type.ToString()
+                });
+            }
+
+            return list;
         }
     }
 

@@ -59,6 +59,13 @@
     </section>
 
 </main><!-- End #main -->
+
+<script>
+    var error = '@ViewBag.error';
+    if (error != '' && error != undefined) { 
+        alert(error);
+    }
+</script>
 @section Scripts {
     <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     @*<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>

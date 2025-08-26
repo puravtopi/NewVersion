@@ -45,6 +45,14 @@ namespace PainTrax.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
+
+                    string cnd = " and type like '%" + model.type + "%' ";
+                    var Data = _services.GetAll(cnd);
+
+                    if (Data.Count > 0) {
+                        ViewBag.error = "This visit type is already present.";
+                        return View(model);
+                    }
                     _services.Insert(model);
                 }
             }

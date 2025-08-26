@@ -63,15 +63,15 @@ namespace PainTrax.Web.Controllers
                 query += " and lc.id =" + locationid;
             }
 
-            if (mcodeid.Equals("1"))
+            if (mcodeid==1)
             {
                 query += " and pp.inhouseprocbit=1 ";
             }
-            else if (mcodeid.Equals("2"))
+            else if (mcodeid == 2)
             {
                 query += " and pp.Other =1 ";
             }
-            else if (mcodeid.Equals("3"))
+            else if (mcodeid == 3)
             {
                 query += " and pp.INhouseProcbit<>1 and  ISNULL(pp.Other,0) <> 1  ";
             }
@@ -250,6 +250,7 @@ namespace PainTrax.Web.Controllers
                 return Content("Error: " + ex.Message);
             }
         }
+
 
         [HttpGet]
         public IActionResult ProSXReport()

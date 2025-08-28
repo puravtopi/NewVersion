@@ -481,5 +481,15 @@ namespace PainTrax.Web.Services
 
             Execute(cm);
         }
+        public void UpdatePOCReportSideandLevel(string id, string side = "", string level = "")
+        {
+            string query = "";
+            if (side != "")
+                query = "update tbl_Procedures_Details set Sides='" + side + "',Level='" + level + "' where ProcedureDetail_ID=" + id;
+
+            MySqlCommand cm = new MySqlCommand(query, conn);
+
+            Execute(cm);
+        }
     }
 }

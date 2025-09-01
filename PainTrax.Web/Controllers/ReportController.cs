@@ -14,6 +14,8 @@ using System.Reflection;
 using DocumentFormat.OpenXml.Wordprocessing;
 using MailKit;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Font = DocumentFormat.OpenXml.Spreadsheet.Font;
+using Color = DocumentFormat.OpenXml.Spreadsheet.Color;
 
 namespace PainTrax.Web.Controllers
 {
@@ -152,12 +154,36 @@ namespace PainTrax.Web.Controllers
 
             if (!string.IsNullOrEmpty(ids))
             {
-                var arrayId = ids.Split(',');
+                    var arrayId = ids.Split(',');
 
-                for (int i = 0; i < arrayId.Length; i++)
-                {
+                    for (int i = 0; i < arrayId.Length; i++)
+                    {
                     _services.TransferToReschedules(arrayId[i],sDate);
                 }
+            }
+            return Json(1);
+        }
+        [HttpPost]
+        public IActionResult UpdatePOCReport(string ids, string side = "", string level = "")
+        {
+            ids = ids.TrimStart(',');
+            side = side.TrimStart(',');
+            level = level.TrimStart(',');
+
+            if (!string.IsNullOrEmpty(ids))
+            {
+                if (!string.IsNullOrEmpty(side) && !string.IsNullOrEmpty(level))
+                {
+                    var arrayId = ids.Split(',');
+                    var arraySide = side.Split(',');
+                    var arrayLevel = level.Split(',');
+
+                    for (int i = 0; i < arrayId.Length; i++)
+                    {                        
+                        _services.UpdatePOCReportSideandLevel(arrayId[i], arraySide[i], arrayLevel[i]);                        
+                    }
+                }
+                
             }
             return Json(1);
         }
@@ -221,10 +247,12 @@ namespace PainTrax.Web.Controllers
                     var sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Users" };
                     sheets.Append(sheet);
 
+                    var (defaultStyleIndex, headerStyleIndex) = CreateStyles(workbookPart.AddNewPart<WorkbookStylesPart>());
+
                     var headerRow = new Row();
                     foreach (DataColumn column in dt.Columns)
                     {
-                        var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName) };
+                        var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName), StyleIndex = headerStyleIndex };
                         headerRow.AppendChild(cell);
                     }
                     sheetData.AppendChild(headerRow);
@@ -239,6 +267,11 @@ namespace PainTrax.Web.Controllers
                         }
                         sheetData.AppendChild(newRow);
                     }
+                    // ✅ Enable AutoFilter for the header row
+                    string lastColumn = GetExcelColumnName(dt.Columns.Count);
+                    var autoFilter = new AutoFilter() { Reference = $"A1:{lastColumn}1" };
+                    worksheetPart.Worksheet.Append(autoFilter);                    
+                    
                 }
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
@@ -249,9 +282,72 @@ namespace PainTrax.Web.Controllers
                 // Log or handle the exception as needed
                 return Content("Error: " + ex.Message);
             }
+        }        
+        private static (uint defaultStyleIndex, uint headerStyleIndex) CreateStyles(WorkbookStylesPart stylesPart)
+        {
+            Stylesheet stylesheet = new Stylesheet();
+
+            // ✅ Fonts
+            DocumentFormat.OpenXml.Spreadsheet.Fonts fonts = new DocumentFormat.OpenXml.Spreadsheet.Fonts(
+                new Font(new Color { Rgb = "FF000000" }), // 0 - black font (default)
+                new Font(new Color { Rgb = "FFFFFFFF" })  // 1 - white font (for header)
+            );
+            stylesheet.Fonts = fonts;
+
+            // ✅ Fills
+            Fills fills = new Fills();
+            fills.Append(new Fill(new PatternFill() { PatternType = PatternValues.None })); // 0 - none
+            fills.Append(new Fill(new PatternFill() { PatternType = PatternValues.Gray125 })); // 1 - gray125 (required)
+            fills.Append(new Fill( // 2 - blue fill
+                new PatternFill(
+                    new ForegroundColor { Rgb = "4d4dff" } // blue
+                )
+                { PatternType = PatternValues.Solid }
+            ));
+            stylesheet.Fills = fills;
+
+            // ✅ Borders
+            Borders borders = new Borders(new DocumentFormat.OpenXml.Spreadsheet.Border()); // default border
+            stylesheet.Borders = borders;
+
+            // ✅ CellFormats
+            CellFormats cellFormats = new CellFormats();
+
+            // 0 - Default (black text, no fill)
+            cellFormats.Append(new CellFormat { FontId = 0, FillId = 0, BorderId = 0 });
+
+            // 1 - Header (white text + blue background)
+            cellFormats.Append(new CellFormat
+            {
+                FontId = 1,
+                FillId = 2,
+                BorderId = 0,
+                ApplyFont = true,
+                ApplyFill = true
+            });
+
+            stylesheet.CellFormats = cellFormats;
+            stylesPart.Stylesheet = stylesheet;
+            stylesPart.Stylesheet.Save();
+
+            return (0, 1); // (defaultStyleIndex, headerStyleIndex)
         }
+        // Helper: Convert column index to Excel column letter (A, B, ..., Z, AA, AB, etc.)
+        private string GetExcelColumnName(int columnNumber)
+        {
+            int dividend = columnNumber;
+            string columnName = String.Empty;
+            int modulo;
 
+            while (dividend > 0)
+            {
+                modulo = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modulo) + columnName;
+                dividend = (dividend - modulo) / 26;
+            }
 
+            return columnName;
+        } 
         [HttpGet]
         public IActionResult ProSXReport()
         {

@@ -80,6 +80,7 @@
                                 <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcel" asp-controller="Report">Export</a>
                                 <button class="btn btn-secondary" type="button" style="float:right; margin-left:10px;" onclick="fnReset()">Reset</button>
                                 <button class="btn btn-success" style="float:right; margin-left:10px;" type="submit">Search</button>
+                                <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSave" type="button" onclick="fnUpdatePOCReport()">Save</button>
                                 <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnTransfer" type="button" onclick="fnTransToExecute()">Transfer to Execute</button>
                                 <button class="btn btn-warning" style="float:right;display:none; margin-left:10px;" id="btnRescheduled" type="button" onclick="fnSMulticheduledPopup()">Reschedule</button>
 
@@ -126,8 +127,38 @@
                                             <td>@item.mcode</td>
                                             <td>@item.phone</td>
                                             <td>@item.location</td>
-                                            <td>@item.sides</td>
-                                            <td>@item.level</td>
+                                            @* <td>@item.sides</td> *@
+                                            <td>
+                                                @if (item.scheduled != null)
+                                                {
+                                                    <input type="text"
+                                                           name="sides[@item.procedureDetail_id]"
+                                                           class="form-control sides-input"
+                                                           value="@item.sides"
+                                                           data-id="@item.procedureDetail_id" />
+                                                    <input type="hidden" value="@item.procedureDetail_id" id="hdnId" />
+                                                }
+                                                else
+                                                {
+                                                    @item.sides
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.scheduled != null)
+                                                {
+                                                    <input type="text"
+                                                           name="level[@item.procedureDetail_id]"
+                                                           class="form-control level-input"
+                                                           value="@item.level"
+                                                           data-id="@item.procedureDetail_id" />
+                                                    @* <input type="hidden" value="@item.level" id="hdnlevel" /> *@
+                                                }
+                                                else
+                                                {
+                                                    @item.level
+                                                }
+                                            </td>
+                                           @*  <td>@item.level</td> *@
                                             <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
                                             <td><label id="lblsche">@(item.scheduled == null ? "" : item.scheduled.Value.ToString("MM/dd/yyyy"))</label></td>
                                             <td><label id="lblexe">@(item.executed == null ? "" : item.executed.Value.ToString("MM/dd/yyyy"))</label></td>
@@ -249,9 +280,11 @@
         if ($("#_scheduled").prop("checked")) {
             $("#btnTransfer").show();
             $("#btnRescheduled").show();
+            $("#btnSave").show();            
         } else {
             $("#btnTransfer").hide();
             $("#btnRescheduled").hide();
+             $("#btnSave").hide();
         }
     }
 
@@ -365,6 +398,54 @@
         }
     }
 
+        function fnUpdatePOCReport() {
+        debugger;        
+
+        var arrayIds = '';
+        var arraySide = '';
+        var arrayLevel = '';       
+        $('#tbl tbody tr').each(function () {
+        var $chkbox = $(this).find('input[type="checkbox"].chkTrans');
+
+        if ($chkbox.length && $chkbox.prop('checked')) {
+                var status = $chkbox.prop('checked');
+                if (status) {
+                    var id = $(this).find('#hid')
+                    arrayIds = arrayIds + ',' + id.val();
+                    
+                    // 🔹 get from textbox instead of hidden
+                var side = $(this).find('.sides-input');
+                arraySide += ',' + (side.length ? side.val() : '');
+
+                var level = $(this).find('.level-input');
+                arrayLevel += ',' + (level.length ? level.val() : '');
+                }
+                 }        
+                 });
+
+                 
+                 if (arrayIds === '') {
+                   arrayIds = $('#hdnId').val();
+                arraySide = $(".sides-input[data-id='" + arrayIds + "']").val();
+                arrayLevel = $(".level-input[data-id='" + arrayIds + "']").val();
+    }
+                var url = '@Url.Action("UpdatePOCReport", "Report")?ids=' + arrayIds + "&side=" + arraySide +"&level=" + arrayLevel;;
+
+            $.ajax({
+                type: "POST",
+                url: url,
+
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function () {
+
+                    location.reload();
+                },
+                failure: function (response) {
+                    alert("Invalid Details...")
+                }
+            });
+    }
     function fnReset() {
         $('#frmPOC').trigger("reset");
         $("#frmPOC")[0].reset();

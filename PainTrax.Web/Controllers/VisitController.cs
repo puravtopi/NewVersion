@@ -1823,7 +1823,7 @@ namespace PainTrax.Web.Controllers
                                         else if (column.ColumnName == "count")
                                         {
                                             html.Append("<td style='min-width:130px;'>");
-                                            html.Append("<input type='button' class='btn btn-warning btn-sm' style='margin-left:25px' onclick='CountPopup($(this));' data-Div='" + ii + "_counttable' data-Procedure_Detail_ID='" + row[30] + "' data-PatientIEID='" + row[24] + "' data-PID='" + row[0] + "' value='" + row[26] + "'  />");
+                                            html.Append("<input type='button' class='btn btn-warning btn-sm' style='margin-left:25px' onclick='CountPopup($(this));' data-Div='" + ii.Replace(' ','_') + "_counttable' data-Procedure_Detail_ID='" + row[30] + "' data-PatientIEID='" + row[24] + "' data-PID='" + row[0] + "' value='" + row[26] + "'  />");
                                             html.Append("</td>");
                                         }
                                         else if (column.ColumnName == "MCODE")
@@ -1836,7 +1836,7 @@ namespace PainTrax.Web.Controllers
                                 }
                                 html.Append("</tr>");
                             }
-                            html.Append("</tbody></table></div><div id='" + ii + "_counttable' style='padding-left: 1%' ></div></div></div></div>");
+                            html.Append("</tbody></table></div><div id='" + ii.Replace(' ', '_') + "_counttable' style='padding-left: 1%' ></div></div></div></div>");
 
                             string body = html.ToString();
 
@@ -4261,234 +4261,242 @@ namespace PainTrax.Web.Controllers
             int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
             int fu_id = 0;
 
-            var fuData = _ieService.GetLastFU(patientIEId, type);
+            var isMCIEPresent = _ieService.IsMCIEPresent(patientIEId, cmpid.Value);
 
-            if (fuData == null)
+            if (isMCIEPresent == null)
             {
-                var ieData = _ieService.GetOne(patientIEId);
+                var fuData = _ieService.GetLastFU(patientIEId, type);
 
-                tbl_patient_fu objFU = new tbl_patient_fu()
+                if (fuData == null || type == "MC IE")
                 {
-                    created_by = userid,
-                    doe = System.DateTime.Now,
-                    patientIE_ID = patientIEId,
-                    cmp_id = cmpid,
-                    created_date = System.DateTime.Now,
-                    is_active = true,
-                    patient_id = patientId,
-                    extra_comments = "",
-                    type = type,
-                    accident_type = ieData.accident_type,
-                    provider_id = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId),
-                    procedure_performed = ieData.procedure_performed,
-                    location_id = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId),
+                    var ieData = _ieService.GetOne(patientIEId);
 
-                };
-                fu_id = _patientFUservices.Insert(objFU);
-
-                try
-                {
-                    _forwardServices.GetOnePage1(patientIEId, fu_id, cmpid.Value, patientId);
-                }
-                catch (Exception ex)
-                {
-                    SaveLog(ex, "CreateFU");
-                }
-
-                try
-                {
-                    _forwardServices.GetOnePage2(patientIEId, fu_id, cmpid.Value, patientId);
-                }
-                catch (Exception ex)
-                {
-                    SaveLog(ex, "CreateFU");
-                }
-
-                try
-                {
-                    _forwardServices.GetOneNE(patientIEId, fu_id, cmpid.Value, patientId);
-                }
-                catch (Exception ex)
-                {
-                    SaveLog(ex, "CreateFU");
-                }
-
-                try
-                {
-                    _forwardServices.GetOneOther(patientIEId, cmpid.Value, fu_id, patientId);
-                }
-                catch (Exception ex)
-                {
-                    SaveLog(ex, "CreateFU");
-
-                }
-
-
-                try
-                {
-                    _forwardServices.GetPage3(patientIEId, cmpid.Value, fu_id, patientId);
-                }
-                catch (Exception ex)
-                {
-                    SaveLog(ex, "CreateFU");
-
-                }
-
-                try
-                {
-                    var iepage3 = _ieService.GetOnePage3(patientIEId);
-
-                    var fupage3 = new tbl_fu_page3();
-
-                    if (iepage3 != null)
-                        fupage3 = _mapper.Map<tbl_fu_page3>(iepage3);
-
-
-                    fupage3.fu_id = fu_id;
-                    fupage3.cmp_id = cmpid.Value;
-
-
-                    _fuPage3services.Insert(fupage3);
-                }
-                catch (Exception ex)
-                {
-                    SaveLog(ex, "CreateFU");
-                    return View("Error");
-                }
-                /*try
-                {
-                    _pocService.ForwardPOCIETOFU(patientIEId, fu_id);
-                }
-                catch (Exception ex)
-                {
-                    SaveLog(ex, "CreateFU");
-                    return View("Error");
-                }*/
-
-                try
-                {
-                    var pageOther = _ieService.GetOneOtherPage(patientIEId);
-                    var fupageOther = _mapper.Map<tbl_fu_other>(pageOther);
-
-                    if (fupageOther != null)
+                    tbl_patient_fu objFU = new tbl_patient_fu()
                     {
-                        fupageOther.fu_id = fu_id;
+                        created_by = userid,
+                        doe = System.DateTime.Now,
+                        patientIE_ID = patientIEId,
+                        cmp_id = cmpid,
+                        created_date = System.DateTime.Now,
+                        is_active = true,
+                        patient_id = patientId,
+                        extra_comments = "",
+                        type = type,
+                        accident_type = ieData.accident_type,
+                        provider_id = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId),
+                        procedure_performed = ieData.procedure_performed,
+                        location_id = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId),
+
+                    };
+                    fu_id = _patientFUservices.Insert(objFU);
+
+                    try
+                    {
+                        _forwardServices.GetOnePage1(patientIEId, fu_id, cmpid.Value, patientId);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
                     }
 
-                    var isFFExiste = _forwardServices.IsColumnPresent("Other", "followup_duration", cmpid.Value.ToString());
+                    try
+                    {
+                        _forwardServices.GetOnePage2(patientIEId, fu_id, cmpid.Value, patientId);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
+                    }
 
-                    if (!isFFExiste)
-                        fupageOther.followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
+                    try
+                    {
+                        _forwardServices.GetOneNE(patientIEId, fu_id, cmpid.Value, patientId);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
+                    }
 
-                    _fuOtherservices.Update(fupageOther);
+                    try
+                    {
+                        _forwardServices.GetOneOther(patientIEId, cmpid.Value, fu_id, patientId);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
+
+                    }
+
+
+                    try
+                    {
+                        _forwardServices.GetPage3(patientIEId, cmpid.Value, fu_id, patientId);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
+
+                    }
+
+                    try
+                    {
+                        var iepage3 = _ieService.GetOnePage3(patientIEId);
+
+                        var fupage3 = new tbl_fu_page3();
+
+                        if (iepage3 != null)
+                            fupage3 = _mapper.Map<tbl_fu_page3>(iepage3);
+
+
+                        fupage3.fu_id = fu_id;
+                        fupage3.cmp_id = cmpid.Value;
+
+
+                        _fuPage3services.Insert(fupage3);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
+                        return View("Error");
+                    }
+                    /*try
+                    {
+                        _pocService.ForwardPOCIETOFU(patientIEId, fu_id);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
+                        return View("Error");
+                    }*/
+
+                    try
+                    {
+                        var pageOther = _ieService.GetOneOtherPage(patientIEId);
+                        var fupageOther = _mapper.Map<tbl_fu_other>(pageOther);
+
+                        if (fupageOther != null)
+                        {
+                            fupageOther.fu_id = fu_id;
+                        }
+
+                        var isFFExiste = _forwardServices.IsColumnPresent("Other", "followup_duration", cmpid.Value.ToString());
+
+                        if (!isFFExiste)
+                            fupageOther.followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
+
+                        _fuOtherservices.Update(fupageOther);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    SaveLog(ex, "CreateFU");
+                    if (fuData.doe != null)
+                    {
+                        if (fuData.doe.Value.ToString("MM/dd/yyyy") == System.DateTime.Now.ToString("MM/dd/yyyy"))
+                        {
+                            return Json(new { success = false });
+                        }
+                    }
+
+                    tbl_patient_fu objFU = new tbl_patient_fu()
+                    {
+                        created_by = userid,
+                        doe = System.DateTime.Now,
+                        patientIE_ID = patientIEId,
+                        cmp_id = cmpid,
+                        created_date = System.DateTime.Now,
+                        is_active = true,
+                        patient_id = patientId,
+                        extra_comments = "",
+                        type = type,
+                        accident_type = fuData.accident_type,
+                        provider_id = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId),
+                        final_save = false,
+                        procedure_performed = fuData.procedure_performed,
+                        location_id = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId),
+
+                    };
+                    fu_id = _patientFUservices.Insert(objFU);
+
+                    try
+                    {
+                        _forwardServices.GetOnePage1(patientIEId, fu_id, cmpid.Value, patientId, fuData.id.Value);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
+                    }
+
+                    try
+                    {
+                        _forwardServices.GetOnePage2(patientIEId, fu_id, cmpid.Value, patientId, fuData.id.Value);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
+                    }
+
+                    try
+                    {
+                        _forwardServices.GetOneNE(patientIEId, fu_id, cmpid.Value, patientId, fuData.id.Value);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
+                    }
+
+                    try
+                    {
+                        _forwardServices.GetOneOther(patientIEId, cmpid.Value, fu_id, patientId, fuData.id.Value);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
+
+                    }
+
+
+                    try
+                    {
+                        _forwardServices.GetPage3(patientIEId, cmpid.Value, fu_id, patientId, fuData.id.Value);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
+
+                    }
+
+                    try
+                    {
+                        var pageOther = _fuOtherservices.GetOne(fu_id);
+                        var fupageOther = _mapper.Map<tbl_fu_other>(pageOther);
+
+                        if (fupageOther != null)
+                        {
+                            fupageOther.fu_id = fu_id;
+                        }
+
+                        var isFFExiste = _forwardServices.IsColumnPresent("Other", "followup_duration", cmpid.Value.ToString());
+
+                        if (!isFFExiste)
+                            fupageOther.followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
+
+                        _fuOtherservices.Update(fupageOther);
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLog(ex, "CreateFU");
+                    }
                 }
+                var redirectUrl = Url.Action("Create", "FuVisit", new { patientIEId = patientIEId, patientFUId = fu_id, type = type });
+                return Json(new { success = true, redirectUrl = redirectUrl });
             }
-            else
-            {
-                if (fuData.doe != null)
-                {
-                    if (fuData.doe.Value.ToString("MM/dd/yyyy") == System.DateTime.Now.ToString("MM/dd/yyyy"))
-                    {
-                        return Json(new { success = false });
-                    }
-                }
-
-                tbl_patient_fu objFU = new tbl_patient_fu()
-                {
-                    created_by = userid,
-                    doe = System.DateTime.Now,
-                    patientIE_ID = patientIEId,
-                    cmp_id = cmpid,
-                    created_date = System.DateTime.Now,
-                    is_active = true,
-                    patient_id = patientId,
-                    extra_comments = "",
-                    type = type,
-                    accident_type = fuData.accident_type,
-                    provider_id = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId),
-                    final_save = false,
-                    procedure_performed = fuData.procedure_performed,
-                    location_id= HttpContext.Session.GetInt32(SessionKeys.SessionLocationId),
-
-                };
-                fu_id = _patientFUservices.Insert(objFU);
-
-                try
-                {
-                    _forwardServices.GetOnePage1(patientIEId, fu_id, cmpid.Value, patientId, fuData.id.Value);
-                }
-                catch (Exception ex)
-                {
-                    SaveLog(ex, "CreateFU");
-                }
-
-                try
-                {
-                    _forwardServices.GetOnePage2(patientIEId, fu_id, cmpid.Value, patientId, fuData.id.Value);
-                }
-                catch (Exception ex)
-                {
-                    SaveLog(ex, "CreateFU");
-                }
-
-                try
-                {
-                    _forwardServices.GetOneNE(patientIEId, fu_id, cmpid.Value, patientId, fuData.id.Value);
-                }
-                catch (Exception ex)
-                {
-                    SaveLog(ex, "CreateFU");
-                }
-
-                try
-                {
-                    _forwardServices.GetOneOther(patientIEId, cmpid.Value, fu_id, patientId, fuData.id.Value);
-                }
-                catch (Exception ex)
-                {
-                    SaveLog(ex, "CreateFU");
-
-                }
-
-
-                try
-                {
-                    _forwardServices.GetPage3(patientIEId, cmpid.Value, fu_id, patientId, fuData.id.Value);
-                }
-                catch (Exception ex)
-                {
-                    SaveLog(ex, "CreateFU");
-
-                }
-
-                try
-                {
-                    var pageOther = _fuOtherservices.GetOne(fu_id);
-                    var fupageOther = _mapper.Map<tbl_fu_other>(pageOther);
-
-                    if (fupageOther != null)
-                    {
-                        fupageOther.fu_id = fu_id;
-                    }
-
-                    var isFFExiste = _forwardServices.IsColumnPresent("Other", "followup_duration", cmpid.Value.ToString());
-
-                    if (!isFFExiste)
-                        fupageOther.followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
-
-                    _fuOtherservices.Update(fupageOther);
-                }
-                catch (Exception ex)
-                {
-                    SaveLog(ex, "CreateFU");
-                }
+            else {
+                return Json(new { success = false, statusCode = 401 });
             }
-            var redirectUrl = Url.Action("Create", "FuVisit", new { patientIEId = patientIEId, patientFUId = fu_id, type = type });
-            return Json(new { success = true, redirectUrl = redirectUrl });
 
 
         }

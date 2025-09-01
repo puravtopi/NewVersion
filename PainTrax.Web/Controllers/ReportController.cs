@@ -255,16 +255,13 @@ namespace PainTrax.Web.Controllers
         [HttpGet]
         public IActionResult ProSXReport()
         {
-
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             var objPro = new ProSXReportVM();
             objPro.lstProSXReport = new List<ProSXReportVM>();
-            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+          
             ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
-
-            //objPro._executed = false;
-            //objPro._requested = false;
-            //objPro._scheduled = false;
-
+            ViewBag.dateList= _commonservices.GetProSXReportDate(cmpid.Value);
+          
             return View(objPro);
         }
 

@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -27,6 +29,7 @@ namespace PainTrax.Web.Controllers
         private readonly UserService _userService = new UserService();
         private readonly SettingsService _setting = new SettingsService();
         private readonly IEmailService _emailService;
+        private readonly POCServices _pocservices = new POCServices();
 
 
         public HomeController(ILogger<HomeController> logger, IEmailService emailService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
@@ -36,11 +39,41 @@ namespace PainTrax.Web.Controllers
             _httpContextAccessor = httpContextAccessor;
             _session = _httpContextAccessor.HttpContext.Session;
             _emailService = emailService;
+
         }
 
         public IActionResult Index()
         {
 
+            // this code is use to delete unwanted mcode from procedure table
+
+            //// Static path (adjust as per your environment)
+            //string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "poc.xlsx");
+
+            //var list = new List<MyPOCExcelModel>();
+
+            //using (SpreadsheetDocument document = SpreadsheetDocument.Open(filePath, false))
+            //{
+            //    WorkbookPart workbookPart = document.WorkbookPart;
+            //    Sheet firstSheet = workbookPart.Workbook.Sheets.Elements<Sheet>().First();
+            //    WorksheetPart worksheetPart = (WorksheetPart)workbookPart.GetPartById(firstSheet.Id);
+            //    Worksheet worksheet = worksheetPart.Worksheet;
+            //    SheetData sheetData = worksheet.GetFirstChild<SheetData>();
+
+            //    var rows = sheetData.Elements<Row>();
+
+            //    foreach (Row row in rows.Skip(1)) // skip header
+            //    {
+            //        var cells = row.Elements<Cell>().ToList();
+
+
+            //        var mcode = GetCellValue(workbookPart, cells[0]);
+
+            //        _pocservices.deleteMCode(mcode);
+                    
+
+            //    }
+            //}
 
 
             //TblCompany tbl = new TblCompany()
@@ -69,12 +102,37 @@ namespace PainTrax.Web.Controllers
                 ViewBag.TodaysIncCo = _dashboardservices.GetTotalInsuranceCompany(cmpid.Value);
                 ViewBag.TotalClaimNo = _dashboardservices.GetTotalClaimNo(cmpid.Value);
 
+
+                string query = " where pm.cmp_id=" + cmpid.ToString();
+                DateTime fdate = new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, 1);
+                DateTime tdate = fdate.AddMonths(1).AddDays(-1);
+
+
+                query = query + " and (tp.Scheduled BETWEEN '" + fdate.ToString("yyyy/MM/dd") + "' and '" + tdate.ToString("yyyy/MM/dd") + "')";
+
+
+                var data = _pocservices.GetPOCReport(query);
+
+
             }
             catch (Exception ex)
             {
                 SaveLog(ex, "Index");
             }
             return View();
+        }
+
+        private string GetCellValue(WorkbookPart workbookPart, Cell cell)
+        {
+            string value = cell.InnerText;
+
+            if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
+            {
+                return workbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>()
+                           .ElementAt(int.Parse(value)).InnerText;
+            }
+
+            return value;
         }
 
         public IActionResult Login()
@@ -98,7 +156,7 @@ namespace PainTrax.Web.Controllers
             try
             {
                 var response = _services.CompanyLogin(login);
-                                
+
 
                 if (response.Success)
                 {
@@ -118,7 +176,7 @@ namespace PainTrax.Web.Controllers
                     {
                         HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, setting.location);
                         HttpContext.Session.SetInt32(SessionKeys.SessionPageSize, setting.page_size);
-                        HttpContext.Session.SetString(SessionKeys.SessionDateFormat, setting.dateformat==null?"MM/dd/yyyy": setting.dateformat);
+                        HttpContext.Session.SetString(SessionKeys.SessionDateFormat, setting.dateformat == null ? "MM/dd/yyyy" : setting.dateformat);
                         HttpContext.Session.SetString(SessionKeys.SessionPageBreak, setting.pageBreakForInjection.ToString().ToLower());
                         HttpContext.Session.SetString(SessionKeys.SessionIsDaignosis, setting.isdaignosisshow.ToString().ToLower());
                         HttpContext.Session.SetString(SessionKeys.SessionDaignosisFoundStatment, setting.foundStatment == null ? "" : setting.foundStatment);
@@ -127,9 +185,9 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, string.IsNullOrEmpty(setting.header_template) ? "" : setting.header_template.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionPostop, setting.show_postop == null ? "true" : setting.show_postop.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionPreop, setting.show_preop == null ? "true" : setting.show_preop.ToString());
-                        HttpContext.Session.SetString(SessionKeys.SessionGAIT, setting.gait_default==null?"": setting.gait_default.ToString());
-                        HttpContext.Session.SetString(SessionKeys.SessionFUDate, setting.fu_default==null?"": setting.fu_default.ToString());
-                        HttpContext.Session.SetString(SessionKeys.SessionSideCase, setting.casetype==null?"U": setting.casetype.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionGAIT, setting.gait_default == null ? "" : setting.gait_default.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionFUDate, setting.fu_default == null ? "" : setting.fu_default.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionSideCase, setting.casetype == null ? "U" : setting.casetype.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionShowTableBorder, setting.table_border.ToString());
 
                     }
@@ -143,7 +201,7 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionHeaderTemplate, "");
                         HttpContext.Session.SetString(SessionKeys.SessionPreop, "true");
                         HttpContext.Session.SetString(SessionKeys.SessionPostop, "true");
-                        HttpContext.Session.SetString(SessionKeys.SessionSideCase,"U");
+                        HttpContext.Session.SetString(SessionKeys.SessionSideCase, "U");
                         HttpContext.Session.SetString(SessionKeys.SessionShowTableBorder, "true");
 
                     }
@@ -181,7 +239,7 @@ namespace PainTrax.Web.Controllers
 
                             return RedirectToAction("ChangePassword", new { tqrs = tqrs });
                         }
-                        
+
                     }
 
                     return RedirectToAction("GetProvider");
@@ -396,7 +454,7 @@ namespace PainTrax.Web.Controllers
                 var user = new tbl_users();
 
                 user.Id = Convert.ToInt32(model.cmpid);
-                user.password = EncryptionHelper.Encrypt(model.password);                
+                user.password = EncryptionHelper.Encrypt(model.password);
                 _userService.UpdateUserPassword(user);
 
                 ViewBag.Success = true;
@@ -470,5 +528,12 @@ namespace PainTrax.Web.Controllers
             new LogService().Insert(logdata);
         }
         #endregion 
+    }
+
+    public class MyPOCExcelModel
+    {
+
+        public string mcode { get; set; }
+
     }
 }

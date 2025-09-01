@@ -1615,7 +1615,7 @@ namespace PainTrax.Web.Controllers
                                         else if (column.ColumnName == "count")
                                         {
                                             html.Append("<td style='min-width:130px'>");
-                                            html.Append("<input type='button' class='btn btn-warning btn-sm' style='margin-left:25px' onclick='CountPopup($(this));' data-Div='" + ii + "_counttable' data-Procedure_Detail_ID='" + row[30] + "' data-PatientIEID='" + row[24] + "' data-PID='" + row[0] + "' value='" + row[26] + "'  />");
+                                            html.Append("<input type='button' class='btn btn-warning btn-sm' style='margin-left:25px' onclick='CountPopup($(this));' data-Div='" + ii.Replace(' ', '_') + "_counttable' data-Procedure_Detail_ID='" + row[30] + "' data-PatientIEID='" + row[24] + "' data-PID='" + row[0] + "' value='" + row[26] + "'  />");
                                             html.Append("</td>");
                                         }
                                         else if (column.ColumnName == "MCODE")
@@ -1628,7 +1628,7 @@ namespace PainTrax.Web.Controllers
                                 }
                                 html.Append("</tr>");
                             }
-                            html.Append("</tbody></table></div><div id='" + ii + "_counttable' style='padding-left: 1%' ></div></div></div></div>");
+                            html.Append("</tbody></table></div><div id='" + ii.Replace(' ', '_') + "_counttable' style='padding-left: 1%' ></div></div></div></div>");
 
                             string body = html.ToString();
 

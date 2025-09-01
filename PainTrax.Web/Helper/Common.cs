@@ -19,6 +19,7 @@ namespace PainTrax.Web.Helper
         private readonly StateService _stateService = new StateService();
         private readonly ReferringPhysicianService _physicianService = new ReferringPhysicianService();
         private readonly VisitTypeService _visitTypeService = new VisitTypeService();
+        private readonly ProSXServices _proSXServices = new ProSXServices();
 
         public List<SelectListItem> GetDesignation(int cmp_id)
         {
@@ -94,6 +95,33 @@ namespace PainTrax.Web.Helper
 
             return list;
         }
+
+
+        public List<SelectListItem> GetProSXReportDate(int cmp_id)
+        {
+
+            var list = new List<SelectListItem>();
+            var data = _proSXServices.GetProSXReportDate(cmp_id.ToString());
+
+            list.Add(new SelectListItem
+            {
+                Text = "--Select Date--",
+                Value = ""
+            });
+
+
+            foreach (var item in data)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = item,
+                    Value = item
+                });
+            }
+
+            return list;
+        }
+
         public List<SelectListItem> GetCaseType(int cmp_id)
         {
             string cnd = " and cmp_id=" + cmp_id;

@@ -481,5 +481,13 @@ namespace PainTrax.Web.Services
 
             Execute(cm);
         }
+
+        public void deleteMCode(string mcode)
+        {
+            string query = "delete from  tbl_Procedures where mcode='"+ mcode +"' and cmp_id=2";
+            MySqlCommand cm = new MySqlCommand(query, conn);
+
+            Execute(cm);
+        }
     }
 }

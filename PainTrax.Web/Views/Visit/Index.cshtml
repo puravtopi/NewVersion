@@ -30,9 +30,9 @@
                             @{
                                 if (HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionRoleAccess).Contains("Add Patient"))
                                 {
-                                        <div class="col-md-12 col-lg-12">
-                                            <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
-                                        </div>
+                                            <div class="col-md-12 col-lg-12">
+                                                <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
+                                            </div>
                                 }
                             }
                         </div>
@@ -696,8 +696,12 @@
                         $("#p_error").text('');
                         window.location.href = response.redirectUrl; // Assuming the response contains a redirect URL
                     }
-                    else
-                        $("#p_error").text(type + " present for this date.");
+                    else {
+                        if(response.statusCode==401)
+                            $("#p_error").text("MC IE already present for this patient.");
+                        else
+                            $("#p_error").text(type + " present for this date.");
+                    }
                 },
                 error: function (xhr, status, error) {
                     // Handle error

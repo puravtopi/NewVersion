@@ -48,6 +48,16 @@ public class PatientIEService : ParentService
         return datalist;
     }
 
+    public tbl_patient_fu? IsMCIEPresent(int id,int cmp_id)
+    {
+        DataTable dt = new DataTable();
+        MySqlCommand cm = new MySqlCommand("select cmp_id from tbl_patient_fu where patientIE_ID=@id and type = 'MC IE' and cmp_id=@cmpid order by id desc LIMIT 1", conn);
+        cm.Parameters.AddWithValue("@id", id);
+        cm.Parameters.AddWithValue("@cmpid", cmp_id);
+        var datalist = ConvertDataTable<tbl_patient_fu>(GetData(cm)).FirstOrDefault();
+        return datalist;
+    }
+
     public vm_patient_ie? GetOnebyPatientId(int patient_id)
     {
         DataTable dt = new DataTable();

@@ -97,30 +97,30 @@ namespace PainTrax.Web.Helper
         }
 
 
-        public List<SelectListItem> GetProSXReportDate(int cmp_id)
-        {
+        //public List<SelectListItem> GetProSXReportDate(int cmp_id)
+        //{
 
-            var list = new List<SelectListItem>();
-            var data = _proSXServices.GetProSXReportDate(cmp_id.ToString());
+        //    var list = new List<SelectListItem>();
+        //    var data = _proSXServices.GetProSXReportDate(cmp_id.ToString());
 
-            list.Add(new SelectListItem
-            {
-                Text = "--Select Date--",
-                Value = ""
-            });
+        //    list.Add(new SelectListItem
+        //    {
+        //        Text = "--Select Date--",
+        //        Value = ""
+        //    });
 
 
-            foreach (var item in data)
-            {
-                list.Add(new SelectListItem
-                {
-                    Text = item,
-                    Value = item
-                });
-            }
+        //    foreach (var item in data)
+        //    {
+        //        list.Add(new SelectListItem
+        //        {
+        //            Text = item,
+        //            Value = item
+        //        });
+        //    }
 
-            return list;
-        }
+        //    return list;
+        //}
 
         public List<SelectListItem> GetCaseType(int cmp_id)
         {

@@ -379,8 +379,22 @@ namespace PainTrax.Web.Controllers
             objPro.lstProSXReport = new List<ProSXReportVM>();
           
             ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
-            ViewBag.dateList= _commonservices.GetProSXReportDate(cmpid.Value);
-          
+            // ViewBag.dateList= _servicesProSX.GetProSXReportDate(cmpid.Value);
+            var dates = _servicesProSX.GetProSXReportDate(cmpid.Value.ToString()); // return List<DateTime>
+
+            var dateList = new List<SelectListItem>
+{
+    new SelectListItem { Value = "", Text = "--Select Date--", Selected = true }
+};
+
+            dateList.AddRange(dates.Select(d => new SelectListItem
+            {
+                Value = d.ToString("yyyy-MM-dd"), // ✅ machine-readable
+                Text = d.ToString("MM/dd/yyyy")  // ✅ user-friendly
+            }));
+
+            ViewBag.dateList = dateList;
+
             return View(objPro);
         }
 
@@ -395,7 +409,18 @@ namespace PainTrax.Web.Controllers
 
             if (fdate != null)
             {
-                _query = " (tp.Scheduled >= '" + fdate.Value.ToString("yyyy/MM/dd") + "' )";
+                _query = " (tp.Scheduled = '" + fdate.Value.ToString("yyyy/MM/dd") + "' )";
+            }
+            if (tdate != null)
+            {
+                _query = " (tp.Scheduled = '" + tdate.Value.ToString("yyyy/MM/dd") + "' )";
+            }
+
+            if (fdate != null && tdate != null)
+            {
+                _query = " (tp.Scheduled = '" + fdate.Value.ToString("yyyy/MM/dd") + "' )";
+
+
             }
 
             if (!string.IsNullOrEmpty(_query))
@@ -410,6 +435,20 @@ namespace PainTrax.Web.Controllers
             TempData["ProSXquery"] = query;
 
             ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+            var dates = _servicesProSX.GetProSXReportDate(cmpid.Value.ToString()); // return List<DateTime>
+
+            var dateList = new List<SelectListItem>
+{
+    new SelectListItem { Value = "", Text = "--Select Date--", Selected = true }
+};
+
+            dateList.AddRange(dates.Select(d => new SelectListItem
+            {
+                Value = d.ToString("yyyy-MM-dd"), // ✅ machine-readable
+                Text = d.ToString("MM/dd/yyyy")  // ✅ user-friendly
+            }));
+
+            ViewBag.dateList = dateList;
             return View(objPOC);
 
         }

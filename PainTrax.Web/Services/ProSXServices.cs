@@ -23,6 +23,7 @@ namespace PainTrax.Web.Services
         #endregion
 
 
+
         public List<ProSXReportVM> GetProSXReport(string cnd)
         {
             string query = "SELECT DISTINCT CONCAT(pm.lname,' ',pm.fname)as 'Name',IFNULL(pm.MC,'') AS MC,ie.Compensation AS 'CaseType' ," +
@@ -31,8 +32,9 @@ namespace PainTrax.Web.Services
            ",tp.Scheduled  FROM tbl_Procedures_Details tp" +
            " inner join tbl_patient_ie ie on tp.PatientIE_ID = ie.id" +
            " inner join tbl_Patient pm on pm.id = ie.Patient_ID" +
-           " inner join tbl_locations lc ON ie.Location_ID = lc.id" +
-           " inner join tbl_attorneys a on a.id = ie.attorney_id";
+           " inner join tbl_locations lc ON ie.Location_ID = lc.id";           
+            //" inner join tbl_locations lc ON ie.Location_ID = lc.id" +
+            //" inner join tbl_attorneys a on a.id = ie.attorney_id";
 
             if (!string.IsNullOrEmpty(cnd))
             {
@@ -45,18 +47,40 @@ namespace PainTrax.Web.Services
             return datalist;
         }
 
-        public List<string> GetProSXReportDate(string cmpid)
+        //public List<string> GetProSXReportDate(string cmpid)
+        //{
+        //    //string query = "SELECT DISTINCT DATE_FORMAT(pd.Scheduled, '%m/%d/%Y') AS Scheduled FROM tbl_procedures_details pd WHERE pd.Scheduled IS NOT NULL and pd.cmp_id=" + cmpid + " AND pd.Scheduled >= CURDATE() ORDER BY pd.Scheduled desc";
+        //    string query = "SELECT DISTINCT DATE_FORMAT(pd.Scheduled, '%m/%d/%Y') AS Scheduled FROM tbl_procedures_details pd inner join tbl_patient_ie ie on pd.PatientIE_ID = ie.id inner join tbl_Patient pm on pm.id = ie.Patient_ID  WHERE pd.Scheduled IS NOT NULL and pm.cmp_id=" + cmpid + " AND pd.Scheduled > CURDATE() ORDER BY pd.Scheduled desc";
+
+        //    MySqlCommand cm = new MySqlCommand(query, conn);
+
+        //    var datalist = GetData(cm);
+
+
+        //    List<string> list = datalist.AsEnumerable()
+        //                     .Select(row => row["Scheduled"].ToString())
+        //                     .ToList();
+
+        //    return list;
+        //}
+
+        public List<DateTime> GetProSXReportDate(string cmpid)
         {
-            string query = "SELECT DISTINCT DATE_FORMAT(pd.Scheduled, '%m/%d/%Y') AS Scheduled FROM tbl_procedures_details pd WHERE pd.Scheduled IS NOT NULL and pd.cmp_id=" + cmpid + " ORDER BY pd.Scheduled desc";
+            string query = @"SELECT DISTINCT pd.Scheduled
+                     FROM tbl_procedures_details pd
+                     INNER JOIN tbl_patient_ie ie ON pd.PatientIE_ID = ie.id
+                     INNER JOIN tbl_Patient pm ON pm.id = ie.Patient_ID
+                     WHERE pd.Scheduled IS NOT NULL
+                       AND pm.cmp_id=" + cmpid + @"
+                       AND pd.Scheduled > CURDATE()
+                     ORDER BY pd.Scheduled DESC";
 
             MySqlCommand cm = new MySqlCommand(query, conn);
-
             var datalist = GetData(cm);
 
-
-            List<string> list = datalist.AsEnumerable()
-                             .Select(row => row["Scheduled"].ToString())
-                             .ToList();
+            List<DateTime> list = datalist.AsEnumerable()
+                .Select(row => Convert.ToDateTime(row["Scheduled"]))
+                .ToList();
 
             return list;
         }

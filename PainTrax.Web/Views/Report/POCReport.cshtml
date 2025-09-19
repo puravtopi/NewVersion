@@ -58,17 +58,17 @@
                                         &nbsp;  Execute &nbsp;
                                     </label>
                                 </div>
-                                 <div class="col-md-3 col-lg-3">
-                                <label class="col-md-12 col-lg-12 col-form-label">MCODE Type</label>
-                                <div class="col-md-12 col-lg-12">
-                                <select asp-for="mcodeid" class="form-select">
-                                <option value="0">All</option>
-                                <option value="1">InHouse</option>
-                                <option value="2">Other</option>
-                                <option value="3">Rest</option>
-                                </select>
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="col-md-12 col-lg-12 col-form-label">MCODE Type</label>
+                                    <div class="col-md-12 col-lg-12">
+                                        <select asp-for="mcodeid" class="form-select">
+                                            <option value="0">All</option>
+                                            <option value="1">InHouse</option>
+                                            <option value="2">Other</option>
+                                            <option value="3">Rest</option>
+                                        </select>
 
-                                </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="clearfix"></div>
@@ -80,6 +80,7 @@
                                 <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcel" asp-controller="Report">Export</a>
                                 <button class="btn btn-secondary" type="button" style="float:right; margin-left:10px;" onclick="fnReset()">Reset</button>
                                 <button class="btn btn-success" style="float:right; margin-left:10px;" type="submit">Search</button>
+                                <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSC" type="button" onclick="fnSC()">Add Surgory Center</button>
                                 <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSave" type="button" onclick="fnUpdatePOCReport()">Save</button>
                                 <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnTransfer" type="button" onclick="fnTransToExecute()">Transfer to Execute</button>
                                 <button class="btn btn-warning" style="float:right;display:none; margin-left:10px;" id="btnRescheduled" type="button" onclick="fnSMulticheduledPopup()">Reschedule</button>
@@ -103,6 +104,8 @@
                                     <th scope="col" id="Location" onclick="sortTable(7);">Location</th>
                                     <th scope="col" id="Location" onclick="sortTable(8);">Side</th>
                                     <th scope="col" id="Location" onclick="sortTable(9);">Level</th>
+                                    <th scope="col" id="Location" onclick="sortTable(9);">Surgery center</th>
+                                    <th scope="col" id="Location" onclick="sortTable(9);">Surgon Name</th>
                                     <th scope="col">Requested</th>
                                     <th scope="col">Schedule</th>
                                     <th scope="col">Executed</th>
@@ -158,7 +161,9 @@
                                                     @item.level
                                                 }
                                             </td>
-                                           @*  <td>@item.level</td> *@
+                                            @*  <td>@item.level</td> *@
+                                            <td>@item.Surgerycenter_name</td>
+                                            <td>@item.surgon_name</td>
                                             <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
                                             <td><label id="lblsche">@(item.scheduled == null ? "" : item.scheduled.Value.ToString("MM/dd/yyyy"))</label></td>
                                             <td><label id="lblexe">@(item.executed == null ? "" : item.executed.Value.ToString("MM/dd/yyyy"))</label></td>
@@ -166,12 +171,12 @@
                                                 @{
                                                     if (item.scheduled != null)
                                                     {
-                                                                    <button class="btn btn-warning" type="button" onclick="fnScheduledPopup(@item.procedureDetail_id)">Reschedule</button>
+                                                        <button class="btn btn-warning" type="button" onclick="fnScheduledPopup(@item.procedureDetail_id)">Reschedule</button>
                                                     }
 
                                                     if (item.executed != null)
                                                     {
-                                                                    <a onclick="DownloadPdf( @item.id ,'@item.fname ', ' @item.lname ', ' @item.mcode ' )"><i class="btn btn-link" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Download PT FORM"> PT </i></a>
+                                                        <a onclick="DownloadPdf( @item.id ,'@item.fname ', ' @item.lname ', ' @item.mcode ' )"><i class="btn btn-link" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Download PT FORM"> PT </i></a>
                                                     }
                                                 }
 
@@ -246,6 +251,29 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="SCModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modeltitle">Surgery Center Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="ProcedureDetailIDs" />
+                <select id="ddlSC" class="form-select" asp-items="@ViewBag.surgoryList"></select>
+                <p id="p_error" style="color:red"></p>
+                <input id="txtSurgonName" class="form-control" placeholder="Surgon Name" />
+                <p id="sn_error" style="color:red"></p>
+                <input id="txtAssistant" class="form-control" placeholder="Assistant Name" />
+                <p id="a_error" style="color:red"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSaveComment" onclick="fnUpdateSC()">Save</button>
+            </div>
+        </div><!-- End Large Modal-->
+    </div>
+</div>
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
@@ -257,10 +285,10 @@
         fnScheduled();
     }
     function fnScheduledPopup(Id) {
-        
+
         $("#pid").val(Id);
         $("#scheduleModel").modal('show');
-      
+
     }
 
     function fnSMulticheduledPopup(Id) {
@@ -280,11 +308,13 @@
         if ($("#_scheduled").prop("checked")) {
             $("#btnTransfer").show();
             $("#btnRescheduled").show();
-            $("#btnSave").show();            
+            $("#btnSave").show();
+            $("#btnSC").show();
         } else {
             $("#btnTransfer").hide();
             $("#btnRescheduled").hide();
-             $("#btnSave").hide();
+            $("#btnSave").hide();
+            $("#btnSC").hide();
         }
     }
 
@@ -327,6 +357,79 @@
                 alert("Invalid Details...")
             }
         });
+    }
+
+    function fnUpdateSC() {
+        var sProcedureDetailIDs = $('#ProcedureDetailIDs').val();
+        var sId = $('#ddlSC').val();
+        var sSCName = $('#txtSurgonName').val();
+        var sAssistant = $('#txtAssistant').val();
+
+        var isValid = true;
+
+        if (sSCName == '' || sSCName == null) {
+            isValid = false;
+            $("#sn_error").text("Please Enter Surgon Name");
+        }
+        else {
+            $("#sn_error").text("");
+        }
+        if (sAssistant == '' || sAssistant == null) {
+            $("#a_error").text("Please Enter Assistant Name");
+            isValid = false;
+        } else {
+            $("#a_error").text("");
+        }
+
+        if (!isValid)
+            return;
+        var url = '@Url.Action("UpdateSurgoryCenter", "Home")?sProcedureDetailIDs=' + sProcedureDetailIDs + '&sId=' + sId + '&sSCName=' + sSCName + '&sAssistant=' + sAssistant;
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                if (data) {
+                    $('#txtSurgonName').val('');
+                    $('#txtAssistant').val('');
+                    $('#ddlSC').prop('selectedIndex', 0);
+                    $('#SCModal').modal('hide');
+                    //bindList("", "");
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnSC() {
+
+        var arrayIds = '';
+
+        $('table tr').each(function (i) {
+            // Only check rows that contain a checkbox
+            var $chkbox = $(this).find('input[type="checkbox"]');
+
+            if ($chkbox.length) {
+                var status = $chkbox.prop('checked');
+                if (status) {
+                    var id = $(this).find('#hid')
+                    arrayIds = arrayIds + ',' + id.val();
+                }
+            }
+        });
+        if (arrayIds == undefined || arrayIds == '' || arrayIds == null) {
+            alert("Please Select Patient.")
+        }
+        else {
+            $('#ProcedureDetailIDs').val(arrayIds);
+            $('#SCModal').modal('show');
+        }
+
+
+
     }
 
     function fnTransToRescheduled() {
@@ -373,7 +476,7 @@
     }
 
     function fnTransToRescheduledSingle() {
-        
+
         var id = $("#pid").val();
         var sDate = $("#txtRescheduleDate").val();
         var url = '@Url.Action("TransferToResheduled", "Report")?ids=' + id + "&sDate=" + sDate;
@@ -398,53 +501,53 @@
         }
     }
 
-        function fnUpdatePOCReport() {
-        debugger;        
+    function fnUpdatePOCReport() {
+        debugger;
 
         var arrayIds = '';
         var arraySide = '';
-        var arrayLevel = '';       
+        var arrayLevel = '';
         $('#tbl tbody tr').each(function () {
-        var $chkbox = $(this).find('input[type="checkbox"].chkTrans');
+            var $chkbox = $(this).find('input[type="checkbox"].chkTrans');
 
-        if ($chkbox.length && $chkbox.prop('checked')) {
+            if ($chkbox.length && $chkbox.prop('checked')) {
                 var status = $chkbox.prop('checked');
                 if (status) {
                     var id = $(this).find('#hid')
                     arrayIds = arrayIds + ',' + id.val();
-                    
+
                     // 🔹 get from textbox instead of hidden
-                var side = $(this).find('.sides-input');
-                arraySide += ',' + (side.length ? side.val() : '');
+                    var side = $(this).find('.sides-input');
+                    arraySide += ',' + (side.length ? side.val() : '');
 
-                var level = $(this).find('.level-input');
-                arrayLevel += ',' + (level.length ? level.val() : '');
+                    var level = $(this).find('.level-input');
+                    arrayLevel += ',' + (level.length ? level.val() : '');
                 }
-                 }        
-                 });
+            }
+        });
 
-                 
-                 if (arrayIds === '') {
-                   arrayIds = $('#hdnId').val();
-                arraySide = $(".sides-input[data-id='" + arrayIds + "']").val();
-                arrayLevel = $(".level-input[data-id='" + arrayIds + "']").val();
-    }
-                var url = '@Url.Action("UpdatePOCReport", "Report")?ids=' + arrayIds + "&side=" + arraySide +"&level=" + arrayLevel;;
 
-            $.ajax({
-                type: "POST",
-                url: url,
+        if (arrayIds === '') {
+            arrayIds = $('#hdnId').val();
+            arraySide = $(".sides-input[data-id='" + arrayIds + "']").val();
+            arrayLevel = $(".level-input[data-id='" + arrayIds + "']").val();
+        }
+        var url = '@Url.Action("UpdatePOCReport", "Report")?ids=' + arrayIds + "&side=" + arraySide + "&level=" + arrayLevel;;
 
-                contentType: "application/json;charset=utf-8",
-                dataType: "json",
-                success: function () {
+        $.ajax({
+            type: "POST",
+            url: url,
 
-                    location.reload();
-                },
-                failure: function (response) {
-                    alert("Invalid Details...")
-                }
-            });
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function () {
+
+                location.reload();
+            },
+            failure: function (response) {
+                alert("Invalid Details...")
+            }
+        });
     }
     function fnReset() {
         $('#frmPOC').trigger("reset");

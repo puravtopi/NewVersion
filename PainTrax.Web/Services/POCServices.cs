@@ -439,6 +439,7 @@ namespace PainTrax.Web.Services
             "ie.Compensation AS 'CaseType' ,ie.doa,pm.dob,ie.doe,pm.mobile AS Phone,ie.primary_policy_no,ie.primary_claim_no,ins.cmpname,tp.sides,tp.level," +
             "lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE ,CONCAT(u.fname,' ',u.lname) as providerName, " +
             "tp.Requested,p1.allergies,p1.note," +
+            "tp.surgercy_center,tp.surgon_name,tp.assistent_name,sc.Surgerycenter_name," +
             "tp.Executed," +
             "CASE when pm.gender = '1' THEN 'Male' when pm.gender = '2' then 'Female' when pm.gender = '3' then 'Other'  ELSE '' END AS gender," +
             "tp.Scheduled  FROM tbl_Procedures_Details tp" +
@@ -448,6 +449,7 @@ namespace PainTrax.Web.Services
             " inner join tbl_Patient pm on pm.id = ie.Patient_ID" +
             " inner join tbl_locations lc ON ie.Location_ID = lc.id" +
             " LEFT JOIN tbl_inscos ins ON ie.primary_ins_cmp_id = ins.id" +
+             " LEFT JOIN tbl_surgerycenter sc ON tp.surgercy_center = sc.Id  " +
             " LEFT JOIN tbl_users u ON ie.provider_id = u.id";
             // query += " where  (tp.Scheduled>='" + DateTime.Now.Date.ToString("yyyy/MM/dd") + "')";
 
@@ -462,6 +464,23 @@ namespace PainTrax.Web.Services
             return datalist;
         }
 
+
+        public List<SurgoryCenterDashboardVM> GetSurgoryDashboardData(string fDate, string tDate, string cmpId)
+        {
+            try
+            {
+                DataTable dt = new DataTable();
+                MySqlCommand cm = new MySqlCommand("CALL sp_Get_Suregory_Dashboard(" + cmpId + ", '" + fDate + "','" + tDate + "')", conn);
+
+                var datalist = ConvertDataTable<SurgoryCenterDashboardVM>(GetData(cm));
+                return datalist;
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
 
         public void TransferToExecute(string id, string sDate)
         {
@@ -494,10 +513,28 @@ namespace PainTrax.Web.Services
 
         public void deleteMCode(string mcode)
         {
-            string query = "delete from  tbl_Procedures where mcode='"+ mcode +"' and cmp_id=2";
+            string query = "delete from  tbl_Procedures where mcode='" + mcode + "' and cmp_id=2";
             MySqlCommand cm = new MySqlCommand(query, conn);
 
             Execute(cm);
+        }
+
+        public bool UpdatePOCSurgoryCenter(string sProcedureDetailIDs, string sId, string sSCName, string sAssistant)
+        {
+            try
+            {
+                string query = "call sp_Update_SurgeryCenter(" + sId + ",'" + sSCName + "','" + sAssistant + "', '" + sProcedureDetailIDs.TrimStart(',') + "')";
+
+                MySqlCommand cm = new MySqlCommand(query, conn);
+
+                Execute(cm);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

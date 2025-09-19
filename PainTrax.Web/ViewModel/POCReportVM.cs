@@ -29,6 +29,10 @@ namespace PainTrax.Web.ViewModel
         public string sides { get; set; }
         public string level { get; set; }
         public string providerName { get; set; }
+        public int? surgercy_center { get; set; }
+        public string surgon_name { get; set; }
+        public string assistent_name { get; set; }
+        public string Surgerycenter_name { get; set; }
         public DateTime? requested { get; set; }
         public DateTime? executed { get; set; }
         public DateTime? scheduled { get; set; }

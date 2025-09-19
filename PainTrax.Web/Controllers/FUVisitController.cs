@@ -1355,21 +1355,21 @@ namespace PainTrax.Web.Controllers
 
                 foreach (var ii in injurbodyparts)
                 {
-
-                    if (ii.ToLower().Contains("left"))
+                    var _bodyparts = _commonservices.GetBodyPart(ii);
+                    if (_bodyparts.ToLower().Contains("left"))
                     {
                         potion = "Left";
-                        iinew = ii.Substring(4, ii.Length - 4);
+                        iinew = _bodyparts.Substring(4, _bodyparts.Length - 4);
                     }
-                    else if (ii.ToLower().Contains("right"))
+                    else if (_bodyparts.ToLower().Contains("right"))
                     {
                         potion = "Right";
-                        iinew = ii.Substring(5, ii.Length - 5);
+                        iinew = _bodyparts.Substring(5, _bodyparts.Length - 5);
                     }
                     else
                     {
                         potion = null;
-                        iinew = ii;
+                        iinew = _bodyparts;
                     }
                     int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                     //var x = _pocService.GetAllProceduresFU(iinew.Trim(), patientFUId, potion, cmpid.Value); //commented by moulick as all poc required so specific visit wise poc cancled. 
@@ -2124,9 +2124,10 @@ namespace PainTrax.Web.Controllers
             bodyparts = bodyparts.Replace("_", " ");
             bodyparts = bodyparts.TrimEnd();
             ViewBag.BodyPart = bodyparts.ToUpper();
+            var _bodyparts = _commonservices.GetBodyPart(bodyparts);
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
-            string cnd = " and cmp_id=" + cmpid + " and (BodyPart='" + bodyparts + "' or Description like '%" + bodyparts + "%') order by Description desc";
+            string cnd = " and cmp_id=" + cmpid + " and (BodyPart='" + _bodyparts + "' or Description like '%" + _bodyparts + "%') order by Description desc";
 
             var data = _diagcodesService.GetAll(cnd);
 

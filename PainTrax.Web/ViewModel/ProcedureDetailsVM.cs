@@ -46,6 +46,7 @@
         public bool? IsVaccinated { get; set; }
         public string? Vac_Status { get; set; }
         public string? Vac_Note { get; set; }
+        public int? Cmp_Id { get; set; }
     }
 
     public class ProcedureDetailsVMNew

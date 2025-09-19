@@ -151,6 +151,7 @@
     <None Include="Views\State\Create.cshtml" />
     <None Include="Views\State\Edit.cshtml" />
     <None Include="Views\State\Index.cshtml" />
+    <None Include="Views\TransferDoc\Index.cshtml" />
     <None Include="Views\Treatment\Create.cshtml" />
     <None Include="Views\Treatment\Edit.cshtml" />
     <None Include="Views\Treatment\Index.cshtml" />

@@ -30,6 +30,7 @@ namespace PainTrax.Web.Controllers
         private readonly SettingsService _setting = new SettingsService();
         private readonly IEmailService _emailService;
         private readonly POCServices _pocservices = new POCServices();
+        private readonly SurgeryCentreService _surgeryCentreService = new SurgeryCentreService();
 
 
         public HomeController(ILogger<HomeController> logger, IEmailService emailService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
@@ -70,7 +71,7 @@ namespace PainTrax.Web.Controllers
             //        var mcode = GetCellValue(workbookPart, cells[0]);
 
             //        _pocservices.deleteMCode(mcode);
-                    
+
 
             //    }
             //}
@@ -102,24 +103,86 @@ namespace PainTrax.Web.Controllers
                 ViewBag.TodaysIncCo = _dashboardservices.GetTotalInsuranceCompany(cmpid.Value);
                 ViewBag.TotalClaimNo = _dashboardservices.GetTotalClaimNo(cmpid.Value);
 
-
-                string query = " where pm.cmp_id=" + cmpid.ToString();
-                DateTime fdate = new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, 1);
-                DateTime tdate = fdate.AddMonths(1).AddDays(-1);
-
-
-                query = query + " and (tp.Scheduled BETWEEN '" + fdate.ToString("yyyy/MM/dd") + "' and '" + tdate.ToString("yyyy/MM/dd") + "')";
+                string cnd = " and cmp_id=" + cmpid;
+                var data = _surgeryCentreService.GetAll(cnd);
+                var list = new List<SelectListItem>();
 
 
-                var data = _pocservices.GetPOCReport(query);
 
-
+                foreach (var item in data)
+                {
+                    list.Add(new SelectListItem
+                    {
+                        Text = item.Surgerycenter_name.ToString(),
+                        Value = item.Id.ToString()
+                    });
+                }
+                ViewBag.surgoryList = list;
             }
             catch (Exception ex)
             {
                 SaveLog(ex, "Index");
             }
             return View();
+        }
+
+        public IActionResult ScheduleList(string fDate = "", string tDate = "")
+        {
+            try
+            {
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+                var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
+                // Skiping number of Rows count
+                var start = Request.Form["start"].FirstOrDefault();
+                // Paging Length 10,20
+                var length = Request.Form["length"].FirstOrDefault();
+                // Sort Column Name
+                var sortColumn = Request.Form["order[0][column]"].FirstOrDefault();
+                // Sort Column Direction ( asc ,desc)
+                var sortColumnDirection = Request.Form["order[0][dir]"].FirstOrDefault();
+                // Search Value from (Search box)
+                var searchValue = Request.Form["search[value]"].FirstOrDefault();
+
+                //Paging Size (10,20,50,100)
+                int pageSize = length != null ? Convert.ToInt32(length) : 0;
+                int skip = start != null ? Convert.ToInt32(start) : 0;
+                int recordsTotal = 0;
+
+
+
+                DateTime fdate = string.IsNullOrEmpty(fDate) ? new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, 1) : Convert.ToDateTime(fDate);
+                DateTime tdate = string.IsNullOrEmpty(tDate) ? fdate.AddMonths(1).AddDays(-1) : Convert.ToDateTime(tDate);
+
+
+                var Data = _pocservices.GetSurgoryDashboardData(fdate.ToString("yyyy-MM-dd"), tdate.ToString("yyyy-MM-dd"), cmpid.ToString());
+
+                //Sorting
+                if (!string.IsNullOrEmpty(sortColumn) && !string.IsNullOrEmpty(sortColumnDirection))
+                {
+                    var property = typeof(SurgoryCenterDashboardVM).GetProperties()[Convert.ToInt32(sortColumn)];
+                    if (sortColumnDirection.ToUpper() == "ASC")
+                    {
+                        Data = Data.OrderBy(x => property.GetValue(x, null)).ToList();
+                    }
+                    else
+                        Data = Data.OrderByDescending(x => property.GetValue(x, null)).ToList();
+                }
+                //Search
+
+
+                //total number of rows count 
+                recordsTotal = Data.Count();
+                //Paging 
+                var data = Data.Skip(skip).Take(pageSize).ToList();
+                //Returning Json Data
+                return Json(new { draw = draw, recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data });
+
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "List");
+            }
+            return Json("");
         }
 
         private string GetCellValue(WorkbookPart workbookPart, Cell cell)
@@ -503,6 +566,13 @@ namespace PainTrax.Web.Controllers
             }
             //return View();
             return RedirectToAction("GetProvider");
+        }
+
+        [HttpPost]
+        public IActionResult UpdateSurgoryCenter(string sProcedureDetailIDs, string sId, string sSCName, string sAssistant)
+        {
+            var result = _pocservices.UpdatePOCSurgoryCenter(sProcedureDetailIDs, sId, sSCName, sAssistant);
+            return Json(result);
         }
 
         #region private Method

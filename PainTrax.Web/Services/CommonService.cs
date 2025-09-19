@@ -41,5 +41,7 @@ namespace PainTrax.Web.Services
             List<tbl_treatment_master> dataList = ConvertDataTable<tbl_treatment_master>(GetData(query));
             return dataList;
         }
+
+       
     }
 }

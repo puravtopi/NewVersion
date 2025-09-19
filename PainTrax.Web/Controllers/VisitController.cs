@@ -984,6 +984,8 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
+                bodyName = _commonservices.GetBodyPart(bodyName);
+
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 string cnd = " and bodypart='" + bodyName + "' and cmp_id=" + cmpid;
 
@@ -1420,9 +1422,10 @@ namespace PainTrax.Web.Controllers
                 bodyparts = bodyparts.Replace("_", " ");
                 bodyparts = bodyparts.TrimEnd();
                 ViewBag.BodyPart = bodyparts.ToUpper();
+                var _bodyparts = _commonservices.GetBodyPart(bodyparts);
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
-                string cnd = " and cmp_id=" + cmpid + " and (BodyPart='" + bodyparts + "' or Description like '%" + bodyparts + "%') order by display_order ASC";
+                string cnd = " and cmp_id=" + cmpid + " and (BodyPart='" + _bodyparts + "' or Description like '%" + _bodyparts + "%') order by display_order ASC";
 
                 var data = _diagcodesService.GetAll(cnd);
 
@@ -1461,9 +1464,10 @@ namespace PainTrax.Web.Controllers
                 bodyparts = bodyparts.Replace(",", "','");
 
                 ViewBag.BodyPart = bodyparts.ToUpper();
+                var _bodyparts = _commonservices.GetBodyPart(bodyparts);
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
-                string cnd = " and cmp_id=" + cmpid + " and BodyPart in ('" + bodyparts + "')";
+                string cnd = " and cmp_id=" + cmpid + " and BodyPart in ('" + _bodyparts + "')";
 
                 var data = _diagcodesService.GetAll(cnd);
 
@@ -1561,21 +1565,21 @@ namespace PainTrax.Web.Controllers
 
                 foreach (var ii in injurbodyparts)
                 {
-
-                    if (ii.ToLower().Contains("left"))
+                    var _bodyparts = _commonservices.GetBodyPart(ii);
+                    if (_bodyparts.ToLower().Contains("left"))
                     {
                         potion = "Left";
-                        iinew = ii.Substring(4, ii.Length - 4);
+                        iinew = _bodyparts.Substring(4, ii.Length - 4);
                     }
-                    else if (ii.ToLower().Contains("right"))
+                    else if (_bodyparts.ToLower().Contains("right"))
                     {
                         potion = "Right";
-                        iinew = ii.Substring(5, ii.Length - 5);
+                        iinew = _bodyparts.Substring(5, ii.Length - 5);
                     }
                     else
                     {
                         potion = null;
-                        iinew = ii;
+                        iinew = _bodyparts;
                     }
 
                     int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
@@ -1823,7 +1827,7 @@ namespace PainTrax.Web.Controllers
                                         else if (column.ColumnName == "count")
                                         {
                                             html.Append("<td style='min-width:130px;'>");
-                                            html.Append("<input type='button' class='btn btn-warning btn-sm' style='margin-left:25px' onclick='CountPopup($(this));' data-Div='" + ii.Replace(' ','_') + "_counttable' data-Procedure_Detail_ID='" + row[30] + "' data-PatientIEID='" + row[24] + "' data-PID='" + row[0] + "' value='" + row[26] + "'  />");
+                                            html.Append("<input type='button' class='btn btn-warning btn-sm' style='margin-left:25px' onclick='CountPopup($(this));' data-Div='" + ii.Replace(' ', '_') + "_counttable' data-Procedure_Detail_ID='" + row[30] + "' data-PatientIEID='" + row[24] + "' data-PID='" + row[0] + "' value='" + row[26] + "'  />");
                                             html.Append("</td>");
                                         }
                                         else if (column.ColumnName == "MCODE")
@@ -4271,6 +4275,14 @@ namespace PainTrax.Web.Controllers
                 {
                     var ieData = _ieService.GetOne(patientIEId);
 
+                    if (ieData.doe!=null) {
+
+                        if (System.DateTime.Now.ToString("yyyy-MM-dd") == ieData.doe.Value.ToString("yyyy-MM-dd"))
+                        {
+                            return Json(new { success = false });
+                        }
+                    }
+
                     tbl_patient_fu objFU = new tbl_patient_fu()
                     {
                         created_by = userid,
@@ -4395,7 +4407,12 @@ namespace PainTrax.Web.Controllers
                 {
                     if (fuData.doe != null)
                     {
-                        if (fuData.doe.Value.ToString("MM/dd/yyyy") == System.DateTime.Now.ToString("MM/dd/yyyy"))
+
+                        var cnd = " and cmp_id=" + cmpid.Value.ToString() + " and id=" + patientIEId+" and DATE(doe)="+ fuData.doe.Value.ToString("yyyy-MM-dd");
+
+                        var result = _ieService.GetOneFromCondtion(cnd);
+
+                        if ((fuData.doe.Value.ToString("MM/dd/yyyy") == System.DateTime.Now.ToString("MM/dd/yyyy")) || result != null)
                         {
                             return Json(new { success = false });
                         }
@@ -4494,7 +4511,8 @@ namespace PainTrax.Web.Controllers
                 var redirectUrl = Url.Action("Create", "FuVisit", new { patientIEId = patientIEId, patientFUId = fu_id, type = type });
                 return Json(new { success = true, redirectUrl = redirectUrl });
             }
-            else {
+            else
+            {
                 return Json(new { success = false, statusCode = 401 });
             }
 

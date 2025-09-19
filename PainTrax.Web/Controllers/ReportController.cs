@@ -16,6 +16,7 @@ using MailKit;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Font = DocumentFormat.OpenXml.Spreadsheet.Font;
 using Color = DocumentFormat.OpenXml.Spreadsheet.Color;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PainTrax.Web.Controllers
 {
@@ -33,6 +34,7 @@ namespace PainTrax.Web.Controllers
         private readonly PtsIEServices _servicesPtsIE = new PtsIEServices();
         private readonly MDTImportServices _servicesMDTImport = new MDTImportServices();
         private readonly Common _commonservices = new Common();
+        private readonly SurgeryCentreService _surgeryCentreService = new SurgeryCentreService();
 
         public ReportController(ILogger<ReportController> logger)
         {
@@ -50,6 +52,8 @@ namespace PainTrax.Web.Controllers
             objPOC._executed = false;
             objPOC._requested = false;
             objPOC._scheduled = false;
+
+            
 
             return View(objPOC);
         }
@@ -123,6 +127,25 @@ namespace PainTrax.Web.Controllers
             TempData["query"] = query;
 
             ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+
+
+            string cnd = " and cmp_id=" + cmpid;
+            var sdata = _surgeryCentreService.GetAll(cnd);
+            var list = new List<SelectListItem>();
+
+
+
+            foreach (var item in sdata)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = item.Surgerycenter_name.ToString(),
+                    Value = item.Id.ToString()
+                });
+            }
+            ViewBag.surgoryList = list;
+
             return View(objPOC);
 
         }

@@ -38,6 +38,19 @@ public class PatientIEService : ParentService
         return datalist;
     }
 
+    public tbl_patient_ie? GetOneFromCondtion(string cnd)
+    {
+        string query = "select * from tbl_patient_ie where 1=1 ";
+
+        if (!string.IsNullOrEmpty(cnd))
+            query = query + cnd;
+        DataTable dt = new DataTable();
+        MySqlCommand cm = new MySqlCommand(query, conn);
+      
+        var datalist = ConvertDataTable<tbl_patient_ie>(GetData(cm)).FirstOrDefault();
+        return datalist;
+    }
+
     public tbl_patient_fu? GetLastFU(int data,string type)
     {
         DataTable dt = new DataTable();

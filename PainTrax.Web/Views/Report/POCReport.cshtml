@@ -66,6 +66,7 @@
                                             <option value="1">InHouse</option>
                                             <option value="2">Other</option>
                                             <option value="3">Rest</option>
+                                            <option value="4">SX Cnt</option>
                                         </select>
 
                                     </div>
@@ -79,8 +80,8 @@
 
                                 <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcel" asp-controller="Report">Export</a>
                                 <button class="btn btn-secondary" type="button" style="float:right; margin-left:10px;" onclick="fnReset()">Reset</button>
-                                <button class="btn btn-success" style="float:right; margin-left:10px;" type="submit">Search</button>
-                                <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSC" type="button" onclick="fnSC()">Add Surgory Center</button>
+                                <button class="btn btn-success" style="float:right; margin-left:10px;" type="submit" id="btnSearch">Search</button>
+                                <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSC" type="button" onclick="fnSC()">Add Surgery Center</button>
                                 <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSave" type="button" onclick="fnUpdatePOCReport()">Save</button>
                                 <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnTransfer" type="button" onclick="fnTransToExecute()">Transfer to Execute</button>
                                 <button class="btn btn-warning" style="float:right;display:none; margin-left:10px;" id="btnRescheduled" type="button" onclick="fnSMulticheduledPopup()">Reschedule</button>
@@ -93,9 +94,13 @@
                             <thead>
                                 <tr>
 
-                                    <th scope="col"></th>
-
-                                    <th scope="col" id="name" onclick="sortTable(1);">Name</th>
+                                    <th scope="col"> <input type="checkbox" id="chkAll" /></th>
+                                    @{
+                                        if (ViewBag.colName.contains("name"))
+                                        {
+                                            <th scope="col" id="name" onclick="sortTable(1);">Name</th>
+                                        }
+                                    }
                                     <th scope="col" id="case" onclick="sortTable(2);">Case</th>
                                     <th scope="col" id="dob" onclick="sortTable(3);">DOB</th>
                                     <th scope="col" id="DOA" onclick="sortTable(4);">DOA</th>
@@ -104,8 +109,8 @@
                                     <th scope="col" id="Location" onclick="sortTable(7);">Location</th>
                                     <th scope="col" id="Location" onclick="sortTable(8);">Side</th>
                                     <th scope="col" id="Location" onclick="sortTable(9);">Level</th>
-                                    <th scope="col" id="Location" onclick="sortTable(9);">Surgery center</th>
-                                    <th scope="col" id="Location" onclick="sortTable(9);">Surgon Name</th>
+                                    <th scope="col" id="Location" onclick="sortTable(9);">Surgery Center</th>
+                                    <th scope="col" id="Location" onclick="sortTable(9);">Surgone Name</th>
                                     <th scope="col">Requested</th>
                                     <th scope="col">Schedule</th>
                                     <th scope="col">Executed</th>
@@ -262,7 +267,7 @@
                 <input type="hidden" id="ProcedureDetailIDs" />
                 <select id="ddlSC" class="form-select" asp-items="@ViewBag.surgoryList"></select>
                 <p id="p_error" style="color:red"></p>
-                <input id="txtSurgonName" class="form-control" placeholder="Surgon Name" />
+                <input id="txtSurgonName" class="form-control" placeholder="Surgone Name" />
                 <p id="sn_error" style="color:red"></p>
                 <input id="txtAssistant" class="form-control" placeholder="Assistant Name" />
                 <p id="a_error" style="color:red"></p>
@@ -367,19 +372,19 @@
 
         var isValid = true;
 
-        if (sSCName == '' || sSCName == null) {
-            isValid = false;
-            $("#sn_error").text("Please Enter Surgon Name");
-        }
-        else {
-            $("#sn_error").text("");
-        }
-        if (sAssistant == '' || sAssistant == null) {
-            $("#a_error").text("Please Enter Assistant Name");
-            isValid = false;
-        } else {
-            $("#a_error").text("");
-        }
+        // if (sSCName == '' || sSCName == null) {
+        //     isValid = false;
+        //     $("#sn_error").text("Please Enter Surgon Name");
+        // }
+        // else {
+        //     $("#sn_error").text("");
+        // }
+        // if (sAssistant == '' || sAssistant == null) {
+        //     $("#a_error").text("Please Enter Assistant Name");
+        //     isValid = false;
+        // } else {
+        //     $("#a_error").text("");
+        // }
 
         if (!isValid)
             return;
@@ -395,7 +400,7 @@
                     $('#txtAssistant').val('');
                     $('#ddlSC').prop('selectedIndex', 0);
                     $('#SCModal').modal('hide');
-                    //bindList("", "");
+                    $('#btnSearch').click();
                 }
             },
             error: function (xhr, status, error) {
@@ -410,7 +415,7 @@
 
         $('table tr').each(function (i) {
             // Only check rows that contain a checkbox
-            var $chkbox = $(this).find('input[type="checkbox"]');
+            var $chkbox = $(this).find('input[type="checkbox"]').not('#chkAll');
 
             if ($chkbox.length) {
                 var status = $chkbox.prop('checked');
@@ -619,5 +624,10 @@
             table.querySelector("tbody").appendChild(row);
         });
     }
+
+
+    $(document).on('change', '#chkAll', function () {
+        $('.chkTrans').prop('checked', this.checked);
+    });
 
 </script>

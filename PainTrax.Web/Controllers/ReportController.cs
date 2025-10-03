@@ -81,6 +81,10 @@ namespace PainTrax.Web.Controllers
             {
                 query += " and pp.INhouseProcbit<>1 and  ISNULL(pp.Other,0) <> 1  ";
             }
+            else if (mcodeid == 4)
+            {
+                query += " and pp.inout=1";
+            }
 
             string _query = "";
 

@@ -960,10 +960,13 @@ namespace PainTrax.Web.Controllers
                 else
                     cnd = " and fname='" + model.fname + "' and lname='" + model.lname + "' and mname is null  and cmp_id=" + cmpid;
 
-                if (string.IsNullOrEmpty(model.account_no))
-                    cnd = cnd + " and account_no is null";
-                else
+                //if (string.IsNullOrEmpty(model.account_no))
+                //    cnd = cnd + " and account_no is null";
+                //else
+                //    cnd = cnd + " and account_no='" + model.account_no + "'";
+                if (!string.IsNullOrEmpty(model.account_no))
                     cnd = cnd + " and account_no='" + model.account_no + "'";
+               
 
                 var data = _patientservices.GetAll(cnd);
 
@@ -987,6 +990,7 @@ namespace PainTrax.Web.Controllers
                 bodyName = _commonservices.GetBodyPart(bodyName);
 
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
                 string cnd = " and bodypart='" + bodyName + "' and cmp_id=" + cmpid;
 
                 var data = _macroService.GetAll(cnd);
@@ -2344,6 +2348,15 @@ namespace PainTrax.Web.Controllers
             try
             {
                 _ieService.Delete(ieId, pId);
+                string cmpid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
+                string msg = "IEID: " + ieId + " and PId: " + pId + " is deleted by " + HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId).ToString() + " in company id: " + cmpid;
+                var logdata = new tbl_log
+                {
+                    CreatedDate = DateTime.Now,
+                    CreatedBy = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId),
+                    Message = msg
+                };
+                new LogService().Insert(logdata);
             }
             catch (Exception ex)
             {

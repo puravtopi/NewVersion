@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using PainTrax.Web.Helper;
 using PainTrax.Web.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -45,6 +46,10 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddApplicationInsightsTelemetry();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();   // Console
+builder.Logging.AddDebug();     // VS Debug window
 
 
 var app = builder.Build();

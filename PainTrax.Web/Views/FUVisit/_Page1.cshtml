@@ -458,64 +458,64 @@
 
     $('#txtbodypart').on('itemAdded', function (event) {
 
-        var item = event.item;
-        try {
-            var cc = ckCC.getData();
-            var pe = ckPE.getData();
-            var assessment = ckAssessment.getData();
-            //var rom = quillROM.root.innerHTML;
-            var daig = ckDaignosis.getData();
+        var item = event.item.toLowerCase(); // normalize case
+       
+            try {
+                var cc = ckCC.getData();
+                var pe = ckPE.getData();
+                var assessment = ckAssessment.getData();
+                //var rom = quillROM.root.innerHTML;
+                var daig = ckDaignosis.getData();
 
-            var url = '@Url.Action("GetMacroDetails", "Visit")';
+                var url = '@Url.Action("GetMacroDetails", "Visit")';
 
-            var model = {
-                "bodyName": item
-            }
+                var model = {
+                    "bodyName": item
+                }
 
-            $.ajax({
-                type: "Post",
-                url: url,
-                data: model,
-                contentType: "application/x-www-form-urlencoded",
-                success: function (data, status, xhr) {
+                $.ajax({
+                    type: "Post",
+                    url: url,
+                    data: model,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data, status, xhr) {
 
-                    if (data.result === 1) {
-                        cc = cc + "<p>" + data.data[0].cc_desc + "</p>";
-                        pe = pe + "<p>" + data.data[0].pe_desc + "</p>";
-                        //assessment = assessment + "<p>" + data.data[0].a_desc + "</p>";
-                        if (data.data[0].a_desc) {
-                            assessment = assessment + "<p>" + data.data[0].a_desc + "</p>";
+                        if (data.result === 1) {
+                            cc = cc + "<p>" + data.data[0].cc_desc + "</p>";
+                            pe = pe + "<p>" + data.data[0].pe_desc + "</p>";
+                            //assessment = assessment + "<p>" + data.data[0].a_desc + "</p>";
+                            if (data.data[0].a_desc) {
+                                assessment = assessment + "<p>" + data.data[0].a_desc + "</p>";
+                            }
                         }
-                    }
 
 
-                    $('#cc').val(cc);
-                    ckCC.data.set(cc);
+                        $('#cc').val(cc);
+                        ckCC.data.set(cc);
 
 
-                    $('#pe').val(pe);
-                    ckPE.data.set(pe);
+                        $('#pe').val(pe);
+                        ckPE.data.set(pe);
 
-                    $('#assessment').val(assessment);
-                    ckAssessment.data.set(assessment);
+                        $('#assessment').val(assessment);
+                        ckAssessment.data.set(assessment);
 
-                },
-                error: function (xhr, status, error) {
-                    alert("Error!" + xhr.status);
-                },
-            });
-
-
-            var linkbody = item.replace(" ", "_");
-
-            daig = "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>";
-
-            $('#divdaigo').append(daig);
-        }
-        catch (err) {
-        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error!" + xhr.status);
+                    },
+                });
 
 
+                var linkbody = item.replace(" ", "_");
+
+                daig = "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>";
+
+                $('#divdaigo').append(daig);
+            }
+            catch (err) {
+            }
+  
     });
 
 

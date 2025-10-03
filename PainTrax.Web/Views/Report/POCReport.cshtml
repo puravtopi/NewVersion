@@ -95,12 +95,7 @@
                                 <tr>
 
                                     <th scope="col"> <input type="checkbox" id="chkAll" /></th>
-                                    @{
-                                        if (ViewBag.colName.contains("name"))
-                                        {
-                                            <th scope="col" id="name" onclick="sortTable(1);">Name</th>
-                                        }
-                                    }
+                                    <th scope="col" id="name" onclick="sortTable(1);">Name</th>
                                     <th scope="col" id="case" onclick="sortTable(2);">Case</th>
                                     <th scope="col" id="dob" onclick="sortTable(3);">DOB</th>
                                     <th scope="col" id="DOA" onclick="sortTable(4);">DOA</th>

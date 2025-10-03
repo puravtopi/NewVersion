@@ -292,15 +292,15 @@
     </div>
 </div><!-- End Large Modal-->
 @{
-    <input type="hidden" id="hdnHandedness" />
-    <input type="hidden" id="hdnAge" />
-    <input type="hidden" id="hdnDOS" />
-    <input type="hidden" id="hdnGender" />
-    <input type="hidden" id="hdnFname" />
-    <input type="hidden" id="hdnLname" />
-    <input type="hidden" id="hdnDOI" />
-    <input type="hidden" id="hdnaccidentType" />
-    <input type="hidden" id="hdnDOAcc" />
+            <input type="hidden" id="hdnHandedness" />
+            <input type="hidden" id="hdnAge" />
+            <input type="hidden" id="hdnDOS" />
+            <input type="hidden" id="hdnGender" />
+            <input type="hidden" id="hdnFname" />
+            <input type="hidden" id="hdnLname" />
+            <input type="hidden" id="hdnDOI" />
+            <input type="hidden" id="hdnaccidentType" />
+            <input type="hidden" id="hdnDOAcc" />
     
 }
 
@@ -498,47 +498,48 @@
     
     $('#txtbodypart').on('itemAdded', function (event) {
         fnShowDetails();
-        var item = event.item;
-        try {
-            var cc = ckCC.getData();
-            var pe = ckPE.getData();
-            var assessment = ckAssessment.getData();
-             var history = ckHistory.getData();
-            // var plan = ckPlan.getData();
+        var item = event.item.toLowerCase(); // normalize case
+     
+            try {
+                var cc = ckCC.getData();
+                var pe = ckPE.getData();
+                var assessment = ckAssessment.getData();
+                var history = ckHistory.getData();
+                // var plan = ckPlan.getData();
 
-            //var rom = quillROM.root.innerHTML;
-            var daig = ckDaignosis.getData();
+                //var rom = quillROM.root.innerHTML;
+                var daig = ckDaignosis.getData();
 
-            var url = '@Url.Action("GetMacroDetails", "Visit")';
+                var url = '@Url.Action("GetMacroDetails", "Visit")';
 
-            var model = {
+                var model = {
 
-                "bodyName": item
-            }
+                    "bodyName": item
+                }
 
-            $.ajax({
-                type: "Post",
-                url: url,
-                data: model,
-                contentType: "application/x-www-form-urlencoded",
-                success: function (data, status, xhr) {
+                $.ajax({
+                    type: "Post",
+                    url: url,
+                    data: model,
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data, status, xhr) {
 
 
-                    debugger;
+                        debugger;
 
-                    if (data.result === 1) {
-                        debugger
-                        if (data.data[0].cc_desc != null)
-                            cc = cc + "<p>" + data.data[0].cc_desc + "</p>";
-                        if (data.data[0].pe_desc != null)
-                            pe = pe + "<p>" + data.data[0].pe_desc + "</p>";
-                        if (data.data[0].a_desc != null)
-                            assessment = assessment + "<p>" + data.data[0].a_desc + "</p>";
-                        // plan = plan + + data.data[0].plan_desc + "</p>";
-                        //rom = rom + "<p>" + data.data[0].rom_desc + "</p>";
-                    }
+                        if (data.result === 1) {
+                            debugger
+                            if (data.data[0].cc_desc != null)
+                                cc = cc + "<p>" + data.data[0].cc_desc + "</p>";
+                            if (data.data[0].pe_desc != null)
+                                pe = pe + "<p>" + data.data[0].pe_desc + "</p>";
+                            if (data.data[0].a_desc != null)
+                                assessment = assessment + "<p>" + data.data[0].a_desc + "</p>";
+                            // plan = plan + + data.data[0].plan_desc + "</p>";
+                            //rom = rom + "<p>" + data.data[0].rom_desc + "</p>";
+                        }
 
-                     var DOS = $("#hdnDOS").val();
+                        var DOS = $("#hdnDOS").val();
 
 
 
@@ -572,49 +573,49 @@
 
                         var FName = $("#hdnFname").val();
 
-                         var Age = $("#hdnAge").val();
-                         var DOAcc = $("#hdnDOAcc").val();
-                         var DOI = $("#hdnDOI").val();
+                        var Age = $("#hdnAge").val();
+                        var DOAcc = $("#hdnDOAcc").val();
+                        var DOI = $("#hdnDOI").val();
 
-                          if (DOAcc == "") { DOI = "___"; }                       
+                        if (DOAcc == "") { DOI = "___"; }
                         else { DOI = "#doi"; }
 
-                         
 
 
 
 
 
-                         var accidentType = $("#hdnaccidentType").val();
+
+                        var accidentType = $("#hdnaccidentType").val();
 
 
 
 
 
-                          var handed = $("#hdnHandedness").val();
+                        var handed = $("#hdnHandedness").val();
 
-                          var handedness = "";
+                        var handedness = "";
 
 
 
                         if (handed == "1") { handedness = "right"; }
-                        else if(handed == "2") { handedness = "left"; }
-                        else if(handed == "3") { handedness = "ambidextrous"; }
+                        else if (handed == "2") { handedness = "left"; }
+                        else if (handed == "3") { handedness = "ambidextrous"; }
                         else { handedness = "___"; }
 
-          
 
-                    $('#cc').val(cc);
-                    ckCC.data.set(cc);
 
-                    $('#pe').val(pe);
-                    ckPE.data.set(pe);
+                        $('#cc').val(cc);
+                        ckCC.data.set(cc);
 
-                    $('#assessment').val(assessment);
-                    ckAssessment.data.set(assessment);
+                        $('#pe').val(pe);
+                        ckPE.data.set(pe);
 
-                    // history = history.replaceAll("#dos", DOS).replace("#gender", genderMrMs).replace("#fn", FName).replace("#ln", LName).replace("#age", Age).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
-                    history = history.replaceAll("#dos", DOS).replace("#gender", genderMrMs).replace("#fn", FName).replace("#ln", LName).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
+                        $('#assessment').val(assessment);
+                        ckAssessment.data.set(assessment);
+
+                        // history = history.replaceAll("#dos", DOS).replace("#gender", genderMrMs).replace("#fn", FName).replace("#ln", LName).replace("#age", Age).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
+                        history = history.replaceAll("#dos", DOS).replace("#gender", genderMrMs).replace("#fn", FName).replace("#ln", LName).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
 
                         $('#txtHistory').val(history);
 
@@ -628,44 +629,45 @@
 
                         ckAssessment.data.set(assessment);
 
-                },
-                error: function (xhr, status, error) {
-                    alert("Error!" + xhr.status);
-                },
-            });
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error!" + xhr.status);
+                    },
+                });
 
 
-            var linkbody = item.replace(" ", "_");
+                var linkbody = item.replace(" ", "_");
 
-            daig = "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>";
+                daig = "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>";
 
-            $('#divdaigo').append(daig);
-        }
-        catch (err) {
-        }
-
-
+                $('#divdaigo').append(daig);
+            }
+            catch (err) {
+            }
+        
     });
 
 
     $('#txtbodypart').on('beforeItemRemove', function (event) {
-        var tag = event.item;
+       
+        var item = event.item.toLowerCase(); // normalize
 
-        var strBody = $("#txtbodypart").val().replace(tag, "");
+            var strBody = $("#txtbodypart").val().replace(tag, "");
 
-        const myArray = strBody.split(",");
+            const myArray = strBody.split(",");
 
-        var daig = '';
+            var daig = '';
 
-        myArray.forEach(function (item) {
-            if (item != '') {
-                var linkbody = item.replace(" ", "_");
+            myArray.forEach(function (item) {
+                if (item != '') {
+                    var linkbody = item.replace(" ", "_");
 
-                daig = daig + "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>";
-            }
-        });
+                    daig = daig + "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + item + "</a><br/>";
+                }
+            });
 
-        $('#divdaigo').html(daig);
+            $('#divdaigo').html(daig);
+        
     });
 
         function fnShowDetails() {        

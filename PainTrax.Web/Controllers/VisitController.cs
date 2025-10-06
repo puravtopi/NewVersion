@@ -57,6 +57,7 @@ namespace PainTrax.Web.Controllers
         private readonly SettingsService _settingservices = new SettingsService();
         private readonly ProcedureService _procedureservices = new ProcedureService();
         private readonly ReferringPhysicianService _physicianService = new ReferringPhysicianService();
+        private readonly DictationServices _dictationServices = new DictationServices();
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
         private IMapper _mapper;
         string SessionDiffDoc = "true";
@@ -966,7 +967,7 @@ namespace PainTrax.Web.Controllers
                 //    cnd = cnd + " and account_no='" + model.account_no + "'";
                 if (!string.IsNullOrEmpty(model.account_no))
                     cnd = cnd + " and account_no='" + model.account_no + "'";
-               
+
 
                 var data = _patientservices.GetAll(cnd);
 
@@ -4288,7 +4289,8 @@ namespace PainTrax.Web.Controllers
                 {
                     var ieData = _ieService.GetOne(patientIEId);
 
-                    if (ieData.doe!=null) {
+                    if (ieData.doe != null)
+                    {
 
                         if (System.DateTime.Now.ToString("yyyy-MM-dd") == ieData.doe.Value.ToString("yyyy-MM-dd"))
                         {
@@ -4421,7 +4423,7 @@ namespace PainTrax.Web.Controllers
                     if (fuData.doe != null)
                     {
 
-                        var cnd = " and cmp_id=" + cmpid.Value.ToString() + " and id=" + patientIEId+" and DATE(doe)="+ fuData.doe.Value.ToString("yyyy-MM-dd");
+                        var cnd = " and cmp_id=" + cmpid.Value.ToString() + " and id=" + patientIEId + " and DATE(doe)=" + fuData.doe.Value.ToString("yyyy-MM-dd");
 
                         var result = _ieService.GetOneFromCondtion(cnd);
 
@@ -4839,6 +4841,57 @@ namespace PainTrax.Web.Controllers
             }
 
             headerPart.Header.Save();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveDictation(string textData, IFormFile audioFile, string type, int ie_id)
+        {
+            string publicUrl = "";
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            // 1️⃣ Save text
+            var textPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads/Dictation/" + cmpid.ToString());
+            if (!Directory.Exists(textPath))
+                Directory.CreateDirectory(textPath);
+            var textFileName = ie_id.ToString() + "_" + type + ".txt";
+            var textFile = Path.Combine(textPath, textFileName);
+            var saveTextFile = Path.Combine("/uploads/Dictation/" + cmpid.ToString(), textFileName);
+            await System.IO.File.WriteAllTextAsync(textFile, textData ?? "");
+
+            // 2️⃣ Save audio
+            if (audioFile != null && audioFile.Length > 0)
+            {
+                var audioFileName = ie_id.ToString() + "_" + type + ".webm";
+                var audioPath = Path.Combine(textPath, audioFileName);
+                var saveAudioPath = Path.Combine("/uploads/Dictation/" + cmpid.ToString(), audioFileName);
+                publicUrl = saveAudioPath;
+                using (var stream = new FileStream(audioPath, FileMode.Create))
+                {
+                    await audioFile.CopyToAsync(stream);
+                }
+
+                tbl_dictation dictation = new tbl_dictation()
+                {
+                    cmp_id = cmpid,
+                    txt_file = saveTextFile,
+                    type = type,
+                    voice_file = saveAudioPath,
+                    ie_id = ie_id
+                };
+
+                _dictationServices.Insert(dictation);
+            }
+
+
+
+            return Ok(new { success = true, fileUrl = publicUrl });
+        }
+
+        [HttpPost]
+        public IActionResult GetDictation(string type, int ie_id)
+        {
+            var _obj = _dictationServices.GetDictationAudio(ie_id, type);
+
+            return Json(_obj == null ? "" :  _obj.voice_file);
         }
 
     }

@@ -44,7 +44,7 @@
                 <button onclick="fnPage1Save(null)" style="margin-top:5px" class="btn btn-primary">Save</button>
             </div>
         </label>
-        <div class="col-sm-10">
+      
           
             <div class="col-sm-10" style="height: fit-content;">
               
@@ -54,8 +54,12 @@
                         hst = Model.history ?? "The patient presents today for follow up with continued pain in the ______ and for evaluation of pain in the _____.";
                 }
                 <textarea id="txtHistory">@hst</textarea>
-            </div>
+               
+           
         </div>
+        <button type="button" id="btnDictate" class="btn btn-outline-secondary">
+            🎤
+        </button>
     </div>
     <div class="row mb-3">
         <label for="inputNumber" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#Vital">
@@ -288,7 +292,6 @@
 <script src="~/assets/dist/bootstrap-tagsinput.min.js" asp-append-version="true"></script>
 <script src="~/assets/dist/bootstrap-tagsinput/bootstrap-tagsinput-angular.min.js" asp-append-version="true"></script>
 
-
 <script>
 
 
@@ -302,7 +305,11 @@
 
 
         ClassicEditor.create(document.querySelector('#txtHistory'), {
-
+            toolbar: {
+                items: [
+                    'bold', 'italic', 'underline', '|', 'dictationButton'
+                ]
+            },
             mention: {
                 feeds: [
                     {
@@ -318,6 +325,7 @@
             window.editor = editor;
             ckHistory = editor;
         }).catch(handleSampleError);
+
 
         ClassicEditor.create(document.querySelector('#txtReason'), {
 

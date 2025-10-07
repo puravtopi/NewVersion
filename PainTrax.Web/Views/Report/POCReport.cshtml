@@ -1,6 +1,5 @@
 ﻿@model PainTrax.Web.ViewModel.POCReportVM
 
-
 <main id="main" class="main">
 
     <div class="pagetitle">
@@ -90,29 +89,84 @@
                             <div class="clearfix"></div>
                         </form>
                         <br />
+                        @{
+                            var columns = ViewBag.Columns as List<string>;
+                            var cmpId = ViewBag.cmpid;
+                        }
                         <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
 
                                     <th scope="col"> <input type="checkbox" id="chkAll" /></th>
-                                    <th scope="col" id="name" onclick="sortTable(1);">Name</th>
-                                    <th scope="col" id="case" onclick="sortTable(2);">Case</th>
-                                    <th scope="col" id="dob" onclick="sortTable(3);">DOB</th>
-                                    <th scope="col" id="DOA" onclick="sortTable(4);">DOA</th>
-                                    <th scope="col" id="MCODE" onclick="sortTable(5);">MCODE</th>
-                                    <th scope="col" id="Phone" onclick="sortTable(6);">Phone</th>
-                                    <th scope="col" id="Location" onclick="sortTable(7);">Location</th>
-                                    <th scope="col" id="Location" onclick="sortTable(8);">Side</th>
-                                    <th scope="col" id="Location" onclick="sortTable(9);">Level</th>
-                                    <th scope="col" id="Location" onclick="sortTable(9);">Surgery Center</th>
-                                    <th scope="col" id="Location" onclick="sortTable(9);">Surgone Name</th>
-                                    <th scope="col">Requested</th>
+                                    
+                                    
+                                    @{
+                                        if (columns.Contains("Name"))
+                                        {
+                                            <th scope="col" id="name" onclick="sortTable(1);">Name</th>
+                                        }
+                                        if (columns.Contains("Case"))
+                                        {
+                                            <th scope="col" id="case" onclick="sortTable(2);">Case</th>
+                                        }
+                                        if (columns.Contains("DOB"))
+                                        {
+                                            <th scope="col" id="dob" onclick="sortTable(3);">DOB</th>
+                                        }
+                                        if (columns.Contains("DOA"))
+                                        {
+                                            <th scope="col" id="DOA" onclick="sortTable(4);">DOA</th>
+                                        }
+                                        if (columns.Contains("MCODE"))
+                                        {
+                                            <th scope="col" id="MCODE" onclick="sortTable(5);">MCODE</th>
+                                        }
+                                        if (columns.Contains("Phone"))
+                                        {
+                                            <th scope="col" id="Phone" onclick="sortTable(6);">Phone</th>
+                                        }
+                                        if (columns.Contains("Location"))
+                                        {
+                                            <th scope="col" id="Location" onclick="sortTable(7);">Location</th>
+                                        }
+                                        if (columns.Contains("Insurance"))
+                                        {
+                                            <th scope="col" id="Insurance" onclick="sortTable(8);">Ins co</th>
+                                        }
+                                        if (columns.Contains("Side"))
+                                        {
+                                            <th scope="col" id="Side" onclick="sortTable(9);">Side</th>
+                                        }
+                                        if (columns.Contains("Level"))
+                                        {
+                                            <th scope="col" id="Level" onclick="sortTable(10);">Level</th>
+                                        }
+                                        if (columns.Contains("Surgery Center"))
+                                        {
+                                            <th scope="col" id="SurgeryCenter" onclick="sortTable(11);">Surgery Center</th>
+                                        }
+                                        if (columns.Contains("Surgone Name"))
+                                        {
+                                            <th scope="col" id="SurgoneName" onclick="sortTable(12);">Surgone Name</th>
+                                        }
+                                    }
+                                    @{
+                                        if (cmpId != 13)
+                                    {
+                                        <th scope="col">Requested</th>
+                                    }
+                                    }
+                                    
                                     <th scope="col">Schedule</th>
                                     <th scope="col">Executed</th>
                                     <th style="width:5%">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @{
+                                    var columnsval = ViewBag.Columns as List<string>;
+                                    var cmpId1 = ViewBag.cmpid;
+                                }
                                 @if (Model.lstPOCReport.Count > 0)
                                 {
                                     @foreach (var item in Model.lstPOCReport)
@@ -122,15 +176,41 @@
                                                 <input type="checkbox" value="@item.procedureDetail_id" class="chkTrans" />
                                                 <input type="hidden" value="@item.procedureDetail_id" id="hid" />
                                             </td>
-
+                                            @{
+                                            if (columnsval.Contains("Name"))
+                                            {
                                             <td>@item.name</td>
+                                            }
+                                            if (columnsval.Contains("Case"))
+                                            {
                                             <td>@item.casetype</td>
+                                            }
+                                            if (columnsval.Contains("DOB"))
+                                            {
                                             <td>@(item.dob == null ? "" : item.dob.Value.ToString("MM/dd/yyyy"))</td>
+                                            }
+                                            if (columnsval.Contains("DOA"))
+                                            {
                                             <td>@(item.doa == null ? "" : item.doa.Value.ToString("MM/dd/yyyy"))</td>
+                                            }
+                                            if (columnsval.Contains("MCODE"))
+                                            {
                                             <td>@item.mcode</td>
+                                            }
+                                            if (columnsval.Contains("Phone"))
+                                            {
                                             <td>@item.phone</td>
+                                            }
+                                            if (columnsval.Contains("Location"))
+                                            {
                                             <td>@item.location</td>
-                                            @* <td>@item.sides</td> *@
+                                            }
+                                                if (columnsval.Contains("Insurance"))
+                                                {
+                                                    <td>@item.cmpname</td>
+                                                }
+                                            if (columnsval.Contains("Side"))
+                                            {
                                             <td>
                                                 @if (item.scheduled != null)
                                                 {
@@ -146,6 +226,9 @@
                                                     @item.sides
                                                 }
                                             </td>
+                                            }
+                                            if (columnsval.Contains("Level"))
+                                            {
                                             <td>
                                                 @if (item.scheduled != null)
                                                 {
@@ -161,10 +244,35 @@
                                                     @item.level
                                                 }
                                             </td>
-                                            @*  <td>@item.level</td> *@
+                                            }
+                                            if (columnsval.Contains("Surgery Center"))
+                                            {
                                             <td>@item.Surgerycenter_name</td>
+                                            }
+                                            if (columnsval.Contains("Surgone Name"))
+                                            {
                                             <td>@item.surgon_name</td>
-                                            <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
+                                            }
+
+                                            }
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            
+                                            @* <td>@item.sides</td> *@
+                                            
+                                            
+                                            @*  <td>@item.level</td> *@
+
+                                            @{
+                                                if(cmpId != 13)
+                                                {
+                                                    <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
+                                                }
+                                            }
+                                           
                                             <td><label id="lblsche">@(item.scheduled == null ? "" : item.scheduled.Value.ToString("MM/dd/yyyy"))</label></td>
                                             <td><label id="lblexe">@(item.executed == null ? "" : item.executed.Value.ToString("MM/dd/yyyy"))</label></td>
                                             <td>

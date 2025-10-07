@@ -585,9 +585,17 @@
 
                             </li>
                         }
+                        if (pageAccess.ToLower().Contains("poc report field config"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="POCConfig">
+                                    <i class="bi bi-circle"></i><span>POC Field Config</span>
+                                </a>
+                            </li>
+                        }
                         <li>
                             <a asp-action="Index" asp-controller="VisitType">
-                                <i class="bi bi-circle"></i><span>Visit Type</span>
+                                <i class="bi bi-circle"></i><spana>Visit Type</spana>
                             </a>
 
                         </li>

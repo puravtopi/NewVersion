@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
@@ -12,6 +13,7 @@ namespace PainTrax.Web.Helper
         private readonly DesinationServices _designationservices = new DesinationServices();
         private readonly GroupsService _groupservices = new GroupsService();
         private readonly LocationsService _locationservices = new LocationsService();
+        private readonly POCConfigService _pocconfigservices = new POCConfigService();
         private readonly CaseTypeService _caseTypeService = new CaseTypeService();
         private readonly UserService _userservices = new UserService();
         private readonly CommonService _commonService = new CommonService();
@@ -268,7 +270,98 @@ namespace PainTrax.Web.Helper
 
             return list;
         }
+        public List<tbl_pocconfig> GetpocconfigColumnList(int cmp_id, string _ids = "")
 
+        {
+
+            string cnd = "";// " and cmp_id=" + cmp_id;
+
+            var data = _pocconfigservices.GetAll(cnd);
+            return data;
+        }
+        public List<CheckBoxItem> GetpocconfigCheckBoxList(int cmp_id, string _ids = "")
+
+        {
+
+            string cnd = "";// " and cmp_id=" + cmp_id;
+
+            var data = _pocconfigservices.GetAll(cnd);
+
+            var list = new List<CheckBoxItem>();
+
+            string input = "Name,Case,DOB,DOA,MCODE,Phone,Location,Insurance,Side,Level";
+
+
+
+
+
+            string[] entries = input.Split(',');
+
+            int i = 0;
+
+            foreach (var item in entries)
+
+            {
+
+                bool ischecked = false;
+
+                foreach (var item1 in data)
+
+                {
+
+                    if (item1.columns == item.TrimEnd())
+
+                    { ischecked = true; }
+
+
+
+
+
+                }
+
+                list.Add(new CheckBoxItem
+
+                {
+
+                    Item = item,
+
+                    Id = i,
+
+                    IsChecked = Convert.ToBoolean(ischecked)
+
+                });
+
+                i++;
+
+            }
+
+
+
+
+
+            //foreach (var item in data)
+
+            //{
+
+            //    list.Add(new CheckBoxItem
+
+            //    {
+
+            //        Item = item.columns,
+
+            //        //    Id = item.columns,
+
+            //        IsChecked = _ids.Contains(item.id.ToString())
+
+            //    });
+
+            //}
+
+
+
+            return list;
+
+        }
         public List<CheckBoxItem> GetPagesCheckBoxList(string pages_ids = "")
         {
 

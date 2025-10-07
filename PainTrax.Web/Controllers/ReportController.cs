@@ -35,6 +35,7 @@ namespace PainTrax.Web.Controllers
         private readonly MDTImportServices _servicesMDTImport = new MDTImportServices();
         private readonly Common _commonservices = new Common();
         private readonly SurgeryCentreService _surgeryCentreService = new SurgeryCentreService();
+        private readonly POCConfigService _pocConfigservices = new POCConfigService();
 
         public ReportController(ILogger<ReportController> logger)
         {
@@ -48,6 +49,10 @@ namespace PainTrax.Web.Controllers
             objPOC.lstPOCReport = new List<POCReportVM>();
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+            string cnd = " and cmp_id=" + cmpid.Value;
+            var data1 = _pocConfigservices.GetAllone(cnd);
+            ViewBag.Columns = data1.Select(x => x.columns).ToList();
+            ViewBag.cmpid = cmpid.Value;
 
             objPOC._executed = false;
             objPOC._requested = false;
@@ -131,8 +136,9 @@ namespace PainTrax.Web.Controllers
             TempData["query"] = query;
 
             ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
-
-
+            ViewBag.cmpid = cmpid.Value;
+            var data1 = _pocConfigservices.GetAllone("");
+            ViewBag.Columns = data1.Select(x => x.columns).ToList();
 
             string cnd = " and cmp_id=" + cmpid;
             var sdata = _surgeryCentreService.GetAll(cnd);

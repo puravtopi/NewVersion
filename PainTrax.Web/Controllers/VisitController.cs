@@ -4863,7 +4863,7 @@ namespace PainTrax.Web.Controllers
                 var audioFileName = ie_id.ToString() + "_" + type + ".webm";
                 var audioPath = Path.Combine(textPath, audioFileName);
                 var saveAudioPath = Path.Combine("/uploads/Dictation/" + cmpid.ToString(), audioFileName);
-                publicUrl = saveAudioPath;
+                publicUrl = "/V2/"+saveAudioPath;
                 using (var stream = new FileStream(audioPath, FileMode.Create))
                 {
                     await audioFile.CopyToAsync(stream);
@@ -4891,7 +4891,7 @@ namespace PainTrax.Web.Controllers
         {
             var _obj = _dictationServices.GetDictationAudio(ie_id, type);
 
-            return Json(_obj == null ? "" :  _obj.voice_file);
+            return Json(_obj == null ? "" : "/V2/" + _obj.voice_file);
         }
 
     }

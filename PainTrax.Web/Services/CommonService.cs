@@ -1,4 +1,5 @@
 ﻿using MS.Models;
+using MySql.Data.MySqlClient;
 using PainTrax.Services;
 using PainTrax.Web.Models;
 
@@ -42,6 +43,13 @@ namespace PainTrax.Web.Services
             return dataList;
         }
 
-       
+        public void UpdateAccountNo(string patientId,string accountNo)
+        {
+            MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient SET account_no=@accountNo WHERE id=@id", conn);
+            cm.Parameters.AddWithValue("@id", patientId);
+            cm.Parameters.AddWithValue("@accountNo", accountNo);
+           
+            Execute(cm);
+        }
     }
 }

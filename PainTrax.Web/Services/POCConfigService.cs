@@ -18,6 +18,11 @@ namespace PainTrax.Web.Services
             var datalist = ConvertDataTable<tbl_pocconfig>(GetData(query)).FirstOrDefault();
 
             List<tbl_pocconfig> configList = new List<tbl_pocconfig>();
+            
+            if (datalist == null || string.IsNullOrEmpty(datalist.columns))
+            {
+                return configList; // return empty list safely
+            }
 
             string[] entries = datalist.columns.Split(',');
 
@@ -50,9 +55,15 @@ namespace PainTrax.Web.Services
             if (!string.IsNullOrEmpty(cnd))
                 query = query + cnd;
 
-            var datalist = ConvertDataTable<tbl_pocconfig>(GetData(query)).FirstOrDefault();
+            var datalist = ConvertDataTable<tbl_pocconfig>(GetData(query)).FirstOrDefault();            
 
             List<tbl_pocconfig> configList = new List<tbl_pocconfig>();
+
+            
+            if (datalist == null || string.IsNullOrEmpty(datalist.columns))
+            {
+                return configList; // return empty list safely
+            }
 
             string[] entries = datalist.columns.Split(',');
 
@@ -83,6 +94,10 @@ namespace PainTrax.Web.Services
             MySqlCommand cm = new MySqlCommand("select * from tbl_pocconfig ", conn);
             //cm.Parameters.AddWithValue("@id", data.id);
             var datalist = ConvertDataTable<tbl_pocconfig>(GetData(cm)).FirstOrDefault();
+            if (datalist == null)
+            {
+                return null; // or you could return a new tbl_pocconfig() if preferred
+            }
             return datalist;
         }
 

@@ -101,6 +101,10 @@
                                     
                                     
                                     @{
+                                        if (columns.Contains("Sex"))
+                                        {
+                                            <th scope="col" id="sex" onclick="sortTable(1);">Sex</th>
+                                        }
                                         if (columns.Contains("Name"))
                                         {
                                             <th scope="col" id="name" onclick="sortTable(1);">Name</th>
@@ -149,6 +153,18 @@
                                         {
                                             <th scope="col" id="SurgoneName" onclick="sortTable(12);">Surgone Name</th>
                                         }
+                                        if (columns.Contains("ClaimNo"))
+                                        {
+                                            <th scope="col" id="ClaimNo" onclick="sortTable(12);">Claim No</th>
+                                        }
+                                        if (columns.Contains("MC"))
+                                        {
+                                            <th scope="col" id="MC" onclick="sortTable(12);">MC</th>
+                                        }
+                                        if (columns.Contains("Allergies"))
+                                        {
+                                            <th scope="col" id="Allergies" onclick="sortTable(12);">Allergies</th>
+                                        }
                                     }
                                     @{
                                         if (cmpId != 13)
@@ -177,6 +193,10 @@
                                                 <input type="hidden" value="@item.procedureDetail_id" id="hid" />
                                             </td>
                                             @{
+                                                if (columnsval.Contains("Sex"))
+                                                {
+                                                    <td>@item.gender</td>
+                                                }
                                             if (columnsval.Contains("Name"))
                                             {
                                             <td>@item.name</td>
@@ -253,6 +273,18 @@
                                             {
                                             <td>@item.surgon_name</td>
                                             }
+                                                if (columnsval.Contains("ClaimNo"))
+                                                {
+                                                    <td>@item.primary_claim_no</td>
+                                                }
+                                                if (columnsval.Contains("MC"))
+                                                {
+                                                    <td>@item.mc</td>
+                                                }
+                                                if (columnsval.Contains("Allergies"))
+                                                {
+                                                    <td>@item.allergies</td>
+                                                }
 
                                             }
                                             

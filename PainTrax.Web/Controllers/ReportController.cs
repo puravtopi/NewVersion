@@ -221,49 +221,199 @@ namespace PainTrax.Web.Controllers
             return Json(1);
         }
 
+        //public IActionResult ExportToExcel()
+        //{
+        //    try
+        //    {
+        //        string query = TempData["query"].ToString();
+        //        var data = _services.GetPOCReport(query);
+
+        //        // Create a new DataTable
+        //        DataTable dt = new DataTable();
+        //        // Add columns to the DataTable
+        //        dt.Columns.AddRange(new DataColumn[]
+        //        {
+        //            new DataColumn("Sex", typeof(string)),
+        //            new DataColumn("Name", typeof(string)),
+        //            //new DataColumn("Provider", typeof(string)),
+        //            new DataColumn("Case", typeof(string)),
+        //           // new DataColumn("DOE", typeof(string)),
+        //            new DataColumn("DOB", typeof(string)),
+        //            new DataColumn("DOA", typeof(string)),
+        //            new DataColumn("MCODE", typeof(string)),
+        //            new DataColumn("Side", typeof(string)),
+        //            new DataColumn("Level", typeof(string)),
+        //            new DataColumn("Phone", typeof(string)),
+        //            new DataColumn("Location", typeof(string)),                 
+        //            new DataColumn("Ins Co", typeof(string)),
+        //            new DataColumn("Claim Number", typeof(string)),
+        //            //new DataColumn("Policy No", typeof(string)),
+        //            new DataColumn("MC", typeof(string)),
+        //            new DataColumn("Allergies", typeof(string)),
+        //            new DataColumn("Requested", typeof(string)),
+        //            new DataColumn("Scheduled", typeof(string)),
+        //            new DataColumn("Executed", typeof(string)),
+        //            new DataColumn("Note", typeof(string)),                   
+
+        //           // new DataColumn("PhoneNo", typeof(string)),                                   
+        //        });
+
+        //        // Populate the DataTable with data from the list of attorneys
+        //        foreach (var user in data)
+        //        {
+        //            var sex = string.IsNullOrEmpty(user.gender) ? "" : (user.gender.ToLower() == "male" ? "M" : "F");
+        //            dt.Rows.Add(sex,user.name, user.providerName, user.casetype, user.doe == null ? "" : user.doe.Value.ToShortDateString(), user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.sides, user.level, user.phone, user.location,user.cmpname, user.primary_claim_no, user.primary_policy_no, user.mc, user.allergies, user.requested == null ? "" : user.requested.Value.ToShortDateString(), user.scheduled == null ? "" : user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString(), user.note);
+        //        }
+
+        //        // Create a new Excel file
+        //        var memoryStream = new MemoryStream();
+        //        using (var document = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook))
+        //        {
+        //            var workbookPart = document.AddWorkbookPart();
+        //            workbookPart.Workbook = new Workbook();
+
+        //            var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+        //            var sheetData = new SheetData();
+        //            worksheetPart.Worksheet = new Worksheet(sheetData);
+
+        //            var sheets = document.WorkbookPart.Workbook.AppendChild(new Sheets());
+        //            var sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Users" };
+        //            sheets.Append(sheet);
+
+        //            var (defaultStyleIndex, headerStyleIndex) = CreateStyles(workbookPart.AddNewPart<WorkbookStylesPart>());
+
+        //            var headerRow = new Row();
+        //            foreach (DataColumn column in dt.Columns)
+        //            {
+        //                var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName), StyleIndex = headerStyleIndex };
+        //                headerRow.AppendChild(cell);
+        //            }
+        //            sheetData.AppendChild(headerRow);
+
+        //            foreach (DataRow row in dt.Rows)
+        //            {
+        //                var newRow = new Row();
+        //                foreach (var value in row.ItemArray)
+        //                {
+        //                    var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
+        //                    newRow.AppendChild(cell);
+        //                }
+        //                sheetData.AppendChild(newRow);
+        //            }
+        //            // ✅ Enable AutoFilter for the header row
+        //            string lastColumn = GetExcelColumnName(dt.Columns.Count);
+        //            var autoFilter = new AutoFilter() { Reference = $"A1:{lastColumn}1" };
+        //            worksheetPart.Worksheet.Append(autoFilter);                    
+
+        //        }
+
+        //        memoryStream.Seek(0, SeekOrigin.Begin);
+        //        return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "POCReport.xlsx");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log or handle the exception as needed
+        //        return Content("Error: " + ex.Message);
+        //    }
+        //}        
         public IActionResult ExportToExcel()
         {
             try
             {
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                string cnd = " and cmp_id=" + cmpid.Value;
+                var data1 = _pocConfigservices.GetAllone(cnd);
+                var columnList = data1.Select(x => x.columns).ToList();
+
                 string query = TempData["query"].ToString();
                 var data = _services.GetPOCReport(query);
 
                 // Create a new DataTable
                 DataTable dt = new DataTable();
                 // Add columns to the DataTable
-                dt.Columns.AddRange(new DataColumn[]
+                
+                foreach (var col in columnList)
                 {
-                    new DataColumn("Sex", typeof(string)),
-                    new DataColumn("Name", typeof(string)),
-                    new DataColumn("Provider", typeof(string)),
-                    new DataColumn("Case", typeof(string)),
-                    new DataColumn("DOE", typeof(string)),
-                    new DataColumn("DOB", typeof(string)),
-                    new DataColumn("DOA", typeof(string)),
-                    new DataColumn("MCODE", typeof(string)),
-                    new DataColumn("Side", typeof(string)),
-                    new DataColumn("Level", typeof(string)),
-                    new DataColumn("Phone", typeof(string)),
-                    new DataColumn("Location", typeof(string)),                 
-                    new DataColumn("Ins Co", typeof(string)),
-                    new DataColumn("Claim Number", typeof(string)),
-                    new DataColumn("Policy No", typeof(string)),
-                    new DataColumn("MC", typeof(string)),
-                    new DataColumn("Allergies", typeof(string)),
-                    new DataColumn("Requested", typeof(string)),
-                    new DataColumn("Scheduled", typeof(string)),
-                    new DataColumn("Executed", typeof(string)),
-                    new DataColumn("Note", typeof(string)),                   
-                                    
-                   // new DataColumn("PhoneNo", typeof(string)),                                   
-                });
+                    dt.Columns.Add(new DataColumn(col, typeof(string)));
+                }
 
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var user in data)
                 {
-                    var sex = string.IsNullOrEmpty(user.gender) ? "" : (user.gender.ToLower() == "male" ? "M" : "F");
-                    dt.Rows.Add(sex,user.name, user.providerName, user.casetype, user.doe == null ? "" : user.doe.Value.ToShortDateString(), user.dob == null ? "" : user.dob.Value.ToShortDateString(), user.doa == null ? "" : user.doa.Value.ToShortDateString(), user.mcode, user.sides, user.level, user.phone, user.location,user.cmpname, user.primary_claim_no, user.primary_policy_no, user.mc, user.allergies, user.requested == null ? "" : user.requested.Value.ToShortDateString(), user.scheduled == null ? "" : user.scheduled.Value.ToShortDateString(), user.executed == null ? "" : user.executed.Value.ToShortDateString(), user.note);
+                    DataRow dr = dt.NewRow();
+
+                    foreach (var col in columnList)
+                    {
+                        switch (col)
+                        {
+                            case "Sex":
+                                dr[col] = string.IsNullOrEmpty(user.gender) ? "" : (user.gender.ToLower() == "male" ? "M" : "F");
+                                break;
+
+                            case "Name":
+                                dr[col] = user.name;
+                                break;
+
+                            case "Case":
+                                dr[col] = user.casetype;
+                                break;
+
+                            case "DOB":
+                                dr[col] = user.dob?.ToShortDateString() ?? "";
+                                break;
+                            case "DOA":
+                                dr[col] = user.doa?.ToShortDateString() ?? "";
+                                break;
+                            case "MCODE":
+                                dr[col] = user.mcode;
+                                break;
+                            case "Phone":
+                                dr[col] = user.phone;
+                                break;
+                            case "Location":
+                                dr[col] = user.location;
+                                break;
+                            case "Insurance":
+                                dr[col] = user.cmpname;
+                                break;
+                            case "Side":
+                                dr[col] = user.sides;
+                                break;
+                            case "Level":
+                                dr[col] = user.level;
+                                break;
+                            case "ClaimNo":
+                                dr[col] = user.primary_claim_no;
+                                break;
+                            case "MC":
+                                dr[col] = user.mc;
+                                break;
+                            case "Allergies":
+                                dr[col] = user.allergies;
+                                break;
+                            case "Requested":
+                                dr[col] = user.requested?.ToShortDateString() ?? "";
+                                break;
+                            case "Scheduled":
+                                dr[col] = user.scheduled?.ToShortDateString() ?? "";
+                                break;
+                            case "Executed":
+                                dr[col] = user.executed?.ToShortDateString() ?? "";
+                                break;
+
+                            case "Note":
+                                dr[col] = user.note;
+                                break;
+
+                            default:
+                                dr[col] = "";
+                                break;
+                        }
+                    }
+
+                    dt.Rows.Add(dr);
                 }
+                
 
                 // Create a new Excel file
                 var memoryStream = new MemoryStream();
@@ -303,8 +453,8 @@ namespace PainTrax.Web.Controllers
                     // ✅ Enable AutoFilter for the header row
                     string lastColumn = GetExcelColumnName(dt.Columns.Count);
                     var autoFilter = new AutoFilter() { Reference = $"A1:{lastColumn}1" };
-                    worksheetPart.Worksheet.Append(autoFilter);                    
-                    
+                    worksheetPart.Worksheet.Append(autoFilter);
+
                 }
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
@@ -315,7 +465,7 @@ namespace PainTrax.Web.Controllers
                 // Log or handle the exception as needed
                 return Content("Error: " + ex.Message);
             }
-        }        
+        }
         private static (uint defaultStyleIndex, uint headerStyleIndex) CreateStyles(WorkbookStylesPart stylesPart)
         {
             Stylesheet stylesheet = new Stylesheet();

@@ -240,7 +240,7 @@ namespace PainTrax.Web.Controllers
 
                         obj.cmp_id = cmpid;
                         obj.position = (dt.Columns.Contains("Position") && dt.Rows[i]["Position"] != DBNull.Value ? dt.Rows[i]["Position"].ToString() : "");
-                        obj.display_order = (dt.Columns.Contains("DO") && dt.Rows[i]["DO"] != DBNull.Value ? Convert.ToInt16(dt.Rows[i]["DO"].ToString()) : 0);
+                        obj.display_order = (dt.Columns.Contains("DisplayOrder") && dt.Rows[i]["DisplayOrder"] != DBNull.Value ? Convert.ToInt16(dt.Rows[i]["DisplayOrder"].ToString()) : 0);
                         obj.hasmuscle = (dt.Columns.Contains("Muscle") && dt.Rows[i]["Muscle"] != DBNull.Value ? dt.Rows[i]["Muscle"].ToString() : "");
                         obj.hassubprocedure = (dt.Columns.Contains("SubProcedure") && dt.Rows[i]["SubProcedure"] != DBNull.Value ? dt.Rows[i]["SubProcedure"].ToString() : "");
                         obj.pedesc = (dt.Columns.Contains("R_PEDesc") && dt.Rows[i]["R_PEDesc"] != DBNull.Value ? dt.Rows[i]["R_PEDesc"].ToString().Replace("'s", "") : "");
@@ -269,7 +269,8 @@ namespace PainTrax.Web.Controllers
                         obj.levelsdefault = (dt.Columns.Contains("LevelsDefault") && dt.Rows[i]["LevelsDefault"] != DBNull.Value ? dt.Rows[i]["LevelsDefault"].ToString() : "");
                         obj.mcode = (dt.Columns.Contains("MCode") && dt.Rows[i]["MCode"] != DBNull.Value ? dt.Rows[i]["MCode"].ToString() : "");
                         obj.mcode_desc = (dt.Columns.Contains("MCodeDesc") && dt.Rows[i]["MCodeDesc"] != DBNull.Value ? dt.Rows[i]["MCodeDesc"].ToString() : "");
-
+                        obj.s_pdesc = (dt.Columns.Contains("S_PDesc") && dt.Rows[i]["S_PDesc"] != DBNull.Value ? dt.Rows[i]["S_PDesc"].ToString() : "");
+                       
 
                         _services.Insert(obj);
 

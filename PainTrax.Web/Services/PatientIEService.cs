@@ -245,6 +245,28 @@ public class PatientIEService : ParentService
         Execute(cm);
     }
 
+
+    public int? GetId(string cnd = "")
+    {
+        string query = "SELECT * FROM tbl_patient_ie where 1=1 ";
+
+        if (!string.IsNullOrEmpty(query))
+            query = query + cnd;
+
+        List<tbl_patient_ie> dataList = ConvertDataTable<tbl_patient_ie>(GetData(query));
+        if (dataList != null)
+        {
+            if (dataList.Count > 0)
+            {
+                return Convert.ToInt32(dataList[0].id);
+            }
+            else
+                return null;
+        }
+        else
+            return null;
+    }
+
     #endregion
 
     #region Page1

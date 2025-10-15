@@ -4651,7 +4651,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other1_study))
                     {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other1_study));
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other1_study.Replace(" ", "").Replace("/", "_")));
                         strDaignosis = strDaignosis + study ;
                     }
 
@@ -4671,7 +4671,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other2_study))
                     {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other2_study));
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other2_study.Replace(" ", "").Replace("/", "_")));
                         strDaignosis = strDaignosis + study;
                     }
 
@@ -4691,7 +4691,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other3_study))
                     {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other3_study));
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other3_study.Replace(" ", "").Replace("/", "_")));
                         strDaignosis = strDaignosis  + study;
                     }
 
@@ -4711,7 +4711,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other4_study))
                     {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other4_study));
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other4_study.Replace(" ", "").Replace("/", "_")));
                         strDaignosis = strDaignosis + study;
                     }
 
@@ -4731,7 +4731,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other5_study))
                     {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other5_study));
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other5_study.Replace(" ", "").Replace("/", "_")));
                         strDaignosis = strDaignosis + study;
                     }
 
@@ -4751,7 +4751,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other6_study))
                     {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other6_study));
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other6_study.Replace(" ", "").Replace("/", "_")));
                         strDaignosis = strDaignosis + study;
                     }
 
@@ -4771,7 +4771,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other7_study))
                     {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other7_study));
+                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other7_study.Replace(" ", "").Replace("/", "_")));
                         strDaignosis = strDaignosis + study;
                     }
 

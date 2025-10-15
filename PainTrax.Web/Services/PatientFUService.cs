@@ -145,6 +145,28 @@ public class PatientFUService : ParentService
         }
     }
 
+    public int? GetId(string cnd = "")
+    {
+        string query = "SELECT * FROM tbl_patient_fu where 1=1 ";
+
+        if (!string.IsNullOrEmpty(query))
+            query = query + cnd;
+
+        List<tbl_patient_fu> dataList = ConvertDataTable<tbl_patient_fu>(GetData(query));
+        if (dataList != null)
+        {
+            if (dataList.Count > 0)
+            {
+                return Convert.ToInt32(dataList[0].id);
+            }
+            else
+                return null;
+        }
+        else
+            return null;
+    }
+
+
     #region POC
     public int UpdateProcedureExecuteDate(string fDate, string tDate, string fuId)
     {

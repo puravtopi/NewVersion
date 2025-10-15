@@ -62,7 +62,7 @@ namespace PainTrax.Web.Controllers
         private IMapper _mapper;
         string SessionDiffDoc = "true";
 
-
+        private readonly IWebHostEnvironment _env;
         public VisitController(ILogger<VisitController> logger, IMapper mapper, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
         {
             _logger = logger;
@@ -3069,7 +3069,7 @@ namespace PainTrax.Web.Controllers
 
                 if (patientData.doa == null)
                 {
-                    docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + ".docx";
+                    docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + patientData.account_no + ".docx";
                 }
                 else if (patientData.account_no != null)
                 {
@@ -4893,6 +4893,30 @@ namespace PainTrax.Web.Controllers
 
             return Json(_obj == null ? "" : "/V2/" + _obj.voice_file);
         }
+
+        [HttpPost]
+        public JsonResult DeleteDictation(int ie_id, string type,string path)
+        {
+            try
+            {
+
+                // Delete file physically
+                var filePath = Path.Combine(Environment.WebRootPath, path.TrimStart('/'));
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+
+
+                _dictationServices.Delete(ie_id,type);
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
 
     }
     public class HtmlRequest

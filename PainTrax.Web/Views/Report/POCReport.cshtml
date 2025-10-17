@@ -297,14 +297,8 @@
                                             
                                             
                                             @*  <td>@item.level</td> *@
-
-                                            @{
-                                                if(cmpId != 13)
-                                                {
-                                                    <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
-                                                }
-                                            }
                                            
+                                            <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
                                             <td><label id="lblsche">@(item.scheduled == null ? "" : item.scheduled.Value.ToString("MM/dd/yyyy"))</label></td>
                                             <td><label id="lblexe">@(item.executed == null ? "" : item.executed.Value.ToString("MM/dd/yyyy"))</label></td>
                                             <td>

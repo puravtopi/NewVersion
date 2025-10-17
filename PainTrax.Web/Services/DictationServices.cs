@@ -54,5 +54,20 @@ namespace PainTrax.Web.Services
 
 
         }
+
+        public int Delete(int ie_id,string type)
+        {
+
+
+            MySqlCommand cm = new MySqlCommand(@"DELETE FROM tbl_dictation
+		        where ie_id=@ie_id and type=@type", conn);
+            cm.Parameters.AddWithValue("@ie_id", ie_id);
+            cm.Parameters.AddWithValue("@type", type);
+         
+
+            return ExecuteScalar(cm);
+
+
+        }
     }
 }

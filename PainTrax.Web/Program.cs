@@ -37,6 +37,7 @@ builder.Services.AddScoped<SignatureService>();
 builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<ILoggingService, LoggingService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddScoped<DataTransferService>();
 
 
 // Add services to the container.

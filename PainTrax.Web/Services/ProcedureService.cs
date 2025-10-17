@@ -173,6 +173,27 @@ namespace PainTrax.Web.Services
             Execute(cm);
         }
 
+        public int? GetId(string cnd = "")
+        {
+            string query = "select id from tbl_procedures where 1=1 ";
+
+            if (!string.IsNullOrEmpty(query))
+                query = query + cnd;
+
+            List<tbl_procedures> dataList = ConvertDataTable<tbl_procedures>(GetData(query));
+            if (dataList != null)
+            {
+                if (dataList.Count > 0)
+                {
+                    return Convert.ToInt32(dataList[0].id);
+                }
+                else
+                    return null;
+            }
+            else
+                return null;
+        }
+
     }
 }
 

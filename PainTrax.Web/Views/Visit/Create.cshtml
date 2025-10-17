@@ -1097,7 +1097,7 @@
 
 
             if (id === "bordered-home") {
-
+                debugger
                 if (isDetaildValid()) {
 
                     if ($("#id").val() === "0") {
@@ -1179,7 +1179,7 @@
 
             $('#printButton').hide();
 
-
+            debugger
             if (isDetaildValid()) {
 
                 if ($("#id").val() === "0") {
@@ -1251,9 +1251,10 @@
     if ($(nextTabLink).data('bs-target') === "#bordered-comments") {
         loadCommentPartial($("#id").val());
     }
-
+     if (isDetaildValid()) {
     // Switch to the next tab
     $(t).tab('show');
+     }
     });
 
         function loadCommentPartial(ieId) {

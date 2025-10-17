@@ -52,11 +52,24 @@
                 <textarea id="txtHistory" onchange="fnAutoSave()">@Model.history</textarea>
 
             </div>
-            <div class="col-sm-10" style="height: fit-content;">
+           @*  <div class="col-sm-10" style="height: fit-content;">
+                <button id="btnDictateHistory" type="button" class="btn btn-primary" style="display:flex">🎤 Start Dictation</button>
+            
+                <div id="audioContainer" style="display: none; align-items: center; gap: 10px;">
+                    <audio id="audioPreviewHistory" controls style="width: 200px;"></audio>
+                    <button id="btnDeleteAudio" type="button" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                </div>
+            </div> *@
+            <div class="col-sm-10" style="display: flex; align-items: center; gap: 10px; height: fit-content;padding:5px">
                 <button id="btnDictateHistory" type="button" class="btn btn-primary">🎤 Start Dictation</button>
-                <button id="btnSaveHistory" type="button" class="btn btn-success">💾 Save</button>
-                <audio id="audioPreviewHistory" controls style="display:none; width: 400px;"></audio>
+
+                <div id="audioContainer" style="display: none; align-items: center; gap: 10px;">
+                    <audio id="audioPreviewHistory" controls style="width: 200px;"></audio>
+                    <button id="btnDeleteAudio" type="button" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                </div>
+                <input type="hidden" id="hdHistoryPath" />
             </div>
+
         </div>
 
     </div>
@@ -656,7 +669,10 @@
 
     $('#txtbodypart').on('beforeItemRemove', function (event) {
 
+        
         var item = event.item.toLowerCase(); // normalize
+
+        var tag = event.item;
 
         var strBody = $("#txtbodypart").val().replace(tag, "");
 
@@ -913,13 +929,22 @@
             audioChunks = [];
             mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
 
-            mediaRecorder.onstop = () => {
+            mediaRecorder.onstop = async ()  => {
                 audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                 const audioURL = URL.createObjectURL(audioBlob);
-                const audioPreview = document.getElementById('audioPreview');
+                const audioPreview = document.getElementById('audioContainer');
                 audioPreview.src = audioURL;
                 audioPreview.style.display = 'block';
+
+                // 🧠 Auto save immediately when recording stops
+                await autoSaveDictation();
             };
+
+            // 🧠 configure recognition for dictation
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+            recognition.maxAlternatives = 1;
 
             mediaRecorder.start();
             recognition.start();
@@ -930,7 +955,24 @@
                     .map(result => result[0].transcript)
                     .join(' ');
                 // document.getElementById('txtHistory').value = text;
-                ckHistory.setData(text)
+                // 🪄 replace spoken punctuation words
+                const _text = text
+                    .replace(/\bcomma\b/gi, ',')
+                    .replace(/\bperiod\b/gi, '.')
+                    .replace(/\bfull stop\b/gi, '.')
+                    .replace(/\bcolon\b/gi, ':')
+                    .replace(/\bsemicolon\b/gi, ';')
+                    .replace(/\bopen bracket\b/gi, '(')
+                    .replace(/\bclose bracket\b/gi, ')')
+                    .replace(/\bopen parenthesis\b/gi, '[')
+                    .replace(/\bclose parenthesis\b/gi, ']')
+                    .replace(/\bslash\b/gi, '\\')
+                    .replace(/\bequal to\b/gi, '=')
+                    .replace(/\bnew line\b/gi, '<br>')
+                    .replace(/\bquestion mark\b/gi, '?')
+                    .replace(/\bexclamation mark\b/gi, '!');
+                    // .replace(/\bnew line\b/gi, '\n');
+                ckHistory.setData(_text)
             };
         } else {
             // Stop recording
@@ -940,11 +982,10 @@
         }
     });
 
-    // --- Save text + audio ---
-    document.getElementById('btnSaveHistory').addEventListener('click', async () => {
-        debugger
+    // --- Reusable Auto-Save Function ---
+    async function autoSaveDictation() {
         if (!audioBlob) {
-            alert("Please record audio first!");
+            alert("No audio found to save!");
             return;
         }
 
@@ -956,23 +997,27 @@
 
         const url = "@Url.Action("SaveDictation", "Visit")";
 
-        const response = await fetch(url, {
-            method: 'POST',
-            body: formData
-        });
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
 
-        const result = await response.json();
-        if (response.ok && result.fileUrl) {
-            alert('Saved successfully!');
+            const result = await response.json();
+            if (response.ok && result.fileUrl) {
+                alert('Saved automatically after stopping dictation!');
 
-            const audioPreview = document.getElementById('audioPreviewHistory');
-            audioPreview.src = result.fileUrl; // set public URL
-            audioPreview.style.display = 'inline';
-            //audioPreview.play(); // autoplay
-        } else {
-            alert('Error saving.');
+                const audioContainer = document.getElementById('audioContainer');
+                const audioPreview = document.getElementById('audioPreviewHistory');
+                audioPreview.src = result.fileUrl;
+                audioContainer.style.display = 'flex';
+            } else {
+                alert('Error while auto-saving.');
+            }
+        } catch (error) {
+            alert('Auto-save failed: ' + error.message);
         }
-    });
+    }
 
     function fngetDictation(type) {
 
@@ -985,9 +1030,11 @@
             contentType: "application/x-www-form-urlencoded",
             success: function (data) {
                 if (data != '') {
+                    const audioContainer = document.getElementById('audioContainer');
                     const audioPreview = document.getElementById('audioPreviewHistory');
                     audioPreview.src = data; // use saved file URL
-                    audioPreview.style.display = 'inline';
+                    audioContainer.style.display = 'flex';
+                    $('#hdHistoryPath').val(data);
                     //audioPreview.play();
                 }
             },
@@ -996,4 +1043,37 @@
             },
         });
     }
+
+    document.getElementById('btnDeleteAudio').addEventListener('click', async () => {
+        if (!confirm("Are you sure you want to delete this dictation?")) return;
+
+        const url = "@Url.Action("DeleteDictation", "Visit")";
+        
+        const audioPreview = document.getElementById('audioPreviewHistory');
+        const formData = new FormData();
+        formData.append('ie_id', $("#id").val());
+        formData.append('type', 'history');
+        formData.append('path', $('#hdHistoryPath').val());
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (response.ok && result.success) {
+                alert("Dictation deleted successfully!");
+                const audioContainer = document.getElementById('audioContainer');
+              
+                audioPreview.src = '';
+                audioContainer.style.display = 'none';
+            } else {
+                alert("Error deleting dictation.");
+            }
+        } catch (err) {
+            alert("Delete failed: " + err.message);
+        }
+    });
+
 </script>

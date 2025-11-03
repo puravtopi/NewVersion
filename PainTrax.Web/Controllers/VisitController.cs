@@ -106,6 +106,12 @@ namespace PainTrax.Web.Controllers
                 int recordsTotal = 0;
                 string cnd = " and cmp_id = " + cmpid;
 
+
+                int? locid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
+
+                if (locid > 0)
+                    cnd = " and location_id=" + locid;
+
                 if (!string.IsNullOrEmpty(searchValue))
                 {
                     cnd = cnd + " and (fname like '%" + searchValue + "%' or lname  like '%" + searchValue + "%' or CONCAT(fname,' ',lname)  LIKE '%" + searchValue + "%' or CONCAT(lname,' ',fname)  LIKE '%" + searchValue + "%' or " +
@@ -3543,10 +3549,16 @@ namespace PainTrax.Web.Controllers
                 }
             }
 
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+
+            if (cmpid.Value == 18)
+                strPoc = strPoc.Replace("<li>", "").Replace("</li>", "<br/>"); ;
+
             pocDetails pocDetails = new pocDetails()
             {
                 strInjectionDesc = inject_desc,
-                strPoc = strPoc != "" ? "<ol>" + strPoc + "</ol>" : "",
+                strPoc = strPoc != "" ? (cmpid.Value == 18 ? strPoc : "<ol>" + strPoc + "</ol>") : "",
                 strCCDesc = ccdesc,
                 strPEDesc = pedesc,
                 strADesc = adesc
@@ -3660,12 +3672,17 @@ namespace PainTrax.Web.Controllers
 
                 var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
                 restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
-                if (cmpid == 7 || cmpid == 13)
+                if (cmpid == 7 || cmpid == 13 || cmpid == 18)
                 {
                     if (!string.IsNullOrEmpty(dos))
                     {
                         string _dos = Common.commonDate(Convert.ToDateTime(dos), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
-                        restheaderPart.Header = CreateHeaderWithPageNumber(patientName, _dos);
+                        if (cmpid == 18)
+                        {
+                            restheaderPart.Header = CreateHeaderWithPageNumber("Re: " + patientName, "");
+                        }
+                        else
+                            restheaderPart.Header = CreateHeaderWithPageNumber(patientName, _dos);
                     }
                 }
                 else
@@ -3687,7 +3704,7 @@ namespace PainTrax.Web.Controllers
                     sectPr.Append(new TitlePage());
                     // Create the new header reference node.
                     sectPr.PrependChild<HeaderReference>(new HeaderReference() { Type = HeaderFooterValues.First, Id = rId });
-                    if (cmpid == 7 || cmpid == 13)
+                    if (cmpid == 7 || cmpid == 13 || cmpid == 18)
                         sectPr.PrependChild<HeaderReference>(new HeaderReference() { Type = HeaderFooterValues.Default, Id = restId });
                 }
             }
@@ -4138,7 +4155,7 @@ namespace PainTrax.Web.Controllers
                     {
                         strCommaValue = "";
                         if (data.other1_comma != null)
-                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other1_comma));
+                            strCommaValue = " " + EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other1_comma));
 
                         strDaignosis = strDaignosis + strCommaValue + " " + data.other1_text.TrimEnd('.') + ". " + "<br/>";
                     }
@@ -4158,7 +4175,7 @@ namespace PainTrax.Web.Controllers
                     {
                         strCommaValue = "";
                         if (data.other2_comma != null)
-                            strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other2_comma));
+                            strCommaValue = " " + EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other2_comma));
 
                         strDaignosis = strDaignosis + strCommaValue + " " + data.other2_text.TrimEnd('.') + ". " + "<br/>";
                     }
@@ -4170,7 +4187,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other3_study))
                     {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other3_study));
+                        var study = " " + EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other3_study));
                         strDaignosis = strDaignosis + study;
                     }
 
@@ -4190,7 +4207,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other4_study))
                     {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other4_study));
+                        var study = " " + EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other4_study));
                         strDaignosis = strDaignosis + study;
                     }
 
@@ -4210,7 +4227,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other5_study))
                     {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other5_study));
+                        var study = " " + EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other5_study));
                         strDaignosis = strDaignosis + study;
                     }
 
@@ -4230,7 +4247,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other6_study))
                     {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other6_study));
+                        var study = " " + EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other6_study));
                         strDaignosis = strDaignosis + study;
                     }
 
@@ -4250,7 +4267,7 @@ namespace PainTrax.Web.Controllers
 
                     if (!string.IsNullOrEmpty(data.other7_study))
                     {
-                        var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other7_study));
+                        var study = " " + EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other7_study));
                         strDaignosis = strDaignosis + study;
                     }
 
@@ -4715,7 +4732,7 @@ namespace PainTrax.Web.Controllers
 
                 var restfooterPart = mainPart.AddNewPart<FooterPart>("RestFooter");
                 // restfooterPart.Footer = CreateHeaderWithPageNumber(patientName, "");
-                if (cmpid == 7 || cmpid == 13)
+                if (cmpid == 7 || cmpid == 13 || cmpid == 18)
                 {
                     if (!string.IsNullOrEmpty(dos))
                     {
@@ -4745,12 +4762,15 @@ namespace PainTrax.Web.Controllers
                 IEnumerable<DocumentFormat.OpenXml.Wordprocessing.SectionProperties> sectPrs = mainPart.Document.Body.Elements<SectionProperties>();
                 foreach (var sectPr in sectPrs)
                 {
-                    // Delete existing references to footers.
-                    sectPr.RemoveAllChildren<FooterReference>();
-                    sectPr.Append(new TitlePage());
-                    // Create the new footer reference node.
-                    sectPr.PrependChild<FooterReference>(new FooterReference() { Type = HeaderFooterValues.First, Id = rId });
-                    sectPr.PrependChild<FooterReference>(new FooterReference() { Type = HeaderFooterValues.Default, Id = restId });
+                    if (cmpid != 18)
+                    {
+                        // Delete existing references to footers.
+                        sectPr.RemoveAllChildren<FooterReference>();
+                        sectPr.Append(new TitlePage());
+                        // Create the new footer reference node.
+                        sectPr.PrependChild<FooterReference>(new FooterReference() { Type = HeaderFooterValues.First, Id = rId });
+                        sectPr.PrependChild<FooterReference>(new FooterReference() { Type = HeaderFooterValues.Default, Id = restId });
+                    }
                 }
             }
         }
@@ -4863,7 +4883,7 @@ namespace PainTrax.Web.Controllers
                 var audioFileName = ie_id.ToString() + "_" + type + ".webm";
                 var audioPath = Path.Combine(textPath, audioFileName);
                 var saveAudioPath = Path.Combine("/uploads/Dictation/" + cmpid.ToString(), audioFileName);
-                publicUrl = "/V2/"+saveAudioPath;
+                publicUrl = "/V2/" + saveAudioPath;
                 using (var stream = new FileStream(audioPath, FileMode.Create))
                 {
                     await audioFile.CopyToAsync(stream);
@@ -4895,7 +4915,7 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public JsonResult DeleteDictation(int ie_id, string type,string path)
+        public JsonResult DeleteDictation(int ie_id, string type, string path)
         {
             try
             {
@@ -4908,7 +4928,7 @@ namespace PainTrax.Web.Controllers
                 }
 
 
-                _dictationServices.Delete(ie_id,type);
+                _dictationServices.Delete(ie_id, type);
                 return Json(new { success = true });
             }
             catch (Exception ex)

@@ -247,6 +247,61 @@ namespace PainTrax.Web.Services
             return data;
         }
 
+        public string SaveProcedureDetailsBHF(ProcedureDetailsVM model)
+        {
+            List<MySqlParameter> param = new List<MySqlParameter>();
+
+            param.Add(new MySqlParameter("v_Backup_Line", model.Backup_Line));
+            param.Add(new MySqlParameter("v_BodyPart", model.BodyPart));
+            param.Add(new MySqlParameter("v_BodypartSide", model.BodypartSide));
+            param.Add(new MySqlParameter("v_Category", model.Category));
+            param.Add(new MySqlParameter("v_Consider", model.Consider));
+            param.Add(new MySqlParameter("v_CreatedBy", model.CreatedBy));
+            param.Add(new MySqlParameter("v_CT_AUTH_Date", model.CT_AUTH_Date));
+            param.Add(new MySqlParameter("v_CT_Note", model.CT_Note));
+            param.Add(new MySqlParameter("v_CT_Report_Status", model.CT_Report_Status));
+            param.Add(new MySqlParameter("v_CT_ReSche_Date", model.CT_ReSche_Date));
+            param.Add(new MySqlParameter("v_Executed", model.Executed));
+            param.Add(new MySqlParameter("v_Exe_Pos", model.Exe_Pos));
+            param.Add(new MySqlParameter("v_Followup", model.Followup));
+            param.Add(new MySqlParameter("v_FU_Pos", model.FU_Pos));
+            param.Add(new MySqlParameter("v_Ins_Note", model.Ins_Note));
+            param.Add(new MySqlParameter("v_Ins_Ver_Status", model.Ins_Ver_Status));
+            param.Add(new MySqlParameter("v_IsConsidered", model.IsConsidered));
+            param.Add(new MySqlParameter("v_IsFromNew", model.IsFromNew));
+            param.Add(new MySqlParameter("v_IsVaccinated", model.IsVaccinated));
+            param.Add(new MySqlParameter("v_Level", model.Level));
+            param.Add(new MySqlParameter("v_MC_Date", model.MC_Date));
+            param.Add(new MySqlParameter("v_MC_Note", model.MC_Note));
+            param.Add(new MySqlParameter("v_MC_Report_Status", model.MC_Report_Status));
+            param.Add(new MySqlParameter("v_MC_ReSche_Date", model.MC_ReSche_Date));
+            param.Add(new MySqlParameter("v_MC_Type", model.MC_Type));
+            param.Add(new MySqlParameter("v_Medication", model.Medication));
+            param.Add(new MySqlParameter("v_Muscle", model.Muscle));
+            param.Add(new MySqlParameter("v_PatientFuID", model.PatientFuID));
+            param.Add(new MySqlParameter("v_PatientIEID", model.PatientIEID));
+            param.Add(new MySqlParameter("v_PatientProceduresID", model.PatientProceduresID));
+            param.Add(new MySqlParameter("v_ProcedureDetailID", model.ProcedureDetailID));
+            param.Add(new MySqlParameter("v_ProcedureID", model.ProcedureID));
+            param.Add(new MySqlParameter("v_ProcedureMasterID", model.ProcedureMasterID));
+            param.Add(new MySqlParameter("v_Requested", model.Requested));
+            param.Add(new MySqlParameter("v_Req_Pos", model.Req_Pos));
+            param.Add(new MySqlParameter("v_Scheduled", model.Scheduled));
+            param.Add(new MySqlParameter("v_Sch_Pos", model.Sch_Pos));
+            param.Add(new MySqlParameter("v_Side", model.Side));
+            param.Add(new MySqlParameter("v_SignPath", model.SignPath));
+            param.Add(new MySqlParameter("v_Subcode", model.Subcode));
+            param.Add(new MySqlParameter("v_Vac_Note", model.Vac_Note));
+            param.Add(new MySqlParameter("v_Vac_Status", model.Vac_Status));
+            param.Add(new MySqlParameter("ADesc", model.ADesc));
+            param.Add(new MySqlParameter("E_ADesc", model.E_ADesc));
+            param.Add(new MySqlParameter("S_ADesc", model.S_ADesc));
+
+            var data = ExecuteSP(CommonSp.SavePatientProceduresDetailsBHF, param);
+
+            return data;
+        }
+
         public ProcedureDetailsVM? GetProcedureDetails(int ProcedurrDetail_ID)
         {
             try

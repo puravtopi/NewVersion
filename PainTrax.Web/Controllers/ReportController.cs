@@ -137,10 +137,11 @@ namespace PainTrax.Web.Controllers
 
             ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
             ViewBag.cmpid = cmpid.Value;
-            var data1 = _pocConfigservices.GetAllone("");
+            string cnd = " and cmp_id=" + cmpid;
+            var data1 = _pocConfigservices.GetAllone(cnd);
             ViewBag.Columns = data1.Select(x => x.columns).ToList();
 
-            string cnd = " and cmp_id=" + cmpid;
+           
             var sdata = _surgeryCentreService.GetAll(cnd);
             var list = new List<SelectListItem>();
 

@@ -47,6 +47,12 @@
         public string? Vac_Status { get; set; }
         public string? Vac_Note { get; set; }
         public int? Cmp_Id { get; set; }
+
+        public string? ADesc { get; set; }
+
+        public string? S_ADesc { get; set; }
+
+        public string? E_ADesc { get; set; }
     }
 
     public class ProcedureDetailsVMNew

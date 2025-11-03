@@ -160,6 +160,41 @@
                                 </div>
                             </form>
                         }
+                        
+                        @if (clientCode.ToLower() == "bhftest")
+                        {
+                            <h5>BHF Import IE Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="BHFUploadFile" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+
+                            <h5>BHF Import FU Document</h5>
+                            <form asp-action="BHFUploadFileFUUpdate" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+
+                                    <div class="col-4">
+                                        <input type="file" class="form-control-file" id="files" name="files" accept=".docx" required multiple />
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="submit" class="btn btn-primary">Upload File</button>
+
+                                    </div>
+
+                                </div>
+                            </form>
+                        }
+
                     </div>
                 </div>
             </div>

@@ -1,5 +1,7 @@
 ﻿@model MS.Models.tbl_ie_other
-
+@using PainTrax.Web.Helper;
+@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 <style>
     .dropdown {
@@ -103,7 +105,9 @@
     <input type="hidden" id="hidTreatmentIds" value="@Model.treatment_delimit" />
     <input type="hidden" id="hidTreatmentDesc" value="@Model.treatment_delimit_desc" />
 </div>
-
+@{
+    var cmpId = HttpContextAccessor.HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+}
 
 <script>
 
@@ -184,7 +188,7 @@
             }
         });
     }
-            function fnTreatmentDetails() {
+    function fnTreatmentDetails() {
         var strContent = '<ol>';
         var strIds = '', strDesc = '';
 
@@ -208,6 +212,16 @@
         // If no valid checkboxes were selected, clear the content (optional)
         if (strContent === '<ol></ol>') {
             strContent = '';  // Or handle this case as needed
+        }
+
+        var cmp_id = '@cmpId';
+        
+        if (cmp_id === '18') {
+           
+            strContent = strContent.replace(/<ol>/g, '')     // remove opening <ol>
+                .replace(/<\/ol>/g, '')   // remove closing </ol>
+                .replace(/<li>/g, '<p>')     // remove opening <li>
+                .replace(/<\/li>/g, '</p>'); // replace closing </li> with <br/>;
         }
 
         // Update the container with the generated content

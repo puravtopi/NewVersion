@@ -31,7 +31,7 @@ namespace PainTrax.Web.Controllers
         private readonly IEmailService _emailService;
         private readonly POCServices _pocservices = new POCServices();
         private readonly SurgeryCentreService _surgeryCentreService = new SurgeryCentreService();
-        private readonly DataTransferService _dataTransferService ;
+        private readonly DataTransferService _dataTransferService;
 
 
         public HomeController(ILogger<HomeController> logger, IEmailService emailService, DataTransferService dataTransferService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
@@ -48,7 +48,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Index()
         {
 
-           // _dataTransferService.TransferEmployees();
+            //var _data = _dataTransferService.TransferEmployees();
             // this code is use to delete unwanted mcode from procedure table
 
             //// Static path (adjust as per your environment)

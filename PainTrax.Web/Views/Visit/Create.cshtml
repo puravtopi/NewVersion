@@ -99,14 +99,15 @@
                                         <a class="nav-link" id="other-tab" data-bs-target="#bordered-other" role="tab" aria-controls="contact" aria-selected="false">Others</a>
                                     </li>
                                     <li class="nav-item" role="presentation">
+                                        <a class="nav-link" id="ps-tab" data-bs-target="#bordered-comments" role="tab" aria-controls="contact" aria-selected="false">Comments</a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="ps-tab" data-bs-target="#bordered-ps" role="tab" aria-controls="contact" aria-selected="false">POC Summary</a>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="ps-tab" data-bs-target="#bordered-doc" role="tab" aria-controls="contact" aria-selected="false">Documents</a>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <a class="nav-link" id="ps-tab" data-bs-target="#bordered-comments" role="tab" aria-controls="contact" aria-selected="false">Comments</a>
-                                    </li>
+                                   
                                 </ul>
                             </div>
                             <div class="col-md-2 col-sm-2">
@@ -1097,7 +1098,7 @@
 
 
             if (id === "bordered-home") {
-                debugger
+                
                 if (isDetaildValid()) {
 
                     if ($("#id").val() === "0") {
@@ -1179,7 +1180,7 @@
 
             $('#printButton').hide();
 
-            debugger
+            
             if (isDetaildValid()) {
 
                 if ($("#id").val() === "0") {
@@ -1265,7 +1266,7 @@
 
     function fnDetailsSave(t) {
 
-        debugger;
+        ;
         bootbox.confirm({
 
             message: 'Are sure you want to save Details?',

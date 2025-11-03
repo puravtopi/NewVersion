@@ -273,50 +273,62 @@ namespace PainTrax.Web.Controllers
 
                             tbl_ie_page2 obj2 = new tbl_ie_page2()
                             {
-                                //aod = dt.Rows[i]["Activities"].ToString(),
-                                ros = dt.Rows[i]["ROS"].ToString(),
+                                aod = dt.Columns.Contains("Activities") ? dt.Rows[i]["Activities"]?.ToString() ?? string.Empty : string.Empty,
+                                ros = dt.Columns.Contains("ROS") ? dt.Rows[i]["ROS"]?.ToString() ?? string.Empty : string.Empty,
                                 ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
                                 cmp_id = cmpid,
                                 patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
+
                             };
 
                             _patientimportservice.InsertPage2(obj2);
 
-                            if (dt.Columns.Contains("Neurological"))
+
+                            var objNE = _patientimportservice.GetOneNE(Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()));
+
+                            if (objNE == null)
                             {
+                                objNE = new tbl_ie_ne();
 
-                                var objNE = _patientimportservice.GetOneNE(Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()));
+                                objNE.cmp_id = cmpid;
+                                objNE.ie_id = dt.Columns.Contains("Patient_ie_id") ? Convert.ToInt32(dt.Rows[i]["Patient_ie_id"] ?? 0) : 0;
+                                objNE.manual_muscle_strength_testing = dt.Columns.Contains("ManualMuscle") ? dt.Rows[i]["ManualMuscle"]?.ToString() ?? string.Empty : string.Empty;
 
-                                if (objNE == null)
-                                {
-                                    objNE = new tbl_ie_ne()
-                                    {
-                                        cmp_id = cmpid,
-                                        ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
-                                        manual_muscle_strength_testing = dt.Rows[i]["ManualMuscle"].ToString(),
-                                        neurological_exam = dt.Rows[i]["Neurological"].ToString(),
-                                        sensory = dt.Rows[i]["Sensory"].ToString(),
-                                        patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
-                                        other_content = dt.Rows[i]["DeepTendon"].ToString(),
-                                    };
+                                if (string.IsNullOrEmpty(objNE.manual_muscle_strength_testing))
+                                    objNE.manual_muscle_strength_testing = dt.Columns.Contains("Motor") ? dt.Rows[i]["Motor"]?.ToString() ?? string.Empty : string.Empty;
 
-                                    _patientimportservice.InsertNE(objNE);
-                                }
-                                else
-                                {
-                                    var _objNE = new tbl_ie_ne()
-                                    {
+                                objNE.neurological_exam = dt.Columns.Contains("Neurological") ? dt.Rows[i]["Neurological"]?.ToString() ?? string.Empty : string.Empty;
+                                objNE.sensory = dt.Columns.Contains("Sensory") ? dt.Rows[i]["Sensory"]?.ToString() ?? string.Empty : string.Empty;
+                                objNE.patient_id = dt.Columns.Contains("Patient_id") ? Convert.ToInt32(dt.Rows[i]["Patient_id"] ?? 0) : 0;
 
-                                        manual_muscle_strength_testing = dt.Rows[i]["ManualMuscle"].ToString(),
-                                        neurological_exam = dt.Rows[i]["Neurological"].ToString(),
-                                        sensory = dt.Rows[i]["Sensory"].ToString(),
-                                        id = objNE.id,
-                                        other_content = dt.Rows[i]["DeepTendon"].ToString(),
-                                    };
 
-                                    _patientimportservice.UpdatePageNE(_objNE);
-                                }
+                                objNE.other_content = dt.Columns.Contains("DeepTendon") ? dt.Rows[i]["DeepTendon"]?.ToString() ?? string.Empty : string.Empty;
+
+                                if (string.IsNullOrEmpty(objNE.other_content))
+                                    objNE.other_content = dt.Columns.Contains("Reflexes") ? dt.Rows[i]["Reflexes"]?.ToString() ?? string.Empty : string.Empty;
+
+                                _patientimportservice.InsertNE(objNE);
                             }
+                            else
+                            {
+                                var _objNE = new tbl_ie_ne();
+
+
+                                _objNE.manual_muscle_strength_testing = dt.Columns.Contains("ManualMuscle") ? dt.Rows[i]["ManualMuscle"]?.ToString() ?? string.Empty : string.Empty;
+                                if (string.IsNullOrEmpty(_objNE.manual_muscle_strength_testing))
+                                    _objNE.manual_muscle_strength_testing = dt.Columns.Contains("Motor") ? dt.Rows[i]["Motor"]?.ToString() ?? string.Empty : string.Empty;
+                                _objNE.neurological_exam = dt.Columns.Contains("Neurological") ? dt.Rows[i]["Neurological"]?.ToString() ?? string.Empty : string.Empty;
+                                _objNE.sensory = dt.Columns.Contains("Sensory") ? dt.Rows[i]["Sensory"]?.ToString() ?? string.Empty : string.Empty;
+                                _objNE.id = objNE.id;
+                                _objNE.other_content = dt.Columns.Contains("DeepTendon") ? dt.Rows[i]["DeepTendon"]?.ToString() ?? string.Empty : string.Empty;
+                                if (string.IsNullOrEmpty(_objNE.other_content))
+                                    _objNE.other_content = dt.Columns.Contains("Reflexes") ? dt.Rows[i]["Reflexes"]?.ToString() ?? string.Empty : string.Empty;
+
+
+
+                                _patientimportservice.UpdatePageNE(_objNE);
+                            }
+
                         }
 
                         ViewBag.Message = "Patient Data uploaded successfully.";
@@ -403,8 +415,8 @@ namespace PainTrax.Web.Controllers
 
                             tbl_fu_page2 obj2 = new tbl_fu_page2()
                             {
-                                //aod = dt.Rows[i]["Activities"].ToString(),
-                                ros = dt.Rows[i]["ROS"].ToString(),
+                                aod = dt.Columns.Contains("Activities") ? dt.Rows[i]["Activities"]?.ToString() ?? string.Empty : string.Empty,
+                                ros = dt.Columns.Contains("ROS") ? dt.Rows[i]["ROS"]?.ToString() ?? string.Empty : string.Empty,
                                 ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
                                 cmp_id = cmpid,
                                 patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
@@ -413,41 +425,63 @@ namespace PainTrax.Web.Controllers
 
                             _patientimportservice.InsertPage2FU(obj2);
 
-                            if (dt.Columns.Contains("Neurological"))
+                            //if (dt.Columns.Contains("Neurological"))
+                            //{
+                            var objNE = _patientimportservice.GetOneNEFU(Convert.ToInt32(dt.Rows[i]["Patient_fu_id"].ToString()));
+
+                            if (objNE == null)
                             {
-                                var objNE = _patientimportservice.GetOneNEFU(Convert.ToInt32(dt.Rows[i]["Patient_fu_id"].ToString()));
+                                objNE = new tbl_fu_ne();
 
-                                if (objNE == null)
-                                {
-                                    objNE = new tbl_fu_ne()
-                                    {
-                                        cmp_id = cmpid,
-                                        ie_id = Convert.ToInt32(dt.Rows[i]["Patient_ie_id"].ToString()),
-                                        manual_muscle_strength_testing = dt.Rows[i]["ManualMuscle"].ToString(),
-                                        neurological_exam = dt.Rows[i]["Neurological"].ToString(),
-                                        sensory = dt.Rows[i]["Sensory"].ToString(),
-                                        patient_id = Convert.ToInt32(dt.Rows[i]["Patient_id"].ToString()),
-                                        other_content = dt.Rows[i]["DeepTendon"].ToString(),
-                                        fu_id = Convert.ToInt32(dt.Rows[i]["Patient_fu_id"].ToString()),
-                                    };
+                                objNE.cmp_id = cmpid;
+                                objNE.ie_id = dt.Columns.Contains("Patient_ie_id") ? Convert.ToInt32(dt.Rows[i]["Patient_ie_id"] ?? 0) : 0;
+                                objNE.manual_muscle_strength_testing = dt.Columns.Contains("ManualMuscle") ? dt.Rows[i]["ManualMuscle"]?.ToString() ?? string.Empty : string.Empty;
 
-                                    _patientimportservice.InsertNEFU(objNE);
-                                }
-                                else
-                                {
-                                    var _objNE = new tbl_fu_ne()
-                                    {
+                                if (string.IsNullOrEmpty(objNE.manual_muscle_strength_testing))
+                                    objNE.manual_muscle_strength_testing = dt.Columns.Contains("Motor") ? dt.Rows[i]["Motor"]?.ToString() ?? string.Empty : string.Empty;
 
-                                        manual_muscle_strength_testing = dt.Rows[i]["ManualMuscle"].ToString(),
-                                        neurological_exam = dt.Rows[i]["Neurological"].ToString(),
-                                        sensory = dt.Rows[i]["Sensory"].ToString(),
-                                        other_content = dt.Rows[i]["DeepTendon"].ToString(),
-                                        id = objNE.id
-                                    };
 
-                                    _patientimportservice.UpdateNEFU(_objNE);
-                                }
+
+                                objNE.neurological_exam = dt.Columns.Contains("Neurological") ? dt.Rows[i]["Neurological"]?.ToString() ?? string.Empty : string.Empty;
+                                objNE.sensory = dt.Columns.Contains("Sensory") ? dt.Rows[i]["Sensory"]?.ToString() ?? string.Empty : string.Empty;
+                                objNE.patient_id = dt.Columns.Contains("Patient_id") ? Convert.ToInt32(dt.Rows[i]["Patient_id"] ?? 0) : 0;
+                                objNE.other_content = dt.Columns.Contains("DeepTendon") ? dt.Rows[i]["DeepTendon"]?.ToString() ?? string.Empty : string.Empty;
+
+                                if (string.IsNullOrEmpty(objNE.other_content))
+                                    objNE.other_content = dt.Columns.Contains("Reflexes") ? dt.Rows[i]["Reflexes"]?.ToString() ?? string.Empty : string.Empty;
+
+
+                                objNE.fu_id = dt.Columns.Contains("Patient_fu_id") ? Convert.ToInt32(dt.Rows[i]["Patient_fu_id"] ?? 0) : 0;
+
+
+                                _patientimportservice.InsertNEFU(objNE);
                             }
+                            else
+                            {
+                                var _objNE = new tbl_fu_ne();
+
+
+                                _objNE.manual_muscle_strength_testing = dt.Columns.Contains("ManualMuscle") ? dt.Rows[i]["ManualMuscle"]?.ToString() ?? string.Empty : string.Empty;
+
+                                if (string.IsNullOrEmpty(objNE.manual_muscle_strength_testing))
+                                    _objNE.manual_muscle_strength_testing = dt.Columns.Contains("Motor") ? dt.Rows[i]["Motor"]?.ToString() ?? string.Empty : string.Empty;
+
+
+
+                                _objNE.neurological_exam = dt.Columns.Contains("Neurological") ? dt.Rows[i]["Neurological"]?.ToString() ?? string.Empty : string.Empty;
+                                _objNE.sensory = dt.Columns.Contains("Sensory") ? dt.Rows[i]["Sensory"]?.ToString() ?? string.Empty : string.Empty;
+                                _objNE.other_content = dt.Columns.Contains("DeepTendon") ? dt.Rows[i]["DeepTendon"]?.ToString() ?? string.Empty : string.Empty;
+
+                                if (string.IsNullOrEmpty(_objNE.other_content))
+                                    _objNE.other_content = dt.Columns.Contains("Reflexes") ? dt.Rows[i]["Reflexes"]?.ToString() ?? string.Empty : string.Empty;
+
+
+                                _objNE.id = objNE.id;
+
+
+                                _patientimportservice.UpdateNEFU(_objNE);
+                            }
+                            //}
                         }
                         ViewBag.Message = "Patient Data uploaded successfully.";
                     }

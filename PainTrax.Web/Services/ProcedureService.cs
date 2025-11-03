@@ -11,7 +11,7 @@ namespace PainTrax.Web.Services
     {
         public List<tbl_procedures> GetAll(string cnd = "")
         {
-            string query = "select* from tbl_procedures where 1=1 ";
+            string query = "select * from tbl_procedures where 1=1 ";
 
             if (!string.IsNullOrEmpty(query))
                 query = query + cnd;

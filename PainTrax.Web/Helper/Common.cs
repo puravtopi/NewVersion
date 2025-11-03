@@ -889,6 +889,7 @@ namespace PainTrax.Web.Helper
         public const string CheckExecuteStatus = "sp_check_execute_status";
         public const string GetAllProceduress = "sp_GetAllProceduress";
         public const string SavePatientProceduresDetails = "sp_SavePatientProceduresDetails";
+        public const string SavePatientProceduresDetailsBHF = "sp_SavePatientProceduresDetailsBHF";
         #endregion
     }
 

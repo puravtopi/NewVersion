@@ -305,7 +305,12 @@ namespace PainTrax.Web.Controllers
                                 objNE.other_content = dt.Columns.Contains("DeepTendon") ? dt.Rows[i]["DeepTendon"]?.ToString() ?? string.Empty : string.Empty;
 
                                 if (string.IsNullOrEmpty(objNE.other_content))
-                                    objNE.other_content = dt.Columns.Contains("Reflexes") ? dt.Rows[i]["Reflexes"]?.ToString() ?? string.Empty : string.Empty;
+                                {
+                                    if (dt.Columns.Contains("Reflexes"))
+                                        objNE.other_content = dt.Columns.Contains("Reflexes") ? dt.Rows[i]["Reflexes"]?.ToString() ?? string.Empty : string.Empty;
+                                    else if (dt.Columns.Contains("Reflex"))
+                                        objNE.other_content = dt.Columns.Contains("Reflex") ? dt.Rows[i]["Reflex"]?.ToString() ?? string.Empty : string.Empty;
+                                }
 
                                 _patientimportservice.InsertNE(objNE);
                             }
@@ -448,8 +453,12 @@ namespace PainTrax.Web.Controllers
                                 objNE.other_content = dt.Columns.Contains("DeepTendon") ? dt.Rows[i]["DeepTendon"]?.ToString() ?? string.Empty : string.Empty;
 
                                 if (string.IsNullOrEmpty(objNE.other_content))
-                                    objNE.other_content = dt.Columns.Contains("Reflexes") ? dt.Rows[i]["Reflexes"]?.ToString() ?? string.Empty : string.Empty;
-
+                                {
+                                    if(dt.Columns.Contains("Reflexes"))
+                                        objNE.other_content = dt.Columns.Contains("Reflexes") ? dt.Rows[i]["Reflexes"]?.ToString() ?? string.Empty : string.Empty;
+                                    else  if(dt.Columns.Contains("Reflex"))
+                                        objNE.other_content = dt.Columns.Contains("Reflex") ? dt.Rows[i]["Reflex"]?.ToString() ?? string.Empty : string.Empty;
+                                }
 
                                 objNE.fu_id = dt.Columns.Contains("Patient_fu_id") ? Convert.ToInt32(dt.Rows[i]["Patient_fu_id"] ?? 0) : 0;
 

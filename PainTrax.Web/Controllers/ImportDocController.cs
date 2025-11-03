@@ -7382,6 +7382,7 @@ namespace PainTrax.Web.Controllers
                         {
                             html.Append($"<p>{paragraphText}</p>");
                             // history.Append($"<p>{paragraphText}</p>");
+                            foundcc = false;
                             foundpe = false;
                             founddiagnoses = false;
                             foundplan = false;
@@ -7953,7 +7954,7 @@ namespace PainTrax.Web.Controllers
                 datarow["Activities"] = activities.ToString().Trim();
                 datarow["Procedure"] = procedure.ToString().Trim();
                 datarow["CC"] = cc.ToString().Trim();
-                datarow["HIstory"] = cc.ToString().Trim();
+                datarow["HIstory"] = history.ToString().Trim();
                 datarow["ROS"] = ros.ToString().Trim();
                 datarow["Past Medical"] = pastmedical.ToString().Trim();
                 datarow["Past Surgical"] = pastsurgery.ToString().Trim();

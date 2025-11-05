@@ -18,7 +18,29 @@
         integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
         crossorigin="anonymous"></script>
 
+<style>
+    .dropdown {
+        position: relative;
+        width: 300px;
+        display: inline-block;
+    }
 
+        .dropdown select {
+            width: 100%;
+        }
+
+        .dropdown > * {
+            box-sizing: border-box;
+        }
+
+        .dropdown select {
+        }
+
+        .dropdown input {
+            position: absolute;
+            width: calc(100% - 20px);
+        }
+</style>
 <style>
     :root {
         /* Make the mention background blue. */
@@ -354,12 +376,20 @@
 
                                                         <label for="inputDate" class="col-sm-2 col-form-label">Medical Clearance</label>
                                                         <div class="col-sm-4">
-                                                            <select class="form-select" asp-for="mc" aria-label="Default select example">
+                                                          @*   <select class="form-select" asp-for="mc" aria-label="Default select example">
                                                                 <option value=""></option>
                                                                 <option value="true">Yes</option>
                                                                 <option value="false">No</option>
 
-                                                            </select>
+                                                            </select> *@
+                                                            <section class="dropdown">
+                                                                <input type="text" asp-for="mc" class="form-control" style="width:88%" onchange="txtMe(this)" />
+                                                                <select id="ddl_mc" class="form-select" onchange="this.previousElementSibling.value = this.value; this.previousElementSibling.focus();selectVal('mc', this.value)">
+                                                                    <option value=""></option>
+                                                                    <option value="Yes">Yes</option>
+                                                                    <option value="No">No</option>
+                                                                </select>
+                                                            </section>
                                                         </div>
                                                     </div>
                                                     <div class="row mb-3">

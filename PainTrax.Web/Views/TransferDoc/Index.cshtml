@@ -39,6 +39,17 @@
                                 </div>
                             </form>
                         }
+                        <br />
+                        @if (clientCode.ToLower() == "bhftest")
+                        {
+                            <h5>Transfer SeldesMD Document</h5>
+                            <!-- Upload File Form -->
+                            <form asp-action="TransferBHFTest" method="post" enctype="multipart/form-data" class="form-inline mb-3">
+                                <div class="row">
+                                    <button type="submit" class="btn btn-primary" style="width:200px">Transfer</button>
+                                </div>
+                            </form>
+                        }
                     </div>
                     <div class="row">
                         @if (TempData["Message"] != null)

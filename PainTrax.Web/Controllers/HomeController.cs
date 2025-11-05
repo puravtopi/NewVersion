@@ -48,7 +48,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Index()
         {
 
-            //var _data = _dataTransferService.TransferEmployees();
+           // var _data = _dataTransferService.UpdateDetails();
             // this code is use to delete unwanted mcode from procedure table
 
             //// Static path (adjust as per your environment)
@@ -94,7 +94,7 @@ namespace PainTrax.Web.Controllers
             //};
 
             //var t = _mapper.Map<CompanyVM>(tbl);
-
+                
             //var respose = _service.Save(t);
             try
             {
@@ -240,7 +240,7 @@ namespace PainTrax.Web.Controllers
 
                     if (setting != null)
                     {
-                        HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, setting.location);
+                        HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, setting.location.Value);
                         HttpContext.Session.SetInt32(SessionKeys.SessionPageSize, setting.page_size);
                         HttpContext.Session.SetString(SessionKeys.SessionDateFormat, setting.dateformat == null ? "MM/dd/yyyy" : setting.dateformat);
                         HttpContext.Session.SetString(SessionKeys.SessionPageBreak, setting.pageBreakForInjection.ToString().ToLower());

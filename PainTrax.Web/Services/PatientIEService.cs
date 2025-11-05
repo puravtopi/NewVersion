@@ -267,6 +267,28 @@ public class PatientIEService : ParentService
             return null;
     }
 
+    public void UpdateProcedurePerformedOldId(string id, string procedure_performed)
+    {
+      
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient_ie SET
+		procedure_performed=@procedure_performed	
+        where old_id=@id and cmp_id=18", conn);
+        cm.Parameters.AddWithValue("@id", id);
+        cm.Parameters.AddWithValue("@procedure_performed", procedure_performed);
+        Execute(cm);
+    }
+
+    public void UpdateMCNoteOldId(string id, string mc,string note)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient SET
+		mc=@mc,mc_details=@mc_details	
+        where old_id=@id and cmp_id=18", conn);
+        cm.Parameters.AddWithValue("@id", id);
+        cm.Parameters.AddWithValue("@mc", mc);
+        cm.Parameters.AddWithValue("@mc_details", note);
+        Execute(cm);
+    }
+
     #endregion
 
     #region Page1

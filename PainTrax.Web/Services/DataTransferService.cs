@@ -152,5 +152,71 @@ namespace PainTrax.Web.Services
             return insertedCount;
         }
 
+
+        public int UpdateDetails()
+        {
+            int insertedCount = 0;
+
+
+            try
+            {
+
+
+                var pdVM = new DataSet();
+
+                //// Step 1: Read from SQL Server
+                _sqlServerConn = "Data Source=10.10.93.20\\SQLEXPRESS,18667;Initial Catalog=dbPainTrax_BHF_V;uid=PTU_BHFPC;pwd=Il0ve$ql@321";
+                //using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
+                //{
+                //    sqlConn.Open();
+                //    string sqlQuery = "select ie.POCSummary,ie.PatientIE_ID from tblPatientIE as ie where ie.POCSummary is not null";
+
+                //    SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
+                //    DataSet dataSet = new DataSet();
+                //    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(cmd);
+                //    sqlDataAdapter.Fill(dataSet);
+
+                //    pdVM = dataSet;
+
+                //}
+
+                //foreach (DataRow row in pdVM.Tables[0].Rows)
+                //{
+                //    _patientIEService.UpdateProcedurePerformedOldId(row["PatientIE_ID"].ToString(), row["POCSummary"].ToString());
+                //}
+
+                using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
+                {
+                    sqlConn.Open();
+                    string sqlQuery = "select p.Patient_ID,p.MC,p.Note from tblPatientMaster p where (p.mc is not null and p.mc<>'') or (p.note is not null and p.note<>'')";
+
+                    SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
+                    DataSet dataSet = new DataSet();
+                    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(cmd);
+                    sqlDataAdapter.Fill(dataSet);
+
+                    pdVM = dataSet;
+
+                }
+
+                foreach (DataRow row in pdVM.Tables[0].Rows)
+                {
+                    _patientIEService.UpdateMCNoteOldId(row["Patient_ID"].ToString(), row["MC"].ToString(), row["Note"].ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                tbl_log log = new tbl_log()
+                {
+                    CreatedBy = 1,
+                    CreatedDate = System.DateTime.Now,
+                    Message = ex.Message
+                };
+                _logServices.Insert(log);
+            }
+
+            return insertedCount;
+        }
+
     }
 }

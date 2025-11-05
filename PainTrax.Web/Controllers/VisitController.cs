@@ -109,14 +109,17 @@ namespace PainTrax.Web.Controllers
 
                 int? locid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
 
-                if (locid > 0)
-                    cnd = " and location_id=" + locid;
+               
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
                     cnd = cnd + " and (fname like '%" + searchValue + "%' or lname  like '%" + searchValue + "%' or CONCAT(fname,' ',lname)  LIKE '%" + searchValue + "%' or CONCAT(lname,' ',fname)  LIKE '%" + searchValue + "%' or " +
                         "location  like '%" + searchValue + "%' or DATE_FORMAT(dob,\"%m/%d/%Y\") = '" + searchValue + "' or DATE_FORMAT(doe,\"%m/%d/%Y\") = '" + searchValue + "'  or " +
                         "compensation like '%" + searchValue + "%' or DATE_FORMAT(doa,\"%m/%d/%Y\") = '" + searchValue + "') ";
+                }
+                else {
+                    if (locid > 0)
+                        cnd = " and location_id=" + locid;
                 }
 
                 if (!string.IsNullOrEmpty(f))
@@ -199,7 +202,7 @@ namespace PainTrax.Web.Controllers
             try
             {
                 obj.vaccinated = false;
-                obj.mc = false;
+                obj.mc = "";
 
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
@@ -3541,6 +3544,7 @@ namespace PainTrax.Web.Controllers
                                 inject_desc = inject_desc + "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
                                 inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
                                 inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+                                inject_desc = inject_desc.Replace("#Level", dsPOC.Rows[i]["Level"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
                             }
                         }
                         //strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + pocDesc + "</li>";

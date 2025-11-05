@@ -701,10 +701,18 @@
     function DownloadPdf(id, fname, lname, mode) {
         modefilter = mode.trim();
         var modedetails = "";
-        if (modefilter == "RSAS") { modedetails = "s/p right shoulder arthroscopy"; }
-        else if (modefilter == "LSAS") { modedetails = "s/p left shoulder arthroscopy "; }
-        else if (modefilter == "RKAS") { modedetails = "s/p right knee arthroscopy"; }
-        else if (modefilter == "LKAS") { modedetails = "s/p left knee arthroscopy"; }
+        if (modefilter == "RSAS" || modefilter == "SARS") { modedetails = "s/p right shoulder arthroscopy"; }
+        else if (modefilter == "LSAS" || modefilter == "SALS") { modedetails = "s/p left shoulder arthroscopy "; }
+        else if (modefilter == "RKAS" || modefilter == "SARK") { modedetails = "s/p right knee arthroscopy"; }
+        else if (modefilter == "LKAS" || modefilter == "SALK") { modedetails = "s/p left knee arthroscopy"; }
+        else if (modefilter == "SALE") { modedetails = "s/p left elbow arthroscopy"; }
+        else if (modefilter == "SARE") { modedetails = "s/p right elbow arthroscopy"; }
+        else if (modefilter == "SARA") { modedetails = "s/p left ankle arthroscopy"; }
+        else if (modefilter == "SALA") { modedetails = "s/p right ankle arthroscopy"; }
+        else if (modefilter == "SALW") { modedetails = "s/p left wrist arthroscopy"; }
+        else if (modefilter == "SARW") { modedetails = "s/p right wrist arthroscopy"; }
+        else if (modefilter == "SARH") { modedetails = "s/p right hip arthroscopy"; }
+        else if (modefilter == "SALH") { modedetails = "s/p left hip arthroscopy"; }
 
         var downloadurl = '@Url.Action("GeneratePdf", "Forms")';
         // ;

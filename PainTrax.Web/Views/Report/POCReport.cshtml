@@ -709,7 +709,8 @@
         var downloadurl = '@Url.Action("GeneratePdf", "Forms")';
         // ;
         console.log("Forms/PT FORM.pdf");
-        downloadurl = downloadurl + '?pdffile=' + "Forms/PT Referral.pdf" + '&id=' + id + '&txt_date=' + formatDate(document.getElementById("fdate").value) + '&txt_surgery=' + "" + '&txt_docName=' + "" + '&txt_MCode_Proc=' + "test mcode " + '&txtProcedureCode=' + "test mcode procedure " + '&txt_diagnosis=' + modedetails;
+        //downloadurl = downloadurl + '?pdffile=' + "Forms/PT Referral.pdf" + '&id=' + id + '&txt_date=' + formatDate(document.getElementById("fdate").value) + '&txt_surgery=' + formatDate(document.getElementById("fdate").value) + '&txt_docName=' + "" + '&txt_MCode_Proc=' + "test mcode " + '&txtProcedureCode=' + "test mcode procedure " + '&txt_diagnosis=' + modedetails;
+        downloadurl = downloadurl + '?pdffile=' + "Forms/PT Referral.pdf" + '&id=' + id + '&txt_date=' + formatDate(document.getElementById("fdate").value) + '&txt_surgery=' + formatDate(document.getElementById("fdate").value) + '&txt_docName=' + "" + '&txt_MCode_Proc=' + "test mcode " + '&txtProcedureCode=' +  modedetails  + '&txt_diagnosis=' + modedetails;
         fetch(downloadurl)
             .then(response => {
                 if (!response.ok) {

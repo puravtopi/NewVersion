@@ -20,6 +20,29 @@
         margin: 0;
     }
 </style>
+<style>
+    .dropdown {
+        position: relative;
+        width: 300px;
+        display: inline-block;
+    }
+
+        .dropdown select {
+            width: 100%;
+        }
+
+        .dropdown > * {
+            box-sizing: border-box;
+        }
+
+        .dropdown select {
+        }
+
+        .dropdown input {
+            position: absolute;
+            width: calc(100% - 20px);
+        }
+</style>
 
 <style>
     .header-nav .nav-profile img {
@@ -336,11 +359,23 @@
                                                         </div>
                                                         <label for="inputDate" class="col-sm-2 col-form-label">MC</label>
                                                         <div class="col-sm-4">
-                                                            <select class="form-select" asp-for="mc" arial--label="Default select example">
+                                                          @*   <select class="form-select" asp-for="mc" arial--label="Default select example">
                                                                 <option value=""></option>
                                                                 <option value="true">Yes</option>
                                                                 <option value="false">No</option>
                                                             </select>
+
+                                                        *@
+
+                                                            <section class="dropdown">
+                                                                <input type="text" asp-for="mc" class="form-control" style="width:88%" onchange="txtMe(this)" />
+                                                                <select id="ddl_mc" class="form-select" onchange="this.previousElementSibling.value = this.value; this.previousElementSibling.focus();selectVal('mc', this.value)">
+                                                                    <option value=""></option>
+                                                                    <option value="Yes">Yes</option>
+                                                                    <option value="No">No</option>
+                                                                </select>
+                                                            </section>
+
                                                             @*  <input type="text" class="form-control" asp-for="mc"> *@
                                                         </div>
                                                     </div>

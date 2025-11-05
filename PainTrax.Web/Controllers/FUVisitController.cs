@@ -82,7 +82,7 @@ namespace PainTrax.Web.Controllers
             {
                 int id = patientIEId;
                 obj.vaccinated = false;
-                obj.mc = false;
+                obj.mc = "";
 
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 ViewBag.locList = _commonservices.GetLocations(cmpid.Value);

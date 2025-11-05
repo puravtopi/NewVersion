@@ -350,15 +350,15 @@ namespace PainTrax.Web.Controllers
                             case "Sex":
                                 dr[col] = string.IsNullOrEmpty(user.gender) ? "" : (user.gender.ToLower() == "male" ? "M" : "F");
                                 break;
-
                             case "Name":
                                 dr[col] = user.name;
                                 break;
-
                             case "Case":
                                 dr[col] = user.casetype;
                                 break;
-
+                            case "DOE":
+                                dr[col] = user.doe?.ToShortDateString() ?? "";
+                                break;
                             case "DOB":
                                 dr[col] = user.dob?.ToShortDateString() ?? "";
                                 break;
@@ -401,11 +401,9 @@ namespace PainTrax.Web.Controllers
                             case "Executed":
                                 dr[col] = user.executed?.ToShortDateString() ?? "";
                                 break;
-
                             case "Note":
                                 dr[col] = user.note;
                                 break;
-
                             default:
                                 dr[col] = "";
                                 break;

@@ -82,7 +82,7 @@ namespace PainTrax.Web.Helper
             list.Add(new SelectListItem
             {
                 Text = "--Select Location--",
-                Value = ""
+                Value = "0"
             });
 
 

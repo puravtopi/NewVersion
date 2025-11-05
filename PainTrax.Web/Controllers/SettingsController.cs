@@ -81,7 +81,7 @@ namespace PainTrax.Web.Controllers
                 _services.Update(model);
 
                 ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
-                HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, model.location);
+                HttpContext.Session.SetInt32(SessionKeys.SessionLocationId, model.location.Value);
                 HttpContext.Session.SetInt32(SessionKeys.SessionPageSize, model.page_size);
                 HttpContext.Session.SetString(SessionKeys.SessionPageBreak, model.pageBreakForInjection.ToString().ToLower());
                 HttpContext.Session.SetString(SessionKeys.SessionIsDaignosis, model.isdaignosisshow.ToString().ToLower());

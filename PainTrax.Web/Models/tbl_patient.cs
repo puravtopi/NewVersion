@@ -19,7 +19,7 @@ public class tbl_patient{
 	public string? home_ph {get;set;}
 	public string? mobile {get;set;}
 	public bool? vaccinated {get;set;}
-	public bool? mc {get;set;}
+	public string? mc {get;set;}
 	public string? account_no {get;set;}
 	public DateTime? createddate {get;set;}
 	public int? createdby {get;set;}

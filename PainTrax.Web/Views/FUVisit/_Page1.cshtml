@@ -8,6 +8,18 @@
     }
 </style>
 
+<style>
+    .clsSmallCK .ck-editor__editable_inline p {
+        margin: 0;
+    }
+
+    .clsSmallCK .ck.ck-reset.ck-editor.ck-rounded-corners {
+        max-height: 250px;
+        margin-bottom: 10px;
+        overflow-y: scroll
+    }
+</style>
+
 <div class="col-lg-12">
     <input type="hidden" id="txtId_P1" value="@Model.id" />
     <div class="row mb-3">
@@ -31,7 +43,7 @@
             @* <input type="hidden" asp-for="cc" />
             <div id="div_cc_desc">
             </div>*@
-            <div class="col-sm-10" style="height: fit-content;">
+            <div class="col-sm-10 clsSmallCK" style="height: fit-content;">
                 <textarea id="txtReason">@Model.appt_reason</textarea>
             </div>
         </div>

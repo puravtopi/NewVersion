@@ -482,6 +482,7 @@ namespace PainTrax.Web.Controllers
                         obj.home_ph = patientData.home_ph;
                         obj.mobile = patientData.mobile;
                         obj.mc = patientData.mc;
+                        obj.mc_details = patientData.mc_details;
                         obj.vaccinated = patientData.vaccinated;
                         obj.patientid = patientData.id;
                         obj.age = patientData.age;
@@ -3425,6 +3426,8 @@ namespace PainTrax.Web.Controllers
                                 inject_desc = (dsPOC.Rows[i]["injection_description"].ToString());
                                 inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
                                 inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+                                inject_desc = inject_desc.Replace("#Level", dsPOC.Rows[i]["Level"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+                                inject_desc = inject_desc.Replace("#Medication", dsPOC.Rows[i]["Medication"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
 
                                 inject_desc = "<div style='page-break-before: always;'>" + inject_desc + "</div>";
                                 pageBreakHtml = pageBreakHtml + inject_desc;

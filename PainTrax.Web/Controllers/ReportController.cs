@@ -17,6 +17,12 @@ using Org.BouncyCastle.Asn1.Ocsp;
 using Font = DocumentFormat.OpenXml.Spreadsheet.Font;
 using Color = DocumentFormat.OpenXml.Spreadsheet.Color;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MySql.Data.MySqlClient;
+using DocumentFormat.OpenXml.Office.Word;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.IO;
+using SkiaSharp;
+using System.Diagnostics.Metrics;
 
 namespace PainTrax.Web.Controllers
 {
@@ -36,6 +42,8 @@ namespace PainTrax.Web.Controllers
         private readonly Common _commonservices = new Common();
         private readonly SurgeryCentreService _surgeryCentreService = new SurgeryCentreService();
         private readonly POCConfigService _pocConfigservices = new POCConfigService();
+        private readonly PocStatusService _pocStatusService = new PocStatusService();
+        private readonly InsuranceStatusService _insuranceStatusService = new InsuranceStatusService();
 
         public ReportController(ILogger<ReportController> logger)
         {
@@ -608,6 +616,16 @@ namespace PainTrax.Web.Controllers
             }));
 
             ViewBag.dateList = dateList;
+            // for status dropdown. 
+            var statusList = _pocStatusService.GetAll();
+
+            ViewBag.StatusList = new SelectList(statusList, "Name", "Name");
+
+            // for insurance status drop down. 
+
+            var InsurancestatusList = _insuranceStatusService.GetAll();
+
+            ViewBag.InsurancestatusList = new SelectList(InsurancestatusList, "Name", "Name");
             return View(objPOC);
 
         }
@@ -624,19 +642,74 @@ namespace PainTrax.Web.Controllers
                 // Add columns to the DataTable
                 dt.Columns.AddRange(new DataColumn[]
                 {
-                    new DataColumn("Name", typeof(string)),
-                    new DataColumn("MC", typeof(string)),
-                    new DataColumn("Case", typeof(string)),
-                    new DataColumn("Location", typeof(string)),
-                    new DataColumn("MCODE", typeof(string)),
-                    new DataColumn("Vaccinated", typeof(string)),
-                    new DataColumn("Scheduled", typeof(string)),
+                //    new DataColumn("Name", typeof(string)),
+                //    new DataColumn("MC", typeof(string)),
+                //    new DataColumn("Case", typeof(string)),
+                //    new DataColumn("Location", typeof(string)),
+                //    new DataColumn("MCODE", typeof(string)),
+                //    new DataColumn("Vaccinated", typeof(string)),
+                //    new DataColumn("Scheduled", typeof(string)),
+                //});
+
+                //// Populate the DataTable with data from the list of attorneys
+                //foreach (var proSX in data)
+                //{
+                //    dt.Rows.Add(proSX.name, proSX.mc, proSX.casetype, proSX.location, proSX.mcode, proSX.vaccinated, proSX.scheduled);
+                new DataColumn("SrNo", typeof(string)) { AllowDBNull = true },
+                        new DataColumn("Sex", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("Name", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("Location", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("CaseType", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("MCODE", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("Phone", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("DOB", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("ClaimNumber", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("Insurance", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("Allergies", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("MC", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("Scheduled", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("sxCenterName", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("status", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("color", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("InsNote", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("statusInsurance", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("verificationComment", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("preopstatus", typeof(string)) { AllowDBNull = true },
+                    new DataColumn("bookingSheetSent", typeof(string)) { AllowDBNull = true },
                 });
 
                 // Populate the DataTable with data from the list of attorneys
+                int counter = 0;
+                //foreach (var proSX in data)
+                //{
+                //    dt.Rows.Add(counter++.ToString(),proSX.name, proSX.mc, proSX.casetype, proSX.location, proSX.mcode, proSX.vaccinated, proSX.scheduled);
+                //}
+
                 foreach (var proSX in data)
                 {
-                    dt.Rows.Add(proSX.name, proSX.mc, proSX.casetype, proSX.location, proSX.mcode, proSX.vaccinated, proSX.scheduled);
+                    dt.Rows.Add(
+                        counter++.ToString(),
+                        proSX.gender,
+                        proSX.name,
+                        proSX.location,
+                        " ", //proSX.caseType,
+                        " ", //proSX.MCODE,
+                        " ", //proSX.phone,
+                        " ", //proSX.DOB,
+                        " ", //proSX.claimNumber,
+                        " ", //proSX.insurance,
+                        " ", //proSX.allergies,
+                        proSX.mc,
+                        proSX.scheduled,
+                        proSX.sx_center_name,
+                        proSX.sx_Status,
+                        proSX.color,
+                        proSX.sx_Notes,
+                        proSX.SX_Ins_Ver_Status,
+                        proSX.Ver_comment,
+                        proSX.Preop_notesent,
+                        proSX.Bookingsheet_sent
+                    );
                 }
 
                 // Create a new Excel file
@@ -683,9 +756,144 @@ namespace PainTrax.Web.Controllers
                 return Content("Error: " + ex.Message);
             }
         }
+        private Stylesheet CreateStylesheet()
+        {
+            return new Stylesheet(
+                new DocumentFormat.OpenXml.Spreadsheet.Fonts(
+                    new Font(), // 0: default
+                    new Font(new DocumentFormat.OpenXml.Spreadsheet.Bold()), // 1: bold
+                    new Font(new DocumentFormat.OpenXml.Spreadsheet.FontSize { Val = 11 }, new Color { Rgb = "FF0000" }) // 2: red
+                ),
+                new Fills(
+                    new Fill(new PatternFill { PatternType = PatternValues.None }),
+                    new Fill(new PatternFill { PatternType = PatternValues.Gray125 }),
+                    new Fill(new PatternFill(new ForegroundColor { Rgb = "D3D3D3" }) { PatternType = PatternValues.Solid }) // 2: gray
+                ),
+                new Borders(new DocumentFormat.OpenXml.Spreadsheet.Border()),
+                new CellFormats(
+                    new CellFormat { FontId = 0, FillId = 0, BorderId = 0 }, // 0: default
+                    new CellFormat { FontId = 1, FillId = 2, BorderId = 0, ApplyFont = true, ApplyFill = true }, // 1: header
+                    new CellFormat { FontId = 0, FillId = 0, BorderId = 0 }, // 2: normal
+                    new CellFormat { FontId = 2, FillId = 0, BorderId = 0, ApplyFont = true } // 3: cancel
+                )
+            );
+        }
+
+        private DocumentFormat.OpenXml.Spreadsheet.Columns CreateColumnWidths(int count)
+        {
+            var columns = new DocumentFormat.OpenXml.Spreadsheet.Columns();
+            for (uint i = 1; i <= count; i++)
+            {
+                columns.Append(new DocumentFormat.OpenXml.Spreadsheet.Column { Min = i, Max = i, Width = 20, CustomWidth = true });
+            }
+            return columns;
+        }
+
+        private SheetViews CreateFreezePane()
+        {
+            return new SheetViews(new SheetView
+            {
+                WorkbookViewId = 0,
+                Pane = new Pane
+                {
+                    VerticalSplit = 2,
+                    //TopRow = 2,
+                    ActivePane = PaneValues.BottomLeft,
+                    State = PaneStateValues.Frozen
+                }
+            });
+        }
+
+        private MergeCells CreateMergedHeaders()
+        {
+            return new MergeCells(
+                new MergeCell { Reference = new StringValue("A1:B1") },
+                new MergeCell { Reference = new StringValue("C1:K1") },
+                new MergeCell { Reference = new StringValue("L1:O1") },
+                new MergeCell { Reference = new StringValue("P1:T1") }
+            );
+        }
+
+        private Row CreateGroupHeaderRow()
+        {
+            var row = new Row();
+            row.Append(CreateTextCell("A1", "", 2));
+            row.Append(CreateTextCell("C1", "Patient Details", 2));
+            row.Append(CreateTextCell("L1", "Surgery Details", 2));
+            row.Append(CreateTextCell("P1", "Insurance Verification Details", 2));
+            return row;
+        }
+
+        private Row CreateHeaderRow(string[] headers)
+        {
+            var row = new Row();
+            for (int i = 0; i < headers.Length; i++)
+            {
+                row.Append(CreateTextCell(GetColumnLetter(i + 1) + "2", headers[i], 2));
+            }
+            return row;
+        }
+
+        private Row CreateDataRow(string[] values, int rowIndex, uint styleIndex)
+        {
+            var row = new Row();
+            for (int i = 0; i < values.Length; i++)
+            {
+                row.Append(CreateTextCell(GetColumnLetter(i + 1) + rowIndex.ToString(), values[i], styleIndex));
+            }
+            return row;
+        }
+
+        private Cell CreateTextCell(string cellReference, string cellValue, uint styleIndex)
+        {
+            return new Cell
+            {
+                CellReference = cellReference,
+                DataType = CellValues.String,
+                CellValue = new CellValue(cellValue ?? ""),
+                StyleIndex = styleIndex
+            };
+        }
+
+        private string GetColumnLetter(int columnIndex)
+        {
+            string columnName = "";
+            while (columnIndex > 0)
+            {
+                int modulo = (columnIndex - 1) % 26;
+                columnName = Convert.ToChar(65 + modulo) + columnName;
+                columnIndex = (columnIndex - modulo) / 26;
+            }
+            return columnName;
+        }
 
 
-        [HttpGet]
+        [HttpPost]
+        public ActionResult UpdateProSXReport(ProSXReportVM model)
+        {
+
+
+            //sx_Notes = @sx_Notes,
+
+            //  _servicesProSX.updae(model);
+
+            try
+            {
+                _servicesProSX.Update(model);
+            }
+            catch (Exception ex)
+            {
+                // SaveLog(ex, "Edit");
+            }
+            //return RedirectToAction("Index");
+
+
+
+            TempData["Message"] = "Details saved successfully!";
+            return RedirectToAction("ProSXReport");
+        }
+
+            [HttpGet]
         public IActionResult IVFRReport()
         {
 

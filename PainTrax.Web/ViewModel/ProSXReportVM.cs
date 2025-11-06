@@ -14,8 +14,16 @@ namespace PainTrax.Web.ViewModel
         public string mcode { get; set; }
         public DateTime? scheduled { get; set; }
 
-       
-  
+        //extra columns added as per charse and arun.  
+        public string? sx_center_name { get; set; }
+        public string? sx_Status { get; set; }
+        public string? color { get; set; }
+        public string? sx_Notes { get; set; }
+        public string? SX_Ins_Ver_Status { get; set; }
+        public string? Ver_comment { get; set; }
+        public string? Preop_notesent { get; set; }
+        public string? Bookingsheet_sent { get; set; }
+
         public DateTime? fdate { get; set; }
         public DateTime? tdate { get; set; }
 

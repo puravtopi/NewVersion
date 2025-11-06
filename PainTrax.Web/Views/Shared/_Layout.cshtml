@@ -593,6 +593,22 @@
                                 </a>
                             </li>
                         }
+                        if (pageAccess.ToLower().Contains("poc status config"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="PocStatus">
+                                    <i class="bi bi-circle"></i><span>Poc Status Config</span>
+                                </a>
+                            </li>
+                        }
+                        if (pageAccess.ToLower().Contains("insurance status config"))
+                        {
+                            <li>
+                                <a asp-action="Index" asp-controller="InsuranceStatus">
+                                    <i class="bi bi-circle"></i><span>Insurance Status Config</span>
+                                </a>
+                            </li>
+                        }
                         <li>
                             <a asp-action="Index" asp-controller="VisitType">
                                 <i class="bi bi-circle"></i><spana>Visit Type</spana>

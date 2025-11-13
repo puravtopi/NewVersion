@@ -1341,12 +1341,32 @@ namespace PainTrax.Web.Controllers
                 //var injurbodyparts = _pocService.GetInjuredParts(patientIEId, patientFUId);
                 var injurbodyparts = _pocService.GetInjuredPartsPOC(patientIEId);
 
+
+                if (injurbodyparts.Any(x => x.Equals("lumbar", StringComparison.OrdinalIgnoreCase)))
+                {
+                    injurbodyparts = injurbodyparts
+                        .Where(x => !x.Equals("lowback", StringComparison.OrdinalIgnoreCase))
+                        .ToArray();
+                }
+                if (injurbodyparts.Any(x => x.Equals("cervical", StringComparison.OrdinalIgnoreCase)))
+                {
+                    injurbodyparts = injurbodyparts
+                        .Where(x => !x.Equals("neck", StringComparison.OrdinalIgnoreCase))
+                        .ToArray();
+                }
+                if (injurbodyparts.Any(x => x.Equals("thoracic", StringComparison.OrdinalIgnoreCase)))
+                {
+                    injurbodyparts = injurbodyparts
+                        .Where(x => !x.Equals("midback", StringComparison.OrdinalIgnoreCase))
+                        .ToArray();
+                }
+
                 if (injurbodyparts != null)
-                    injurbodyparts = injurbodyparts.Append("Other").ToArray();
+                    injurbodyparts = injurbodyparts.Append("other").ToArray();
                 else
                 {
                     injurbodyparts = new string[1];
-                    injurbodyparts[0] = "Other";
+                    injurbodyparts[0] = "other";
                 }
 
                 string potion = null;
@@ -1384,10 +1404,10 @@ namespace PainTrax.Web.Controllers
                             //Table start.
                             html.Append("<div class='accordion-item'>" +
                                 "<h2 class='accordion-header' id='#" + ii + "_HeadingColps'>" +
-                                "<button class='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#" + ii.Replace(" ", "_") + "_Colps' aria-expanded='false' aria-controls='flush-collapseTwo'>" + ii.ToUpperInvariant() + "</button></h2>" +
-                                "<div id='" + ii.Replace(" ", "_") + "_Colps' class='accordion-collapse collapse' aria-labelledby='" + ii.Replace(" ", "_") + "_HeadingColps' data-bs-parent='#accordionFlushExample'>" +
+                                "<button class='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#" + ii.ToLower().Replace(" ", "_") + "_Colps' aria-expanded='false' aria-controls='flush-collapseTwo'>" + ii.ToUpperInvariant() + "</button></h2>" +
+                                "<div id='" + ii.ToLower().Replace(" ", "_") + "_Colps' class='accordion-collapse collapse' aria-labelledby='" + ii.Replace(" ", "_") + "_HeadingColps' data-bs-parent='#accordionFlushExample'>" +
                                 "<div class='accordion-body'><div class='table-responsive'>" +
-                                "<table class='table table-hover table-bordered tblpoc'  border = '1' id='" + ii + "_tbl'>");
+                                "<table class='table table-hover table-bordered tblpoc'  border = '1' id='" + ii.ToLower().Replace(" ", "_") + "_tbl'>");
                             html.Append("<thead>");
                             //Building the Header row.
                             html.Append("<tr>");
@@ -2535,7 +2555,7 @@ namespace PainTrax.Web.Controllers
 
                         body = body.Replace("#ProviderName", providerData.providername.ToUpper());
                         body = body.Replace("#AssProviderName", providerData.assistant_providername);
-                }
+                    }
                     else
                         body = body.Replace("#Sign", "");
                 }
@@ -2613,6 +2633,22 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#Location", locData[0].location);
                     body = body.Replace("#Nameofpractice", locData[0].nameofpractice == null ? "" : (locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice));
                     body = body.Replace("#Phone", locData[0].telephone);
+
+                    if (locData[0].drfname != null)
+                        body = body.Replace("#NameofDr", locData[0].drfname + " " + locData[0].drlname);
+                    else
+                        body = body.Replace("#NameofDr", "");
+
+
+                    string drAddress = "";
+                    if (!string.IsNullOrEmpty(locData[0].address))
+                        drAddress = locData[0].address;
+
+                    if (!string.IsNullOrEmpty(locData[0].city))
+                        drAddress = drAddress + "<br/>" + locData[0].city + " " + locData[0].state + " " + locData[0].zipcode;
+
+                    body = body.Replace("#DrAddress", drAddress);
+
                 }
 
                 //ADL printing
@@ -2985,7 +3021,7 @@ namespace PainTrax.Web.Controllers
                     body += injectionHtml;
                 }
 
-               // string updatedHtml = HtmlCleaner.ClearHTML(body);
+                // string updatedHtml = HtmlCleaner.ClearHTML(body);
 
                 ViewBag.content = body;
 
@@ -3000,8 +3036,14 @@ namespace PainTrax.Web.Controllers
         #region Image to Base64
         public string ImageToBase64(string imagePath)
         {
-            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-            string base64String = Convert.ToBase64String(imageBytes);
+            string base64String = string.Empty;
+            if (System.IO.File.Exists(imagePath))
+            {
+                byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                base64String = Convert.ToBase64String(imageBytes);
+                // Use base64String as needed
+            }
+
             return base64String;
         }
         #endregion
@@ -3666,6 +3708,8 @@ namespace PainTrax.Web.Controllers
                                 inject_desc = (dsPOC.Rows[i]["injection_description"].ToString());
                                 inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
                                 inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+                                inject_desc = inject_desc.Replace("#Level", dsPOC.Rows[i]["Level"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+                                inject_desc = inject_desc.Replace("#Medication", dsPOC.Rows[i]["Medication"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
 
                                 inject_desc = "<div style='page-break-before: always;'>" + inject_desc + "</div>";
                                 pageBreakHtml = pageBreakHtml + inject_desc;
@@ -3697,10 +3741,10 @@ namespace PainTrax.Web.Controllers
 
 
             string strPoc = "";
-            string inject_desc = "", ccdesc = "", pedesc = "", adesc = "", pocDesc = "";
+            string inject_desc = "", ccdesc = "", pedesc = "", adesc = "", pocDesc = "", pageBreakHtml = "";
             if (dsPOC != null && dsPOC.Rows.Count > 0)
             {
-
+                int cnt = 0;
                 for (int i = 0; i < dsPOC.Rows.Count; i++)
                 {
                     if (!string.IsNullOrEmpty(dsPOC.Rows[i]["Heading"].ToString()))
@@ -3782,14 +3826,23 @@ namespace PainTrax.Web.Controllers
                             heading = heading.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
                             heading = heading.Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
                         }
-
+                       
                         if (dsPOC.Rows[i]["pn"].ToString() == "1" && dsPOC.Rows[i]["Executed"] != DBNull.Value)
                         {
                             if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
                             {
-                                inject_desc = inject_desc + "<br/>" + (dsPOC.Rows[i]["injection_description"].ToString());
+                                inject_desc = (dsPOC.Rows[i]["injection_description"].ToString());
                                 inject_desc = inject_desc.Replace("#Side", dsPOC.Rows[i]["Sides"].ToString());
                                 inject_desc = inject_desc.Replace("#Muscle", dsPOC.Rows[i]["Muscle"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+                                inject_desc = inject_desc.Replace("#Level", dsPOC.Rows[i]["Level"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+                                inject_desc = inject_desc.Replace("#Medication", dsPOC.Rows[i]["Medication"].ToString().TrimEnd('~').ToString().Replace("~", ", "));
+
+                                if (cnt > 0)
+                                    inject_desc = "<div style='page-break-before: always;'>" + inject_desc + "</div>";
+                                
+                                pageBreakHtml = pageBreakHtml + inject_desc;
+                                cnt++;
+
                             }
                         }
                         //strPoc = strPoc + "<li><b style='text-transform:uppercase'>" + heading.TrimEnd(':') + ": </b>" + pocDesc + "</li>";
@@ -3800,7 +3853,7 @@ namespace PainTrax.Web.Controllers
 
             pocDetails pocDetails = new pocDetails()
             {
-                strInjectionDesc = inject_desc,
+                strInjectionDesc = pageBreakHtml,
                 strPoc = strPoc != "" ? "<ol>" + strPoc + "</ol>" : "",
                 strCCDesc = ccdesc,
                 strPEDesc = pedesc,
@@ -4019,7 +4072,7 @@ namespace PainTrax.Web.Controllers
 
                     if (data.diagcervialbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagcervialbulge_comma));
-                    strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text ;
+                    strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text;
 
 
                     stradddaigno = stradddaigno + "Cervical " + (string.IsNullOrEmpty(data.diagcervialbulge_text) ? "" : data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.')) + ".<br/>";
@@ -4067,7 +4120,7 @@ namespace PainTrax.Web.Controllers
                     strCommaValue = "";
                     if (data.diagthoracicbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagthoracicbulge_comma));
-                    strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text ;
+                    strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text;
 
                     stradddaigno = stradddaigno + "Thoracic " + (string.IsNullOrEmpty(data.diagthoracicbulge_text) ? "" : data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
@@ -4114,7 +4167,7 @@ namespace PainTrax.Web.Controllers
                     strCommaValue = "";
                     if (data.diaglumberbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
-                    strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text ;
+                    strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text;
 
                     stradddaigno = stradddaigno + "Lumbar " + (string.IsNullOrEmpty(data.diaglumberbulge_text) ? "" : data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
@@ -4261,7 +4314,7 @@ namespace PainTrax.Web.Controllers
                     {
                         strCommaValue = "";
                         if (data.other1_comma != null)
-                            strCommaValue = " "+EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other1_comma));
+                            strCommaValue = " " + EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.other1_comma));
 
                         strDaignosis = strDaignosis + " " + strCommaValue + " " + data.other1_text.TrimEnd('.') + ". ";
                     }
@@ -4418,7 +4471,7 @@ namespace PainTrax.Web.Controllers
 
                     if (data.diagcervialbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagcervialbulge_comma));
-                    strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text ;
+                    strDaignosis = strDaignosis + " of the cervical spine " + strCommaValue + " " + data.diagcervialbulge_text;
 
 
                     stradddaigno = stradddaigno + "Cervical " + (data.diagcervialbulge_text == null ? "" : data.diagcervialbulge_text.Replace("reveals", "").TrimEnd('.')) + ".<br/>";
@@ -4466,7 +4519,7 @@ namespace PainTrax.Web.Controllers
                     strCommaValue = "";
                     if (data.diagthoracicbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diagthoracicbulge_comma));
-                    strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text ;
+                    strDaignosis = strDaignosis + " of the thoracic spine " + strCommaValue + " " + data.diagthoracicbulge_text;
 
                     stradddaigno = stradddaigno + "Thoracic " + (data.diagthoracicbulge_text == null ? "" : data.diagthoracicbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diagthoracicbulge_text))
@@ -4513,7 +4566,7 @@ namespace PainTrax.Web.Controllers
                     strCommaValue = "";
                     if (data.diaglumberbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
-                    strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text ;
+                    strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text;
 
                     stradddaigno = stradddaigno + " Lumbar " + (data.diaglumberbulge_text == null ? "" : data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))
@@ -4652,7 +4705,7 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(data.other1_study))
                     {
                         var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other1_study.Replace(" ", "").Replace("/", "_")));
-                        strDaignosis = strDaignosis + study ;
+                        strDaignosis = strDaignosis + study;
                     }
 
                     if (!string.IsNullOrEmpty(data.other1_text))
@@ -4692,7 +4745,7 @@ namespace PainTrax.Web.Controllers
                     if (!string.IsNullOrEmpty(data.other3_study))
                     {
                         var study = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.Study2>(data.other3_study.Replace(" ", "").Replace("/", "_")));
-                        strDaignosis = strDaignosis  + study;
+                        strDaignosis = strDaignosis + study;
                     }
 
                     if (!string.IsNullOrEmpty(data.other3_text))

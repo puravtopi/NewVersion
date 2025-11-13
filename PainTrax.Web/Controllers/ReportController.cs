@@ -66,7 +66,7 @@ namespace PainTrax.Web.Controllers
             objPOC._requested = false;
             objPOC._scheduled = false;
 
-            
+
 
             return View(objPOC);
         }
@@ -82,7 +82,7 @@ namespace PainTrax.Web.Controllers
                 query += " and lc.id =" + locationid;
             }
 
-            if (mcodeid==1)
+            if (mcodeid == 1)
             {
                 query += " and pp.inhouseprocbit=1 ";
             }
@@ -149,7 +149,7 @@ namespace PainTrax.Web.Controllers
             var data1 = _pocConfigservices.GetAllone(cnd);
             ViewBag.Columns = data1.Select(x => x.columns).ToList();
 
-           
+
             var sdata = _surgeryCentreService.GetAll(cnd);
             var list = new List<SelectListItem>();
 
@@ -190,17 +190,17 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult TransferToResheduled(string ids,string sDate="")
+        public IActionResult TransferToResheduled(string ids, string sDate = "")
         {
             ids = ids.TrimStart(',');
 
             if (!string.IsNullOrEmpty(ids))
             {
-                    var arrayId = ids.Split(',');
+                var arrayId = ids.Split(',');
 
-                    for (int i = 0; i < arrayId.Length; i++)
-                    {
-                    _services.TransferToReschedules(arrayId[i],sDate);
+                for (int i = 0; i < arrayId.Length; i++)
+                {
+                    _services.TransferToReschedules(arrayId[i], sDate);
                 }
             }
             return Json(1);
@@ -221,11 +221,11 @@ namespace PainTrax.Web.Controllers
                     var arrayLevel = level.Split(',');
 
                     for (int i = 0; i < arrayId.Length; i++)
-                    {                        
-                        _services.UpdatePOCReportSideandLevel(arrayId[i], arraySide[i], arrayLevel[i]);                        
+                    {
+                        _services.UpdatePOCReportSideandLevel(arrayId[i], arraySide[i], arrayLevel[i]);
                     }
                 }
-                
+
             }
             return Json(1);
         }
@@ -340,7 +340,7 @@ namespace PainTrax.Web.Controllers
                 // Create a new DataTable
                 DataTable dt = new DataTable();
                 // Add columns to the DataTable
-                
+
                 foreach (var col in columnList)
                 {
                     dt.Columns.Add(new DataColumn(col, typeof(string)));
@@ -420,7 +420,7 @@ namespace PainTrax.Web.Controllers
 
                     dt.Rows.Add(dr);
                 }
-                
+
 
                 // Create a new Excel file
                 var memoryStream = new MemoryStream();
@@ -537,14 +537,14 @@ namespace PainTrax.Web.Controllers
             }
 
             return columnName;
-        } 
+        }
         [HttpGet]
         public IActionResult ProSXReport()
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             var objPro = new ProSXReportVM();
             objPro.lstProSXReport = new List<ProSXReportVM>();
-          
+
             ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
             // ViewBag.dateList= _servicesProSX.GetProSXReportDate(cmpid.Value);
             var dates = _servicesProSX.GetProSXReportDate(cmpid.Value.ToString()); // return List<DateTime>
@@ -893,7 +893,7 @@ namespace PainTrax.Web.Controllers
             return RedirectToAction("ProSXReport");
         }
 
-            [HttpGet]
+        [HttpGet]
         public IActionResult IVFRReport()
         {
 
@@ -1056,29 +1056,13 @@ namespace PainTrax.Web.Controllers
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
-            string query = " where pm.cmp_id=" + cmpid.ToString();
-
-            string _query = "";
-
-            //if (fdate != null)
-            //{
-            //    _query = " (tp.Scheduled >= '" + fdate.Value.ToString("yyyy/MM/dd") + "' )";
-            //}
-
-
-
+            string query = "";
             if (fdate != null && tdate != null)
             {
-
-
-                _query = "'" + fdate.Value.ToString("yyyy/MM/dd") + "' and '" + tdate.Value.ToString("yyyy/MM/dd") + "'";
-
+                query = query + "  '" + fdate.Value.ToString("yyyy/MM/dd") + "' and '" + tdate.Value.ToString("yyyy/MM/dd") + "'";
             }
 
-
-
-
-            var data = _servicesDailyCount.GetDailyCountReport(_query);
+            var data = _servicesDailyCount.GetDailyCountReport(query,cmpid.ToString());
             var objPOC = new DailyCountReportVM();
             objPOC.lstDailyCountReport = data;
             TempData["DailyCountquery"] = query;
@@ -1092,8 +1076,9 @@ namespace PainTrax.Web.Controllers
         {
             try
             {
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 string query = TempData["DailyCountquery"].ToString();
-                var data = _servicesDailyCount.GetDailyCountReport(query);
+                var data = _servicesDailyCount.GetDailyCountReport(query, cmpid.ToString());
 
                 // Create a new DataTable
                 DataTable dt = new DataTable();
@@ -1498,7 +1483,7 @@ namespace PainTrax.Web.Controllers
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var t in data)
                 {
-                    dt.Rows.Add(t.name, t.sex, t.mc, t.casetype, t.location, t.vaccinated, t.mcode, t.bodypart, t.ins_ver_status, t.mc_status, t.case_status, t.insverstatus, t.vac_status, t.scheduled,t.executed,t.requested);//, IVFR.scheduled == null ? "" : IVFR.scheduled.Value.ToShortDateString());
+                    dt.Rows.Add(t.name, t.sex, t.mc, t.casetype, t.location, t.vaccinated, t.mcode, t.bodypart, t.ins_ver_status, t.mc_status, t.case_status, t.insverstatus, t.vac_status, t.scheduled, t.executed, t.requested);//, IVFR.scheduled == null ? "" : IVFR.scheduled.Value.ToShortDateString());
                 }
 
                 // Create a new Excel file

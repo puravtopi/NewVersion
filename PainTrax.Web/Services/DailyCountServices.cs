@@ -25,7 +25,7 @@ namespace PainTrax.Web.Services
         #endregion
 
 
-        public List<DailyCountReportVM> GetDailyCountReport(string cnd)
+        public List<DailyCountReportVM> GetDailyCountReport(string cnd, string cmp_id)
         {
             string query = "";
 
@@ -33,9 +33,9 @@ namespace PainTrax.Web.Services
             {
                 query = "SELECT DOE as DOE, Location,max(NoOfIE) as NoOfIE,max(NoOfFU) as NoOfFU from(select count(tblpat.id) as NoOfIE, 0 AS NoOfFU, tblpat.DOE as DOE, tblLoc.Location from tbl_patient_ie tblpat inner " +
                         " join tbl_locations tblLoc on tblpat.location_id = tblLoc.id " +
-                        " where ( tblpat.doe BETWEEN " + cnd + " ) group by tblLoc.Location,tblpat.DOE union all select 0  AS NoOfIE, count(tblFUPat.id) as NoOfFU ,tblFUPat.DOE as DOE, tblLoc.Location from tbl_patient_fu tblFUPat " +
+                        " where tblLoc.cmp_id=" + cmp_id + " and ( tblpat.doe BETWEEN " + cnd + " ) group by tblLoc.Location,tblpat.DOE union all select 0  AS NoOfIE, count(tblFUPat.id) as NoOfFU ,tblFUPat.DOE as DOE, tblLoc.Location from tbl_patient_fu tblFUPat " +
                         " INNER JOIN tbl_patient_ie ie ON ie.id = tblFUPat.patientIE_ID inner join tbl_locations tblLoc on ie.location_id = tblLoc.id " +
-                        " where(tblFUPat.doe BETWEEN " + cnd + ") group by tblLoc.Location,tblFUPat.DOE  )t " +
+                        " where  tblLoc.cmp_id=" + cmp_id + "  and (tblFUPat.doe BETWEEN " + cnd + ") group by tblLoc.Location,tblFUPat.DOE  )t " +
                         " group by DOE, Location order by DOE asc ";
             }
 

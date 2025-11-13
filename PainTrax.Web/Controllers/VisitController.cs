@@ -109,7 +109,7 @@ namespace PainTrax.Web.Controllers
 
                 int? locid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
 
-               
+
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
@@ -117,7 +117,8 @@ namespace PainTrax.Web.Controllers
                         "location  like '%" + searchValue + "%' or DATE_FORMAT(dob,\"%m/%d/%Y\") = '" + searchValue + "' or DATE_FORMAT(doe,\"%m/%d/%Y\") = '" + searchValue + "'  or " +
                         "compensation like '%" + searchValue + "%' or DATE_FORMAT(doa,\"%m/%d/%Y\") = '" + searchValue + "') ";
                 }
-                else {
+                else
+                {
                     if (locid > 0)
                         cnd = " and location_id=" + locid;
                 }
@@ -1566,12 +1567,33 @@ namespace PainTrax.Web.Controllers
                 //var injurbodyparts = _pocService.GetInjuredParts(patientIEId);
                 var injurbodyparts = _pocService.GetInjuredPartsPOC(patientIEId);
 
+
+
+                if (injurbodyparts.Any(x => x.Equals("lumbar", StringComparison.OrdinalIgnoreCase)))
+                {
+                    injurbodyparts = injurbodyparts
+                        .Where(x => !x.Equals("lowback", StringComparison.OrdinalIgnoreCase))
+                        .ToArray();
+                }
+                if (injurbodyparts.Any(x => x.Equals("cervical", StringComparison.OrdinalIgnoreCase)))
+                {
+                    injurbodyparts = injurbodyparts
+                        .Where(x => !x.Equals("neck", StringComparison.OrdinalIgnoreCase))
+                        .ToArray();
+                }
+                if (injurbodyparts.Any(x => x.Equals("thoracic", StringComparison.OrdinalIgnoreCase)))
+                {
+                    injurbodyparts = injurbodyparts
+                        .Where(x => !x.Equals("midback", StringComparison.OrdinalIgnoreCase))
+                        .ToArray();
+                }
+
                 if (injurbodyparts != null)
-                    injurbodyparts = injurbodyparts.Append("Other").ToArray();
+                    injurbodyparts = injurbodyparts.Append("other").ToArray();
                 else
                 {
                     injurbodyparts = new string[1];
-                    injurbodyparts[0] = "Other";
+                    injurbodyparts[0] = "other";
                 }
 
                 string potion = null;
@@ -1610,10 +1632,10 @@ namespace PainTrax.Web.Controllers
                             //Table start.
                             html.Append("<div class='accordion-item'>" +
                                 "<h2 class='accordion-header' id='#" + ii + "_HeadingColps'>" +
-                                "<button class='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#" + ii.Replace(" ", "_") + "_Colps' aria-expanded='false' aria-controls='flush-collapseTwo'>" + ii.ToUpperInvariant() + "</button></h2>" +
-                                "<div id='" + ii.Replace(" ", "_") + "_Colps' class='accordion-collapse collapse' aria-labelledby='" + ii.Replace(" ", "_") + "_HeadingColps' data-bs-parent='#accordionFlushExample'>" +
+                                "<button class='accordion-button collapsed' type='button' data-bs-toggle='collapse' data-bs-target='#" + ii.ToLower().Replace(" ", "_") + "_Colps' aria-expanded='false' aria-controls='flush-collapseTwo'>" + ii.ToUpperInvariant() + "</button></h2>" +
+                                "<div id='" + ii.ToLower().Replace(" ", "_") + "_Colps' class='accordion-collapse collapse' aria-labelledby='" + ii.ToLower().Replace(" ", "_") + "_HeadingColps' data-bs-parent='#accordionFlushExample'>" +
                                 "<div class='accordion-body'><div class='table-responsive'>" +
-                                "<table class='table table-hover table-bordered tblpoc'  border = '1' id='" + ii + "_tbl'>");
+                                "<table class='table table-hover table-bordered tblpoc'  border = '1' id='" + ii.ToLower().Replace(" ", "_") + "_tbl'>");
                             html.Append("<thead>");
                             //Building the Header row.
                             html.Append("<tr>");
@@ -2502,6 +2524,23 @@ namespace PainTrax.Web.Controllers
                     else
                         body = body.Replace("#Nameofpractice", "");
 
+
+                    if (locData[0].drfname != null)
+                        body = body.Replace("#NameofDr", locData[0].drfname + " " + locData[0].drlname);
+                    else
+                        body = body.Replace("#NameofDr", "");
+
+                   
+                    string drAddress = "";
+                    if (!string.IsNullOrEmpty(locData[0].address))
+                        drAddress = locData[0].address;
+
+                    if (!string.IsNullOrEmpty(locData[0].city))
+                        drAddress = drAddress + "<br/>" + locData[0].city + " " + locData[0].state + " " + locData[0].zipcode;
+
+                    body = body.Replace("#DrAddress", drAddress);
+
+
                     string formattedphone = locData[0].telephone != null ? Regex.Replace(locData[0].telephone, @"(\d{3})-(\d{3})-(\d{4})", "($1) $2-$3") : "";
                     body = body.Replace("#Phone", formattedphone);
                     //body = body.Replace("#Location", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
@@ -2937,8 +2976,14 @@ namespace PainTrax.Web.Controllers
         #region Image to Base64
         public string ImageToBase64(string imagePath)
         {
-            byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-            string base64String = Convert.ToBase64String(imageBytes);
+            string base64String = string.Empty;
+            if (System.IO.File.Exists(imagePath))
+            {
+                byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                 base64String = Convert.ToBase64String(imageBytes);
+                // Use base64String as needed
+            }
+            
             return base64String;
         }
         #endregion

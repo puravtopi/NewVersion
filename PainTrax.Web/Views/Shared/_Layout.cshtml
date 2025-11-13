@@ -758,6 +758,11 @@
                             <i class="bi bi-circle"></i><span>Transfer Documents</span>
                         </a>
                     </li>
+                      <li>
+                        <a class="nav-link collapsed" asp-action="Index" asp-controller="ImportPDF">
+                            <i class="bi bi-circle"></i><span>Import PDF</span>
+                        </a>
+                    </li>
                     @* <li>
                     <a href="charts-apexcharts.html">
                     <i class="bi bi-circle"></i><span>Pro / SX Report</span>
@@ -782,6 +787,27 @@
         </div>
 
     </footer><!-- End Footer -->
+    @* @section Scripts {
+        <script>
+            window.addEventListener('DOMContentLoaded', function () {
+                window.convaiSettings = {
+                    agentId: "agent_4401k9eqdcgdf9k99t0xd3qh98va",
+                    theme: {
+                        color: "#0056D2",
+                        launcher: "floating"
+                    },
+                    enableMic: true
+                };
+
+                const script = document.createElement("script");
+                script.src = "https://unpkg.com/@elevenlabs/convai-widget-embed";
+                script.async = true;
+                document.body.appendChild(script);
+            });
+        </script>
+    } *@
+
+    
 
 
     <div id="myModalMessage" class="modal fade" role="dialog">

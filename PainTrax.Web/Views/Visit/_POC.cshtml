@@ -99,33 +99,35 @@
                                     <option value="RIGHT">RIGHT</option>
                                     <option value="BILATERAL">BILATERAL</option>
                                 }
-                                else if(sideCase=="M")
+                                else if (sideCase == "M")
                                 {
                                     <option value=" ">--Select--</option>
                                     <option value="Left">Left</option>
                                     <option value="Right">Right</option>
                                     <option value="Bilateral">Bilateral</option>
-                                
-                                }else {
+
+                                }
+                                else
+                                {
                                     <option value=" ">--Select--</option>
                                     <option value="left">left</option>
                                     <option value="right">right</option>
                                     <option value="bilateral">bilateral</option>
                                 }
-                               
+
                             </select>
                         </div>
                     </div>
-                   @*  <div class="row mb-3" id="divSide">
-                        <label id="Sidelbl" class="col-sm-2 col-form-label">Side</label>
-                        <div class="col-sm-4">
-                            <select id="Side" class="form-control">
-                                <option value=" ">--Select--</option>
-                                <option value="Left">LEFT</option>
-                                <option value="Right">RIGHT</option>
-                                <option value="Bilateral">BILATERAL</option>
-                            </select>
-                        </div>
+                    @*  <div class="row mb-3" id="divSide">
+                    <label id="Sidelbl" class="col-sm-2 col-form-label">Side</label>
+                    <div class="col-sm-4">
+                    <select id="Side" class="form-control">
+                    <option value=" ">--Select--</option>
+                    <option value="Left">LEFT</option>
+                    <option value="Right">RIGHT</option>
+                    <option value="Bilateral">BILATERAL</option>
+                    </select>
+                    </div>
                     </div> *@
 
                     <div class="row mb-3" id="divMuscle">
@@ -486,9 +488,9 @@
 
             var dos = $('#dos').val();
 
-            if(dos!='' && dos!=undefined)
+            if (dos != '' && dos != undefined)
                 $("#pocdate").val(new Date(dos).toLocaleDateString('en-CA'));
-                else
+            else
                 $("#pocdate").val(new Date().toLocaleDateString('en-CA'));
 
             var url = '@Url.Action("GetSubCodeFromDB", "Visit")?ProcedureId=' + t[0].dataset.pid;
@@ -751,7 +753,7 @@
         $('#PPID').val(t[0].dataset.ppid);
         $('#Hasposition').val(t[0].dataset.pos);
 
-        $('#PositionValue').val(t[0].dataset.pos);
+        $('#PositionValue').val(t[0].dataset.reqpos);
         $('#CatHeading').val(t[0].dataset.position);
         $('#Haslevel').val(t[0].dataset.haslevel);
         $('#HasSides').val(t[0].dataset.hassides);
@@ -898,6 +900,15 @@
             $('#Muscle').show();
             $('#Musclelbl').show();
         }
+
+
+        var dos = $('#dos').val();
+
+        if (dos != '' && dos != undefined)
+            $("#pocdate").val(new Date(dos).toLocaleDateString('en-CA'));
+        else
+            $("#pocdate").val(new Date().toLocaleDateString('en-CA'));
+
         $('#EditPopuprec').modal('hide');
         $('#SelectPopup').modal('show');
     }
@@ -913,6 +924,7 @@
         $('#Muscle').html('');
         $('#Medication').html('');
 
+        
         $('#CatHeading').text($("#positionVal").val());
 
         if ($('#PPID').val() != "0") {
@@ -1013,7 +1025,7 @@
                 $('#Medicationlbl').show();
             }
 
-            debugger
+            
 
             if ($('#Hasmuscle').val() != "1") {
                 $('#Muscle').hide();
@@ -1074,7 +1086,6 @@
                 dataType: "JSON",
                 success: function (output) {
 
-                    ;
                     data = output;
                     $('#McType').val(data.MC_Type);
                     if (data.MC_Report_Status) $('#McStatus').val(data.MC_Report_Status);
@@ -1128,12 +1139,11 @@
     function RemoveProc() {
 
         var ProcedureDetailIDfordelete = $('#ProcedureDetailId').val();
-      
+
         var url = '@Url.Action("Delete", "Visit")?ProcedureDetailID=' + ProcedureDetailIDfordelete + '&IeId=' + $("#hdIEId").val();
 
         if (confirm('Do u want to delete?')) {
-            ;
-
+         
             if (ProcedureDetailIDfordelete == undefined) { ProcedureDetailIDfordelete = 0 }
 
             $.ajax({
@@ -1143,13 +1153,13 @@
                 dataType: "json",
                 success: function (data) {
                     // if (data) {
-                        $('#SelectPopup').modal('hide');
-                        $('.modal-backdrop').remove();
-                        $('body').css('overflow', 'auto');
-                        ckPlan.data.set(data);
-                        fnReLoadPOC();
-                        
-                        
+                    $('#SelectPopup').modal('hide');
+                    $('.modal-backdrop').remove();
+                    $('body').css('overflow', 'auto');
+                    ckPlan.data.set(data);
+                    fnReLoadPOC();
+
+
                     // }
                 },
                 failure: function (response) {
@@ -1288,15 +1298,26 @@
             contentType: "application/x-www-form-urlencoded",
             success: function (data, status, xhr) {
 
-               
-                    $('#SelectPopup').modal('hide');
-                    fnReLoadPOC();
-                    fnShowPOCSummary();
+
+                $('#SelectPopup').modal('hide');
+
+                
+                var targetId = BodyPart.toLowerCase()+"_Colps";
+
+                if ($('#PositionValue').val()!='' && $('#PositionValue').val()!='0')
+                    targetId = $('#PositionValue').val().toLowerCase()+"_"+BodyPart.toLowerCase()+"_Colps";
+
+                fnReLoadPOC(targetId);
+                fnShowPOCSummary();
                 ckPlan.data.set(data.strPoc);
+
+
+
+
                 // ckCC.data.set(data.strCCDesc);
                 // ckPE.data.set(data.strPEDesc);
                 // ckAssessment.data.set(data.strADesc);
-                
+
 
             },
             failure: function (response) {
@@ -1307,7 +1328,7 @@
 
     }
 
-    function fnReLoadPOC() {
+    function fnReLoadPOC(targetId) {
         var url = '@Url.Action("GetPOC", "Visit")?patientIEId=' + $("#hdIEId").val();
 
         $.ajax({
@@ -1316,6 +1337,13 @@
             contentType: "application/x-www-form-urlencoded",
             success: function (data, status, xhr) {
                 $("#divPOC").html(data);
+                // Close all
+                $('.accordion .accordion-collapse').collapse('hide');
+
+                alert("Procedure details saved successfully.");
+
+                // Open the selected one
+                $('#' + targetId).collapse('show');
             },
             error: function (xhr, status, error) {
                 alert("Error!" + xhr.status);

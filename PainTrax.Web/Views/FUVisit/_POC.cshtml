@@ -706,9 +706,7 @@
             $('#SubProcedurelbl').show();
             $('#divSubProcedure').show();
         }
-
-
-        ;
+        
         $('#ProcedureDetailId').val(t[0].dataset.procedure_detail_id);
         $('#hidSign').val(t[0].dataset.signpath);
         $('#ProcedureId').val(t[0].dataset.pid);
@@ -724,7 +722,7 @@
         $('#PPID').val(t[0].dataset.ppid);
         $('#Hasposition').val(t[0].dataset.pos);
 
-        $('#PositionValue').val(t[0].dataset.pos);
+        $('#PositionValue').val(t[0].dataset.reqpos);
         $('#CatHeading').val(t[0].dataset.position);
         $('#Haslevel').val(t[0].dataset.haslevel);
         $('#HasSides').val(t[0].dataset.hassides);
@@ -867,6 +865,15 @@
             $('#Muscle').show();
             $('#Musclelbl').show();
         }
+
+
+        var dos = $('#dov').val();
+
+        if (dos != '' && dos != undefined)
+            $("#pocdate").val(new Date(dos).toLocaleDateString('en-CA'));
+        else
+            $("#pocdate").val(new Date().toLocaleDateString('en-CA'));
+
         $('#EditPopuprec').modal('hide');
         $('#SelectPopup').modal('show');
     }
@@ -1032,7 +1039,7 @@
                 dataType: "JSON",
                 success: function (output) {
 
-                    ;
+                    
                     data = output;
                     $('#McType').val(data.MC_Type);
                     if (data.MC_Report_Status) $('#McStatus').val(data.MC_Report_Status);
@@ -1248,7 +1255,14 @@
 
                
                     $('#SelectPopup').modal('hide');
-                    fnReLoadPOC();
+
+
+                var targetId = BodyPart.toLowerCase() + "_Colps";
+
+                if ($('#PositionValue').val() != '' && $('#PositionValue').val() != '0')
+                    targetId = $('#PositionValue').val().toLowerCase() + "_" + BodyPart.toLowerCase() + "_Colps";
+
+                fnReLoadPOC(targetId);
                     fnShowPOCSummary();
                     ckPlan.data.set(data.strPoc);
                 // ckCC.data.set(data.strCCDesc);
@@ -1264,7 +1278,7 @@
 
     }
 
-    function fnReLoadPOC() {
+    function fnReLoadPOC(targetId) {
         var url = '@Url.Action("GetPOC","FUVisit")?patientIEId=' + $("#hdIEId").val()+"&patientFUId="+$("#hdFUId").val();
 
         $.ajax({
@@ -1273,6 +1287,14 @@
             contentType: "application/x-www-form-urlencoded",
             success: function (data, status, xhr) {
                 $("#divPOC").html(data);
+                // Close all
+                $('.accordion .accordion-collapse').collapse('hide');
+
+
+                alert("Procedure details saved successfully.");
+
+                // Open the selected one
+                $('#' + targetId).collapse('show');
             },
             error: function (xhr, status, error) {
                 alert("Error!" + xhr.status);

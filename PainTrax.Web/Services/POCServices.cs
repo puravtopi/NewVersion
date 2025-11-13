@@ -497,7 +497,7 @@ namespace PainTrax.Web.Services
             "tp.surgercy_center,tp.surgon_name,tp.assistent_name,sc.Surgerycenter_name," +
             "tp.Executed," +
             "CASE when pm.gender = '1' THEN 'Male' when pm.gender = '2' then 'Female' when pm.gender = '3' then 'Other'  ELSE '' END AS gender," +
-            "tp.Scheduled  FROM tbl_Procedures_Details tp" +
+            "tp.Scheduled,tp.sx_center_name FROM tbl_Procedures_Details tp" +
             " inner join tbl_patient_ie ie on tp.PatientIE_ID = ie.id" +
             " inner join tbl_Procedures pp on pp.id=tp.Procedure_Master_ID" +
             " INNER JOIN tbl_ie_page1 p1 ON ie.id = p1.ie_id " +

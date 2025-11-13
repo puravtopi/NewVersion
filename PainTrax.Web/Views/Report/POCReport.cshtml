@@ -146,7 +146,7 @@
                                             {
                                                 <th scope="col" id="Level" onclick="sortTable(10);">Level</th>
                                             }
-                                            if (columns.Contains("Surgery Center"))
+                                            if (columns.Contains("SC_Name"))
                                             {
                                                 <th scope="col" id="SurgeryCenter" onclick="sortTable(11);">Surgery Center</th>
                                             }
@@ -268,9 +268,9 @@
                                                             }
                                                         </td>
                                                     }
-                                                    if (columnsval.Contains("Surgery Center"))
+                                                    if (columnsval.Contains("SC_Name"))
                                                     {
-                                                        <td>@item.Surgerycenter_name</td>
+                                                        <td>@item.sx_center_name</td>
                                                     }
                                                     if (columnsval.Contains("Surgone Name"))
                                                     {

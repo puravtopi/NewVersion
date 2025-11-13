@@ -56,7 +56,7 @@ namespace PainTrax.Web.Services
            " inner join tbl_patient_ie ie on tp.PatientIE_ID = ie.id" +
            " inner join tbl_Patient pm on pm.id = ie.Patient_ID" +
            " inner join tbl_locations lc ON ie.Location_ID = lc.id" +
-           " inner join tbl_attorneys a on a.id = ie.attorney_id" +
+           //" inner join tbl_attorneys a on a.id = ie.attorney_id" +
            " LEFT JOIN tbl_insurance_status_type ins ON ins.Name = tp.SX_Ins_Ver_Status " +
            " LEFT JOIN tbl_poc_status_type poc ON poc.Name=tp.sx_Status ";
 

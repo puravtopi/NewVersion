@@ -38,7 +38,7 @@ namespace PainTrax.Web.ViewModel
         public DateTime? scheduled { get; set; }
         public DateTime? fdate { get; set; }
         public DateTime? tdate { get; set; }
-
+        public string sx_center_name { get; set; }
         public List<POCReportVM> lstPOCReport { get; set; }
 
         public int? locationid { get; set; } 

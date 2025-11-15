@@ -574,11 +574,11 @@ namespace PainTrax.Web.Services
             Execute(cm);
         }
 
-        public bool UpdatePOCSurgoryCenter(string sProcedureDetailIDs, string sId, string sSCName, string sAssistant)
+        public bool UpdatePOCSurgoryCenter(string sProcedureDetailIDs, string sId, string sName, string sSCName, string sAssistant)
         {
             try
             {
-                string query = "call sp_Update_SurgeryCenter(" + sId + ",'" + sSCName + "','" + sAssistant + "', '" + sProcedureDetailIDs.TrimStart(',') + "')";
+                string query = "call sp_Update_SurgeryCenter(" + sId + ",'" + sName + ",'" + sSCName + "','" + sAssistant + "', '" + sProcedureDetailIDs.TrimStart(',') + "')";
 
                 MySqlCommand cm = new MySqlCommand(query, conn);
 

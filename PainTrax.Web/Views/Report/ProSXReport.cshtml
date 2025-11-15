@@ -191,7 +191,13 @@
                                                 <td>@Html.DisplayFor(m => m.lstProSXReport[i].mcode)</td>
                                                 <td>@(Model.lstProSXReport[i].scheduled?.ToString("MM/dd/yyyy"))</td>
 
-                                                <td>@Html.TextBoxFor(m => m.lstProSXReport[i].sx_center_name, new { @class = "form-control" })</td>
+                                                
+                                                <td>
+                                                    @Html.DropDownListFor(m => m.lstProSXReport[i].sx_center_name,
+                                                             (SelectList)ViewBag.surgoryList,
+                                                             "Select SurgeryCenter",
+                                                             new { @class = "form-control" })
+                                                </td>
                                                 <td>@Html.TextBoxFor(m => m.lstProSXReport[i].sx_Notes, new { @class = "form-control" })</td>
 
                                                 <td>

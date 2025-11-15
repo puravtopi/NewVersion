@@ -626,6 +626,12 @@ namespace PainTrax.Web.Controllers
             var InsurancestatusList = _insuranceStatusService.GetAll();
 
             ViewBag.InsurancestatusList = new SelectList(InsurancestatusList, "Name", "Name");
+
+            string cnd = " and cmp_id=" + cmpid;
+
+            var surgoryList = _surgeryCentreService.GetAll(cnd);
+            
+            ViewBag.surgoryList = new SelectList(surgoryList, "Surgerycenter_name", "Surgerycenter_name");
             return View(objPOC);
 
         }

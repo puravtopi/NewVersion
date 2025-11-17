@@ -3087,6 +3087,9 @@ namespace PainTrax.Web.Controllers
 
                     // Parse the HTML content and append it to the document
                     HtmlConverter converter = new HtmlConverter(mainPart);
+                    // Clean invalid or empty <img> tags
+                    htmlContent = Regex.Replace(htmlContent, @"<img[^>]*base64,\s*""[^>]*>", "", RegexOptions.IgnoreCase);
+
                     IList<OpenXmlCompositeElement> generatedBody = converter.Parse(htmlContent);
 
                     // Iterate over the parsed elements and apply RunProperties

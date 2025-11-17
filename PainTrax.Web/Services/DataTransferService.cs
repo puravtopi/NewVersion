@@ -166,10 +166,13 @@ namespace PainTrax.Web.Services
 
                 //// Step 1: Read from SQL Server
                 _sqlServerConn = "Data Source=10.10.93.20\\SQLEXPRESS,18667;Initial Catalog=dbPainTrax_BHF_V;uid=PTU_BHFPC;pwd=Il0ve$ql@321";
+
+
+
                 using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
                 {
                     sqlConn.Open();
-                    string sqlQuery = "select ie.InsNote,ie.Patient_ID from tblPatientIE as ie where (ie.InsNote is not null and ie.InsNote<>'')";
+                    string sqlQuery = "select ie.POCSummary,ie.Patient_ID from tblPatientIE as ie where (ie.POCSummary is not null and ie.POCSummary<>'')";
 
                     SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
                     DataSet dataSet = new DataSet();
@@ -182,8 +185,28 @@ namespace PainTrax.Web.Services
 
                 foreach (DataRow row in pdVM.Tables[0].Rows)
                 {
-                    _patientIEService.UpdateNoteOldId(row["Patient_ID"].ToString(), row["InsNote"].ToString());
+                    _patientIEService.UpdateProcedurePerformedOldId(row["Patient_ID"].ToString(), row["POCSummary"].ToString());
                 }
+
+
+                //using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
+                //{
+                //    sqlConn.Open();
+                //    string sqlQuery = "select ie.InsNote,ie.Patient_ID from tblPatientIE as ie where (ie.InsNote is not null and ie.InsNote<>'')";
+
+                //    SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
+                //    DataSet dataSet = new DataSet();
+                //    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(cmd);
+                //    sqlDataAdapter.Fill(dataSet);
+
+                //    pdVM = dataSet;
+
+                //}
+
+                //foreach (DataRow row in pdVM.Tables[0].Rows)
+                //{
+                //    _patientIEService.UpdateNoteOldId(row["Patient_ID"].ToString(), row["InsNote"].ToString());
+                //}
 
                 //using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
                 //{

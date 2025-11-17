@@ -572,9 +572,9 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateSurgoryCenter(string sProcedureDetailIDs, string sId, string sSCName, string sAssistant)
+        public IActionResult UpdateSurgoryCenter(string sProcedureDetailIDs, string sId, string sSCName, string sAssistant,string sSurgeon)
         {
-            var result = _pocservices.UpdatePOCSurgoryCenter(sProcedureDetailIDs, sId, sSCName, sAssistant);
+            var result = _pocservices.UpdatePOCSurgoryCenter(sProcedureDetailIDs, sId, sSCName, sAssistant, sSurgeon);
             return Json(result);
         }
 

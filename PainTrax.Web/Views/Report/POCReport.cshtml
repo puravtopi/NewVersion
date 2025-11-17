@@ -406,9 +406,9 @@
                 <input type="hidden" id="ProcedureDetailIDs" />
                 <select id="ddlSC" class="form-select" asp-items="@ViewBag.surgoryList"></select>
                 <p id="p_error" style="color:red"></p>
-                <input id="txtSurgonName" class="form-control" placeholder="Surgone Name" />
+                <input id="txtSurgonName" class="form-control" placeholder="Surgeon" />
                 <p id="sn_error" style="color:red"></p>
-                <input id="txtAssistant" class="form-control" placeholder="Assistant Name" />
+                <input id="txtAssistant" class="form-control" placeholder="Assistant" />
                 <p id="a_error" style="color:red"></p>
             </div>
             <div class="modal-footer">
@@ -506,7 +506,8 @@
     function fnUpdateSC() {
         var sProcedureDetailIDs = $('#ProcedureDetailIDs').val();
         var sId = $('#ddlSC').val();
-        var sSCName = $('#txtSurgonName').val();
+        var sSCName = $("#ddlSC option:selected").text();
+        var sSurgeon = $('#txtSurgonName').val();
         var sAssistant = $('#txtAssistant').val();
 
         var isValid = true;
@@ -527,7 +528,7 @@
 
         if (!isValid)
             return;
-        var url = '@Url.Action("UpdateSurgoryCenter", "Home")?sProcedureDetailIDs=' + sProcedureDetailIDs + '&sId=' + sId + '&sSCName=' + sSCName + '&sAssistant=' + sAssistant;
+        var url = '@Url.Action("UpdateSurgoryCenter", "Home")?sProcedureDetailIDs=' + sProcedureDetailIDs + '&sId=' + sId + '&sSCName=' + sSCName + '&sAssistant=' + sAssistant + '&sSurgeon=' + sSurgeon;
 
         $.ajax({
             type: "Post",

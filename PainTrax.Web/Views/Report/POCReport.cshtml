@@ -504,6 +504,7 @@
     }
 
     function fnUpdateSC() {
+        debugger;
         var sProcedureDetailIDs = $('#ProcedureDetailIDs').val();
         var sId = $('#ddlSC').val();
         var sSCName = $("#ddlSC option:selected").text();
@@ -528,7 +529,7 @@
 
         if (!isValid)
             return;
-        var url = '@Url.Action("UpdateSurgoryCenter", "Home")?sProcedureDetailIDs=' + sProcedureDetailIDs + '&sId=' + sId + '&sSCName=' + sSCName + '&sAssistant=' + sAssistant + '&sSurgeon=' + sSurgeon;
+        var url = '@Url.Action("UpdateSurgoryCenter", "Home")?sProcedureDetailIDs=' + sProcedureDetailIDs + '&sId=' + sId + '&sSCName=' + sSCName + '&sAssistant=' + sAssistant;
 
         $.ajax({
             type: "Post",

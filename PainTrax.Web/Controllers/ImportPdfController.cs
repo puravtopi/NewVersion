@@ -1,9 +1,11 @@
-﻿using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Humanizer;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MS.Models;
 using MS.Services;
 using Newtonsoft.Json;
@@ -40,8 +42,25 @@ namespace PainTrax.Web.Controllers
         public IActionResult Index()
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            var data = _commonservices.GetLocations(cmpid.Value);
+            List<SelectListItem> lst = new List<SelectListItem>();
 
-            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+            int defaultlocation = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId).Value;
+
+            foreach (var item in data)
+            {
+                var obj = new SelectListItem()
+                {
+                    Text = item.Text,
+                    Value = item.Value,
+                    Selected = item.Value == defaultlocation.ToString() ? true : false
+                };
+                lst.Add(obj);
+
+            }
+            ViewBag.locList = lst;
+
+            //ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
             var providers = _userService.GetProviders(cmpid.Value);
             ViewBag.providerList = providers;
             return View();

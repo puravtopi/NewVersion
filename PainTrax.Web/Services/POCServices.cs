@@ -513,7 +513,7 @@ namespace PainTrax.Web.Services
                 "CONCAT(pm.lname, ', ', pm.fname) AS Name,CASE WHEN pm.MC=1 THEN 'Yes' ELSE 'No' END AS MC,ie.Compensation AS CaseType,"+
                 "ie.doa, pm.dob, ie.doe, pm.mobile AS Phone,ie.primary_policy_no, ie.primary_claim_no,ins.cmpname, tp.sides, tp.level,lc.location,"+
                 "CASE WHEN pm.Vaccinated=1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE,CONCAT(u.fname,' ',u.lname) AS providerName,"+
-                "tp.Requested, p1.allergies, p1.mc_details as note,tp.surgercy_center, tp.surgon_name, tp.assistent_name,sc.Surgerycenter_name, tp.Executed,"+
+                "tp.Requested, p1.allergies, pm.mc_details as note,tp.surgercy_center, tp.surgon_name, tp.assistent_name,sc.Surgerycenter_name, tp.Executed,"+
                 "CASE WHEN pm.gender='1' THEN 'Male' WHEN pm.gender='2' THEN 'Female' WHEN pm.gender='3' THEN 'Other' ELSE '' END AS gender,"+
                 "tp.Scheduled, tp.sx_center_name,ROW_NUMBER() OVER (PARTITION BY tp.ProcedureDetail_ID ORDER BY pm.id DESC) AS rn FROM tbl_Procedures_Details tp"+
                 " INNER JOIN tbl_patient_ie ie ON tp.PatientIE_ID = ie.id INNER JOIN tbl_Procedures pp ON pp.id = tp.Procedure_Master_ID INNER JOIN tbl_ie_page1 p1"+

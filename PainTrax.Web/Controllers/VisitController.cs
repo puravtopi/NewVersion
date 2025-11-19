@@ -3805,6 +3805,7 @@ namespace PainTrax.Web.Controllers
 
         public Header CreateHeaderWithPageNumber(string text1, string text2)
         {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             if (text2 != "")
             {
                 return new Header(
@@ -3840,34 +3841,68 @@ namespace PainTrax.Web.Controllers
             }
             else
             {
-                return new Header(
-                   new Paragraph(
-                       new Run(
-                            new RunProperties(
-                    new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
-                ),
-                           new Text(text1) // First line
-                       ),
-                       new Break(), // Line break
+                if (cmpid == 18) {
 
-                       new Run(
-                            new RunProperties(
-                    new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
-                ),
-                           new Text("Page ") // Static "Page " text
+                    return new Header(
+                          new Paragraph(
+                              new Run(
+                                   new RunProperties(
+                           new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
                        ),
-                       new Run(
-                            new RunProperties(
-                    new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                                  new Text(text1) // First line
+                              ),
+                                 new Run(new TabChar()), new Run(new TabChar()), // Line break
 
-                ),
-                           new SimpleField() // Dynamic page number field
-                           {
-                               Instruction = "PAGE", // Specifies the field type
-                           }
+                              new Run(
+                                   new RunProperties(
+                           new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                       ),
+                                  new Text("Page ") // Static "Page " text
+                              ),
+                              new Run(
+                                   new RunProperties(
+                           new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+
+                       ),
+                                  new SimpleField() // Dynamic page number field
+                                  {
+                                      Instruction = "PAGE", // Specifies the field type
+                                  }
+                              )
+                          )
+                      );
+                }
+                else
+                {
+                    return new Header(
+                       new Paragraph(
+                           new Run(
+                                new RunProperties(
+                        new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                    ),
+                               new Text(text1) // First line
+                           ),
+                           new Break(), // Line break
+
+                           new Run(
+                                new RunProperties(
+                        new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                    ),
+                               new Text("Page ") // Static "Page " text
+                           ),
+                           new Run(
+                                new RunProperties(
+                        new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+
+                    ),
+                               new SimpleField() // Dynamic page number field
+                               {
+                                   Instruction = "PAGE", // Specifies the field type
+                               }
+                           )
                        )
-                   )
-               );
+                   );
+                }
             }
         }
 
@@ -4068,7 +4103,7 @@ namespace PainTrax.Web.Controllers
                     strCommaValue = "";
                     if (data.diaglumberbulge_comma != null)
                         strCommaValue = EnumHelper.GetDisplayName(System.Enum.Parse<EnumHelper.StudyComma>(data.diaglumberbulge_comma));
-                    strDaignosis = strDaignosis + " of the lumbar spine" + strCommaValue + " " + data.diaglumberbulge_text;
+                    strDaignosis = strDaignosis + " of the lumbar spine " + strCommaValue + " " + data.diaglumberbulge_text;
 
                     stradddaigno = stradddaigno + "Lumbar " + (string.IsNullOrEmpty(data.diaglumberbulge_text) ? "" : data.diaglumberbulge_text.ToString().Replace("reveals", "").TrimEnd('.')) + ".<br/>";
                     if (!string.IsNullOrEmpty(data.diaglumberbulge_text))

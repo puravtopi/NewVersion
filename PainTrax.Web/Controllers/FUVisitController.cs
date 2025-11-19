@@ -2596,7 +2596,7 @@ namespace PainTrax.Web.Controllers
                 if (patientData != null)
                 {
                     gender = Common.GetMrMrsFromSex(patientData.gender);
-
+                    body = body.Replace("#wcbgroup", patientData.primary_wcb_group);
                     body = body.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
                     body = body.Replace("#fn", patientData.fname);
                     body = body.Replace("#ln", patientData.lname);
@@ -2897,12 +2897,18 @@ namespace PainTrax.Web.Controllers
 
                     if (HttpContext.Session.GetString(SessionKeys.SessionPageBreak) == "true")
                     {
-                        // Create HTML with a page break before the injection section
-                        string pageBreakHtml = "<div style='page-break-before: always;'>";
-                        pageBreakHtml += injectionHtml;
-                        pageBreakHtml += "</div>";
+                        if (!string.IsNullOrEmpty(injectionHtml))
+                        {
+                            // Create HTML with a page break before the injection section
+                            string pageBreakHtml = "<div style='page-break-before: always;'>";
+                            pageBreakHtml += injectionHtml;
+                            pageBreakHtml += "</div>";
 
-                        body = body.Replace("#injection", pageBreakHtml);
+                            body = body.Replace("#injection", pageBreakHtml);
+                        }
+                        else {
+                            body = body.Replace("#injection", "");
+                        }
                     }
                     else
                     {
@@ -3522,7 +3528,7 @@ namespace PainTrax.Web.Controllers
                        new Run(
                            new Text(text1) // First line
                        ),
-                          new Run(new TabChar()), new Run(new TabChar()), new Run(new TabChar()),
+                          new Break(),
                        new Run(
                            new Text("Page ") // Static "Page " text
                        ),

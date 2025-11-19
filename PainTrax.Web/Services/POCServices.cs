@@ -490,23 +490,37 @@ namespace PainTrax.Web.Services
 
         public List<POCReportVM> GetPOCReport(string cnd)
         {
-            string query = "SELECT pm.id,replace(pm.lname, ' ','') AS lname,replace(pm.fname, ' ','') AS fname, tp.ProcedureDetail_ID,CONCAT(pm.lname,', ',pm.fname)as 'Name',CASE when pm.MC=1 THEN 'Yes' ELSE 'No' END as MC," +
-            "ie.Compensation AS 'CaseType' ,ie.doa,pm.dob,ie.doe,pm.mobile AS Phone,ie.primary_policy_no,ie.primary_claim_no,ins.cmpname,tp.sides,tp.level," +
-            "lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE ,CONCAT(u.fname,' ',u.lname) as providerName, " +
-            "tp.Requested,p1.allergies,p1.note," +
-            "tp.surgercy_center,tp.surgon_name,tp.assistent_name,sc.Surgerycenter_name," +
-            "tp.Executed," +
-            "CASE when pm.gender = '1' THEN 'Male' when pm.gender = '2' then 'Female' when pm.gender = '3' then 'Other'  ELSE '' END AS gender," +
-            "tp.Scheduled,tp.sx_center_name FROM tbl_Procedures_Details tp" +
-            " inner join tbl_patient_ie ie on tp.PatientIE_ID = ie.id" +
-            " inner join tbl_Procedures pp on pp.id=tp.Procedure_Master_ID" +
-            " INNER JOIN tbl_ie_page1 p1 ON ie.id = p1.ie_id " +
-            " inner join tbl_Patient pm on pm.id = ie.Patient_ID" +
-            " inner join tbl_locations lc ON ie.Location_ID = lc.id" +
-            " LEFT JOIN tbl_inscos ins ON ie.primary_ins_cmp_id = ins.id" +
-             " LEFT JOIN tbl_surgerycenter sc ON tp.surgercy_center = sc.Id  " +
-            " LEFT JOIN tbl_users u ON ie.provider_id = u.id";
+            //string query = "SELECT pm.id,replace(pm.lname, ' ','') AS lname,replace(pm.fname, ' ','') AS fname, tp.ProcedureDetail_ID,CONCAT(pm.lname,', ',pm.fname)as 'Name',CASE when pm.MC=1 THEN 'Yes' ELSE 'No' END as MC," +
+            //"ie.Compensation AS 'CaseType' ,ie.doa,pm.dob,ie.doe,pm.mobile AS Phone,ie.primary_policy_no,ie.primary_claim_no,ins.cmpname,tp.sides,tp.level," +
+            //"lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE ,CONCAT(u.fname,' ',u.lname) as providerName, " +
+            //"tp.Requested,p1.allergies,p1.note," +
+            //"tp.surgercy_center,tp.surgon_name,tp.assistent_name,sc.Surgerycenter_name," +
+            //"tp.Executed," +
+            //"CASE when pm.gender = '1' THEN 'Male' when pm.gender = '2' then 'Female' when pm.gender = '3' then 'Other'  ELSE '' END AS gender," +
+            //"tp.Scheduled,tp.sx_center_name FROM tbl_Procedures_Details tp" +
+            //" inner join tbl_patient_ie ie on tp.PatientIE_ID = ie.id" +
+            //" inner join tbl_Procedures pp on pp.id=tp.Procedure_Master_ID" +
+            //" INNER JOIN tbl_ie_page1 p1 ON ie.id = p1.ie_id " +
+            //" inner join tbl_Patient pm on pm.id = ie.Patient_ID" +
+            //" inner join tbl_locations lc ON ie.Location_ID = lc.id" +
+            //" LEFT JOIN tbl_inscos ins ON ie.primary_ins_cmp_id = ins.id" +
+            // " LEFT JOIN tbl_surgerycenter sc ON tp.surgercy_center = sc.Id  " +
+            //" LEFT JOIN tbl_users u ON ie.provider_id = u.id";
             // query += " where  (tp.Scheduled>='" + DateTime.Now.Date.ToString("yyyy/MM/dd") + "')";
+
+
+            string query = "SELECT pm.id,REPLACE(pm.lname,' ','') AS lname,REPLACE(pm.fname,' ','') AS fname,tp.ProcedureDetail_ID,"+
+                "CONCAT(pm.lname, ', ', pm.fname) AS Name,CASE WHEN pm.MC=1 THEN 'Yes' ELSE 'No' END AS MC,ie.Compensation AS CaseType,"+
+                "ie.doa, pm.dob, ie.doe, pm.mobile AS Phone,ie.primary_policy_no, ie.primary_claim_no,ins.cmpname, tp.sides, tp.level,lc.location,"+
+                "CASE WHEN pm.Vaccinated=1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE,CONCAT(u.fname,' ',u.lname) AS providerName,"+
+                "tp.Requested, p1.allergies, p1.mc_details as note,tp.surgercy_center, tp.surgon_name, tp.assistent_name,sc.Surgerycenter_name, tp.Executed,"+
+                "CASE WHEN pm.gender='1' THEN 'Male' WHEN pm.gender='2' THEN 'Female' WHEN pm.gender='3' THEN 'Other' ELSE '' END AS gender,"+
+                "tp.Scheduled, tp.sx_center_name,ROW_NUMBER() OVER (PARTITION BY tp.ProcedureDetail_ID ORDER BY pm.id DESC) AS rn FROM tbl_Procedures_Details tp"+
+                " INNER JOIN tbl_patient_ie ie ON tp.PatientIE_ID = ie.id INNER JOIN tbl_Procedures pp ON pp.id = tp.Procedure_Master_ID INNER JOIN tbl_ie_page1 p1"+
+                " ON ie.id = p1.ie_id INNER JOIN tbl_Patient pm ON pm.id = ie.Patient_ID INNER JOIN tbl_locations lc ON ie.Location_ID = lc.id"+
+                " LEFT JOIN tbl_inscos ins ON ie.primary_ins_cmp_id = ins.id LEFT JOIN tbl_surgerycenter sc ON tp.surgercy_center = sc.Id "+ 
+                " LEFT JOIN tbl_users u ON ie.provider_id = u.id ";
+
 
             if (!string.IsNullOrEmpty(cnd))
             {

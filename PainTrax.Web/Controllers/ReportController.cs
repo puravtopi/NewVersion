@@ -412,6 +412,9 @@ namespace PainTrax.Web.Controllers
                             case "Note":
                                 dr[col] = user.note;
                                 break;
+                            case "SC_Name":
+                                dr[col] = user.sx_center_name;
+                                break;
                             default:
                                 dr[col] = "";
                                 break;

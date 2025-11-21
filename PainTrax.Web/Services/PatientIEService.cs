@@ -281,10 +281,11 @@ public class PatientIEService : ParentService
     public void UpdateMCNoteOldId(string id, string mc,string note)
     {
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient SET
-		mc=@mc where old_id=@id and cmp_id=18", conn);
+		mc=@mc,mc_details=@mc_details	 where old_id=@id and cmp_id=13", conn);
         cm.Parameters.AddWithValue("@id", id);
         cm.Parameters.AddWithValue("@mc", mc);
-      
+        cm.Parameters.AddWithValue("@mc_details", note);
+
         Execute(cm);
     }
 

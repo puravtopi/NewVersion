@@ -165,7 +165,7 @@ namespace PainTrax.Web.Services
                 var pdVM = new DataSet();
 
                 //// Step 1: Read from SQL Server
-                _sqlServerConn = "Data Source=10.10.93.20\\SQLEXPRESS,18667;Initial Catalog=dbPainTrax_BHF_V;uid=PTU_BHFPC;pwd=Il0ve$ql@321";
+                _sqlServerConn = "Data Source=10.10.93.20\\SQLEXPRESS,18667;Initial Catalog=dbPainTrax_AKS_Live;uid=PTU_ASMPC;pwd=Il0ve$ql@321";
 
 
 
@@ -189,29 +189,10 @@ namespace PainTrax.Web.Services
                 //}
 
 
-                using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
-                {
-                    sqlConn.Open();
-                    string sqlQuery = "select ie.InsNote,ie.Patient_ID from tblPatientIE as ie where (ie.InsNote is not null and ie.InsNote<>'')";
-
-                    SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
-                    DataSet dataSet = new DataSet();
-                    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(cmd);
-                    sqlDataAdapter.Fill(dataSet);
-
-                    pdVM = dataSet;
-
-                }
-
-                foreach (DataRow row in pdVM.Tables[0].Rows)
-                {
-                    _patientIEService.UpdateNoteOldId(row["Patient_ID"].ToString(), row["InsNote"].ToString());
-                }
-
                 //using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
                 //{
                 //    sqlConn.Open();
-                //    string sqlQuery = "select p.Patient_ID,p.MC,p.Note from tblPatientMaster p where (p.mc is not null and p.mc<>'') or (p.note is not null and p.note<>'')";
+                //    string sqlQuery = "select ie.InsNote,ie.Patient_ID from tblPatientIE as ie where (ie.InsNote is not null and ie.InsNote<>'')";
 
                 //    SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
                 //    DataSet dataSet = new DataSet();
@@ -224,8 +205,27 @@ namespace PainTrax.Web.Services
 
                 //foreach (DataRow row in pdVM.Tables[0].Rows)
                 //{
-                //    _patientIEService.UpdateMCNoteOldId(row["Patient_ID"].ToString(), row["MC"].ToString(), row["Note"].ToString());
+                //    _patientIEService.UpdateNoteOldId(row["Patient_ID"].ToString(), row["InsNote"].ToString());
                 //}
+
+                using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
+                {
+                    sqlConn.Open();
+                    string sqlQuery = "select p.Patient_ID,p.MC,p.Note from tblPatientMaster p where (p.mc is not null and p.mc<>'') or (p.note is not null and p.note<>'')";
+
+                    SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
+                    DataSet dataSet = new DataSet();
+                    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(cmd);
+                    sqlDataAdapter.Fill(dataSet);
+
+                    pdVM = dataSet;
+
+                }
+
+                foreach (DataRow row in pdVM.Tables[0].Rows)
+                {
+                    _patientIEService.UpdateMCNoteOldId(row["Patient_ID"].ToString(), row["MC"].ToString(), row["Note"].ToString());
+                }
             }
             catch (Exception ex)
             {

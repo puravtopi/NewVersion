@@ -328,7 +328,7 @@
                             var fname=full.fname;
                             var lname = full.lname;
                            // var index = '<a onclick="DownloadPdf(' + full.patient_id + ',' + '\'' + fname + '\','+ '\'' + lname + '\')" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Download"></i></a> &nbsp; &nbsp;'
-                            var index = '<a onclick="DownloadPdf(' + full.patient_id + ',' + '\'' +  `${fname.replace(/'/g, "\\'")}` + '\','+ '\'' +  `${lname.replace(/'/g, "\\'")}` + '\')" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Download"></i></a> &nbsp; &nbsp;'
+                            var index = '<a onclick="DownloadPdf(' + full.patient_id + ',' + '\'' + `${fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${lname.replace(/'/g, "\\'")}` + '\')" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" style="font-size: 25px;" data-bs-placement="bottom" data-bs-original-title="Download"></i></a> &nbsp; &nbsp;'
                             return index;
                         }
                     }

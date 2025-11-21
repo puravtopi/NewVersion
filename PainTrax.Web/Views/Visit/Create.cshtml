@@ -1420,7 +1420,7 @@
                                         dos = formatDate(dos);
                                     }
 
-
+                                    debugger
                                     var gender = $("#gender option:selected").text().toLowerCase();
                                     var accidenttype = $("#accidentType option:selected").text().toLowerCase();
                                     var fullName = $("#fname").val() + ' ' + $("#mname").val() + ' ' + $("#lname").val()
@@ -1429,11 +1429,14 @@
                                     //content = content.replace("#doi", doi == undefined ? "" : doi);
                                     // content = content.replace("#age", age);
                                     //content = content.replace("#gender", gender);
-                                    //content = content.replace("#dos", dos == undefined ? "" : dos)
+                                    content = content.replace("#dos", dos == undefined ? "" : dos)
                                     content = content.replace("#patientname", fullName == undefined ? "" : fullName);
                                     content = content.replace("#lname", $("#lname").val());
                                     content = content.replace("#fname", $("#fname").val());
-                                    //content = content.replace("#accidenttype", accidenttype);
+                                    content = content.replace("#ln", $("#lname").val());
+                                    content = content.replace("#fn", $("#fname").val());
+                                    content = content.replace("#accidenttype", accidenttype);
+                                    content = content.replace("#handedness", accidenttype);
                                     ckHistory.data.set(content);
 
                                     content = (ckAssessment.getData());

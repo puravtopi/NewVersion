@@ -559,8 +559,8 @@ namespace PainTrax.Web.Controllers
 
             dateList.AddRange(dates.Select(d => new SelectListItem
             {
-                Value = d.ToString("yyyy-MM-dd"), // ✅ machine-readable
-                Text = d.ToString("MM/dd/yyyy")  // ✅ user-friendly
+                Value = Convert.ToDateTime(d).ToString("yyyy-MM-dd"), // ✅ machine-readable
+                Text = Convert.ToDateTime(d).ToString("MM/dd/yyyy")  // ✅ user-friendly
             }));
 
             ViewBag.dateList = dateList;
@@ -614,8 +614,8 @@ namespace PainTrax.Web.Controllers
 
             dateList.AddRange(dates.Select(d => new SelectListItem
             {
-                Value = d.ToString("yyyy-MM-dd"), // ✅ machine-readable
-                Text = d.ToString("MM/dd/yyyy")  // ✅ user-friendly
+                Value = Convert.ToDateTime(d).ToString("yyyy-MM-dd"), // ✅ machine-readable
+                Text = Convert.ToDateTime(d).ToString("MM/dd/yyyy")  // ✅ user-friendly
             }));
 
             ViewBag.dateList = dateList;

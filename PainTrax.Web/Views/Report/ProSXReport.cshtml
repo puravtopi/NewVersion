@@ -1,7 +1,11 @@
 ﻿@model PainTrax.Web.ViewModel.ProSXReportVM
 
 <main id="main" class="main">
-
+    <style>
+        #tbl th, #tbl td {
+            white-space: nowrap !important;
+        }
+    </style>
     <div class="pagetitle">
         <h1>Pro/SX Report</h1>
         <nav>
@@ -33,127 +37,34 @@
                                 <div class="col-md-3 col-lg-3">
                                     <label class="col-md-12 col-lg-12 col-form-label">Select Date</label>
                                     <div class="col-md-12 col-lg-12">
-                                        <select asp-for="tdate" class="form-select" asp-items="@ViewBag.dateList"></select>
+                                        <select asp-for="fdate" class="form-select" asp-items="@ViewBag.dateList"></select>
                                     </div>
                                 </div>
-                               @*  <div class="col-md-3 col-lg-3">
-                                    <label class="col-md-12 col-lg-12 col-form-label">Location</label>
-                                    <div class="col-md-12 col-lg-12">
-                                        <select asp-for="locationid" class="form-select" asp-items="@ViewBag.locList"></select>
+                                @*  <div class="col-md-3 col-lg-3">
+                                <label class="col-md-12 col-lg-12 col-form-label">Location</label>
+                                <div class="col-md-12 col-lg-12">
+                                <select asp-for="locationid" class="form-select" asp-items="@ViewBag.locList"></select>
 
-                                    </div>
+                                </div>
                                 </div> *@
                                 <div class="col-md-3 col-lg-3">
                                     <br />
                                     <br />
-                                 @*    <input type="checkbox" class="form-check-input" asp-for="_requested" /><label class="form-check-label" for="rememberMe">
-                                        &nbsp; Requsted &nbsp;
-                                    </label>
-                                    <input type="checkbox" class="form-check-input" asp-for="_scheduled" id="_scheduled" onclick="fnScheduled()" /><label class="form-check-label" for="rememberMe">
-                                        &nbsp; Schedule &nbsp;
-                                    </label>
-                                    <input type="checkbox" class="form-check-input" asp-for="_executed" /><label class="form-check-label" for="rememberMe">
-                                        &nbsp;  Execute &nbsp;
-                                    </label> *@
-                                </div>
-                                @*  <div class="col-md-3 col-lg-3">
-                                <label class="col-md-12 col-lg-12 col-form-label">MCODE</label>
-                                <div class="col-md-12 col-lg-12">
-                                <select asp-for="mcodeid" class="form-select">
-                                <option value="1">All</option>
-                                <option value="2">InHouse</option>
-                                <option value="3">Other</option>
-                                <option value="4">Rest</option>
-                                </select>
 
                                 </div>
-                                </div> *@
+
                             </div>
                             <div class="clearfix"></div>
                             <br />
                             <div class="col-md-12 col-lg-12">
-
-
-
                                 <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcelProSX" asp-controller="Report">Export</a>
                                 <button class="btn btn-secondary" type="button" style="float:right; margin-left:10px;" onclick="fnReset()">Reset</button>
                                 <button class="btn btn-success" style="float:right; margin-left:10px;" type="submit">Search</button>
-                                @* <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnTransfer" type="button" onclick="fnTransToExecute()">Transfer to Execute</button>
-                                <button class="btn btn-warning" style="float:right;display:none; margin-left:10px;" id="btnRescheduled" type="button" onclick="fnTransToRescheduled()">Reschedule</button> *@
 
                             </div>
                             <div class="clearfix"></div>
                         </form>
                         <br />
-                        @*<table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-
-                                     <th scope="col"></th> 
-
-                                    <th scope="col">Name</th>
-                                    <th scope="col">MC</th>
-                                    <th scope="col">Case</th>
-                                    <th scope="col">Location</th>
-                                    <th scope="col">MCODE</th>
-                                    <th scope="col">Vaccinated</th>
-                                    <th scope="col">Schedule</th>
-                                    @* <th scope="col">DOB</th>
-                                    <th scope="col">DOA</th>
-                                    
-                                    <th scope="col">Phone</th>
-                                    
-                                    <th scope="col">Requested</th>
-                                    <th scope="col">Schedule</th>
-                                    <th scope="col">Executed</th> 
-                                     <th style="width:5%">Action</th> 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.lstProSXReport.Count > 0)
-                                {
-                                    @foreach (var item in Model.lstProSXReport)
-                                    {
-                                        <tr>
-                                          @*   <td>
-                                                <input type="checkbox" value="@item.procedureDetail_id" class="chkTrans" />
-                                                <input type="hidden" value="@item.procedureDetail_id" id="hid" />
-                                            </td> 
-
-                                            <td>@item.name</td>
-                                            <td>@item.mc</td>
-                                            <td>@item.casetype</td>
-                                            <td>@item.location</td>
-                                            <td>@item.mcode</td>
-                                            <td>@item.vaccinated</td>
-                                             <td>@(item.dob == null ? "" : item.dob.Value.ToString("MM/dd/yyyy"))</td>
-                                            <td>@(item.doa == null ? "" : item.doa.Value.ToString("MM/dd/yyyy"))</td> 
-                                            
-                                            
-                                           
-                                             <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
-                                            <td><label id="lblsche">@(item.scheduled == null ? "" : item.scheduled.Value.ToString("MM/dd/yyyy"))</label></td>
-                                            @* <td><label id="lblexe">@(item.executed == null ? "" : item.executed.Value.ToString("MM/dd/yyyy"))</label></td>
-                                           @*  <td>
-                                                @{
-                                                    if (item.scheduled != null)
-                                                    {
-                                                            <button class="btn btn-warning" type="button" onclick="fnTransToRescheduledSingle(@item.procedureDetail_id)">Reschedule</button>
-                                                    }
-                                                }
-                                            </td> 
-                                        </tr>
-
-                                    }
-                                }
-                                else
-                                {
-                                    <tr><td colspan="12"><p>No data found</p></td></tr>
-
-                                }
-
-                            </tbody>
-                        </table>*@
 
                         @using (Html.BeginForm("UpdateProSXReport", "Report", FormMethod.Post))
                         {
@@ -162,6 +73,7 @@
                                 <thead>
                                     <tr>
                                         <th>Name</th>
+                                        <th>Phone</th>
                                         <th>MC</th>
                                         <th>Case</th>
                                         <th>Location</th>
@@ -170,10 +82,11 @@
                                         <th>sx_center_name</th>
                                         <th>sx_Notes</th>
                                         <th>sx_Status</th>
+                                        <th>mc_Status</th>
                                         <th>SX_Ins_Ver_Status</th>
                                         <th>Ver_comment</th>
                                         <th>Preop_notesent</th>
-                                        <th>Bookingsheet_sent</th>
+                                        <th>Bookingsheet_status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -185,24 +98,26 @@
                                                 @Html.HiddenFor(m => m.lstProSXReport[i].procedureDetail_id) <!-- Needed for DB update -->
 
                                                 <td>@Html.DisplayFor(m => m.lstProSXReport[i].name)</td>
+                                                <td>@Html.DisplayFor(m => m.lstProSXReport[i].Phone)</td>
                                                 <td>@Html.DisplayFor(m => m.lstProSXReport[i].mc)</td>
                                                 <td>@Html.DisplayFor(m => m.lstProSXReport[i].casetype)</td>
                                                 <td>@Html.DisplayFor(m => m.lstProSXReport[i].location)</td>
                                                 <td>@Html.DisplayFor(m => m.lstProSXReport[i].mcode)</td>
                                                 <td>@(Model.lstProSXReport[i].scheduled?.ToString("MM/dd/yyyy"))</td>
 
-                                                
-                                                <td>
-                                                    @Html.DropDownListFor(m => m.lstProSXReport[i].sx_center_name,
-                                                             (SelectList)ViewBag.surgoryList,
-                                                             "Select SurgeryCenter",
-                                                             new { @class = "form-control" })
-                                                </td>
-                                                <td>@Html.TextBoxFor(m => m.lstProSXReport[i].sx_Notes, new { @class = "form-control" })</td>
+                                                <td>@Html.TextAreaFor(m => m.lstProSXReport[i].sx_center_name, new { @class = "form-control" })</td>
+                                                <td>@Html.TextAreaFor(m => m.lstProSXReport[i].sx_Notes, new { @class = "form-control" })</td>
 
                                                 <td>
                                                     @Html.DropDownListFor(m => m.lstProSXReport[i].sx_Status,
                                                              (SelectList)ViewBag.StatusList,
+                                                             "Select Status",
+                                                             new { @class = "form-control" })
+                                                </td>
+
+                                                <td>
+                                                    @Html.DropDownListFor(m => m.lstProSXReport[i].mc_Status,
+                                                             new SelectList(new[] { "Requested", "Not Needed", "MC Cleared" }, Model.lstProSXReport[i].mc_Status),
                                                              "Select Status",
                                                              new { @class = "form-control" })
                                                 </td>
@@ -214,7 +129,7 @@
                                                              new { @class = "form-control" })
                                                 </td>
 
-                                                <td>@Html.TextBoxFor(m => m.lstProSXReport[i].Ver_comment, new { @class = "form-control" })</td>
+                                                <td>@Html.TextAreaFor(m => m.lstProSXReport[i].Ver_comment, new { @class = "form-control" })</td>
 
                                                 <td>
                                                     @Html.DropDownListFor(m => m.lstProSXReport[i].Preop_notesent,
@@ -233,10 +148,7 @@
                                     }
                                 </tbody>
                             </table>
-
-
                         }
-
                     </div>
                 </div>
 
@@ -246,120 +158,73 @@
 
 </main>
 
+
+
+
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
 <script>
-
-
-    // function fnScheduled() {
-
-    //     if ($("#_scheduled").prop("checked")) {
-    //         $("#btnTransfer").show();
-    //         $("#btnRescheduled").show();
-    //     } else {
-    //         $("#btnTransfer").hide();
-    //         $("#btnRescheduled").hide();
-    //     }
-    // }
-
-    // function fnTransToExecute() {
-
-    //     var arrayIds = '', arrayDates = '';
-
-    //     $('table tr').each(function (i) {
-    //         // Only check rows that contain a checkbox
-    //         var $chkbox = $(this).find('input[type="checkbox"]');
-
-    //         if ($chkbox.length) {
-    //             var status = $chkbox.prop('checked');
-    //             if (status) {
-
-    //                 var label = $(this).find('#lblsche');
-    //                 var id = $(this).find('#hid')
-
-    //                 arrayIds = arrayIds + ',' + id.val();
-    //                 arrayDates = arrayDates + ',' + label.text();
-
-    //             }
-    //         }
-    //     });
-
-
-    //     var url = '@Url.Action("TransferToExecute", "Report")?ids=' + arrayIds + '&dates=' + arrayDates;
-
-    //     $.ajax({
-    //         type: "POST",
-    //         url: url,
-
-    //         contentType: "application/json;charset=utf-8",
-    //         dataType: "json",
-    //         success: function () {
-
-    //             location.reload();
-    //         },
-    //         failure: function (response) {
-    //             alert("Invalid Details...")
-    //         }
-    //     });
-    // }
-
-    // function fnTransToRescheduled() {
-
-    //     var arrayIds = '';
-
-    //     $('table tr').each(function (i) {
-    //         // Only check rows that contain a checkbox
-    //         var $chkbox = $(this).find('input[type="checkbox"]');
-
-    //         if ($chkbox.length) {
-    //             var status = $chkbox.prop('checked');
-    //             if (status) {
-    //                 arrayIds = arrayIds + ',' + id.val();
-    //             }
-    //         }
-    //     });
-
-
-    //     var url = '@Url.Action("TransferToResheduled", "Report")?ids=' + arrayIds;
-
-    //     $.ajax({
-    //         type: "POST",
-    //         url: url,
-
-    //         contentType: "application/json;charset=utf-8",
-    //         dataType: "json",
-    //         success: function () {
-
-    //             location.reload();
-    //         },
-    //         failure: function (response) {
-    //             alert("Invalid Details...")
-    //         }
-    //     });
-    // }
-
-    // function fnTransToRescheduledSingle(Id) {
-    //     var url = '@Url.Action("TransferToResheduled", "Report")?ids=' + Id;
-
-    //     $.ajax({
-    //         type: "POST",
-    //         url: url,
-
-    //         contentType: "application/json;charset=utf-8",
-    //         dataType: "json",
-    //         success: function () {
-
-    //             location.reload();
-    //         },
-    //         failure: function (response) {
-    //             alert("Invalid Details...")
-    //         }
-    //     });
-    // }
 
     function fnReset() {
         $('#frmPOC').trigger("reset");
         $("#frmPOC")[0].reset();
-        window.location = '@Url.Action("ProSXReport","Report")';
+        window.location = '@Url.Action("ProSXReport", "Report")';
     }
+
+</script>
+
+@* <script>
+    $(document).ready(function () {
+        $("#tbl").DataTable({
+            searching: false,
+            paging: false,
+            info: false,
+            order: [], // no default sorting
+
+            columnDefs: [
+                { targets: [0, 7, 9], orderable: true },   // enable sorting on Name(0) and Status(9)
+                { targets: "_all", orderable: false }  // disable sorting on every other column
+            ]
+        });
+    });
+</script> *@
+
+
+<script>
+    $(function () {
+
+        if ($.fn.DataTable.isDataTable("#tbl")) {
+            $("#tbl").DataTable().clear().destroy();
+        }
+
+        $("#tbl").DataTable({
+            paging: false,
+            searching: false,
+            info: false,
+            autoWidth: true,
+            columnDefs: [
+                { targets: [0, 2, 9], orderable: true },  // Name, MC
+                { targets: "_all", orderable: false }, // everything else default false
+
+                {
+                    targets: 9,   // mc_Status (dropdown)
+                        orderable: true,
+                    render: function (data, type, row, meta) {
+                        if (type === 'sort') {
+                            return $(data).find("option:selected").text();
+                        }
+                        return data;
+                    }
+                }
+            ]
+        });
+
+    });
+   
 </script>

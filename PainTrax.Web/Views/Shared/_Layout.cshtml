@@ -372,7 +372,13 @@
             var pageAccess = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionPagesAccess);
         }
         <ul class="sidebar-nav" id="sidebar-nav">
-
+            
+            <li class="nav-item">
+                <a class="nav-link " asp-action="GetProvider" asp-controller="Home">
+                    <i class="bi bi-grid"></i>
+                    <span>Home</span>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link " asp-action="Index" asp-controller="Home">
                     <i class="bi bi-grid"></i>

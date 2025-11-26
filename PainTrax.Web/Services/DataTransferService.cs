@@ -165,7 +165,8 @@ namespace PainTrax.Web.Services
                 var pdVM = new DataSet();
 
                 //// Step 1: Read from SQL Server
-                _sqlServerConn = "Data Source=10.10.93.20\\SQLEXPRESS,18667;Initial Catalog=dbPainTrax_AKS_Live;uid=PTU_ASMPC;pwd=Il0ve$ql@321";
+                _sqlServerConn = "Data Source=10.10.93.20\\SQLEXPRESS,18667;Initial Catalog=dbPainTrax_BHF_V;uid=PTU_BHFPC;pwd=Il0ve$ql@321";
+                //_sqlServerConn = "Data Source=10.10.93.20\\SQLEXPRESS,18667;Initial Catalog=dbPainTrax_AKS_Live;uid=PTU_ASMPC;pwd=Il0ve$ql@321";
 
 
 
@@ -211,7 +212,7 @@ namespace PainTrax.Web.Services
                 using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
                 {
                     sqlConn.Open();
-                    string sqlQuery = "select p.Patient_ID,p.MC,p.Note from tblPatientMaster p where (p.mc is not null and p.mc<>'') or (p.note is not null and p.note<>'')";
+                    string sqlQuery = "select p.Patient_ID,p.MC,p.Note from tblPatientMaster p where (p.mc is not null and p.mc<>'')";
 
                     SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
                     DataSet dataSet = new DataSet();

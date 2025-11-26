@@ -99,7 +99,7 @@ namespace PainTrax.Web.Controllers
             try
             {
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-
+               
                 ViewBag.TotalPatient = _dashboardservices.GetTotalPatient(cmpid.Value, 4);
                 ViewBag.TodaysPatient = _dashboardservices.GetTotalPatient(cmpid.Value, 1);
                 ViewBag.TodaysAttorny = _dashboardservices.GetTotalAttorny(cmpid.Value);
@@ -203,7 +203,7 @@ namespace PainTrax.Web.Controllers
 
         public IActionResult Login()
         {
-
+            //var password = EncryptionHelper.Encrypt("A$hL3y2021");
 
             if (Request.Cookies["LoginCookie"] != null)
             {

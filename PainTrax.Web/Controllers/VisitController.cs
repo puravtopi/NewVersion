@@ -2490,6 +2490,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
                     body = body.Replace("#gender", gender);
                     body = body.Replace("#dos", Common.commonDate(patientData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
+                    body = body.Replace("#sex", sex.ToLower());
 
 
 

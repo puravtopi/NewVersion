@@ -1,6 +1,7 @@
 
 
 
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using PainTrax.Web.Helper;
@@ -73,7 +74,16 @@ app.UseStaticFiles(new StaticFileOptions()
 });
 
 app.UseRouting();
-
+//app.UseExceptionHandler(errorApp =>
+//{
+//    errorApp.Run(async context =>
+//    {
+//        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+//        var exception = exceptionHandlerPathFeature?.Error;
+//        await File.AppendAllTextAsync("errorlog.txt", exception?.ToString());
+//        await context.Response.WriteAsync("Something went wrong.");
+//    });
+//});
 
 
 app.UseAuthorization();

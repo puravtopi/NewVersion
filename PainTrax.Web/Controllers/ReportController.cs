@@ -646,53 +646,32 @@ namespace PainTrax.Web.Controllers
                 string query = TempData["ProSXquery"].ToString();
                 var data = _servicesProSX.GetProSXReport(query);
 
-                // Create a new DataTable
+                // Build DataTable
                 DataTable dt = new DataTable();
-                // Add columns to the DataTable
-                dt.Columns.AddRange(new DataColumn[]
-                {
-                //    new DataColumn("Name", typeof(string)),
-                //    new DataColumn("MC", typeof(string)),
-                //    new DataColumn("Case", typeof(string)),
-                //    new DataColumn("Location", typeof(string)),
-                //    new DataColumn("MCODE", typeof(string)),
-                //    new DataColumn("Vaccinated", typeof(string)),
-                //    new DataColumn("Scheduled", typeof(string)),
-                //});
+                dt.Columns.Add("SrNo");
+                dt.Columns.Add("Sex");
+                dt.Columns.Add("Name");
+                dt.Columns.Add("Location");
+                dt.Columns.Add("CaseType");
+                dt.Columns.Add("MCODE");
+                dt.Columns.Add("Phone");
+                dt.Columns.Add("DOB");
+                dt.Columns.Add("ClaimNumber");
+                dt.Columns.Add("Insurance");
+                dt.Columns.Add("Allergies");
+                dt.Columns.Add("MC");
+                dt.Columns.Add("MC_Status");
+                dt.Columns.Add("Scheduled");
+                dt.Columns.Add("sxCenterName");
+                dt.Columns.Add("status");
+                dt.Columns.Add("Color");   // color name / hex
+                dt.Columns.Add("InsNote");
+                dt.Columns.Add("statusInsurance");
+                dt.Columns.Add("verificationComment");
+                dt.Columns.Add("preopstatus");
+                dt.Columns.Add("bookingSheetStatus");
 
-                //// Populate the DataTable with data from the list of attorneys
-                //foreach (var proSX in data)
-                //{
-                //    dt.Rows.Add(proSX.name, proSX.mc, proSX.casetype, proSX.location, proSX.mcode, proSX.vaccinated, proSX.scheduled);
-                new DataColumn("SrNo", typeof(string)) { AllowDBNull = true },
-                        new DataColumn("Sex", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("Name", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("Location", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("CaseType", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("MCODE", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("Phone", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("DOB", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("ClaimNumber", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("Insurance", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("Allergies", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("MC", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("Scheduled", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("sxCenterName", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("status", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("color", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("InsNote", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("statusInsurance", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("verificationComment", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("preopstatus", typeof(string)) { AllowDBNull = true },
-                    new DataColumn("bookingSheetSent", typeof(string)) { AllowDBNull = true },
-                });
-
-                // Populate the DataTable with data from the list of attorneys
                 int counter = 0;
-                //foreach (var proSX in data)
-                //{
-                //    dt.Rows.Add(counter++.ToString(),proSX.name, proSX.mc, proSX.casetype, proSX.location, proSX.mcode, proSX.vaccinated, proSX.scheduled);
-                //}
 
                 foreach (var proSX in data)
                 {
@@ -701,14 +680,15 @@ namespace PainTrax.Web.Controllers
                         proSX.gender,
                         proSX.name,
                         proSX.location,
-                        " ", //proSX.caseType,
-                        " ", //proSX.MCODE,
-                        " ", //proSX.phone,
-                        " ", //proSX.DOB,
-                        " ", //proSX.claimNumber,
-                        " ", //proSX.insurance,
-                        " ", //proSX.allergies,
+                        proSX.casetype,
+                        proSX.mcode,
+                        proSX.Phone,
+                        proSX.DOB,
+                        proSX.ClaimNumber,
+                        proSX.Insurance,
+                        proSX.Allergies,
                         proSX.mc,
+                        proSX.mc_Status,
                         proSX.scheduled,
                         proSX.sx_center_name,
                         proSX.sx_Status,
@@ -721,47 +701,196 @@ namespace PainTrax.Web.Controllers
                     );
                 }
 
-                // Create a new Excel file
+                // Create Excel
                 var memoryStream = new MemoryStream();
+
                 using (var document = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook))
                 {
                     var workbookPart = document.AddWorkbookPart();
                     workbookPart.Workbook = new Workbook();
 
+                    //------------------------------------
+                    // CREATE VALID STYLESHEET
+                    //------------------------------------
+                    var stylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
+                    var stylesheet = new Stylesheet();
+
+                    // FONTS (required)
+                    var fonts = new DocumentFormat.OpenXml.Spreadsheet.Fonts();
+                    fonts.Append(new Font());
+                    fonts.Count = 1;
+
+                    // FILLS (Excel requires min 2)
+                    var fills = new Fills();
+                    fills.Append(new Fill(new PatternFill() { PatternType = PatternValues.None }));     // 0
+                    fills.Append(new Fill(new PatternFill() { PatternType = PatternValues.Gray125 }));   // 1
+                    fills.Count = 2;
+
+                    // BORDERS (required)
+                    var borders = new Borders();
+                    borders.Append(new DocumentFormat.OpenXml.Spreadsheet.Border());
+                    borders.Count = 1;
+
+                    // CELL STYLE FORMATS (required)
+                    var cellStyleFormats = new CellStyleFormats();
+                    cellStyleFormats.Append(new CellFormat());
+                    cellStyleFormats.Count = 1;
+
+                    // CELL FORMATS
+                    var cellFormats = new CellFormats();
+                    cellFormats.Append(new CellFormat());
+                    cellFormats.Count = 1;
+
+                    // attach to stylesheet
+                    stylesheet.Append(fonts);
+                    stylesheet.Append(fills);
+                    stylesheet.Append(borders);
+                    stylesheet.Append(cellStyleFormats);
+                    stylesheet.Append(cellFormats);
+
+                    stylesPart.Stylesheet = stylesheet;
+
+                    // cache styles
+                    Dictionary<string, uint> colorStyleCache = new Dictionary<string, uint>();
+
+                    //------------------------------------
+                    // COLOR NAME → HEX
+                    //------------------------------------
+                    string ConvertColorNameToHex(string colorName)
+                    {
+                        if (string.IsNullOrWhiteSpace(colorName)) return null;
+
+                        colorName = colorName.Trim().ToLower();
+
+                        return colorName switch
+                        {
+                            "red" => "FF0000",
+                            "green" => "00FF00",
+                            "yellow" => "FFFF00",
+                            "orange" => "FFA500",
+                            "blue" => "0000FF",
+                            "pink" => "FFC0CB",
+                            "purple" => "800080",
+                            "black" => "000000",
+                            "gray" => "808080",
+                            _ => colorName.Replace("#", "").ToUpper()
+                        };
+                    }
+
+                    //------------------------------------
+                    // CREATE COLOR STYLES
+                    //------------------------------------
+                    uint GetStyleForColor(string colorName)
+                    {
+                        string hex = ConvertColorNameToHex(colorName);
+                        if (hex == null) return 0;
+
+                        if (colorStyleCache.ContainsKey(hex))
+                            return colorStyleCache[hex];
+
+                        // ADD FILL
+                        fills.Append(new Fill(
+                            new PatternFill(
+                                new ForegroundColor() { Rgb = hex }
+                            )
+                            { PatternType = PatternValues.Solid }
+                        ));
+                        fills.Count = (uint)fills.ChildElements.Count;
+
+                        uint fillId = (uint)(fills.Count - 1);
+
+                        // ADD FORMAT
+                        var format = new CellFormat()
+                        {
+                            FillId = fillId,
+                            ApplyFill = true
+                        };
+
+                        cellFormats.Append(format);
+                        cellFormats.Count = (uint)cellFormats.ChildElements.Count;
+
+                        uint styleIndex = (uint)(cellFormats.Count - 1);
+                        colorStyleCache[hex] = styleIndex;
+
+                        return styleIndex;
+                    }
+
+                    //------------------------------------
+                    // SAVE STYLES EXACTLY ONCE
+                    //------------------------------------
+                    stylesheet.Save();
+
+                    //------------------------------------
+                    // WORKSHEET
+                    //------------------------------------
                     var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
                     var sheetData = new SheetData();
                     worksheetPart.Worksheet = new Worksheet(sheetData);
 
-                    var sheets = document.WorkbookPart.Workbook.AppendChild(new Sheets());
-                    var sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Users" };
-                    sheets.Append(sheet);
-
-                    var headerRow = new Row();
-                    foreach (DataColumn column in dt.Columns)
+                    var sheets = workbookPart.Workbook.AppendChild(new Sheets());
+                    sheets.Append(new Sheet()
                     {
-                        var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName) };
-                        headerRow.AppendChild(cell);
-                    }
-                    sheetData.AppendChild(headerRow);
+                        Id = workbookPart.GetIdOfPart(worksheetPart),
+                        SheetId = 1,
+                        Name = "Users"
+                    });
 
+
+                    //------------------------------------
+                    // REMOVE COLOR COLUMN FROM SHEET
+                    //------------------------------------
+
+                    // Save color values first (these match row order exactly)
+                    List<string> rowColors = new List<string>();
+                    foreach (DataRow row in dt.Rows)
+                        rowColors.Add(row["Color"]?.ToString());
+
+                    // Remove Color column so Excel does NOT show it
+                    dt.Columns.Remove("Color");
+
+
+
+                    // HEADER
+                    var headerRow = new Row();
+                    foreach (DataColumn col in dt.Columns)
+                        headerRow.Append(new Cell()
+                        {
+                            DataType = CellValues.String,
+                            CellValue = new CellValue(col.ColumnName)
+                        });
+
+                    sheetData.Append(headerRow);
+
+                    // DATA
+                    int rowIndex = 0;
                     foreach (DataRow row in dt.Rows)
                     {
-                        var newRow = new Row();
+                        var r = new Row();
+
+                        // uint styleIndex = GetStyleForColor(row["Color"]?.ToString());
+                        uint styleIndex = GetStyleForColor(rowColors[rowIndex++]);
+
                         foreach (var value in row.ItemArray)
                         {
-                            var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
-                            newRow.AppendChild(cell);
+                            r.Append(new Cell()
+                            {
+                                DataType = CellValues.String,
+                                CellValue = new CellValue(value?.ToString()),
+                                StyleIndex = styleIndex
+                            });
                         }
-                        sheetData.AppendChild(newRow);
+
+                        sheetData.Append(r);
                     }
                 }
 
                 memoryStream.Seek(0, SeekOrigin.Begin);
-                return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ProSX Report.xlsx");
+                return File(memoryStream.ToArray(),
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "ProSX Report.xlsx");
             }
             catch (Exception ex)
             {
-                // Log or handle the exception as needed
                 return Content("Error: " + ex.Message);
             }
         }

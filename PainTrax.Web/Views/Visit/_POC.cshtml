@@ -431,6 +431,12 @@
 
     function Popup(t) {
 
+
+        // Close all jQuery UI dialogs
+        $('.modal').modal('hide');
+        $('.modal-backdrop').remove();   // remove black background
+        $('body').removeClass('modal-open');
+
         if (t[0].dataset.position == "Execute") {
             $("#McCaseIns").css("visibility", "collapse");
         } else {
@@ -623,6 +629,11 @@
     }
 
     function PopupNE(t) {
+
+        // Close all jQuery UI dialogs
+        $('.modal').modal('hide');
+        $('.modal-backdrop').remove();   // remove black background
+        $('body').removeClass('modal-open');
 
         $('#MuscleVal').val(t[0].dataset.musc);
 
@@ -912,7 +923,6 @@
         $('#EditPopuprec').modal('hide');
         $('#SelectPopup').modal('show');
     }
-
 
     function EditProc() {
 
@@ -1340,10 +1350,13 @@
                 // Close all
                 $('.accordion .accordion-collapse').collapse('hide');
 
-                alert("Procedure details saved successfully.");
+                // alert("Procedure details saved successfully.");
 
                 // Open the selected one
                 $('#' + targetId).collapse('show');
+                $('.modal').modal('hide');
+                $('.modal-backdrop').remove();   // remove black background
+                $('body').removeClass('modal-open');
             },
             error: function (xhr, status, error) {
                 alert("Error!" + xhr.status);

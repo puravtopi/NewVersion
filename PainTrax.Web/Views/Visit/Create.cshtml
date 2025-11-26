@@ -1421,7 +1421,7 @@
                                     }
 
                                     debugger
-                                    var gender = $("#gender option:selected").text().toLowerCase();
+                                    //var gender = $("#gender option:selected").text().toLowerCase();
                                     var accidenttype = $("#accidentType option:selected").text().toLowerCase();
                                     var fullName = $("#fname").val() + ' ' + $("#mname").val() + ' ' + $("#lname").val()
 
@@ -1436,7 +1436,7 @@
                                     content = content.replace("#ln", $("#lname").val());
                                     content = content.replace("#fn", $("#fname").val());
                                     content = content.replace("#accidenttype", accidenttype);
-                                    //content = content.replace("#handedness", accidenttype);
+                                    content = content.replace("#handedness", $("#handeness option:selected").text().toLowerCase());
                                     ckHistory.data.set(content);
 
                                     content = (ckAssessment.getData());

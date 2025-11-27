@@ -3608,7 +3608,7 @@ namespace PainTrax.Web.Controllers
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
 
-            if (cmpid.Value == 18)
+            if (cmpid.Value == 18 || cmpid.Value==15)
                 strPoc = strPoc.Replace("<li>", "").Replace("</li>", "<br/>"); ;
 
             pocDetails pocDetails = new pocDetails()

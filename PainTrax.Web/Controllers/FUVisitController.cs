@@ -3974,10 +3974,14 @@ namespace PainTrax.Web.Controllers
                 }
             }
 
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            if (cmpid.Value == 18 || cmpid.Value == 15)
+                strPoc = strPoc.Replace("<li>", "").Replace("</li>", "<br/>"); ;
+
             pocDetails pocDetails = new pocDetails()
             {
                 strInjectionDesc = inject_desc,
-                strPoc = strPoc != "" ? "<ol>" + strPoc + "</ol>" : "",
+                strPoc = strPoc != "" ? (cmpid.Value == 18 ? strPoc : "<ol>" + strPoc + "</ol>") : "",
                 strCCDesc = ccdesc,
                 strPEDesc = pedesc,
                 strADesc = adesc

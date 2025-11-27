@@ -180,7 +180,7 @@
         });
     }
     function fnTreatmentDetails() {
-        var strContent = '<ol>';
+        var strContent = '<ol style="list-style: decimal;">';
         var strIds = '', strDesc = '';
 
         $('input[type=checkbox]').each(function (i, e) {
@@ -207,7 +207,7 @@
 
         var cmp_id = '@cmpId';
 
-        if (cmp_id === '18') {
+        if (cmp_id === '18' || cmp_id === '15') {
 
             strContent = strContent.replace(/<ol>/g, '')     // remove opening <ol>
                 .replace(/<\/ol>/g, '')   // remove closing </ol>

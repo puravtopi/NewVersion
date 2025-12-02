@@ -180,7 +180,7 @@
         });
     }
     function fnTreatmentDetails() {
-        var strContent = '<ol style="list-style: decimal;">';
+        var strContent = '<ol>';
         var strIds = '', strDesc = '';
 
         $('input[type=checkbox]').each(function (i, e) {
@@ -196,7 +196,7 @@
                 }
             }
          });
-
+         debugger
         // Close the ordered list
         strContent += '</ol>';
 
@@ -223,22 +223,5 @@
         $('#hidTreatmentDesc').val(strDesc);
     }
 
-    // function fnTreatmentDetails() {
-
-    //     var strContent = '<ol>';
-    //     var strIds = '', strDesc = '';
-    //     $('input[type=checkbox]').map(function (i, e) {
-    //         if (e.checked) {
-    //             strContent = strContent + '<li>' + $("#chk_" + e.id).val() + '</li>';
-    //             strIds = strIds + ',' + e.id;
-    //         }
-    //         strDesc = strDesc + '^' + $("#chk_" + e.id).val();
-    //     });
-
-    //     quillTreatment.container.firstChild.innerHTML = strContent + '</ol>';
-
-    //     $('#hidTreatmentIds').val(strIds);
-
-    //     $('#hidTreatmentDesc').val(strDesc);
-    // }
+   
 </script>

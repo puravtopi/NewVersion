@@ -1790,6 +1790,7 @@ namespace PainTrax.Web.Controllers
                 data.Subcode = model.SubProcedureID;
                 data.Vac_Note = model.Vac_Note;
                 data.Vac_Status = model.Vac_Status;
+                data.Cmp_Id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
                 switch (model.req)
                 {

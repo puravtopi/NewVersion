@@ -203,7 +203,7 @@ namespace PainTrax.Web.Controllers
 
         public IActionResult Login()
         {
-            //var password = EncryptionHelper.Encrypt("A$hL3y2021");
+            //var password = EncryptionHelper.Encrypt("P@ssword123$");
 
             if (Request.Cookies["LoginCookie"] != null)
             {

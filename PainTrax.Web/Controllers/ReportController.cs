@@ -400,7 +400,7 @@ namespace PainTrax.Web.Controllers
                             case "Allergies":
                                 dr[col] = user.allergies;
                                 break;
-                            case "Requested":
+                            case "Request":
                                 dr[col] = user.requested?.ToShortDateString() ?? "";
                                 break;
                             case "Scheduled":

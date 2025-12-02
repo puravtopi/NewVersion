@@ -23,6 +23,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using System.IO.Compression;
 using System.Linq;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace PainTrax.Web.Controllers
 {
@@ -2008,6 +2009,7 @@ namespace PainTrax.Web.Controllers
                 data.Subcode = model.SubProcedureID;
                 data.Vac_Note = model.Vac_Note;
                 data.Vac_Status = model.Vac_Status;
+                data.Cmp_Id =  HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
 
                 switch (model.req)
@@ -3852,13 +3854,13 @@ namespace PainTrax.Web.Controllers
                        ),
                                   new Text(text1) // First line
                               ),
-                                 new Run(new TabChar()), new Run(new TabChar()), // Line break
+                               new Break(), // Line break
 
                               new Run(
                                    new RunProperties(
-                           new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
-                       ),
-                                  new Text("Page ") // Static "Page " text
+                                        new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                                   ),
+                                   new Text("Page ") // Static "Page " text
                               ),
                               new Run(
                                    new RunProperties(

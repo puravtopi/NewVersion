@@ -150,7 +150,7 @@
                                             {
                                                 <th scope="col" id="Insurance" onclick="sortTable(8);">Ins co</th>
                                             }
-                                            
+
                                             if (columns.Contains("SC_Name"))
                                             {
                                                 <th scope="col" id="SurgeryCenter" onclick="sortTable(11);">Surgery Center</th>
@@ -175,14 +175,11 @@
                                             {
                                                 <th scope="col" id="Note" onclick="sortTable(12);">Note</th>
                                             }
-                                        }
-                                        @{
-                                            if (cmpId != 13)
+                                            if (columns.Contains("Request"))
                                             {
                                                 <th scope="col">Requested</th>
                                             }
                                         }
-
                                         <th scope="col">Schedule</th>
                                         <th scope="col">Executed</th>
                                         <th style="width:5%">Action</th>
@@ -281,7 +278,7 @@
                                                     {
                                                         <td>@item.cmpname</td>
                                                     }
-                                                   
+
                                                     if (columnsval.Contains("SC_Name"))
                                                     {
                                                         <td>@item.sx_center_name</td>
@@ -306,26 +303,12 @@
                                                     {
                                                         <td>@item.note</td>
                                                     }
-
-                                                }
-
-
-
-
-
-
-                                                @* <td>@item.sides</td> *@
-
-
-                                                @*  <td>@item.level</td> *@
-
-                                                @{
-                                                    if (cmpId != 13)
+                                                    if (columnsval.Contains("Request"))
                                                     {
                                                         <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
                                                     }
-                                                }
 
+                                                }
                                                 <td><label id="lblsche">@(item.scheduled == null ? "" : item.scheduled.Value.ToString("MM/dd/yyyy"))</label></td>
                                                 <td><label id="lblexe">@(item.executed == null ? "" : item.executed.Value.ToString("MM/dd/yyyy"))</label></td>
                                                 <td>
@@ -738,7 +721,7 @@
         // ;
         console.log("Forms/PT FORM.pdf");
         //downloadurl = downloadurl + '?pdffile=' + "Forms/PT Referral.pdf" + '&id=' + id + '&txt_date=' + formatDate(document.getElementById("fdate").value) + '&txt_surgery=' + formatDate(document.getElementById("fdate").value) + '&txt_docName=' + "" + '&txt_MCode_Proc=' + "test mcode " + '&txtProcedureCode=' + "test mcode procedure " + '&txt_diagnosis=' + modedetails;
-        downloadurl = downloadurl + '?pdffile=' + "Forms/PT Referral.pdf" + '&id=' + id + '&txt_date=' + formatDate(document.getElementById("fdate").value) + '&txt_surgery=' + formatDate(document.getElementById("fdate").value) + '&txt_docName=' + "" + '&txt_MCode_Proc=' + "test mcode " + '&txtProcedureCode=' +  modedetails  + '&txt_diagnosis=' + modedetails;
+        downloadurl = downloadurl + '?pdffile=' + "Forms/PT Referral.pdf" + '&id=' + id + '&txt_date=' + formatDate(document.getElementById("fdate").value) + '&txt_surgery=' + formatDate(document.getElementById("fdate").value) + '&txt_docName=' + "" + '&txt_MCode_Proc=' + "test mcode " + '&txtProcedureCode=' + modedetails + '&txt_diagnosis=' + modedetails;
         fetch(downloadurl)
             .then(response => {
                 if (!response.ok) {

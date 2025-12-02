@@ -3833,7 +3833,10 @@ namespace PainTrax.Web.Controllers
 
             dataTable.Columns.Add("Procedures", typeof(string));
             dataTable.Columns.Add("Goals", typeof(string));
-            //DOS, Location, Reason, Occupation, Tylenol
+            dataTable.Columns.Add("Neurological", typeof(string));
+            dataTable.Columns.Add("DeepTendon", typeof(string));
+            dataTable.Columns.Add("Sensory", typeof(string));
+            dataTable.Columns.Add("ManualMuscle", typeof(string));
 
             string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
             var downloadFolder = Path.Combine(_environment.WebRootPath);
@@ -4001,6 +4004,10 @@ namespace PainTrax.Web.Controllers
                 StringBuilder followup = new StringBuilder();
                 StringBuilder gait = new StringBuilder();
                 StringBuilder procedures = new StringBuilder();
+                StringBuilder neurological = new StringBuilder();
+                StringBuilder deeptendon = new StringBuilder();
+                StringBuilder sensory = new StringBuilder();
+                StringBuilder manualmuscle = new StringBuilder();
 
 
                 bool foundcc = false;
@@ -4270,7 +4277,69 @@ namespace PainTrax.Web.Controllers
                               founddiagnosticstudies = false;
                               continue;
                           }*/
+                        if (paragraphText.StartsWith("Neurological Examination:"))
+                        {
+                            html.Append($"<p>{paragraphText}</p>");
+                            //followup.Append($"<p>{paragraphText}</p>");
+                            neurological.Append(paragraphText.Substring(("Neurological Examination:".Length)));
+                            foundcc = false;
+                            foundpe = false;
+                            founddiagnoses = false;
+                            foundplan = false;
+                            //   foundcurmedications = false;
+                            foundhistory = false;
+                            foundreason = false;
+                            founddiagnosticstudies = false;
+                            continue;
+                        }
 
+                        if (paragraphText.StartsWith("Deep Tendon Reflexes:"))
+                        {
+                            html.Append($"<p>{paragraphText}</p>");
+                            //followup.Append($"<p>{paragraphText}</p>");
+                            deeptendon.Append(paragraphText.Substring(("Deep Tendon Reflexes:".Length)));
+                            foundcc = false;
+                            foundpe = false;
+                            founddiagnoses = false;
+                            foundplan = false;
+                            //   foundcurmedications = false;
+                            foundhistory = false;
+                            foundreason = false;
+                            founddiagnosticstudies = false;
+                            continue;
+                        }
+
+                        if (paragraphText.StartsWith("Sensory Examination:"))
+                        {
+                            html.Append($"<p>{paragraphText}</p>");
+                            //followup.Append($"<p>{paragraphText}</p>");
+                            sensory.Append(paragraphText.Substring(("Sensory Examination:".Length)));
+                            foundcc = false;
+                            foundpe = false;
+                            founddiagnoses = false;
+                            foundplan = false;
+                            //   foundcurmedications = false;
+                            foundhistory = false;
+                            foundreason = false;
+                            founddiagnosticstudies = false;
+                            continue;
+                        }
+
+                        if (paragraphText.StartsWith("Manual Muscle Strength Testing:"))
+                        {
+                            html.Append($"<p>{paragraphText}</p>");
+                            //followup.Append($"<p>{paragraphText}</p>");
+                            manualmuscle.Append(paragraphText.Substring(("Manual Muscle Strength Testing:".Length)));
+                            foundcc = false;
+                            foundpe = false;
+                            founddiagnoses = false;
+                            foundplan = false;
+                            //   foundcurmedications = false;
+                            foundhistory = false;
+                            foundreason = false;
+                            founddiagnosticstudies = false;
+                            continue;
+                        }
 
                         if (paragraphText.StartsWith("PHYSICAL EXAM:") || paragraphText.StartsWith("PHYSICAL EXAMINATION:"))
                         {
@@ -4573,6 +4642,12 @@ namespace PainTrax.Web.Controllers
                 datarow["GAIT"] = gait.ToString().Trim();
                 datarow["Procedures"] = procedures.ToString().Trim();
                 datarow["Goals"] = goals.ToString().Trim();
+
+                datarow["Neurological"] = neurological.ToString().Trim();
+                datarow["DeepTendon"] = deeptendon.ToString().Trim();
+                datarow["Sensory"] = sensory.ToString().Trim();
+                datarow["ManualMuscle"] = manualmuscle.ToString().Trim();
+
                 return datarow;
 
             }

@@ -241,6 +241,7 @@ namespace PainTrax.Web.Services
             param.Add(new MySqlParameter("v_Subcode", model.Subcode));
             param.Add(new MySqlParameter("v_Vac_Note", model.Vac_Note));
             param.Add(new MySqlParameter("v_Vac_Status", model.Vac_Status));
+            param.Add(new MySqlParameter("v_cmpid", model.Cmp_Id));
 
             var data = ExecuteSP(CommonSp.SavePatientProceduresDetails, param);
 

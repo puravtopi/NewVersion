@@ -69,7 +69,7 @@ namespace PainTrax.Web.Controllers
                     model.createdby = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
                     model.createddate = System.DateTime.Now;
                     model.cmp_id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-                    model.password = EncryptionHelper.Encrypt(model.password);
+                   // model.password = EncryptionHelper.Encrypt(model.password);
                     if (signature != null)
                     {
                         string folderPath = Path.Combine(Environment.WebRootPath, "Uploads/Sign", model.cmp_id.ToString());

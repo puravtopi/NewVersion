@@ -230,6 +230,15 @@ namespace PainTrax.Web.Controllers
             return Json(1);
         }
 
+        [HttpPost]
+        public IActionResult UpdatePOCSideLevelReport(string id, string side = "", string level = "")
+        {
+
+            _services.UpdatePOCReportSideandLevel(id, side, level);
+
+            return Json(1);
+        }
+
         //public IActionResult ExportToExcel()
         //{
         //    try
@@ -633,7 +642,7 @@ namespace PainTrax.Web.Controllers
             string cnd = " and cmp_id=" + cmpid;
 
             var surgoryList = _surgeryCentreService.GetAll(cnd);
-            
+
             ViewBag.surgoryList = new SelectList(surgoryList, "Surgerycenter_name", "Surgerycenter_name");
             return View(objPOC);
 
@@ -1200,7 +1209,7 @@ namespace PainTrax.Web.Controllers
                 query = query + "  '" + fdate.Value.ToString("yyyy/MM/dd") + "' and '" + tdate.Value.ToString("yyyy/MM/dd") + "'";
             }
 
-            var data = _servicesDailyCount.GetDailyCountReport(query,cmpid.ToString());
+            var data = _servicesDailyCount.GetDailyCountReport(query, cmpid.ToString());
             var objPOC = new DailyCountReportVM();
             objPOC.lstDailyCountReport = data;
             TempData["DailyCountquery"] = query;

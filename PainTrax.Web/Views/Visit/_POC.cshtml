@@ -861,7 +861,7 @@
         }
         else {
 
-            var url = '@Url.Action("GetMedicationFromDB", "Visit")?ProcedureId=' + t[0].dataset.pid;
+            var url = '@Url.Action("GetMedicationFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
 
             $.ajax({
                 type: "POST",

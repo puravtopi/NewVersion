@@ -746,7 +746,6 @@
 
     function CreateProc() {
 
-
         $('#NewProc').val('1');
         $('#SubCode').html('');
         $('#Level').html('');
@@ -762,10 +761,6 @@
         $('#Positionlbl').show();
 
         $('#signEdit').hide();
-
-
-
-
 
         if ($('#Haslevel').val() != "1") {
             $('#Level').hide();
@@ -793,15 +788,18 @@
             $('#SubProcedurelbl').hide();
         }
         else {
+
+            var url = '@Url.Action("GetSubCodeFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
             $.ajax({
                 type: "POST",
-                url: "GetSubCodeFromDB",
-                data: "{'SubCode':'" + $('#ProcedureId').val() + "'}",
+                url: url,
+
                 contentType: "application/json; charset=utf-8",
                 dataType: "JSON",
                 success: function (output) {
                     $('#SubProcedure').html('');
-                    var json = JSON.parse(output.d);
+                    var json = output;
                     $.each(json, function (index, value) {
                         $('#SubProcedure').append($('<option>').text(value.SubCode).attr('value', value.SubCode));
                     });
@@ -821,16 +819,18 @@
         }
         else {
 
+            var url = '@Url.Action("GetMedicationFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
             $.ajax({
                 type: "POST",
-                url: "GetMedicationFromDB",
-                data: "{'patientIEID':'" + t[0].dataset.pid + "'}",
+                url: url,
+
                 contentType: "application/json; charset=utf-8",
                 dataType: "JSON",
                 success: function (output) {
 
                     $('#Medication').html('');
-                    var json = JSON.parse(output.d);
+                    var json = output;
                     $.each(json, function (index, value) {
                         $('#Medication').append($('<option>').text(value.Medicaton).attr('value', value.Medicaton));
                     });
@@ -847,16 +847,20 @@
             $('#Musclelbl').hide();
         }
         else {
+
+            var url = '@Url.Action("GetMuscleFromDB", "Visit")?ProcedureId=' + $('#ProcedureId').val();
+
+
             $.ajax({
                 type: "POST",
-                url: "GetMuscleFromDB",
-                data: "{'patientIEID':'" + $('#ProcedureId').val() + "'}",
+                url: url,
+                // data: "{'patientIEID':'" + $('#ProcedureId').val() + "'}",
                 contentType: "application/json; charset=utf-8",
                 dataType: "JSON",
                 success: function (output) {
 
                     $('#Muscle').html('');
-                    var json = JSON.parse(output.d);
+                    var json = output;
                     $.each(json, function (index, value) {
                         $('#Muscle').append($('<option>').text(value.Muscle).attr('value', value.Muscle));
                     });
@@ -867,7 +871,7 @@
         }
 
 
-        var dos = $('#dov').val();
+        var dos = $('#dos').val();
 
         if (dos != '' && dos != undefined)
             $("#pocdate").val(new Date(dos).toLocaleDateString('en-CA'));

@@ -555,8 +555,6 @@
                 success: function (data, status, xhr) {
 
 
-                    debugger;
-
                     if (data.result === 1) {
                         debugger
                         if (data.data[0].cc_desc != null)
@@ -570,60 +568,23 @@
                     }
 
                     var DOS = $("#hdnDOS").val();
-
-
-
-
-
                     var Gender = $("#hdnGender").val();
-
-
-
                     var genderMrMs = "";
-
-
-
                     if (Gender == "1") { genderMrMs = "Mr."; }
-
                     else { genderMrMs = "Ms."; }
-
-
-
                     var sex = "";
-
-
-
                     if (Gender == "1") { sex = "male"; }
-
                     else { sex = "female"; }
-
-
-
                     var LName = $("#hdnLname").val();
-
                     var FName = $("#hdnFname").val();
-
                     var Age = $("#hdnAge").val();
                     var DOAcc = $("#hdnDOAcc").val();
                     var DOI = $("#hdnDOI").val();
 
                     if (DOAcc == "") { DOI = "___"; }
                     else { DOI = "#doi"; }
-
-
-
-
-
-
-
                     var accidentType = $("#hdnaccidentType").val();
-
-
-
-
-
                     var handed = $("#hdnHandedness").val();
-
                     var handedness = "";
 
 
@@ -645,13 +606,12 @@
                     ckAssessment.data.set(assessment);
 
                     // history = history.replaceAll("#dos", DOS).replace("#gender", genderMrMs).replace("#fn", FName).replace("#ln", LName).replace("#age", Age).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
-                    history = history.replaceAll("#dos", DOS).replace("#gender", genderMrMs).replace("#fn", FName).replace("#ln", LName).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
+                    //history = history.replaceAll("#dos", DOS).replace("#gender", genderMrMs).replace("#fn", FName).replace("#ln", LName).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
+                    history = history.replaceAll("#dos", DOS).replace("#fn", FName).replace("#ln", LName).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
 
                     $('#txtHistory').val(history);
 
                     ckHistory.data.set(history);
-
-
 
                     assessment = assessment.replace("#age", Age).replace("#sex", sex).replace("#accidenttype", accidentType).replace("#doi", DOI).replace("#handedness", handedness);
 

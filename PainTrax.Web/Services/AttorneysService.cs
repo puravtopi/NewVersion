@@ -47,8 +47,8 @@ namespace PainTrax.Web.Services
         public int Insert(tbl_attorneys data)
         {
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_attorneys
-		(Attorney,Address,City,State,Zip,ContactName,ContactNo,EmailId,CreatedDate,CreatedBy,old_id,cmp_id)Values
-				(@Attorney,@Address,@City,@State,@Zip,@ContactName,@ContactNo,@EmailId,@CreatedDate,@CreatedBy,@old_id,@cmp_id);select @@identity;", conn);
+		(Attorney,Address,City,State,Zip,ContactName,ContactNo,EmailId,CreatedDate,CreatedBy,old_id,cmp_id,Paralegal)Values
+				(@Attorney,@Address,@City,@State,@Zip,@ContactName,@ContactNo,@EmailId,@CreatedDate,@CreatedBy,@old_id,@cmp_id,@Paralegal);select @@identity;", conn);
             cm.Parameters.AddWithValue("@Attorney", data.Attorney);
             cm.Parameters.AddWithValue("@Address", data.Address);
             cm.Parameters.AddWithValue("@City", data.City);
@@ -61,6 +61,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@CreatedBy", data.CreatedBy);
             cm.Parameters.AddWithValue("@old_id", data.old_id);
             cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+            cm.Parameters.AddWithValue("@Paralegal", data.Paralegal);
             var result = ExecuteScalar(cm);
             return result;
         }
@@ -77,6 +78,7 @@ namespace PainTrax.Web.Services
 		EmailId=@EmailId,
 		CreatedDate=@CreatedDate,
 		CreatedBy=@CreatedBy,
+Paralegal=@Paralegal,
 		old_id=@old_id,
 		cmp_id=@cmp_id		where Id=@Id", conn);
             cm.Parameters.AddWithValue("@Id", data.Id);
@@ -92,6 +94,7 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@CreatedBy", data.CreatedBy);
             cm.Parameters.AddWithValue("@old_id", data.old_id);
             cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+            cm.Parameters.AddWithValue("@Paralegal", data.Paralegal);
             Execute(cm);
         }
         public void Delete(tbl_attorneys data)

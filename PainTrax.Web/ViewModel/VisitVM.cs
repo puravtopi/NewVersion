@@ -74,6 +74,7 @@ namespace PainTrax.Web.ViewModel
         public string? attory_phone { get; set; }
         public string? attory_fax_no { get; set; }
         public string? attory_email { get; set; }
+        public string? paralegal { get; set; }
 
         public string? adj_name { get; set; }
         public string? adj_phone { get; set; }

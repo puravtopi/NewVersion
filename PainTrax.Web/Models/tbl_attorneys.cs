@@ -16,6 +16,7 @@ namespace PainTrax.Web.Models
 		
 		public string? State { get; set; }
 		public string? Zip { get; set; }
+		public string? Paralegal { get; set; }
 		public DateTime? CreatedDate { get; set; }
 		public int? CreatedBy { get; set; }
 		public int? old_id { get; set; }

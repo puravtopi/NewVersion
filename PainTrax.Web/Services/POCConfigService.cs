@@ -104,10 +104,11 @@ namespace PainTrax.Web.Services
         public void Insert(tbl_pocconfig data)
         {
             MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_pocconfig
-		(id,columns)Values
-				(@columns);select @@identity;", conn);
+		(id,columns,cmp_id)Values
+				(@id,@columns,@cmp_id);select @@identity;", conn);
             cm.Parameters.AddWithValue("@id", data.id);
             cm.Parameters.AddWithValue("@columns", data.columns);
+            cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
 
             //cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
             //cm.Parameters.AddWithValue("@createddate", data.createddate);
@@ -122,9 +123,10 @@ namespace PainTrax.Web.Services
         {
             MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_pocconfig SET
             id = @id,		
-            columns=@columns ", conn);
+            columns=@columns where cmp_id=@cmp_id ", conn);
             cm.Parameters.AddWithValue("@id", data.id);
             cm.Parameters.AddWithValue("@columns", data.columns);
+            cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
             Execute(cm);
         }
   

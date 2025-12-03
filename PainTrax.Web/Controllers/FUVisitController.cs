@@ -208,6 +208,7 @@ namespace PainTrax.Web.Controllers
                             obj.attory_fax_no = "";
                             obj.attory_name = attrData.Attorney;
                             obj.attory_phone = attrData.ContactNo;
+                            obj.paralegal = attrData.Paralegal;
                         }
                     }
 
@@ -884,7 +885,8 @@ namespace PainTrax.Web.Controllers
                             EmailId = model.attory_email,
                             ContactNo = model.attory_phone,
                             cmp_id = cmpid,
-                            CreatedBy = userid
+                            CreatedBy = userid,
+                            Paralegal= model.paralegal
 
                         };
 

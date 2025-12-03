@@ -130,13 +130,13 @@
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="ps-tab" data-bs-target="#bordered-doc" role="tab" aria-controls="contact" aria-selected="false">Documents</a>
                                     </li>
-                                   
+
                                 </ul>
                             </div>
                             <div class="col-md-2 col-sm-2">
 
                                 <a id="printButton" name="printButton" target="_new" onclick="fnPrint()" class="btn btn-success bi bi-printer" title="Print Report" style="float:right;display:none"></a> &nbsp; &nbsp;
-                                <button type="button" id="btnSaveAll" class="btn btn-secondary bi bi-floppy"  style="margin-right:4px; margin-left:4px; float:right;">
+                                <button type="button" id="btnSaveAll" class="btn btn-secondary bi bi-floppy" style="margin-right:4px; margin-left:4px; float:right;">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
                                         <path d="M11 2H9v3h2z"></path>
                                         <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"></path>
@@ -234,7 +234,8 @@
                                                             <input type="text" class="form-control" asp-for="lname" onchange="fnCheckPatientNameOnly();fnUpdateSidePanel();">
                                                             <span id="error-lname" style="display:none" class="errorSpan">Please Enter Last Name.</span>
                                                         </div>
-                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#fn">First Name
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#fn">
+                                                            First Name
                                                             <span style="color: red;">*</span>
                                                         </label>
                                                         <div class="col-sm-4">
@@ -248,7 +249,8 @@
                                                         <div class="col-sm-4">
                                                             <input type="text" class="form-control" asp-for="mname" onchange="fnCheckPatientNameOnly();fnUpdateSidePanel();">
                                                         </div>
-                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#gender">Sex
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#gender">
+                                                            Sex
                                                             <span style="color: red;">*</span>
                                                         </label>
                                                         <div class="col-sm-4">
@@ -259,7 +261,8 @@
 
                                                     </div>
                                                     <div class="row mb-3">
-                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#dob">DOB
+                                                        <label for="inputText" class="col-sm-2 col-form-label" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="#dob">
+                                                            DOB
                                                             <span style="color: red;">*</span>
                                                         </label>
                                                         <div class="col-sm-4">
@@ -331,9 +334,9 @@
                                                             </select>
                                                         </div>
 
-                                                        
+
                                                     </div>
-                                                    
+
                                                     <div class="row mb-3">
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
                                                             Account No
@@ -351,21 +354,21 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                       
-                                                        
+
+
                                                         <label for="inputText" class="col-sm-2 col-form-label">SSN</label>
                                                         <div class="col-sm-4">
                                                             <input type="text" class="form-control msktxt" asp-for="ssn" placeholder="xxx-xx-xxxx">
                                                         </div>
                                                         <label for="inputDate" class="col-sm-2 col-form-label">MC</label>
                                                         <div class="col-sm-4">
-                                                          @*   <select class="form-select" asp-for="mc" arial--label="Default select example">
-                                                                <option value=""></option>
-                                                                <option value="true">Yes</option>
-                                                                <option value="false">No</option>
+                                                            @*   <select class="form-select" asp-for="mc" arial--label="Default select example">
+                                                            <option value=""></option>
+                                                            <option value="true">Yes</option>
+                                                            <option value="false">No</option>
                                                             </select>
 
-                                                        *@
+                                                            *@
 
                                                             <section class="dropdown">
                                                                 <input type="text" asp-for="mc" class="form-control" style="width:88%" onchange="txtMe(this)" />
@@ -574,7 +577,7 @@
                                                             Attorney Ph
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            <input type="text" class="form-control msktxt" asp-for="attory_phone" placeholder="xxx-xxx-xxxx" />
+                                                            <input type="text" class="form-control" asp-for="attory_phone" placeholder="xxx-xxx-xxxx" />
                                                         </div>
                                                     </div>
                                                     <div class="row mb-3">
@@ -585,9 +588,14 @@
                                                         <div class="col-sm-4">
                                                             <input type="email" class="form-control" asp-for="attory_email" />
                                                         </div>
+
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            Paralegal
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="paralegal" />
+                                                        </div>
                                                     </div>
-
-
 
 
                                                 </div>
@@ -884,20 +892,20 @@
                         </div>
                     </div>
                 </div>
-                 <div class="card">
+                <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Procedure Performed</h5>
-                        <div class="col-lg-12" >
-                         <div class="row mb-3">
-                                 <div class="col-sm-12">
-                                      <textarea class="form-control" asp-for="procedure_performed"  rows="5"></textarea>
-                                      <br>
-                                     <button type="button" class="btn btn-secondary" onclick="fnSaveProcedurePerformd()">Save</button>
-                                  </div>
-                         </div>
+                        <div class="col-lg-12">
+                            <div class="row mb-3">
+                                <div class="col-sm-12">
+                                    <textarea class="form-control" asp-for="procedure_performed" rows="5"></textarea>
+                                    <br>
+                                    <button type="button" class="btn btn-secondary" onclick="fnSaveProcedurePerformd()">Save</button>
+                                </div>
+                            </div>
                         </div>
-                     </div>
-                 </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1058,26 +1066,26 @@
         );
     }
 
-    function fnSaveProcedurePerformd(){
-         var id =  $("#hdIEId").val();
-         if(id!=null && id!=undefined){
-         var pp= $("#procedure_performed").val();
+    function fnSaveProcedurePerformd() {
+        var id = $("#hdIEId").val();
+        if (id != null && id != undefined) {
+            var pp = $("#procedure_performed").val();
             $.ajax({
                 url: '@Url.Action("SaveProcedurePerformed", "Visit")',
                 type: 'GET',
-                data: { eId: id,pp:pp },
+                data: { eId: id, pp: pp },
                 success: function (data) {
-                     $('#myModalMessage').modal('show');
-                     $('#messBody').html("Details Saved.");
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html("Details Saved.");
                 },
                 error: function (xhr, status, error) {
                     alert("Error fetching physicians: " + error);
                 }
             });
-         }
-         else{
-          alert("Please Create Initial First.");
-         }
+        }
+        else {
+            alert("Please Create Initial First.");
+        }
     }
 </script>
 
@@ -1092,12 +1100,12 @@
         $("body").addClass("toggle-sidebar");
 
         var alertNote = $("#alert_note").val();
-        
+
         if (alertNote != '') {
             $('.modal-title').text('Alert');
             var myModal = new bootstrap.Modal(document.getElementById('myModalMessage'));
             myModal.show();
-           // $('#myModalMessage').modal('show');
+            // $('#myModalMessage').modal('show');
             $('#messBody').html("<p>" + alertNote + "</p>");
 
         }
@@ -1130,10 +1138,10 @@
 
             // var id = $("#hd-active-tab").val();
             var id = $('.tab-content .active').attr('id');
-            
+
 
             if (id === "bordered-home") {
-                
+
                 if (isDetaildValid()) {
 
                     if ($("#id").val() === "0") {
@@ -1145,7 +1153,7 @@
                             "dob": $("#dob").val(),
                             "account_no": $("#account_no").val()
                         }
-                        
+
                         $.ajax({
                             type: "Post",
                             url: url,
@@ -1197,16 +1205,16 @@
     $('#borderedTab a').on('click', function (e) {
 
         var id = $('.tab-content .active').attr('id');
-        
+
         e.preventDefault();
         var currentPaneId = $('.tab-content .active').attr('id'); // current pane ID (leaving)
         var t = this;
         var nextTabLink = this;
-         var selectedTabId = $(this).attr('id');
-         if(selectedTabId==='home-tab')
+        var selectedTabId = $(this).attr('id');
+        if (selectedTabId === 'home-tab')
             $('#printButtonSOAP').show();
         else
-              $('#printButtonSOAP').hide();
+            $('#printButtonSOAP').hide();
 
 
         $("#hd-active-tab").val(id);
@@ -1215,7 +1223,7 @@
 
             $('#printButton').hide();
 
-            
+
             if (isDetaildValid()) {
 
                 if ($("#id").val() === "0") {
@@ -1280,20 +1288,20 @@
             $(t).tab('show');
         }
         else if (id === "bordered-comments") {
-            fnSaveComment(t); 
-           // loadCommentPartial($("#id").val());
+            fnSaveComment(t);
+            // loadCommentPartial($("#id").val());
         }
-             // ===== LOAD logic for the tab you are going to =====
-    if ($(nextTabLink).data('bs-target') === "#bordered-comments") {
-        loadCommentPartial($("#id").val());
-    }
-     if (isDetaildValid()) {
-    // Switch to the next tab
-    $(t).tab('show');
-     }
+        // ===== LOAD logic for the tab you are going to =====
+        if ($(nextTabLink).data('bs-target') === "#bordered-comments") {
+            loadCommentPartial($("#id").val());
+        }
+        if (isDetaildValid()) {
+            // Switch to the next tab
+            $(t).tab('show');
+        }
     });
 
-        function loadCommentPartial(ieId) {
+    function loadCommentPartial(ieId) {
         $.get('@Url.Action("LoadCommentPartial", "Visit")', { ie_id: ieId }, function (html) {
             $("#commentPartialContainer").html(html);
         });
@@ -1373,7 +1381,8 @@
                         "adj_email": $("#adj_email").val(),
                         "adj_fax_no": $("#adj_fax_no").val(),
                         "alert_note": $("#alert_note").val(),
-                        "physicianid": $("#physicianid").val()
+                        "physicianid": $("#physicianid").val(),
+                        "paralegal": $("#paralegal").val()
                     }
                     $.ajax({
                         type: "Post",
@@ -1459,7 +1468,7 @@
                 else {
                     if (t !== null)
                         $(t).tab('show');
-                        fnShowPOC();
+                    fnShowPOC();
                 }
             }
         });
@@ -1599,7 +1608,7 @@
 
     }
 
-    function fngetAGE(inputDate){
+    function fngetAGE(inputDate) {
         if (inputDate) {
             var date = new Date(inputDate);
 
@@ -1623,7 +1632,7 @@
             "fname": $("#fname").val(),
             "lname": $("#lname").val(),
             "mname": $("#mname").val(),
-            "account_no":$("#account_no").val()
+            "account_no": $("#account_no").val()
         }
 
         $.ajax({
@@ -1775,7 +1784,7 @@
 
                 $("#attory_email").val(item.emailId)
                 $("#attory_phone").val(item.contactNo)
-
+                $("#paralegal").val(item.paralegal)
 
             },
             minLength: 1

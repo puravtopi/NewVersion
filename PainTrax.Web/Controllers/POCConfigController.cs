@@ -161,10 +161,11 @@ namespace PainTrax.Web.Controllers
                         loc_name = loc_name + "," + i.Item.Trim();
                     }
                 }
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 loc_ids = loc_ids.TrimStart(',');
                 model.id = loc_name.TrimStart(','); ;
                 model.columns = loc_name.TrimStart(',');
-                
+                model.cmp_id = cmpid;
 
                 _services.Update(model);
             }

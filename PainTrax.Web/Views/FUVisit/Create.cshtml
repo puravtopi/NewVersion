@@ -606,11 +606,14 @@
                                                         <div class="col-sm-4">
                                                             <input type="email" class="form-control" asp-for="attory_email" />
                                                         </div>
+
+                                                        <label for="paralegal" class="col-sm-2 col-form-label">
+                                                           Paralegal
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <input type="text" class="form-control" asp-for="paralegal" />
+                                                        </div>
                                                     </div>
-
-
-
-
                                                 </div>
                                             </div>
 
@@ -1465,6 +1468,7 @@
             "alert_note": $("#alert_note").val(),
             "physicianid": $("#physicianid").val(),
             "type": $("#hdType").val(),
+            "paralegal": $("#paralegal").val(),
             "accidentType": $("#accidentType").val()
         }
 
@@ -1742,6 +1746,7 @@
 
                 $("#attory_email").val(item.emailId)
                 $("#attory_phone").val(item.contactNo)
+                $("#paralegal").val(item.paralegal)
 
 
             },

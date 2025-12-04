@@ -794,7 +794,8 @@
         $('#Muscle').html('');
         $('#Medication').html('');
         $('#Level').val('');
-        $('#pocdate').html($('#dov').val());
+        //$('#pocdate').html($('#dov').val());
+        $("#pocdate").val(new Date($('#dov').val()).toLocaleDateString('en-CA'));//YYYY-MM-dd
 
         $('#CatHeading').text($("#positionVal").val());
 

@@ -41,7 +41,7 @@
                                         <th scope="col">Email</th>
                                         <th scope="col">Telephone</th>
                                         <th scope="col">DOB</th>
-
+                                        <th scope="col">Account#</th>
                                         <th style="width:5%">Action</th>
                                     </tr>
                                 </thead>
@@ -143,7 +143,7 @@
                             return (month.toString().length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
                         }
                     },
-                  
+                    { "data": "account_no", "account_no": "account_no", "autoWidth": true },
                     {
                         "render": function (data, type, full, meta) {
                             var index = '<a href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'

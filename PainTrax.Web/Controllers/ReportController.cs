@@ -341,7 +341,7 @@ namespace PainTrax.Web.Controllers
             {
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 string cnd = " and cmp_id=" + cmpid.Value;
-                var data1 = _pocConfigservices.GetAllone(cnd);
+                var data1 = _pocConfigservices.GetAlloneExport(cnd);
                 var columnList = data1.Select(x => x.columns).ToList();
 
                 string query = TempData["query"].ToString();

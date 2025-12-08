@@ -25,7 +25,7 @@ namespace PainTrax.Web.Services
 
         public List<ProSXReportVM> GetProSXReport(string cnd)
         {
-            string query = "SELECT DISTINCT tp.ProcedureDetail_ID, CONCAT(pm.lname,' ',pm.fname)as 'Name',pm.dob as DOB,pm.mobile as Phone,ie.primary_claim_no AS ClaimNumber,(SELECT ins.cmpname FROM tbl_inscos ins WHERE ins.id =ie.primary_ins_cmp_id) AS Insurance,p1.allergies AS Allergies,CASE  WHEN IFNULL(pm.MC, '') = '1' THEN 'Yes'  ELSE 'No' END AS MC,ie.Compensation AS 'CaseType' ," +
+            string query = "SELECT DISTINCT tp.ProcedureDetail_ID, CONCAT(pm.lname,' ',pm.fname)as 'Name',pm.dob as DOB,pm.mobile as Phone,ie.primary_claim_no AS ClaimNumber,(SELECT ins.cmpname FROM tbl_inscos ins WHERE ins.id =ie.primary_ins_cmp_id) AS Insurance,p1.allergies AS Allergies,CASE WHEN pm.MC='True' THEN 'Yes' ELSE 'No' END AS MC,ie.Compensation AS 'CaseType' ," +
            "lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE, " +
             "CASE when pm.gender = '1' THEN 'M' when pm.gender = '2' then 'F' when pm.gender = '3' then 'O'  ELSE '' END AS gender," +
             "tp.sx_center_name,tp.sx_Notes AS sx_Notes,tp.sx_Status,poc.color,tp.mc_Status,tp.SX_Ins_Ver_Status,tp.Ver_comment,tp.Preop_notesent,tp.Bookingsheet_sent," +

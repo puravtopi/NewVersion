@@ -87,6 +87,45 @@ namespace PainTrax.Web.Services
 
             return configList;
         }
+        public List<tbl_pocconfig> GetAlloneExport(string cnd = "")
+        {
+            string query = "select * from tbl_pocconfig where 1=1 ";
+
+            if (!string.IsNullOrEmpty(cnd))
+                query = query + cnd;
+
+            var datalist = ConvertDataTable<tbl_pocconfig>(GetData(query)).FirstOrDefault();
+
+            List<tbl_pocconfig> configList = new List<tbl_pocconfig>();
+
+
+            if (datalist == null || string.IsNullOrEmpty(datalist.export_Columns))
+            {
+                return configList; // return empty list safely
+            }
+
+            string[] entries = datalist.columns.Split(',');
+
+            foreach (string entry in entries)
+            {
+                //  string[] parts = entry.Split(',');
+
+                if (entry.Length >= 1)
+                {
+                    tbl_pocconfig config = new tbl_pocconfig
+                    {
+                        id = entry.TrimEnd(),
+                        columns = entry.TrimEnd(),
+                        //Value = parts[1]
+                    };
+
+                    configList.Add(config);
+                }
+            }
+
+
+            return configList;
+        }
 
         public tbl_pocconfig? GetOne(tbl_pocconfig data)
         {
@@ -129,7 +168,18 @@ namespace PainTrax.Web.Services
             cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
             Execute(cm);
         }
-  
+        public void ExportUpdate(tbl_pocconfig data)
+        {
+            MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_pocconfig SET
+            id = @id,		
+            export_Columns=@export_Columns  where cmp_id = @cmp_id", conn);
+
+            cm.Parameters.AddWithValue("@id", data.id);
+            cm.Parameters.AddWithValue("@export_Columns", data.columns);
+            cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
+            Execute(cm);
+        }
+
 
     }
 }

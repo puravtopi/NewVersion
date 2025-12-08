@@ -20,19 +20,19 @@
 
                 <div class="card">
                     <div class="card-body">
-                        <div class="row mb-3">
+                        @* <div class="row mb-3">
 
                             <div class="col-md-12 col-lg-12">
                                 <a class="btn btn-success" style="float:right" asp-action="Edit" asp-controller="POCConfig">Update list</a>
                             </div>
-                        </div>
+                        </div> *@
                         <div class="table-responsive">
                             <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th scope="col" style="width:5%">#</th>
-                                        <th scope="col">columns</th>
-                                       @*  <th style="width:5%">Action</th> *@
+                                        <th scope="col">Type</th>
+
+                                        <th style="width:5%">Action</th>
                                     </tr>
                                 </thead>
                             </table>
@@ -57,48 +57,80 @@
             bindList();
         });
 
-        function bindList() {
+         function bindList() {
 
+            var gridUrl = '@Url.Action("Edit", "POCConfig")';
+            var exportUrl = '@Url.Action("ExportEdit", "POCConfig")';
 
-            var url = '@Url.Action("List", "POCConfig")';
-            var editurl = '@Url.Action("Edit", "POCConfig")';
-            var deleteurl = '@Url.Action("Delete", "POCConfig")';
-            debugger;
+            var staticData = [
+                { id: 1, type: "Grid Columns" },
+                { id: 2, type: "Export Columns" }
+            ];
 
             $("#tbl").DataTable({
-                "lengthMenu": [[25, 50, 100], [25, 50, 100]],
-                "pageLength": 25,
-                "processing": true, // for show progress bar
-                "serverSide": true, // for process server side
-                "filter": true, // this is for disable filter (search box)
-                "orderMulti": false, // for disable multiple column at once
-                "ajax": {
-                    "url": url,
-                    "type": "POST",
-                    "datatype": "json"
-                },
-                "columnDefs":
-                    [{
-                        "targets": [0],
-                        "visible": false,
-                        "searchable": false
-                    }],
+                "data": staticData,
                 "columns": [
-                    { "data": "id", "ID": "id", "autoWidth": true },
-                    { "data": "columns", "columns": "columns", "autoWidth": true },
-                    // {
-                    //     "render": function (data, type, full, meta) {
-                    //         var index = '<a href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'
-                    //         index += '<a href="' + deleteurl + '/' + full.id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
-                    //         return index;
-                    //     }
-                    // }
-                    // ,
+                    { data: "type", autoWidth: true },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            var url = '';
+
+                            if (row.type === "Grid Columns") {
+                                url = gridUrl;
+                            }
+                            else if (row.type === "Export Columns") {
+                                url = exportUrl;
+                            }
+
+                            return '<a href="' + url + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit"></i></a>';
+                        }
+                    }
                 ]
-
             });
-
         }
+        // function bindList() {
+
+
+        //     var url = '@Url.Action("List", "POCConfig")';
+        //     var editurl = '@Url.Action("Edit", "POCConfig")';
+        //     var deleteurl = '@Url.Action("Delete", "POCConfig")';
+        //     debugger;
+
+        //     $("#tbl").DataTable({
+        //         "lengthMenu": [[25, 50, 100], [25, 50, 100]],
+        //         "pageLength": 25,
+        //         "processing": true, // for show progress bar
+        //         "serverSide": true, // for process server side
+        //         "filter": true, // this is for disable filter (search box)
+        //         "orderMulti": false, // for disable multiple column at once
+        //         "ajax": {
+        //             "url": url,
+        //             "type": "POST",
+        //             "datatype": "json"
+        //         },
+        //         "columnDefs":
+        //             [{
+        //                 "targets": [0],
+        //                 "visible": false,
+        //                 "searchable": false
+        //             }],
+        //         "columns": [
+        //             { "data": "id", "ID": "id", "autoWidth": true },
+        //             { "data": "columns", "columns": "columns", "autoWidth": true },
+        //             // {
+        //             //     "render": function (data, type, full, meta) {
+        //             //         var index = '<a href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'
+        //             //         index += '<a href="' + deleteurl + '/' + full.id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+        //             //         return index;
+        //             //     }
+        //             // }
+        //             // ,
+        //         ]
+
+        //     });
+
+        // }
 
 
         function DeleteData(CustomerID) {

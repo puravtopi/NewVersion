@@ -176,6 +176,74 @@ namespace PainTrax.Web.Controllers
             return Json(1);
         }
 
+        public IActionResult ExportEdit(int id1)
+        {
+            var data = new tbl_pocconfig();
+            try
+            {
+                tbl_pocconfig obj = new tbl_pocconfig();
+                //obj.id = Convert.toid1;
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
+                //data = _services.GetOne(obj);
+                data.Listcolumns = _commonservices.GetpocconfigCheckBoxList(cmpid.Value);
+
+
+
+                var downloadFolder = System.IO.Path.Combine(_environment.WebRootPath, "Downloads/" + cmpclientid);
+                var subFolders = Directory.GetDirectories(downloadFolder);
+
+                var filesByFolder = new Dictionary<string, List<string>>();
+
+                foreach (var folder in subFolders)
+                {
+                    var folderName = System.IO.Path.GetFileName(folder);
+                    var pdfFiles = Directory.GetFiles(folder, "*.pdf")
+                                            .Select(System.IO.Path.GetFileName)
+                                            .ToList();
+
+                    filesByFolder.Add(folderName, pdfFiles);
+                }
+
+                ViewBag.FilesByFolder = filesByFolder;
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "Edit");
+            }
+            return View(data);
+        }
+
+        [HttpPost]
+        public IActionResult ExportEdit(tbl_pocconfig model)
+        {
+            try
+            {
+                string loc_ids = "", loc_name = "";
+                foreach (var i in model.Listcolumns)
+                {
+                    if (i.IsChecked)
+                    {
+                        loc_ids = loc_ids + "," + i.Id;
+                        loc_name = loc_name + "," + i.Item.Trim();
+                    }
+                }
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                loc_ids = loc_ids.TrimStart(',');
+                model.id = loc_name.TrimStart(','); ;
+                model.columns = loc_name.TrimStart(',');
+                model.cmp_id = cmpid;
+
+
+                _services.ExportUpdate(model);
+            }
+            catch (Exception ex)
+            {
+                SaveLog(ex, "Edit");
+            }
+            return Json(1);
+        }
+
 
         public IActionResult List()
         {

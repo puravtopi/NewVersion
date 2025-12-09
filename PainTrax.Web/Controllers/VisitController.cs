@@ -2639,7 +2639,8 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#fn", patientData.fname);
                     body = body.Replace("#ln", patientData.lname);
                     body = body.Replace("#gender", Common.GetMrMrsFromSex(patientData.gender));
-                    body = body.Replace("#sex", char.ToUpper(sex[0]) + sex.Substring(1));
+                    body = body.Replace("#sex", sex);
+                    //body = body.Replace("#sex", char.ToUpper(sex[0]) + sex.Substring(1));
 
 
                     body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
@@ -3133,14 +3134,14 @@ namespace PainTrax.Web.Controllers
 
                 if (patientData.doa == null)
                 {
-                    docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + patientData.account_no + ".docx";
+                    docName = patientData.lname + ", " + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + patientData.account_no + ".docx";
                 }
                 else if (patientData.account_no != null)
                 {
-                    docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                    docName = patientData.lname + ", " + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
                 }
                 else
-                    docName = patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                    docName = patientData.lname + ", " + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
                 if (cmpid == "14")
                 {
                     patientName = patientData.fname + ", " + patientData.lname;

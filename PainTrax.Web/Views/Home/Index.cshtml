@@ -627,6 +627,7 @@
                     <p id="sn_error" style="color:red"></p>
                     <input id="txtAssistant" class="form-control" placeholder="Assistant Name" />
                     <p id="a_error" style="color:red"></p>
+                    <input type="hidden" id="hdDate" />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -688,7 +689,7 @@
                 { "data": "bookedCnt", "autoWidth": true },
                 {
                     "render": function (data, type, full, meta) {
-                        var index = '<a href="javascript:void(0)" onclick="fnShowModel(\'' + full.procedureDetailIDs + '\',\'' + full.surgerycenterId + '\')"><i class="ri-add-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Suregory Center"></i></a> &nbsp'
+                        var index = '<a href="javascript:void(0)" onclick="fnShowModel(\'' + full.procedureDetailIDs + '\',\'' + full.surgerycenterId + '\',\'' + full.scheduledDate + '\')"><i class="ri-add-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Add Suregory Center"></i></a> &nbsp'
                         return index;
                     }
                 },
@@ -720,11 +721,12 @@
         bindList(fDate, tDate);
     }
 
-    function fnShowModel(procedureDetailIDs, sCenterId) {
+    function fnShowModel(procedureDetailIDs, sCenterId,sDate) {
         $('#ProcedureDetailIDs').val(procedureDetailIDs);
         debugger
         if (sCenterId != 'null') {
             $("#ddlSC").val(sCenterId);
+            $("#hdDate").val(sDate);
         }
         $('#SCModal').modal('show');
     }
@@ -732,28 +734,29 @@
     function fnUpdateSC() {
         var sProcedureDetailIDs = $('#ProcedureDetailIDs').val();
         var sId = $('#ddlSC').val();
-        var sSCName = $('#txtSurgonName').val();
+        var scName = $('#ddlSC option:selected').text();
+        var sSurgeon = $('#txtSurgonName').val();
         var sAssistant = $('#txtAssistant').val();
 
         var isValid = true;
-        
-        if (sSCName == '' || sSCName == null) {
+
+        if (sSurgeon == '' || sSurgeon == null) {
             isValid = false;
             $("#sn_error").text("Please Enter Surgon Name");
         }
         else {
             $("#sn_error").text("");
         }
-        if (sAssistant == '' || sAssistant == null) {
-            $("#a_error").text("Please Enter Assistant Name");
-            isValid = false;
-        }else{
-            $("#a_error").text("");
-        }
+        // if (sAssistant == '' || sAssistant == null) {
+        //     $("#a_error").text("Please Enter Assistant Name");
+        //     isValid = false;
+        // }else{
+        //     $("#a_error").text("");
+        // }
 
         if (!isValid)
             return;
-        var url = '@Url.Action("UpdateSurgoryCenter", "Home")?sProcedureDetailIDs=' + sProcedureDetailIDs + '&sId=' + sId + '&sSCName=' + sSCName + '&sAssistant=' + sAssistant;
+        var url = '@Url.Action("UpdateSurgoryCenter", "Home")?sProcedureDetailIDs=' + sProcedureDetailIDs + '&sId=' + sId + '&sSurgeon=' + sSurgeon + '&sAssistant=' + sAssistant + '&sSCName=' + scName + '&sDate=' + $('#hdDate').val();
 
         $.ajax({
             type: "Post",

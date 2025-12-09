@@ -510,16 +510,16 @@ namespace PainTrax.Web.Services
             // query += " where  (tp.Scheduled>='" + DateTime.Now.Date.ToString("yyyy/MM/dd") + "')";
 
 
-            string query = "SELECT pm.id,REPLACE(pm.lname,' ','') AS lname,REPLACE(pm.fname,' ','') AS fname,tp.ProcedureDetail_ID,"+
+            string query = "SELECT pm.id,REPLACE(pm.lname,' ','') AS lname,REPLACE(pm.fname,' ','') AS fname,tp.ProcedureDetail_ID," +
                 "CONCAT(pm.lname, ', ', pm.fname) AS Name,CASE WHEN pm.MC='True' THEN 'Yes' WHEN pm.MC = 'False' THEN 'No' ELSE pm.MC END AS MC,ie.Compensation AS CaseType," +
                 "ie.doa, pm.dob,IFNULL((SELECT _fu.doe FROM tbl_patient_fu _fu WHERE _fu.patientIE_ID=ie.id ORDER BY _fu.doe DESC LIMIT 0,1),ie.doe) AS doe, pm.mobile AS Phone,ie.primary_policy_no, ie.primary_claim_no,ins.cmpname, tp.sides, tp.level,lc.location," +
-                "CASE WHEN pm.Vaccinated=1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE,CONCAT(u.fname,' ',u.lname) AS providerName,"+
-                "tp.Requested, p1.allergies, pm.mc_details as note,tp.surgercy_center, tp.surgon_name, tp.assistent_name,sc.Surgerycenter_name, tp.Executed,"+
-                "CASE WHEN pm.gender='1' THEN 'Male' WHEN pm.gender='2' THEN 'Female' WHEN pm.gender='3' THEN 'Other' ELSE '' END AS gender,"+
-                "tp.Scheduled, tp.sx_center_name,ROW_NUMBER() OVER (PARTITION BY tp.ProcedureDetail_ID ORDER BY pm.id DESC) AS rn FROM tbl_Procedures_Details tp"+
-                " INNER JOIN tbl_patient_ie ie ON tp.PatientIE_ID = ie.id INNER JOIN tbl_Procedures pp ON pp.id = tp.Procedure_Master_ID INNER JOIN tbl_ie_page1 p1"+
-                " ON ie.id = p1.ie_id INNER JOIN tbl_Patient pm ON pm.id = ie.Patient_ID INNER JOIN tbl_locations lc ON ie.Location_ID = lc.id"+
-                " LEFT JOIN tbl_inscos ins ON ie.primary_ins_cmp_id = ins.id LEFT JOIN tbl_surgerycenter sc ON tp.surgercy_center = sc.Id "+ 
+                "CASE WHEN pm.Vaccinated=1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE,CONCAT(u.fname,' ',u.lname) AS providerName," +
+                "tp.Requested, p1.allergies, pm.mc_details as note,tp.surgercy_center, tp.surgon_name, tp.assistent_name,sc.Surgerycenter_name, tp.Executed," +
+                "CASE WHEN pm.gender='1' THEN 'Male' WHEN pm.gender='2' THEN 'Female' WHEN pm.gender='3' THEN 'Other' ELSE '' END AS gender," +
+                "tp.Scheduled, tp.sx_center_name,ROW_NUMBER() OVER (PARTITION BY tp.ProcedureDetail_ID ORDER BY pm.id DESC) AS rn FROM tbl_Procedures_Details tp" +
+                " INNER JOIN tbl_patient_ie ie ON tp.PatientIE_ID = ie.id INNER JOIN tbl_Procedures pp ON pp.id = tp.Procedure_Master_ID INNER JOIN tbl_ie_page1 p1" +
+                " ON ie.id = p1.ie_id INNER JOIN tbl_Patient pm ON pm.id = ie.Patient_ID INNER JOIN tbl_locations lc ON ie.Location_ID = lc.id" +
+                " LEFT JOIN tbl_inscos ins ON ie.primary_ins_cmp_id = ins.id LEFT JOIN tbl_surgerycenter sc ON tp.surgercy_center = sc.Id " +
                 " LEFT JOIN tbl_users u ON ie.provider_id = u.id ";
 
 
@@ -589,11 +589,12 @@ namespace PainTrax.Web.Services
             Execute(cm);
         }
 
-        public bool UpdatePOCSurgoryCenter(string sProcedureDetailIDs, string sId, string sSCName, string sAssistant,string sSurgeon)
+        public bool UpdatePOCSurgoryCenter(string sProcedureDetailIDs, string sId, string sSCName, string sAssistant, string sSurgeon, int cmpid,DateTime sDate)
         {
             try
             {
-                string query = "call sp_Update_SurgeryCenter(" + sId + ",'" + sSCName + "','" + sAssistant + "', '" + sProcedureDetailIDs.TrimStart(',') + "','" + sSurgeon.TrimStart(',') + "')";
+                string query = "call sp_Update_SurgeryCenter(" + sId + ",'" + sSCName + "','" + sAssistant + "', '" + sProcedureDetailIDs.TrimStart(',') + "','" + sSurgeon.TrimStart(',') + "'," + cmpid + "," +
+                    "'"+ sDate.ToString("yyyy-MM-dd") +"')";
 
                 MySqlCommand cm = new MySqlCommand(query, conn);
 

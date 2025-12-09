@@ -93,7 +93,7 @@ namespace PainTrax.Web.Controllers
             else if (mcodeid == 3)
             {
                // query += " and pp.INhouseProcbit<>1 and  ISNULL(pp.Other,0) <> 1  ";
-                query += " and pp.INhouseProcbit<>1   ";
+                query += " and pp.INhouseProcbit<>1 and ISNULL(pp.inout<>1) and  ISNULL(pp.Other,0) <> 1  ";
             }
             else if (mcodeid == 4)
             {

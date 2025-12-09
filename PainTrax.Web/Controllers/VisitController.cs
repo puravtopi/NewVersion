@@ -797,8 +797,8 @@ namespace PainTrax.Web.Controllers
                         ContactNo = model.attory_phone,
                         cmp_id = cmpid,
                         CreatedBy = userid,
-                        Paralegal= model.paralegal
-                        
+                        Paralegal = model.paralegal
+
 
                     };
 
@@ -2012,7 +2012,7 @@ namespace PainTrax.Web.Controllers
                 data.Subcode = model.SubProcedureID;
                 data.Vac_Note = model.Vac_Note;
                 data.Vac_Status = model.Vac_Status;
-                data.Cmp_Id =  HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+                data.Cmp_Id = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
 
                 switch (model.req)
@@ -2536,7 +2536,7 @@ namespace PainTrax.Web.Controllers
                     else
                         body = body.Replace("#NameofDr", "");
 
-                   
+
                     string drAddress = "";
                     if (!string.IsNullOrEmpty(locData[0].address))
                         drAddress = locData[0].address;
@@ -2986,10 +2986,10 @@ namespace PainTrax.Web.Controllers
             if (System.IO.File.Exists(imagePath))
             {
                 byte[] imageBytes = System.IO.File.ReadAllBytes(imagePath);
-                 base64String = Convert.ToBase64String(imageBytes);
+                base64String = Convert.ToBase64String(imageBytes);
                 // Use base64String as needed
             }
-            
+
             return base64String;
         }
         #endregion
@@ -3613,13 +3613,13 @@ namespace PainTrax.Web.Controllers
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 
 
-            if (cmpid.Value == 18 || cmpid.Value==15)
-                strPoc = strPoc.Replace("<li>", "").Replace("</li>", "<br/>"); ;
+            if (cmpid.Value == 18 || cmpid.Value == 15 || cmpid.Value == 10 || cmpid.Value == 2)
+                strPoc = strPoc.Replace("<li>", "").Replace("</li>", "<br/>");
 
             pocDetails pocDetails = new pocDetails()
             {
                 strInjectionDesc = inject_desc,
-                strPoc = strPoc != "" ? (cmpid.Value == 18 ? strPoc : "<ol>" + strPoc + "</ol>") : "",
+                strPoc = strPoc != "" ? ((cmpid.Value == 18 || cmpid.Value == 15 || cmpid.Value == 10 || cmpid.Value == 2) ? strPoc : "<ol>" + strPoc + "</ol>") : "",
                 strCCDesc = ccdesc,
                 strPEDesc = pedesc,
                 strADesc = adesc
@@ -3847,7 +3847,8 @@ namespace PainTrax.Web.Controllers
             }
             else
             {
-                if (cmpid == 18) {
+                if (cmpid == 18)
+                {
 
                     return new Header(
                           new Paragraph(

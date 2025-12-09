@@ -289,7 +289,7 @@ namespace PainTrax.Web.Helper
 
             var list = new List<CheckBoxItem>();
 
-            string input = "Sex,Name,Case,DOB,DOA,MCODE,Phone,Location,Insurance,Side,Level,ClaimNo,MC,Allergies,Requested,Scheduled,Executed,Note,SC_Name";
+            string input = "Sex,Name,Case,DOB,DOA,MCODE,Phone,Location,Insurance,Side,Level,ClaimNo,MC,Allergies,Request,Scheduled,Executed,Note,SC_Name";
 
 
 
@@ -357,6 +357,66 @@ namespace PainTrax.Web.Helper
 
             //}
 
+
+
+            return list;
+
+        }
+        public List<CheckBoxItem> GetpocconfigExportCheckBoxList(int cmp_id, string _ids = "")
+
+        {
+
+            string cnd = "";// " and cmp_id=" + cmp_id;
+
+            var data = _pocconfigservices.GetAll(cnd);
+
+            var list = new List<CheckBoxItem>();
+
+            string input = "Sex,Name,Case,DOB,DOA,MCODE,Phone,Location,Insurance,Side,Level,ClaimNo,MC,Allergies,Request,Scheduled,Executed,Note,SC_Name";
+
+
+
+
+
+            string[] entries = input.Split(',');
+
+            int i = 0;
+
+            foreach (var item in entries)
+
+            {
+
+                bool ischecked = false;
+
+                foreach (var item1 in data)
+
+                {
+
+                    if (item1.columns == item.TrimEnd())
+
+                    { ischecked = true; }
+
+
+
+
+
+                }
+
+                list.Add(new CheckBoxItem
+
+                {
+
+                    Item = item,
+
+                    Id = i,
+
+                    IsChecked = Convert.ToBoolean(ischecked)
+
+                });
+
+                i++;
+
+            }         
 
 
             return list;

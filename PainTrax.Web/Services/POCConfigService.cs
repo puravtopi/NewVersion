@@ -104,7 +104,7 @@ namespace PainTrax.Web.Services
                 return configList; // return empty list safely
             }
 
-            string[] entries = datalist.columns.Split(',');
+            string[] entries = datalist.export_Columns.Split(',');
 
             foreach (string entry in entries)
             {
@@ -175,7 +175,7 @@ namespace PainTrax.Web.Services
             export_Columns=@export_Columns  where cmp_id = @cmp_id", conn);
 
             cm.Parameters.AddWithValue("@id", data.id);
-            cm.Parameters.AddWithValue("@export_Columns", data.columns);
+            cm.Parameters.AddWithValue("@export_Columns", data.export_Columns);
             cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
             Execute(cm);
         }

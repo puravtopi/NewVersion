@@ -186,7 +186,7 @@ namespace PainTrax.Web.Controllers
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                 string cmpclientid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId).ToString();
                 //data = _services.GetOne(obj);
-                data.Listcolumns = _commonservices.GetpocconfigCheckBoxList(cmpid.Value);
+                data.Listcolumns = _commonservices.GetpocconfigExportCheckBoxList(cmpid.Value);
 
 
 

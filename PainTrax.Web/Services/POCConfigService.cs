@@ -46,6 +46,45 @@ namespace PainTrax.Web.Services
 
             return configList;
         }
+        public List<tbl_pocconfig> GetAllExport(string cnd = "")
+        {
+            string query = "select * from tbl_pocconfig where 1=1 ";
+
+            if (!string.IsNullOrEmpty(cnd))
+                query = query + cnd;
+
+            var datalist = ConvertDataTable<tbl_pocconfig>(GetData(query)).FirstOrDefault();
+
+            List<tbl_pocconfig> configList = new List<tbl_pocconfig>();
+
+            if (datalist == null || string.IsNullOrEmpty(datalist.export_Columns))
+            {
+                return configList; // return empty list safely
+            }
+
+            string[] entries = datalist.export_Columns.Split(',');
+
+            foreach (string entry in entries)
+            {
+                //  string[] parts = entry.Split(',');
+
+                if (entry.Length >= 1)
+                {
+                    tbl_pocconfig config = new tbl_pocconfig
+                    {
+                        id = entry.TrimEnd(),
+                        columns = entry.TrimEnd(),
+                        export_Columns = entry.TrimEnd(),
+                        //Value = parts[1]
+                    };
+
+                    configList.Add(config);
+                }
+            }
+
+
+            return configList;
+        }
 
 
         public List<tbl_pocconfig> GetAllone(string cnd = "")
@@ -116,6 +155,7 @@ namespace PainTrax.Web.Services
                     {
                         id = entry.TrimEnd(),
                         columns = entry.TrimEnd(),
+                        export_Columns = entry.TrimEnd(),
                         //Value = parts[1]
                     };
 

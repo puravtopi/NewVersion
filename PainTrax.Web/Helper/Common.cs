@@ -368,7 +368,7 @@ namespace PainTrax.Web.Helper
 
             string cnd = "";// " and cmp_id=" + cmp_id;
 
-            var data = _pocconfigservices.GetAll(cnd);
+            var data = _pocconfigservices.GetAllExport(cnd);
 
             var list = new List<CheckBoxItem>();
 
@@ -392,7 +392,7 @@ namespace PainTrax.Web.Helper
 
                 {
 
-                    if (item1.columns == item.TrimEnd())
+                    if (item1.export_Columns == item.TrimEnd())
 
                     { ischecked = true; }
 

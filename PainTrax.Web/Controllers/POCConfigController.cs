@@ -232,6 +232,7 @@ namespace PainTrax.Web.Controllers
                 loc_ids = loc_ids.TrimStart(',');
                 model.id = loc_name.TrimStart(','); ;
                 model.columns = loc_name.TrimStart(',');
+                model.export_Columns = loc_name.TrimStart(',');
                 model.cmp_id = cmpid;
 
 

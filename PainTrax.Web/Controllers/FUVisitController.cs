@@ -3157,30 +3157,30 @@ namespace PainTrax.Web.Controllers
                 {
                     if (patientData.doa == null)
                     {
-                        docName = patientData.lname + ", " + patientData.fname + "_PreOP_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
+                        docName = patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_PreOP_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
                     }
                     else if (patientData.account_no != null)
                     {
-                        docName = patientData.lname + ", " + patientData.fname + "_PreOP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                        docName = patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_PreOP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
                     }
                     else
                     {
-                        docName = patientData.lname + ", " + patientData.fname + "_PreOP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                        docName = patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_PreOP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
                     }
                 }
                 else if (fuData.type == "Postop FU")
                 {
                     if (patientData.doa == null)
                     {
-                        docName = patientData.lname + ", " + patientData.fname + "_POP_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
+                        docName = patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_POP_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
                     }
                     else if (patientData.account_no != null)
                     {
-                        docName = patientData.lname + ", " + patientData.fname + "_POP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                        docName = patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_POP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
                     }
                     else
                     {
-                        docName = patientData.lname + ", " + patientData.fname + "_POP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                        docName = patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_POP_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
                     }
                 }
                 else
@@ -3188,23 +3188,23 @@ namespace PainTrax.Web.Controllers
                     if (patientData.doa == null)
                     {
                         if (patientData.account_no != null)
-                            docName = patientData.lname + ", " + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + ".docx";
+                            docName = patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + ".docx";
                         else
-                            docName = patientData.lname + ", " + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
+                            docName = patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + ".docx";
                     }
 
                     else if (patientData.account_no != null)
                     {
-                        docName = patientData.lname + ", " + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                        docName = patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
                     }
 
                     else
                     {
-                        docName = patientData.lname + ", " + patientData.fname + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                        docName = patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_FU_" + Common.commonDate(fuData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
                     }
                 }
 
-                patientName = patientData.lname + ", " + patientData.fname;
+                patientName = patientData.lname.Trim() + ", " + patientData.fname.Trim();
 
                 dos = fuData.doe == null ? "" : fuData.doe.Value.ToShortDateString();
                 dob = patientData.dob == null ? "" : patientData.dob.Value.ToShortDateString();
@@ -3224,7 +3224,7 @@ namespace PainTrax.Web.Controllers
 
                     memStream.WriteTo(fileStream);
                 }
-                injDocName = subPath + "/" + patientData.lname + "," + patientData.fname + "_FU_" + Common.commonDate(patientData.doe).Replace("/", "") + "_injection.docx";
+                injDocName = subPath + "/" + patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_FU_" + Common.commonDate(patientData.doe).Replace("/", "") + "_injection.docx";
                 System.IO.File.Delete(injDocName);
                 injHtmlContent = Regex.Replace(injHtmlContent, @"</ol>", string.Empty, RegexOptions.IgnoreCase);
                 injHtmlContent = injHtmlContent.Trim();

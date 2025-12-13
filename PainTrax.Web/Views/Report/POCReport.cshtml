@@ -75,19 +75,24 @@
                             <br />
                             <div class="col-md-12 col-lg-12">
 
-                                <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSC" type="button" onclick="fnSC()">Add Surgery Center</button>
-                                <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSave" type="button" onclick="fnUpdatePOCReport()">Save</button>
-                                <button class="btn btn-warning" style="float:right;display:none; margin-left:10px;" id="btnRescheduled" type="button" onclick="fnSMulticheduledPopup()">Reschedule</button>
-                                <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnTransfer" type="button" onclick="fnTransToExecute()">Transfer to Execute</button>
                                 <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToExcel" asp-controller="Report">Export</a>
                                 <button class="btn btn-secondary" type="button" style="float:right; margin-left:10px;" onclick="fnReset()">Reset</button>
                                 <button class="btn btn-success" style="float:right; margin-left:10px;" type="submit" id="btnSearch">Search</button>
-                        
-                      
-                            
+                                <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSave" type="button" onclick="fnUpdatePOCReport()">Save</button>
+
 
                             </div>
                             <div class="clearfix"></div>
+                            <br />
+                            <div class="col-md-12 col-lg-12">
+                               
+                                <button class="btn btn-warning" style="float:right;display:none; margin-left:10px;" id="btnRescheduled" type="button" onclick="fnSMulticheduledPopup()">Reschedule</button>
+                                <button class="btn btn-success" style="float:right;display:none; margin-left:10px;" id="btnTransfer" type="button" onclick="fnTransToExecute()">Transfer to Execute</button>
+                                <button class="btn btn-primary" style="float:right;display:none; margin-left:10px;" id="btnSC" type="button" onclick="fnSC()">Add Surgery Center</button>
+                               
+                            </div>
+                            <div class="clearfix"></div>
+                            <br />
                         </form>
                         <br />
                         @{
@@ -105,80 +110,80 @@
                                         @{
                                             if (columns.Contains("Sex"))
                                             {
-                                                        <th scope="col" id="sex" onclick="sortTable(1);">Sex</th>
+                                                <th scope="col" id="sex" onclick="sortTable(1);">Sex</th>
                                             }
                                             if (columns.Contains("Name"))
                                             {
-                                                        <th scope="col" id="name" onclick="sortTable(1);">Name</th>
+                                                <th scope="col" id="name" onclick="sortTable(1);">Name</th>
                                             }
                                             if (columns.Contains("Case"))
                                             {
-                                                        <th scope="col" id="case" onclick="sortTable(2);">Case</th>
+                                                <th scope="col" id="case" onclick="sortTable(2);">Case</th>
                                             }
                                             if (columns.Contains("DOB"))
                                             {
-                                                        <th scope="col" id="dob" onclick="sortTable(3);">DOB</th>
+                                                <th scope="col" id="dob" onclick="sortTable(3);">DOB</th>
                                             }
                                             if (columns.Contains("DOA"))
                                             {
-                                                        <th scope="col" id="DOA" onclick="sortTable(4);">DOA</th>
+                                                <th scope="col" id="DOA" onclick="sortTable(4);">DOA</th>
                                             }
                                             if (columns.Contains("DOE"))
                                             {
-                                                        <th scope="col" id="DOE" onclick="sortTable(4);">DOE</th>
+                                                <th scope="col" id="DOE" onclick="sortTable(4);">DOE</th>
                                             }
                                             if (columns.Contains("MCODE"))
                                             {
-                                                        <th scope="col" id="MCODE" onclick="sortTable(5);">MCODE</th>
+                                                <th scope="col" id="MCODE" onclick="sortTable(5);">MCODE</th>
                                             }
                                             if (columns.Contains("Side"))
                                             {
-                                                        <th scope="col" id="Side" onclick="sortTable(9);">Side</th>
+                                                <th scope="col" id="Side" onclick="sortTable(9);">Side</th>
                                             }
                                             if (columns.Contains("Level"))
                                             {
-                                                        <th scope="col" id="Level" onclick="sortTable(10);">Level</th>
+                                                <th scope="col" id="Level" onclick="sortTable(10);">Level</th>
                                             }
                                             if (columns.Contains("Phone"))
                                             {
-                                                        <th scope="col" id="Phone" onclick="sortTable(6);">Phone</th>
+                                                <th scope="col" id="Phone" onclick="sortTable(6);">Phone</th>
                                             }
                                             if (columns.Contains("Location"))
                                             {
-                                                        <th scope="col" id="Location" onclick="sortTable(7);">Location</th>
+                                                <th scope="col" id="Location" onclick="sortTable(7);">Location</th>
                                             }
                                             if (columns.Contains("Insurance"))
                                             {
-                                                        <th scope="col" id="Insurance" onclick="sortTable(8);">Ins co</th>
+                                                <th scope="col" id="Insurance" onclick="sortTable(8);">Ins co</th>
                                             }
 
                                             if (columns.Contains("SC_Name"))
                                             {
-                                                        <th scope="col" id="SurgeryCenter" onclick="sortTable(11);">Surgery Center</th>
+                                                <th scope="col" id="SurgeryCenter" onclick="sortTable(11);">Surgery Center</th>
                                             }
                                             if (columns.Contains("Surgone Name"))
                                             {
-                                                        <th scope="col" id="SurgoneName" onclick="sortTable(12);">Surgone Name</th>
+                                                <th scope="col" id="SurgoneName" onclick="sortTable(12);">Surgone Name</th>
                                             }
                                             if (columns.Contains("ClaimNo"))
                                             {
-                                                        <th scope="col" id="ClaimNo" onclick="sortTable(12);">Claim No</th>
+                                                <th scope="col" id="ClaimNo" onclick="sortTable(12);">Claim No</th>
                                             }
                                             if (columns.Contains("MC"))
                                             {
-                                                        <th scope="col" id="MC" onclick="sortTable(12);">MC</th>
+                                                <th scope="col" id="MC" onclick="sortTable(12);">MC</th>
                                             }
                                             if (columns.Contains("Allergies"))
                                             {
-                                                        <th scope="col" id="Allergies" onclick="sortTable(12);">Allergies</th>
+                                                <th scope="col" id="Allergies" onclick="sortTable(12);">Allergies</th>
                                             }
                                             if (columns.Contains("Note"))
                                             {
-                                                        <th scope="col" id="Note" onclick="sortTable(12);">Note</th>
+                                                <th scope="col" id="Note" onclick="sortTable(12);">Note</th>
                                             }
                                             if (columns.Contains("Request"))
                                             {
-                                                        <th scope="col">Requested</th>
+                                                <th scope="col">Requested</th>
                                             }
                                         }
                                         <th scope="col">Schedule</th>
@@ -203,112 +208,112 @@
                                                 @{
                                                     if (columnsval.Contains("Sex"))
                                                     {
-                                                                <td>@item.gender</td>
+                                                        <td>@item.gender</td>
                                                     }
                                                     if (columnsval.Contains("Name"))
                                                     {
-                                                                <td>@item.name</td>
+                                                        <td>@item.name</td>
                                                     }
                                                     if (columnsval.Contains("Case"))
                                                     {
-                                                                <td>@item.casetype</td>
+                                                        <td>@item.casetype</td>
                                                     }
                                                     if (columnsval.Contains("DOB"))
                                                     {
-                                                                <td>@(item.dob == null ? "" : item.dob.Value.ToString("MM/dd/yyyy"))</td>
+                                                        <td>@(item.dob == null ? "" : item.dob.Value.ToString("MM/dd/yyyy"))</td>
                                                     }
                                                     if (columnsval.Contains("DOA"))
                                                     {
-                                                                <td>@(item.doa == null ? "" : item.doa.Value.ToString("MM/dd/yyyy"))</td>
+                                                        <td>@(item.doa == null ? "" : item.doa.Value.ToString("MM/dd/yyyy"))</td>
                                                     }
                                                     if (columnsval.Contains("DOE"))
                                                     {
-                                                                <td>@(item.doe == null ? "" : item.doe.Value.ToString("MM/dd/yyyy"))</td>
+                                                        <td>@(item.doe == null ? "" : item.doe.Value.ToString("MM/dd/yyyy"))</td>
                                                     }
                                                     if (columnsval.Contains("MCODE"))
                                                     {
-                                                                <td>@item.mcode</td>
+                                                        <td>@item.mcode</td>
                                                     }
                                                     if (columnsval.Contains("Side"))
                                                     {
-                                                                <td>
-                                                                    @if (item.scheduled != null)
+                                                        <td>
+                                                            @if (item.scheduled != null)
                                                             {
-                                                                        <input type="text"
-                                                                               style="width:100px"
-                                                                               name="sides[@item.procedureDetail_id]"
-                                                                               class="form-control sides-input"
-                                                                               value="@item.sides"
-                                                                               data-id="@item.procedureDetail_id"
-                                                                               onChange="fnUpdateSideLevel(@item.procedureDetail_id)"/>
-                                                                        <input type="hidden" value="@item.procedureDetail_id" id="hdnId" />
+                                                                <input type="text"
+                                                                       style="width:100px"
+                                                                       name="sides[@item.procedureDetail_id]"
+                                                                       class="form-control sides-input"
+                                                                       value="@item.sides"
+                                                                       data-id="@item.procedureDetail_id"
+                                                                       onChange="fnUpdateSideLevel(@item.procedureDetail_id)" />
+                                                                <input type="hidden" value="@item.procedureDetail_id" id="hdnId" />
                                                             }
                                                             else
                                                             {
-                                                                        @item.sides
+                                                                @item.sides
                                                             }
-                                                                </td>
+                                                        </td>
                                                     }
                                                     if (columnsval.Contains("Level"))
                                                     {
-                                                                <td>
-                                                                    @if (item.scheduled != null)
+                                                        <td>
+                                                            @if (item.scheduled != null)
                                                             {
-                                                                        <input type="text"
-                                                                               style="width:100px"
-                                                                               name="level[@item.procedureDetail_id]"
-                                                                               class="form-control level-input"
-                                                                               value="@item.level"
-                                                                               data-id="@item.procedureDetail_id"
+                                                                <input type="text"
+                                                                       style="width:100px"
+                                                                       name="level[@item.procedureDetail_id]"
+                                                                       class="form-control level-input"
+                                                                       value="@item.level"
+                                                                       data-id="@item.procedureDetail_id"
                                                                        onChange="fnUpdateSideLevel(@item.procedureDetail_id)" />
-                                                                        @* <input type="hidden" value="@item.level" id="hdnlevel" /> *@
+                                                                @* <input type="hidden" value="@item.level" id="hdnlevel" /> *@
                                                             }
                                                             else
                                                             {
-                                                                        @item.level
+                                                                @item.level
                                                             }
-                                                                </td>
+                                                        </td>
                                                     }
                                                     if (columnsval.Contains("Phone"))
                                                     {
-                                                                <td>@item.phone</td>
+                                                        <td>@item.phone</td>
                                                     }
                                                     if (columnsval.Contains("Location"))
                                                     {
-                                                                <td>@item.location</td>
+                                                        <td>@item.location</td>
                                                     }
                                                     if (columnsval.Contains("Insurance"))
                                                     {
-                                                                <td>@item.cmpname</td>
+                                                        <td>@item.cmpname</td>
                                                     }
 
                                                     if (columnsval.Contains("SC_Name"))
                                                     {
-                                                                <td>@item.sx_center_name</td>
+                                                        <td>@item.sx_center_name</td>
                                                     }
                                                     if (columnsval.Contains("Surgone Name"))
                                                     {
-                                                                <td>@item.surgon_name</td>
+                                                        <td>@item.surgon_name</td>
                                                     }
                                                     if (columnsval.Contains("ClaimNo"))
                                                     {
-                                                                <td>@item.primary_claim_no</td>
+                                                        <td>@item.primary_claim_no</td>
                                                     }
                                                     if (columnsval.Contains("MC"))
                                                     {
-                                                                <td>@item.mc</td>
+                                                        <td>@item.mc</td>
                                                     }
                                                     if (columnsval.Contains("Allergies"))
                                                     {
-                                                                <td>@item.allergies</td>
+                                                        <td>@item.allergies</td>
                                                     }
                                                     if (columnsval.Contains("Note"))
                                                     {
-                                                                <td>@item.note</td>
+                                                        <td>@item.note</td>
                                                     }
                                                     if (columnsval.Contains("Request"))
                                                     {
-                                                                <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
+                                                        <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
                                                     }
 
                                                 }
@@ -318,12 +323,12 @@
                                                     @{
                                                         if (item.scheduled != null)
                                                         {
-                                                                    <button class="btn btn-warning" type="button" onclick="fnScheduledPopup(@item.procedureDetail_id)">Reschedule</button>
+                                                            <button class="btn btn-warning" type="button" onclick="fnScheduledPopup(@item.procedureDetail_id)">Reschedule</button>
                                                         }
 
                                                         if (item.executed != null)
                                                         {
-                                                                    <a onclick="DownloadPdf( @item.id ,'@item.fname ', ' @item.lname ', ' @item.mcode ' )"><i class="btn btn-link" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Download PT FORM"> PT </i></a>
+                                                            <a onclick="DownloadPdf( @item.id ,'@item.fname ', ' @item.lname ', ' @item.mcode ' )"><i class="btn btn-link" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Download PT FORM"> PT </i></a>
                                                         }
                                                     }
 
@@ -654,7 +659,7 @@
 
     function fnUpdateSideLevel(id) {
 
-       
+
 
         var side = $(".sides-input[data-id='" + id + "']").val();
         var level = $(".level-input[data-id='" + id + "']").val();
@@ -679,7 +684,7 @@
     }
 
     function fnUpdatePOCReport() {
-       
+
 
         var arrayIds = '';
         var arraySide = '';
@@ -716,7 +721,7 @@
         }
         var url = '@Url.Action("UpdatePOCReport", "Report")?ids=' + arrayIds + "&side=" + arraySide + "&level=" + arrayLevel;
 
-        
+
 
         $.ajax({
             type: "POST",

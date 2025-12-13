@@ -82,7 +82,7 @@ namespace PainTrax.Web.Controllers
             return View();
         }
 
-        public IActionResult List(string f = "")
+        public IActionResult List(string f = "", string statusFilter = "Active")
         {
             try
             {
@@ -107,10 +107,16 @@ namespace PainTrax.Web.Controllers
                 int recordsTotal = 0;
                 string cnd = " and cmp_id = " + cmpid;
 
+                if (statusFilter == "Active")
+                {
+                    cnd = cnd + " and (is_close=0 or is_close is null) ";
+                }
+                else if (statusFilter == "Inactive")
+                {
+                    cnd = cnd + " and (is_close=1) ";
+                }
 
                 int? locid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
-
-
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
@@ -120,8 +126,8 @@ namespace PainTrax.Web.Controllers
                 }
                 else
                 {
-                    if (locid > 0)
-                        cnd = " and location_id=" + locid;
+                    if (locid > 0 && (statusFilter == "All"))
+                        cnd = cnd + " and location_id=" + locid;
                 }
 
                 if (!string.IsNullOrEmpty(f))
@@ -3134,21 +3140,21 @@ namespace PainTrax.Web.Controllers
 
                 if (patientData.doa == null)
                 {
-                    docName = patientData.lname + ", " + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + patientData.account_no + ".docx";
+                    docName = patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + patientData.account_no + ".docx";
                 }
                 else if (patientData.account_no != null)
                 {
-                    docName = patientData.lname + ", " + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                    docName = patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + patientData.account_no + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
                 }
                 else
-                    docName = patientData.lname + ", " + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
+                    docName = patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_" + Common.commonDate(patientData.doa).Replace("/", "") + ".docx";
                 if (cmpid == "14")
                 {
-                    patientName = patientData.fname + ", " + patientData.lname;
+                    patientName = patientData.lname.Trim() + ", " + patientData.fname.Trim();
                 }
                 else
                 {
-                    patientName = patientData.lname + ", " + patientData.fname;
+                    patientName = patientData.lname.Trim() + ", " + patientData.fname.Trim();
                 }
 
                 dos = patientData.doe == null ? "" : patientData.doe.Value.ToShortDateString();
@@ -3169,7 +3175,7 @@ namespace PainTrax.Web.Controllers
 
                     memStream.WriteTo(fileStream);
                 }
-                injDocName = subPath + "/" + patientData.lname + "," + patientData.fname + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_injection.docx";
+                injDocName = subPath + "/" + patientData.lname.Trim() + ", " + patientData.fname.Trim() + "_IE_" + Common.commonDate(patientData.doe).Replace("/", "") + "_injection.docx";
                 System.IO.File.Delete(injDocName);
                 injHtmlContent = Regex.Replace(injHtmlContent, @"</ol>", string.Empty, RegexOptions.IgnoreCase);
                 injHtmlContent = injHtmlContent.Trim();
@@ -4568,6 +4574,8 @@ namespace PainTrax.Web.Controllers
                     };
                     fu_id = _patientFUservices.Insert(objFU);
 
+
+
                     try
                     {
                         _forwardServices.GetOnePage1(patientIEId, fu_id, cmpid.Value, patientId, fuData.id.Value);
@@ -4638,6 +4646,8 @@ namespace PainTrax.Web.Controllers
                         SaveLog(ex, "CreateFU");
                     }
                 }
+                _ieService.MakePatientActive(patientId);
+
                 var redirectUrl = Url.Action("Create", "FuVisit", new { patientIEId = patientIEId, patientFUId = fu_id, type = type });
                 return Json(new { success = true, redirectUrl = redirectUrl });
             }

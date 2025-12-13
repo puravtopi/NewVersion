@@ -940,4 +940,14 @@ WHERE Executed = @fDate and PatientIE_ID=@ieId;Select 1;", conn);
         return Convert.ToInt32(result);
     }
     #endregion
+
+
+    public void MakePatientActive(int id)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient SET
+		is_close=0	where id=@id ", conn);
+        cm.Parameters.AddWithValue("@id", id);
+       
+        Execute(cm);
+    }
 }

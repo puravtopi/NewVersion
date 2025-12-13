@@ -30,9 +30,9 @@
                             @{
                                 if (HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionRoleAccess).Contains("Add Patient"))
                                 {
-                                            <div class="col-md-12 col-lg-12">
-                                                <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
-                                            </div>
+                                    <div class="col-md-12 col-lg-12">
+                                        <a class="btn btn-success" style="float:right" asp-action="Create" asp-controller="Visit">Add New</a>
+                                    </div>
                                 }
                             }
                         </div>
@@ -162,7 +162,7 @@
                 <div class="modal-body">
                     <input type="hidden" id="type_ie_id" />
                     <input type="hidden" id="type_patient_id" />
-                   @*  <select id="ddlfuType" class="form-select" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.VisitType>()"></select> *@
+                    @*  <select id="ddlfuType" class="form-select" asp-items="Html.GetEnumSelectList<PainTrax.Web.Helper.EnumHelper.VisitType>()"></select> *@
                     <select id="ddlfuType" class="form-select" asp-items="@ViewBag.visitTypeList"></select>
                     <br />
                     <p id="p_error" style="color:red"></p>
@@ -277,13 +277,36 @@
 
         function bindList() {
 
-            var url = '@Url.Action("List", "Visit")?f=' + $("#hfilter").val();
+            var url = '@Url.Action("List", "Visit")';
             var editurl = '@Url.Action("Create", "Visit")';
             var printurl = '@Url.Action("IEPrint", "Visit")';
             var appurl = '@Url.Action("Appointments", "Appointment")';
             var editurldocument = '@Url.Action("Index", "Patientdocument")';
 
             var tab = $("#tbl").DataTable({
+
+
+                initComplete: function () {
+
+                    // Create dropdown
+                    var ddl = `
+                    <select id="statusFilter" class="form-control form-control-sm ml-2" style="width:120px; display:inline-block;">
+                        <option value="All">All</option>
+                        <option value="Active" selected="selected">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                `;
+
+                    // Append dropdown after search box
+                    $('#tbl_filter').append(ddl);
+
+                    // Filter DataTable when dropdown changes
+                    $('#statusFilter').on('change', function () {
+                        var val = $(this).val();
+                        $('#tbl').DataTable().column(3).search(val).draw();  // Column index to filter
+                    });
+                },
+
                 "lengthMenu": [[25, 50, 100], [25, 50, 100]],
                 "pageLength": pageSize,
                 "processing": true, // for show progress bar
@@ -293,7 +316,11 @@
                 "ajax": {
                     "url": url,
                     "type": "POST",
-                    "datatype": "json"
+                    "datatype": "json",
+                    "data": function (d) {
+                        d.f = $("#hfilter").val();
+                        d.statusFilter = $('#statusFilter').val();  // <-- passes dropdown value correctly
+                    }
                 },
 
                 "columns": [
@@ -651,7 +678,7 @@
 
         function fnFuType(id, patientid) {
             $("#type_ie_id").val(id);
-            $("#type_patient_id").val(id);
+            $("#type_patient_id").val(patientid);
             $("#fuModal").modal('show');
         }
 
@@ -697,7 +724,7 @@
                         window.location.href = response.redirectUrl; // Assuming the response contains a redirect URL
                     }
                     else {
-                        if(response.statusCode==401)
+                        if (response.statusCode == 401)
                             $("#p_error").text("MC IE already present for this patient.");
                         else
                             $("#p_error").text(type + " present for this date.");
@@ -886,6 +913,6 @@
 
         }
 
-       
+
     </script>
 </main>

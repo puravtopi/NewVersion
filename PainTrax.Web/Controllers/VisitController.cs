@@ -126,7 +126,7 @@ namespace PainTrax.Web.Controllers
                 }
                 else
                 {
-                    if (locid > 0 && (statusFilter == "All"))
+                    if (locid > 0 && (statusFilter == "Active"))
                         cnd = cnd + " and location_id=" + locid;
                 }
 

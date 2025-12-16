@@ -322,15 +322,15 @@
     </div>
 </div><!-- End Large Modal-->
 @{
-                <input type="hidden" id="hdnHandedness" />
-                <input type="hidden" id="hdnAge" />
-                <input type="hidden" id="hdnDOS" />
-                <input type="hidden" id="hdnGender" />
-                <input type="hidden" id="hdnFname" />
-                <input type="hidden" id="hdnLname" />
-                <input type="hidden" id="hdnDOI" />
-                <input type="hidden" id="hdnaccidentType" />
-                <input type="hidden" id="hdnDOAcc" />
+                            <input type="hidden" id="hdnHandedness" />
+                            <input type="hidden" id="hdnAge" />
+                            <input type="hidden" id="hdnDOS" />
+                            <input type="hidden" id="hdnGender" />
+                            <input type="hidden" id="hdnFname" />
+                            <input type="hidden" id="hdnLname" />
+                            <input type="hidden" id="hdnDOI" />
+                            <input type="hidden" id="hdnaccidentType" />
+                            <input type="hidden" id="hdnDOAcc" />
 
 }
 
@@ -756,74 +756,82 @@
         // First trigger the button click
         $("#btnDaignoCode").trigger("click");
 
-        bootbox.confirm({
+        if (t != null) {
+            bootbox.confirm({
 
-            message: 'Are sure you want to save Details?',
-            swapButtonOrder: true,
-            callback: function (result) {
-                if (result) {
-                    //if (isPage1Valid()) {
-                    var url = '@Url.Action("SavePage1", "Visit")';
-
-                    var myContentDaignosis = ckDaignosis.getData();
-
-                    var model = {
-                        "id": $("#txtId_P1").val(),
-                        "history": ckHistory.getData(),
-                        "appt_reason": ckReason.getData(),
-                        "vital": $("#vital").val(),
-                        "pmh": $("#pmh").val(),
-                        "psh": $("#psh").val(),
-                        "allergies": $("#allergies").val(),
-                        "medication": $("#medication").val(),
-                        "family_history": $("#family_history").val(),
-                        "social_history": $("#social_history").val(),
-                        "cc": ckCC.getData(),
-                        "pe": ckPE.getData(),
-                        "assessment": ckAssessment.getData(),
-                        "plan": ckPlan.getData(),
-                        "rom": "",
-                        "ie_id": $("#id").val(),
-                        "patient_id": $("#patientid").val(),
-                        "bodypart": $("#txtbodypart").val(),
-                        "daignosis_desc": myContentDaignosis,
-                        "daignosis_delimit": myContentDaignosis,
-                        "dd": $("#dd").val(),
-                        "work_status": $("#work_status").val(),
-                        "occupation": $("#occupation").val(),
-                        "impairment_rating": $("#impairment_rating").val(),
-                        "poc_note": $("#poc_note").val(),
-                        "injection_desc": ckInjection.getData(),
-                        "poc_assesment": ckPOCAssestence.getData(),
+                message: 'Are sure you want to save Details?',
+                swapButtonOrder: true,
+                callback: function (result) {
+                    if (result) {
+                        //if (isPage1Valid()) {
+                        Page1Save(t);
+                        //}
                     }
-
-                    $.ajax({
-                        type: "Post",
-                        url: url,
-                        data: model,
-                        contentType: "application/x-www-form-urlencoded",
-                        success: function (data, status, xhr) {
-
-                            if (data > 0) {
-                                $('#myModalMessage').modal('show');
-                                $('#messBody').html('<p>Saved.</p>');
-                                $("#txtId_P1").val(data);
-                                autoclosepopup();
-
-                                fnShowPOC();
-                                if (t != null)
-                                    $(t).tab('show');
-                            }
-                            else
-                                alert("Error in Data Saving.");
-                        },
-                        error: function (xhr, status, error) {
-                            alert("Error!" + xhr.status);
-                        },
-                    });
-                    //}
                 }
-            }
+            });
+        }else{
+            Page1Save(null);
+        }
+    }
+
+    function Page1Save(t) {
+        var url = '@Url.Action("SavePage1", "Visit")';
+
+        var myContentDaignosis = ckDaignosis.getData();
+
+        var model = {
+            "id": $("#txtId_P1").val(),
+            "history": ckHistory.getData(),
+            "appt_reason": ckReason.getData(),
+            "vital": $("#vital").val(),
+            "pmh": $("#pmh").val(),
+            "psh": $("#psh").val(),
+            "allergies": $("#allergies").val(),
+            "medication": $("#medication").val(),
+            "family_history": $("#family_history").val(),
+            "social_history": $("#social_history").val(),
+            "cc": ckCC.getData(),
+            "pe": ckPE.getData(),
+            "assessment": ckAssessment.getData(),
+            "plan": ckPlan.getData(),
+            "rom": "",
+            "ie_id": $("#id").val(),
+            "patient_id": $("#patientid").val(),
+            "bodypart": $("#txtbodypart").val(),
+            "daignosis_desc": myContentDaignosis,
+            "daignosis_delimit": myContentDaignosis,
+            "dd": $("#dd").val(),
+            "work_status": $("#work_status").val(),
+            "occupation": $("#occupation").val(),
+            "impairment_rating": $("#impairment_rating").val(),
+            "poc_note": $("#poc_note").val(),
+            "injection_desc": ckInjection.getData(),
+            "poc_assesment": ckPOCAssestence.getData(),
+        }
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    $("#txtId_P1").val(data);
+                    autoclosepopup();
+
+                    fnShowPOC();
+                    if (t != null)
+                        $(t).tab('show');
+                }
+                else
+                    alert("Error in Data Saving.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
         });
     }
 

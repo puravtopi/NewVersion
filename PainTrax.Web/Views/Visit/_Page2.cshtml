@@ -113,54 +113,64 @@
 
     function fnPage2Save(t) {
 
-        bootbox.confirm({
+        if (t != null) {
+            bootbox.confirm({
 
-            message: 'Are sure you want to save Details?',
-            swapButtonOrder: true,
-            callback: function (result) {
-                if (result) {
-                    var url = '@Url.Action("SavePage2", "Visit")';
-
-                    var model = {
-                        "id": $("#txtId_P2").val(),
-                        "ros": ckROS.getData(),
-                        "aod": ckADL.getData(),
-                        "other": ckOther.getData(),
-                        "ie_id": $("#id").val(),
-                        "patient_id": $("#patientid").val()
+                message: 'Are sure you want to save Details?',
+                swapButtonOrder: true,
+                callback: function (result) {
+                    if (result) {
+                        Page2Save(t);
                     }
-
-
-                    $.ajax({
-                        type: "Post",
-                        url: url,
-                        data: model,
-                        contentType: "application/x-www-form-urlencoded",
-                        success: function (data, status, xhr) {
-
-                            if (data > 0) {
-                                $('#myModalMessage').modal('show');
-                                $('#messBody').html('<p>Saved.</p>');
-                                autoclosepopup();
-
-                                $("#txtId_P2").val(data);
-
-                                if (t != null)
-                                    $(t).tab('show');
-                            }
-                            else
-                                alert("Error in Data Saving.");
-                        },
-                        error: function (xhr, status, error) {
-                            alert("Error!" + xhr.status);
-                        },
-                    });
+                    else {
+                        $(t).tab('show');
+                    }
                 }
-                else {
-                    $(t).tab('show');
-                }
-            }
-        });
+            });
+        }
+        else {
+            Page2Save(t);
+        }
+
     }
 
+    function Page2Save(t) {
+        var url = '@Url.Action("SavePage2", "Visit")';
+
+        var model = {
+            "id": $("#txtId_P2").val(),
+            "ros": ckROS.getData(),
+            "aod": ckADL.getData(),
+            "other": ckOther.getData(),
+            "ie_id": $("#id").val(),
+            "patient_id": $("#patientid").val()
+        }
+
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    autoclosepopup();
+
+                    $("#txtId_P2").val(data);
+
+                    if (t != null)
+                        $(t).tab('show');
+                }
+                else
+                    alert("Error in Data Saving.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+
+    }
 </script>

@@ -134,54 +134,61 @@
 
     function fnNESave(t) {
 
-        bootbox.confirm({
+        if (t != null) {
+            bootbox.confirm({
 
-            message: 'Are sure you want to save Details?',
-            swapButtonOrder: true,
-            callback: function (result) {
+                message: 'Are sure you want to save Details?',
+                swapButtonOrder: true,
+                callback: function (result) {
 
-                if (result) {
-                    var url = '@Url.Action("SaveNE", "Visit")';
-
-                    var model = {
-                        "id": $("#txtId_Ne").val(),
-                        "neurological_exam": ckNE.getData(),
-                        "sensory": ckSE.getData(),
-                        "manual_muscle_strength_testing": ckMMST.getData(),
-                        "other_content": chkOther.getData(),
-                        "ie_id": $("#id").val(),
-                        "patient_id": $("#patientid").val()
+                    if (result) {
+                        NESave(t);
                     }
-
-                    $.ajax({
-                        type: "Post",
-                        url: url,
-                        data: model,
-                        contentType: "application/x-www-form-urlencoded",
-                        success: function (data, status, xhr) {
-
-                            if (data > 0) {
-                                $('#myModalMessage').modal('show');
-                                $('#messBody').html('<p>Saved.</p>');
-                                autoclosepopup();
-                                $("#txtId_Ne").val(data);
-                                if (t != null)
-                                    $(t).tab('show');
-                            }
-                            else
-                                alert("Error in Data Saving.");
-                        },
-                        error: function (xhr, status, error) {
-                            alert("Error!" + xhr.status);
-                        },
-                    });
+                    else {
+                        $(t).tab('show');
+                    }
                 }
-                else {
-                    $(t).tab('show');
-                }
-            }
-        });
+            });
+        } else {
+            NESave(t);
+        }
 
     }
 
+    function NESave(t) {
+        var url = '@Url.Action("SaveNE", "Visit")';
+
+        var model = {
+            "id": $("#txtId_Ne").val(),
+            "neurological_exam": ckNE.getData(),
+            "sensory": ckSE.getData(),
+            "manual_muscle_strength_testing": ckMMST.getData(),
+            "other_content": chkOther.getData(),
+            "ie_id": $("#id").val(),
+            "patient_id": $("#patientid").val()
+        }
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    autoclosepopup();
+                    $("#txtId_Ne").val(data);
+                    if (t != null)
+                        $(t).tab('show');
+                }
+                else
+                    alert("Error in Data Saving.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
 </script>

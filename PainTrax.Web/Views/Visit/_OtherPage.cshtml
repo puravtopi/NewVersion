@@ -134,60 +134,69 @@
 
     function fnOtherSave(t) {
 
-        bootbox.confirm({
+        if (t != null) {
+            bootbox.confirm({
 
-            message: 'Are sure you want to save Details?',
-            swapButtonOrder: true,
-            callback: function (result) {
+                message: 'Are sure you want to save Details?',
+                swapButtonOrder: true,
+                callback: function (result) {
 
-                if (result) {
-
-                    var url = '@Url.Action("SaveOther", "Visit")';
-
-                    var model = {
-                        "id": $("#txtId_Other").val(),
-                        "treatment_details": quillTreatment.root.innerHTML,
-                        "ie_id": $("#id").val(),
-                        "patient_id": $("#patientid").val(),
-                        "treatment_delimit": $("#hidTreatmentIds").val(),
-                        "note1": $("#note1").val(),
-                        "note2": $("#note2").val(),
-                        "note3": $("#note3").val(),
-                        "treatment_delimit_desc": $("#hidTreatmentDesc").val(),
-                        "followup_duration": $("#followup_duration").val(),
-                        "followup_date": $("#followup_date").val()
+                    if (result) {
+                        OtherSave(t);
                     }
-
-
-                    $.ajax({
-                        type: "Post",
-                        url: url,
-                        data: model,
-                        contentType: "application/x-www-form-urlencoded",
-                        success: function (data, status, xhr) {
-
-                            if (data > 0) {
-                                $('#myModalMessage').modal('show');
-                                $('#messBody').html('<p>Saved.</p>');
-                                autoclosepopup();
-                                $("#txtId_Other").val(data);
-                                if (t != null)
-                                    $(t).tab('show');
-                            }
-                            else
-                                alert("Error in Data Saving.");
-                        },
-                        error: function (xhr, status, error) {
-                            alert("Error!" + xhr.status);
-                        },
-                    });
+                    else {
+                        $(t).tab('show');
+                    }
                 }
-                else {
-                    $(t).tab('show');
+            });
+        } else {
+            OtherSave(t);
+        }
+    }
+
+
+    function OtherSave(t) {
+
+        var url = '@Url.Action("SaveOther", "Visit")';
+
+        var model = {
+            "id": $("#txtId_Other").val(),
+            "treatment_details": quillTreatment.root.innerHTML,
+            "ie_id": $("#id").val(),
+            "patient_id": $("#patientid").val(),
+            "treatment_delimit": $("#hidTreatmentIds").val(),
+            "note1": $("#note1").val(),
+            "note2": $("#note2").val(),
+            "note3": $("#note3").val(),
+            "treatment_delimit_desc": $("#hidTreatmentDesc").val(),
+            "followup_duration": $("#followup_duration").val(),
+            "followup_date": $("#followup_date").val()
+        }
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    autoclosepopup();
+                    $("#txtId_Other").val(data);
+                    if (t != null)
+                        $(t).tab('show');
                 }
-            }
+                else
+                    alert("Error in Data Saving.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
         });
     }
+
     function fnTreatmentDetails() {
         var strContent = '<ol>';
         var strIds = '', strDesc = '';

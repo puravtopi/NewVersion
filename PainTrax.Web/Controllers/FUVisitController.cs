@@ -313,9 +313,7 @@ namespace PainTrax.Web.Controllers
                     {
                         var otherIEData = _mapper.Map<tbl_ie_other>(pageOther);
 
-
                         obj.Other = otherIEData;
-
 
                         var tretmentdesc = string.IsNullOrEmpty(pageOther.treatment_delimit_desc) ? null : pageOther.treatment_delimit_desc.Split('^');
 
@@ -329,15 +327,18 @@ namespace PainTrax.Web.Controllers
                             if (!string.IsNullOrEmpty(pageOther.treatment_delimit))
                             {
                                 if (pageOther.treatment_delimit.Contains(item.id.ToString()))
+                                {
+                                    if (tretmentdesc.Length >= (i + 1))
+                                        item.treatment_details = tretmentdesc[i];
                                     item.pre_select = true;
+                                    i++;
+                                }
                                 else
                                     item.pre_select = false;
                             }
-
-                            //if (tretmentdesc != null)
-                            //    item.treatment_details = tretmentdesc[i];
+                                                      
                             lst.Add(item);
-                            i++;
+                       
                         }
 
                         obj.Other.listTreatmentMaster = lst;

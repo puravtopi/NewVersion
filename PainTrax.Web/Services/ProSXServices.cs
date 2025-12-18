@@ -51,7 +51,7 @@ namespace PainTrax.Web.Services
 
         public List<string> GetProSXReportDate(string cmpid)
         {
-            string query = "SELECT DISTINCT DATE_FORMAT(pd.Scheduled, '%m/%d/%Y') AS Scheduled FROM tbl_procedures_details pd WHERE pd.Scheduled IS NOT NULL and pd.cmp_id=" + cmpid + " ORDER BY pd.Scheduled desc";
+            string query = "SELECT DISTINCT DATE_FORMAT(pd.Scheduled, '%m/%d/%Y') AS Scheduled FROM tbl_procedures_details pd WHERE pd.Scheduled IS NOT NULL and pd.cmp_id=" + cmpid + " AND pd.Scheduled > CURDATE() ORDER BY pd.Scheduled desc";
 
             MySqlCommand cm = new MySqlCommand(query, conn);
 

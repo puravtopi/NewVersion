@@ -369,13 +369,13 @@
 
     function fnPage3Save(t) {
 
-        bootbox.confirm({
+        // bootbox.confirm({
 
-            message: 'Are sure you want to save Details?',
-            swapButtonOrder: true,
-            callback: function (result) {
+        //     message: 'Are sure you want to save Details?',
+        //     swapButtonOrder: true,
+        //     callback: function (result) {
 
-                if (result) {
+                // if (result) {
                     var url = '@Url.Action("SavePage3", "Visit")';
                     var ieId = $("#id").val();
                     var patientId = $("#patientid").val();
@@ -443,12 +443,12 @@
                             alert("Error!" + xhr.status);
                         },
                     });
-                }
-                else {
-                    $(t).tab('show');
-                }
-            }
-        });
+                // }
+                // else {
+                //     $(t).tab('show');
+                // }
+        //     }
+        // });
     }
 
     $(".pdate").change(function () {

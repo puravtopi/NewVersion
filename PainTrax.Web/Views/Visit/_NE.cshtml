@@ -135,20 +135,20 @@
     function fnNESave(t) {
 
         if (t != null) {
-            bootbox.confirm({
+            // bootbox.confirm({
 
-                message: 'Are sure you want to save Details?',
-                swapButtonOrder: true,
-                callback: function (result) {
+            //     message: 'Are sure you want to save Details?',
+            //     swapButtonOrder: true,
+            //     callback: function (result) {
 
-                    if (result) {
+            //         if (result) {
                         NESave(t);
-                    }
-                    else {
-                        $(t).tab('show');
-                    }
-                }
-            });
+            //         }
+            //         else {
+            //             $(t).tab('show');
+            //         }
+            //     }
+            // });
         } else {
             NESave(t);
         }

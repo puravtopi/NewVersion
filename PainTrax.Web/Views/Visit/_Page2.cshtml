@@ -114,19 +114,19 @@
     function fnPage2Save(t) {
 
         if (t != null) {
-            bootbox.confirm({
+            // bootbox.confirm({
 
-                message: 'Are sure you want to save Details?',
-                swapButtonOrder: true,
-                callback: function (result) {
-                    if (result) {
+            //     message: 'Are sure you want to save Details?',
+            //     swapButtonOrder: true,
+            //     callback: function (result) {
+            //         if (result) {
                         Page2Save(t);
-                    }
-                    else {
-                        $(t).tab('show');
-                    }
-                }
-            });
+            //         }
+            //         else {
+            //             $(t).tab('show');
+            //         }
+            //     }
+            // });
         }
         else {
             Page2Save(t);

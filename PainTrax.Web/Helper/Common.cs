@@ -283,7 +283,7 @@ namespace PainTrax.Web.Helper
 
         {
 
-            string cnd = "";// " and cmp_id=" + cmp_id;
+            string cnd = " and cmp_id=" + cmp_id;
 
             var data = _pocconfigservices.GetAll(cnd);
 
@@ -366,7 +366,7 @@ namespace PainTrax.Web.Helper
 
         {
 
-            string cnd = "";// " and cmp_id=" + cmp_id;
+            string cnd = " and cmp_id=" + cmp_id;
 
             var data = _pocconfigservices.GetAllExport(cnd);
 

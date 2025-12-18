@@ -757,18 +757,18 @@
         $("#btnDaignoCode").trigger("click");
 
         if (t != null) {
-            bootbox.confirm({
+            // bootbox.confirm({
 
-                message: 'Are sure you want to save Details?',
-                swapButtonOrder: true,
-                callback: function (result) {
-                    if (result) {
+            //     message: 'Are sure you want to save Details?',
+            //     swapButtonOrder: true,
+            //     callback: function (result) {
+            //         if (result) {
                         //if (isPage1Valid()) {
                         Page1Save(t);
                         //}
-                    }
-                }
-            });
+            //         }
+            //     }
+            // });
         }else{
             Page1Save(null);
         }

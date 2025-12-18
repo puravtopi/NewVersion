@@ -1310,23 +1310,23 @@
     function fnDetailsSave(t) {
 
         var isnew = false;
-        bootbox.confirm({
+        // bootbox.confirm({
 
-            message: 'Are sure you want to save Details?',
-            swapButtonOrder: true,
-            buttons: {
-                confirm: {
-                    label: 'Ok',
-                    className: 'btn-primary'
-                },
-                cancel: {
-                    label: 'Cancel',
-                    className: 'btn btn-secondary'
-                }
-            },
-            callback: function (result) {
+        //     message: 'Are sure you want to save Details?',
+        //     swapButtonOrder: true,
+        //     buttons: {
+        //         confirm: {
+        //             label: 'Ok',
+        //             className: 'btn-primary'
+        //         },
+        //         cancel: {
+        //             label: 'Cancel',
+        //             className: 'btn btn-secondary'
+        //         }
+        //     },
+        //     callback: function (result) {
 
-                if (result) {
+                // if (result) {
                     var url = '@Url.Action("SaveDetails", "Visit")';
 
 
@@ -1473,14 +1473,14 @@
                             alert("Error!" + xhr.status);
                         },
                     });
-                }
-                else {
-                    if (t !== null)
-                        $(t).tab('show');
-                    fnShowPOC();
-                }
-            }
-        });
+                // }
+                // else {
+                //     if (t !== null)
+                //         $(t).tab('show');
+                //     fnShowPOC();
+                // }
+            //}
+       // });
     }
     function formatDate(inputDate) {
 

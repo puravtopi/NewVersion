@@ -408,6 +408,12 @@ namespace PainTrax.Web.Controllers
                             case "MC":
                                 dr[col] = user.mc;
                                 break;
+                            case "MC_Details":
+                                dr[col] = user.mc_details;
+                                break;
+                            case "Account_No":
+                                dr[col] = user.account_no;
+                                break;
                             case "Allergies":
                                 dr[col] = user.allergies;
                                 break;

@@ -23,6 +23,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.IO;
 using SkiaSharp;
 using System.Diagnostics.Metrics;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace PainTrax.Web.Controllers
 {
@@ -424,6 +425,18 @@ namespace PainTrax.Web.Controllers
                                 break;
                             case "SC_Name":
                                 dr[col] = user.sx_center_name;
+                                break;
+                            case "account_no":
+                                dr[col] = user.account_no;
+                                break;
+                            case "Policy":
+                                dr[col] = user.PolicyNo;
+                                break;
+                            case "Attorney":
+                                dr[col] = user.Attorney;
+                                break;
+                            case "Vaccinated":
+                                dr[col] = user.vaccinated;
                                 break;
                             default:
                                 dr[col] = "";
@@ -1625,13 +1638,16 @@ namespace PainTrax.Web.Controllers
                      new DataColumn("Vac_Status", typeof(string)),
                      new DataColumn("Scheduled", typeof(string)),
                      new DataColumn("Executed", typeof(string)),
-                     new DataColumn("Requested", typeof(string))
+                     new DataColumn("Requested", typeof(string)),
+                     new DataColumn("DOE", typeof(string)),
+                     new DataColumn("PolicyNo", typeof(string)),
+                     new DataColumn("Attorney", typeof(string))                    
                 });
 
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var t in data)
                 {
-                    dt.Rows.Add(t.name, t.sex, t.mc, t.casetype, t.location, t.vaccinated, t.mcode, t.bodypart, t.ins_ver_status, t.mc_status, t.case_status, t.insverstatus, t.vac_status, t.scheduled, t.executed, t.requested);//, IVFR.scheduled == null ? "" : IVFR.scheduled.Value.ToShortDateString());
+                    dt.Rows.Add(t.name, t.sex, t.mc, t.casetype, t.location, t.vaccinated, t.mcode, t.bodypart, t.ins_ver_status, t.mc_status, t.case_status, t.insverstatus, t.vac_status, t.scheduled, t.executed, t.requested, t.DOE == null ? "" : t.DOE.Value.ToShortDateString(),t.PolicyNo,t.Attorney);//, IVFR.scheduled == null ? "" : IVFR.scheduled.Value.ToShortDateString());
                 }
 
                 // Create a new Excel file

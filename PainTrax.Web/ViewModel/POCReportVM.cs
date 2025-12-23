@@ -50,6 +50,6 @@ namespace PainTrax.Web.ViewModel
         public bool _requested { get; set; }
         public bool _executed { get; set; }
         public bool _scheduled { get; set; }
-        public string account_no { get; set; }
+       
     }
 }

@@ -2165,7 +2165,7 @@ namespace PainTrax.Web.Controllers
                               DaignoCodeId = c.Id.Value,
                               Description = c.Description,
                               DiagCode = c.DiagCode,
-                              IsSelect = assetment != null ? (assetment.IndexOf(c.Description) > 0 ? true : c.PreSelect) : false,
+                              IsSelect = assetment != null ? (assetment.IndexOf(c.Description) > 0 ? true : c.PreSelect) : c.PreSelect,
                               Display_Order = c.display_order,
                               cmp_id = c.cmp_id
 

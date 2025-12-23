@@ -5,6 +5,9 @@ namespace PainTrax.Web.ViewModel
 {
     public class ProSXDetailsReportVM
     {
+        public string Attorney { get; set; }
+        public DateTime? DOE { get; set; }
+        public string PolicyNo { get; set; }
         public int ProcedureDetail_ID { get; set; }
         public string sex { get; set; }
         public string name { get; set; }

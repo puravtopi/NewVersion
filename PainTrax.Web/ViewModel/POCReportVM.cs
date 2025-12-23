@@ -4,6 +4,7 @@ namespace PainTrax.Web.ViewModel
 {
     public class POCReportVM
     {
+        public string Attorney { get; set; }
         public int id { get; set; }
         public string lname { get; set; }
         public string fname { get; set; }
@@ -18,7 +19,7 @@ namespace PainTrax.Web.ViewModel
         public string mc_details { get; set; }
         public string account_no { get; set; }
         public string phone { get; set; }
-        public string primary_policy_no { get; set; }
+        public string PolicyNo { get; set; }
         public string primary_claim_no { get; set; }
         public string cmpname { get; set; }
         public string allergies { get; set; }
@@ -49,5 +50,6 @@ namespace PainTrax.Web.ViewModel
         public bool _requested { get; set; }
         public bool _executed { get; set; }
         public bool _scheduled { get; set; }
+        public string account_no { get; set; }
     }
 }

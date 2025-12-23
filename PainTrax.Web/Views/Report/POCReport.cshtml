@@ -182,10 +182,27 @@
                                             {
                                                 <th scope="col" id="Note" onclick="sortTable(12);">Note</th>
                                             }
+                                            if (columns.Contains("Attorney"))
+                                            {
+                                                <th scope="col" id="Attorney" onclick="sortTable(1);">Attorney</th>
+                                            }
+                                            if (columns.Contains("account_no"))
+                                            {
+                                                <th scope="col" id="account_no" onclick="sortTable(1);">AccountNo</th>
+                                            }
+                                            if (columns.Contains("Policy"))
+                                            {
+                                                <th scope="col" id="PolicyNo" onclick="sortTable(1);">PolicyNo</th>
+                                            }
+                                            if (columns.Contains("Vaccinated"))
+                                            {
+                                                <th scope="col" id="vaccinated" onclick="sortTable(1);">Vaccinated</th>
+                                            }
                                             if (columns.Contains("Request"))
                                             {
                                                 <th scope="col">Requested</th>
                                             }
+                                            
                                         }
                                         <th scope="col">Schedule</th>
                                         <th scope="col">Executed</th>
@@ -312,10 +329,27 @@
                                                     {
                                                         <td>@item.note</td>
                                                     }
+                                                    if (columnsval.Contains("Attorney"))
+                                                    {
+                                                        <td>@item.Attorney</td>
+                                                    }
+                                                    if (columnsval.Contains("account_no"))
+                                                    {
+                                                        <td>@item.account_no</td>
+                                                    }
+                                                    if (columnsval.Contains("Policy"))
+                                                    {
+                                                        <td>@item.PolicyNo</td>
+                                                    }
+                                                    if (columnsval.Contains("Vaccinated"))
+                                                    {
+                                                        <td>@item.vaccinated</td>
+                                                    }
                                                     if (columnsval.Contains("Request"))
                                                     {
                                                         <td><label id="lblreq">@(item.requested == null ? "" : item.requested.Value.ToString("MM/dd/yyyy"))</label></td>
                                                     }
+                                                    
 
                                                 }
                                                 <td><label id="lblsche">@(item.scheduled == null ? "" : item.scheduled.Value.ToString("MM/dd/yyyy"))</label></td>

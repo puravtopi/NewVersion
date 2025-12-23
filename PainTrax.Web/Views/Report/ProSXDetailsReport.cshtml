@@ -63,6 +63,9 @@
                         <table id="tbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
+                                        <th scope="col">Attorney</th>
+                                        <th scope="col">DOE</th>
+                                        <th scope="col">PolicyNo</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">SEX</th>
                                    @*  <th scope="col">NAME</th> *@
@@ -88,6 +91,10 @@
                                     @foreach (var item in Model.lstProSXDetailsReport)
                                     {
                                         <tr>
+                                                <td>@item.Attorney</td>
+
+                                                <td>@(item.DOE == null ? "" : item.DOE.Value.ToString("MM/dd/yyyy"))</td>
+                                                <td>@item.PolicyNo</td>
                                             <td>@item.name</td>
                                             <td>@item.sex</td>
                                             <td>@item.mc</td>

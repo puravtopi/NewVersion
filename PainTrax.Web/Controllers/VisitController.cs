@@ -442,8 +442,11 @@ namespace PainTrax.Web.Controllers
                                 {
                                     if (pageOther.treatment_delimit.Contains(item.id.ToString()))
                                     {
-                                        if (tretmentdesc.Length >= (i + 1))
-                                            item.treatment_details = tretmentdesc[i];
+                                        if (tretmentdesc != null)
+                                        {
+                                            if (tretmentdesc.Length >= (i + 1))
+                                                item.treatment_details = tretmentdesc[i];
+                                        }
                                         item.pre_select = true;
                                         i++;
                                     }
@@ -660,6 +663,8 @@ namespace PainTrax.Web.Controllers
                     obj.Page3.other6_comma = (obj.Page3.other6_comma == null) ? _page3Setting.other6_comma : obj.Page3.other6_comma;
                     obj.Page3.other7_study = (obj.Page3.other7_study == null) ? "0" : obj.Page3.other7_study;
                     obj.Page3.other7_comma = (obj.Page3.other7_comma == null) ? _page3Setting.other7_comma : obj.Page3.other7_comma;
+
+                    obj.Page3.gait = _page3Setting.gait_default;
                 }
 
             }
@@ -2647,7 +2652,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#ln", patientData.lname);
                     body = body.Replace("#gender", Common.GetMrMrsFromSex(patientData.gender));
                     body = body.Replace("#sex", sex);
-                    //body = body.Replace("#sex", char.ToUpper(sex[0]) + sex.Substring(1));
+                    body = body.Replace("#accountno", patientData.account_no);
 
 
                     body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));

@@ -328,8 +328,11 @@ namespace PainTrax.Web.Controllers
                             {
                                 if (pageOther.treatment_delimit.Contains(item.id.ToString()))
                                 {
-                                    if (tretmentdesc.Length >= (i + 1))
-                                        item.treatment_details = tretmentdesc[i];
+                                    if (tretmentdesc != null)
+                                    {
+                                        if (tretmentdesc.Length >= (i + 1))
+                                            item.treatment_details = tretmentdesc[i];
+                                    }
                                     item.pre_select = true;
                                     i++;
                                 }
@@ -2719,6 +2722,7 @@ namespace PainTrax.Web.Controllers
                     body = body.Replace("#ln", patientData.lname);
                     body = body.Replace("#gender", Common.GetMrMrsFromSex(patientData.gender));
                     body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
+                    body = body.Replace("#accountno", patientData.account_no);
 
                     if (patientData.compensation == "WC")
                     {

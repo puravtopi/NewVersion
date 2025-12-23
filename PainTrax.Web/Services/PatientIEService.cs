@@ -46,12 +46,12 @@ public class PatientIEService : ParentService
             query = query + cnd;
         DataTable dt = new DataTable();
         MySqlCommand cm = new MySqlCommand(query, conn);
-      
+
         var datalist = ConvertDataTable<tbl_patient_ie>(GetData(cm)).FirstOrDefault();
         return datalist;
     }
 
-    public tbl_patient_fu? GetLastFU(int data,string type)
+    public tbl_patient_fu? GetLastFU(int data, string type)
     {
         DataTable dt = new DataTable();
         MySqlCommand cm = new MySqlCommand("select * from tbl_patient_fu where patientIE_ID=@id and ((@type = 'FU' AND type IN ('FU', 'Tele FU')) OR (@type = 'Tele FU' AND type IN ('FU', 'Tele FU')) OR (@type != 'FU' AND type = @type)) order by id desc LIMIT 1", conn);
@@ -61,7 +61,7 @@ public class PatientIEService : ParentService
         return datalist;
     }
 
-    public tbl_patient_fu? IsMCIEPresent(int id,int cmp_id)
+    public tbl_patient_fu? IsMCIEPresent(int id, int cmp_id)
     {
         DataTable dt = new DataTable();
         MySqlCommand cm = new MySqlCommand("select cmp_id from tbl_patient_fu where patientIE_ID=@id and type = 'MC IE' and cmp_id=@cmpid order by id desc LIMIT 1", conn);
@@ -165,7 +165,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@ins_note", data.ins_note);
         cm.Parameters.AddWithValue("@alert_note", data.alert_note);
         cm.Parameters.AddWithValue("@updated_by", data.updated_by);
-       
+
         cm.Parameters.AddWithValue("@is_active", data.is_active);
         cm.Parameters.AddWithValue("@referring_physician", data.referring_physician);
         cm.Parameters.AddWithValue("@accident_type", data.accident_type);
@@ -200,13 +200,13 @@ public class PatientIEService : ParentService
 		is_active=@is_active		where id=@id", conn);
         cm.Parameters.AddWithValue("@id", data.id);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
-       
+
         cm.Parameters.AddWithValue("@attorney_id", data.attorney_id);
         cm.Parameters.AddWithValue("@primary_ins_cmp_id", data.primary_ins_cmp_id);
         cm.Parameters.AddWithValue("@secondary_ins_cmp_id", data.secondary_ins_cmp_id);
         cm.Parameters.AddWithValue("@emp_id", data.emp_id);
         cm.Parameters.AddWithValue("@adjuster_id", data.adjuster_id);
-     
+
         cm.Parameters.AddWithValue("@doa", data.doa);
         cm.Parameters.AddWithValue("@primary_claim_no", data.primary_claim_no);
         cm.Parameters.AddWithValue("@secondary_claim_no", data.secondary_claim_no);
@@ -226,7 +226,7 @@ public class PatientIEService : ParentService
         Execute(cm);
     }
 
-    public void Delete(int id,int pid)
+    public void Delete(int id, int pid)
     {
         MySqlCommand cm = new MySqlCommand(@"DELETE FROM tbl_patient_ie
 		where id=@id;DELETE from tbl_patient where id=@pid;", conn);
@@ -235,7 +235,7 @@ public class PatientIEService : ParentService
         Execute(cm);
     }
 
-    public void UpdateProcedurePerformed(string id,string procedure_performed)
+    public void UpdateProcedurePerformed(string id, string procedure_performed)
     {
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient_ie SET
 		procedure_performed=@procedure_performed	
@@ -269,7 +269,7 @@ public class PatientIEService : ParentService
 
     public void UpdateProcedurePerformedOldId(string id, string procedure_performed)
     {
-      
+
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient_ie SET
 		procedure_performed=@procedure_performed	
         where old_id=@id and cmp_id=18", conn);
@@ -278,24 +278,24 @@ public class PatientIEService : ParentService
         Execute(cm);
     }
 
-    public void UpdateMCNoteOldId(string id, string mc,string note)
+    public void UpdateMCNoteOldId(string id, string mc, string note)
     {
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient SET
 		mc=@mc	where old_id=@id and cmp_id=18", conn);
         cm.Parameters.AddWithValue("@id", id);
         cm.Parameters.AddWithValue("@mc", mc);
-       // cm.Parameters.AddWithValue("@mc_details", note);
+        // cm.Parameters.AddWithValue("@mc_details", note);
 
         Execute(cm);
     }
 
-    public void UpdateNoteOldId(string id,  string note)
+    public void UpdateNoteOldId(string id, string note)
     {
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient SET
 		mc_details=@mc_details	
         where old_id=@id and cmp_id=18", conn);
         cm.Parameters.AddWithValue("@id", id);
-       
+
         cm.Parameters.AddWithValue("@mc_details", note);
         Execute(cm);
     }
@@ -389,18 +389,18 @@ poc_assesment=@poc_assesment
         return datalist;
     }
 
-    public int UpdatePage1Plan(int id,string plan)
+    public int UpdatePage1Plan(int id, string plan)
     {
         MySqlCommand cm = new MySqlCommand(@"update tbl_ie_page1 set
 		plan=@plan
        
         where ie_id=@id
 				 ;select 1;", conn);
-       
-        cm.Parameters.AddWithValue("@id", id);     
-        cm.Parameters.AddWithValue("@plan",plan);
-      
-      
+
+        cm.Parameters.AddWithValue("@id", id);
+        cm.Parameters.AddWithValue("@plan", plan);
+
+
         var result = ExecuteScalar(cm);
         return result;
     }
@@ -849,7 +849,7 @@ poc_assesment=@poc_assesment
         cm.Parameters.AddWithValue("@followup_date", data.followup_date);
         cm.Parameters.AddWithValue("@followup_duration", data.followup_duration);
         cm.Parameters.AddWithValue("@treatment_delimit", data.treatment_delimit == null ? "" : data.treatment_delimit.TrimStart(','));
-        cm.Parameters.AddWithValue("@treatment_delimit_desc", data.treatment_delimit_desc == null ?"": data.treatment_delimit_desc.TrimStart('^'));
+        cm.Parameters.AddWithValue("@treatment_delimit_desc", data.treatment_delimit_desc == null ? "" : data.treatment_delimit_desc.TrimStart('^'));
         Execute(cm);
     }
 
@@ -927,7 +927,7 @@ poc_assesment=@poc_assesment
     #endregion
 
     #region POC
-    public int UpdateProcedureExecuteDate(string fDate,string tDate,string ieId)
+    public int UpdateProcedureExecuteDate(string fDate, string tDate, string ieId)
     {
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_procedures_details
 SET Executed = @tDate
@@ -947,7 +947,19 @@ WHERE Executed = @fDate and PatientIE_ID=@ieId;Select 1;", conn);
         MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_patient SET
 		is_close=0	where id=@id ", conn);
         cm.Parameters.AddWithValue("@id", id);
-       
+
         Execute(cm);
+    }
+
+    public DataTable GetFalseMCIds(string cnd = "")
+    {
+        string query = "SELECT old_id,id FROM tbl_patient WHERE mc='False' ";
+
+        if (!string.IsNullOrEmpty(query))
+            query = query + cnd;
+
+
+        var dataList = GetData(query);
+        return dataList;
     }
 }

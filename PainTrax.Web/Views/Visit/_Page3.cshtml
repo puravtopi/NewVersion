@@ -368,87 +368,90 @@
     var ckDisMediction;
 
     function fnPage3Save(t) {
+        if (t != null) {
+            // bootbox.confirm({
 
-        // bootbox.confirm({
+            //     message: 'Are sure you want to save Details?',
+            //     swapButtonOrder: true,
+            //     callback: function (result) {
+            //         if (result) {
+            fnPage3Save(t);
+            //         }
+            //         else {
+            //             $(t).tab('show');
+            //         }
+            //     }
+            // });
+        }
+        else {
+            fnPage3Save(t);
+        }
+    }
 
-        //     message: 'Are sure you want to save Details?',
-        //     swapButtonOrder: true,
-        //     callback: function (result) {
+    function Page3Save(t) {
+        var url = '@Url.Action("SavePage3", "Visit")';
+        var ieId = $("#id").val();
+        var patientId = $("#patientid").val();
+        var Id = $("#txtId_P3").val();
+        var model = $("#frmPage3_1,#frmPage3_2").serialize() + "&ieid=" + ieId + "&patientid=" + patientId + "&id=" + Id + "&discharge_medications=" + ckDisMediction.getData();
 
-                // if (result) {
-                    var url = '@Url.Action("SavePage3", "Visit")';
-                    var ieId = $("#id").val();
-                    var patientId = $("#patientid").val();
-                    var Id = $("#txtId_P3").val();
-                    var model = $("#frmPage3_1,#frmPage3_2").serialize() + "&ieid=" + ieId + "&patientid=" + patientId + "&id=" + Id + "&discharge_medications=" + ckDisMediction.getData();
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
 
-                    $.ajax({
-                        type: "Post",
-                        url: url,
-                        data: model,
-                        contentType: "application/x-www-form-urlencoded",
-                        success: function (data, status, xhr) {
+                var daignoCodeDetails = "<ol>";
 
+                if ($("#diagcervialbulge_text").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diagcervialbulge_text").val() + "</li>";
+                }
+                if ($("#diagcervialbulge_hnp1").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diagcervialbulge_hnp1").val() + "</li>";
+                }
+                if ($("#diagcervialbulge_hnp2").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diagcervialbulge_hnp2").val() + "</li>";
+                }
 
+                if ($("#diagthoracicbulge_text").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diagthoracicbulge_text").val() + "</li>";
+                }
+                if ($("#diagthoracicbulge_hnp1").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diagthoracicbulge_hnp1").val() + "</li>";
+                }
+                if ($("#diagthoracicbulge_hnp2").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diagthoracicbulge_hnp2").val() + "</li>";
+                }
 
+                if ($("#diaglumberbulge_text").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diaglumberbulge_text").val() + "</li>";
+                }
+                if ($("#diaglumberbulge_hnp1").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diaglumberbulge_hnp1").val() + "</li>";
+                }
+                if ($("#diaglumberbulge_hnp2").val() != '') {
+                    daignoCodeDetails += "<li>" + $("#diaglumberbulge_hnp2").val() + "</li>";
+                }
 
+                var htmlDaignosis = daignoCodeDetails + "</ol>";
+                ckPOCAssestence.data.set(htmlDaignosis);
 
-                            var daignoCodeDetails = "<ol>";
-
-                            if ($("#diagcervialbulge_text").val() != '') {
-                                daignoCodeDetails += "<li>" + $("#diagcervialbulge_text").val() + "</li>";
-                            }
-                            if ($("#diagcervialbulge_hnp1").val() != '') {
-                                daignoCodeDetails += "<li>" + $("#diagcervialbulge_hnp1").val() + "</li>";
-                            }
-                            if ($("#diagcervialbulge_hnp2").val() != '') {
-                                daignoCodeDetails += "<li>" + $("#diagcervialbulge_hnp2").val() + "</li>";
-                            }
-
-                            if ($("#diagthoracicbulge_text").val() != '') {
-                                daignoCodeDetails += "<li>" + $("#diagthoracicbulge_text").val() + "</li>";
-                            }
-                            if ($("#diagthoracicbulge_hnp1").val() != '') {
-                                daignoCodeDetails += "<li>" + $("#diagthoracicbulge_hnp1").val() + "</li>";
-                            }
-                            if ($("#diagthoracicbulge_hnp2").val() != '') {
-                                daignoCodeDetails += "<li>" + $("#diagthoracicbulge_hnp2").val() + "</li>";
-                            }
-
-                            if ($("#diaglumberbulge_text").val() != '') {
-                                daignoCodeDetails += "<li>" + $("#diaglumberbulge_text").val() + "</li>";
-                            }
-                            if ($("#diaglumberbulge_hnp1").val() != '') {
-                                daignoCodeDetails += "<li>" + $("#diaglumberbulge_hnp1").val() + "</li>";
-                            }
-                            if ($("#diaglumberbulge_hnp2").val() != '') {
-                                daignoCodeDetails += "<li>" + $("#diaglumberbulge_hnp2").val() + "</li>";
-                            }
-
-                            var htmlDaignosis = daignoCodeDetails + "</ol>";
-                            ckPOCAssestence.data.set(htmlDaignosis);
-
-                            if (data > 0) {
-                                $('#myModalMessage').modal('show');
-                                $('#messBody').html('<p>Saved.</p>');
-                                autoclosepopup();
-                                $("#txtId_P3").val(data);
-                                if (t != null)
-                                    $(t).tab('show');
-                            }
-                            else
-                                alert("Error in Data Saving.");
-                        },
-                        error: function (xhr, status, error) {
-                            alert("Error!" + xhr.status);
-                        },
-                    });
-                // }
-                // else {
-                //     $(t).tab('show');
-                // }
-        //     }
-        // });
+                if (data > 0) {
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    autoclosepopup();
+                    $("#txtId_P3").val(data);
+                    if (t != null)
+                        $(t).tab('show');
+                }
+                else
+                    alert("Error in Data Saving.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
     }
 
     $(".pdate").change(function () {

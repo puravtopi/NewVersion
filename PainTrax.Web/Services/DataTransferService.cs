@@ -11,7 +11,7 @@ namespace PainTrax.Web.Services
 {
     public class DataTransferService
     {
-        private  string _sqlServerConn;
+        private string _sqlServerConn;
 
         private readonly ProcedureService _procedureService = new ProcedureService();
         private readonly PatientIEService _patientIEService = new PatientIEService();
@@ -38,8 +38,8 @@ namespace PainTrax.Web.Services
                 _logServices.Insert(log);
             }
 
-              
-            
+
+
         }
 
         public int TransferEmployees()
@@ -130,9 +130,9 @@ namespace PainTrax.Web.Services
                         Subcode = row["Subcode"] != DBNull.Value ? row["Subcode"].ToString() : null,
                         Vac_Note = null,
                         Vac_Status = null,
-                        ADesc= row["ADesc"] != DBNull.Value ? row["ADesc"].ToString() : null,
-                        E_ADesc= row["E_ADesc"] != DBNull.Value ? row["E_ADesc"].ToString() : null,
-                        S_ADesc= row["S_ADesc"] != DBNull.Value ? row["S_ADesc"].ToString() : null,
+                        ADesc = row["ADesc"] != DBNull.Value ? row["ADesc"].ToString() : null,
+                        E_ADesc = row["E_ADesc"] != DBNull.Value ? row["E_ADesc"].ToString() : null,
+                        S_ADesc = row["S_ADesc"] != DBNull.Value ? row["S_ADesc"].ToString() : null,
 
                     };
                     _pocServices.SaveProcedureDetailsBHF(vm);
@@ -209,23 +209,46 @@ namespace PainTrax.Web.Services
                 //    _patientIEService.UpdateNoteOldId(row["Patient_ID"].ToString(), row["InsNote"].ToString());
                 //}
 
-                using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
+                //using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
+                //{
+                //    sqlConn.Open();
+                //    string sqlQuery = "select p.Patient_ID,p.MC,p.Note from tblPatientMaster p where (p.mc is not null and p.mc<>'')";
+
+                //    SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
+                //    DataSet dataSet = new DataSet();
+                //    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(cmd);
+                //    sqlDataAdapter.Fill(dataSet);
+
+                //    pdVM = dataSet;
+
+                //}
+
+                //foreach (DataRow row in pdVM.Tables[0].Rows)
+                //{
+                //    _patientIEService.UpdateMCNoteOldId(row["Patient_ID"].ToString(), row["MC"].ToString(), row["Note"].ToString());
+                //}
+
+                var data = _patientIEService.GetFalseMCIds(" and cmp_id=18 AND old_id IS NOT null");
+
+                for (var i = 0; i < data.Rows.Count; i++)
                 {
-                    sqlConn.Open();
-                    string sqlQuery = "select p.Patient_ID,p.MC,p.Note from tblPatientMaster p where (p.mc is not null and p.mc<>'')";
+                    using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
+                    {
+                        sqlConn.Open();
+                        string sqlQuery = "select mc from tblPatientMaster where Patient_ID=" + data.Rows[i]["old_id"];
 
-                    SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
-                    DataSet dataSet = new DataSet();
-                    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(cmd);
-                    sqlDataAdapter.Fill(dataSet);
+                        SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
+                        DataSet dataSet = new DataSet();
+                        SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(cmd);
+                        sqlDataAdapter.Fill(dataSet);
+                        sqlConn.Close();
 
-                    pdVM = dataSet;
-
-                }
-
-                foreach (DataRow row in pdVM.Tables[0].Rows)
-                {
-                    _patientIEService.UpdateMCNoteOldId(row["Patient_ID"].ToString(), row["MC"].ToString(), row["Note"].ToString());
+                        if (dataSet != null)
+                        {
+                            if (dataSet.Tables[0].Rows.Count > 0)
+                                _patientIEService.UpdateMCNoteOldId(data.Rows[i]["old_id"].ToString(), dataSet.Tables[0].Rows[0]["MC"].ToString(), "");
+                        }
+                    }
                 }
             }
             catch (Exception ex)

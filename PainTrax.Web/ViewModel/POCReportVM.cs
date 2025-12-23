@@ -15,6 +15,8 @@ namespace PainTrax.Web.ViewModel
         public DateTime? doe { get; set; }
         public DateTime? doa { get; set; }
         public string mc { get; set; }
+        public string mc_details { get; set; }
+        public string account_no { get; set; }
         public string phone { get; set; }
         public string primary_policy_no { get; set; }
         public string primary_claim_no { get; set; }

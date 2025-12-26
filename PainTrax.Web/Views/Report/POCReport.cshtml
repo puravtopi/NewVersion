@@ -121,6 +121,10 @@
                                             {
                                                 <th scope="col" id="case" onclick="sortTable(2);">Case</th>
                                             }
+                                            if (columns.Contains("DOE"))
+                                            {
+                                                <th scope="col" id="DOE" onclick="sortTable(4);">DOE</th>
+                                            }
                                             if (columns.Contains("DOB"))
                                             {
                                                 <th scope="col" id="dob" onclick="sortTable(3);">DOB</th>
@@ -129,10 +133,7 @@
                                             {
                                                 <th scope="col" id="DOA" onclick="sortTable(4);">DOA</th>
                                             }
-                                            if (columns.Contains("DOE"))
-                                            {
-                                                <th scope="col" id="DOE" onclick="sortTable(4);">DOE</th>
-                                            }
+                                           
                                             if (columns.Contains("MCODE"))
                                             {
                                                 <th scope="col" id="MCODE" onclick="sortTable(5);">MCODE</th>
@@ -236,6 +237,10 @@
                                                     {
                                                         <td>@item.casetype</td>
                                                     }
+                                                    if (columnsval.Contains("DOE"))
+                                                    {
+                                                        <td>@(item.doe == null ? "" : item.doe.Value.ToString("MM/dd/yyyy"))</td>
+                                                    }
                                                     if (columnsval.Contains("DOB"))
                                                     {
                                                         <td>@(item.dob == null ? "" : item.dob.Value.ToString("MM/dd/yyyy"))</td>
@@ -244,10 +249,7 @@
                                                     {
                                                         <td>@(item.doa == null ? "" : item.doa.Value.ToString("MM/dd/yyyy"))</td>
                                                     }
-                                                    if (columnsval.Contains("DOE"))
-                                                    {
-                                                        <td>@(item.doe == null ? "" : item.doe.Value.ToString("MM/dd/yyyy"))</td>
-                                                    }
+                                                    
                                                     if (columnsval.Contains("MCODE"))
                                                     {
                                                         <td>@item.mcode</td>
@@ -333,9 +335,9 @@
                                                     {
                                                         <td>@item.Attorney</td>
                                                     }
-                                                    if (columnsval.Contains("account_no"))
+                                                    if (columnsval.Contains("Account_no"))
                                                     {
-                                                        <td>@item.account_no</td>
+                                                        <td>@item.acct_no</td>
                                                     }
                                                     if (columnsval.Contains("Policy"))
                                                     {

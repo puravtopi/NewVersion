@@ -412,7 +412,7 @@ namespace PainTrax.Web.Controllers
                                 dr[col] = user.mc_details;
                                 break;
                             case "Account_No":
-                                dr[col] = user.account_no;
+                                dr[col] = user.acct_no;
                                 break;
                             case "Allergies":
                                 dr[col] = user.allergies;
@@ -433,7 +433,7 @@ namespace PainTrax.Web.Controllers
                                 dr[col] = user.sx_center_name;
                                 break;
                             case "account_no":
-                                dr[col] = user.account_no;
+                                dr[col] = user.acct_no;
                                 break;
                             case "Policy":
                                 dr[col] = user.PolicyNo;

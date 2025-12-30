@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml;
 using HtmlToOpenXml;
@@ -455,7 +456,7 @@ namespace PainTrax.Web.Controllers
                                 }
 
                                 lst.Add(item);
-                                
+
                             }
                         }
                         catch (Exception ex)
@@ -2393,13 +2394,13 @@ namespace PainTrax.Web.Controllers
 
 
         [HttpPost]
-        public IActionResult DeleteIE(int ieId, int pId)
+        public IActionResult DeleteIE(int ieId, int pId, string pName)
         {
             try
             {
                 _ieService.Delete(ieId, pId);
                 string cmpid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
-                string msg = "IEID: " + ieId + " and PId: " + pId + " is deleted by " + HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId).ToString() + " in company id: " + cmpid;
+                string msg = "IEID: " + ieId + " and PId: " + pId + ", PatientName: " + pName + " is deleted by " + HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId).ToString() + " in company id: " + cmpid;
                 var logdata = new tbl_log
                 {
                     CreatedDate = DateTime.Now,

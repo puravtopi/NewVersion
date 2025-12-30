@@ -2122,11 +2122,20 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteFU(int fuId)
+        public IActionResult DeleteFU(int fuId,string pName)
         {
             try
             {
                 _patientFuservices.Delete(fuId);
+                string cmpid = HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
+                string msg = "FUID: " + fuId + " and PatientName: " + pName + " is deleted by " + HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId).ToString() + " in company id: " + cmpid;
+                var logdata = new tbl_log
+                {
+                    CreatedDate = DateTime.Now,
+                    CreatedBy = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId),
+                    Message = msg
+                };
+                new LogService().Insert(logdata);
             }
             catch (Exception ex)
             {

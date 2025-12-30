@@ -25,16 +25,30 @@ namespace PainTrax.Web.Services
 
         public List<ProSXReportVM> GetProSXReport(string cnd)
         {
+            // string query = "SELECT DISTINCT tp.ProcedureDetail_ID, CONCAT(pm.lname,' ',pm.fname)as 'Name',pm.dob as DOB,pm.mobile as Phone,ie.primary_claim_no AS ClaimNumber,(SELECT ins.cmpname FROM tbl_inscos ins WHERE ins.id =ie.primary_ins_cmp_id) AS Insurance,p1.allergies AS Allergies,pm.MC AS MC,ie.Compensation AS 'CaseType' ," +
+            //"lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE, " +
+            // "CASE when pm.gender = '1' THEN 'M' when pm.gender = '2' then 'F' when pm.gender = '3' then 'O'  ELSE '' END AS gender," +
+            // "tp.sx_center_name,tp.sx_Notes AS sx_Notes,tp.sx_Status,poc.color,tp.mc_Status,tp.SX_Ins_Ver_Status,tp.Ver_comment,tp.Preop_notesent,tp.Bookingsheet_sent," +
+            //"tp.Scheduled  FROM tbl_Procedures_Details tp" +
+            //" inner join tbl_patient_ie ie on tp.PatientIE_ID = ie.id" +
+            //" inner join tbl_Patient pm on pm.id = ie.Patient_ID" +
+            //" inner join tbl_locations lc ON ie.Location_ID = lc.id" +
+            //" inner join tbl_attorneys a on a.id = ie.attorney_id" +
+            //" left JOIN tbl_ie_page1 p1 ON p1.ie_id = ie.id AND p1.cmp_id = ie.cmp_id  AND p1.patient_id = ie.patient_id " +
+            //" LEFT JOIN tbl_insurance_status_type ins ON ins.Name = tp.SX_Ins_Ver_Status " +
+            //" LEFT JOIN tbl_poc_status_type poc ON poc.Name=tp.sx_Status ";
+
             string query = "SELECT DISTINCT tp.ProcedureDetail_ID, CONCAT(pm.lname,' ',pm.fname)as 'Name',pm.dob as DOB,pm.mobile as Phone,ie.primary_claim_no AS ClaimNumber,(SELECT ins.cmpname FROM tbl_inscos ins WHERE ins.id =ie.primary_ins_cmp_id) AS Insurance,p1.allergies AS Allergies,pm.MC AS MC,ie.Compensation AS 'CaseType' ," +
            "lc.location,CASE when pm.Vaccinated = 1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE, " +
             "CASE when pm.gender = '1' THEN 'M' when pm.gender = '2' then 'F' when pm.gender = '3' then 'O'  ELSE '' END AS gender," +
             "tp.sx_center_name,tp.sx_Notes AS sx_Notes,tp.sx_Status,poc.color,tp.mc_Status,tp.SX_Ins_Ver_Status,tp.Ver_comment,tp.Preop_notesent,tp.Bookingsheet_sent," +
            "tp.Scheduled  FROM tbl_Procedures_Details tp" +
            " inner join tbl_patient_ie ie on tp.PatientIE_ID = ie.id" +
+           " INNER JOIN tbl_Procedures pp ON pp.id = tp.Procedure_Master_ID" +
+           " INNER JOIN tbl_ie_page1 p1 ON p1.ie_id = ie.id " +
            " inner join tbl_Patient pm on pm.id = ie.Patient_ID" +
            " inner join tbl_locations lc ON ie.Location_ID = lc.id" +
-           " inner join tbl_attorneys a on a.id = ie.attorney_id" +
-           " left JOIN tbl_ie_page1 p1 ON p1.ie_id = ie.id AND p1.cmp_id = ie.cmp_id  AND p1.patient_id = ie.patient_id " +
+           " LEFT join tbl_attorneys a on a.id = ie.attorney_id" +           
            " LEFT JOIN tbl_insurance_status_type ins ON ins.Name = tp.SX_Ins_Ver_Status " +
            " LEFT JOIN tbl_poc_status_type poc ON poc.Name=tp.sx_Status ";
 

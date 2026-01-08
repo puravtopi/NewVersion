@@ -24,9 +24,20 @@ namespace PainTrax.Web.Services
         public tbl_pdfproccode? GetOne(int id)
         {
             MySqlCommand cmd = new MySqlCommand(
-                "SELECT * FROM tbl_pdfproccode WHERE id=@id", conn);
+                "SELECT * FROM tbl_pdfproccode WHERE mcode=@id", conn);
 
             cmd.Parameters.AddWithValue("@id", id);
+
+            return ConvertDataTable<tbl_pdfproccode>(GetData(cmd))
+                   .FirstOrDefault();
+        }
+
+        public tbl_pdfproccode? GetMcode(string mcode)
+        {
+            MySqlCommand cmd = new MySqlCommand(
+                "SELECT * FROM tbl_pdfproccode WHERE mcode=@mcode", conn);
+
+            cmd.Parameters.AddWithValue("@mcode", mcode);
 
             return ConvertDataTable<tbl_pdfproccode>(GetData(cmd))
                    .FirstOrDefault();

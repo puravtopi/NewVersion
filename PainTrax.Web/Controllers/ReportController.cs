@@ -45,6 +45,8 @@ namespace PainTrax.Web.Controllers
         private readonly POCConfigService _pocConfigservices = new POCConfigService();
         private readonly PocStatusService _pocStatusService = new PocStatusService();
         private readonly InsuranceStatusService _insuranceStatusService = new InsuranceStatusService();
+        private readonly ProBSServices _servicesProBS = new ProBSServices();
+        private readonly PdfProcCodeService _servicesProcCode = new PdfProcCodeService();
 
         public ReportController(ILogger<ReportController> logger)
         {
@@ -700,7 +702,7 @@ namespace PainTrax.Web.Controllers
                 dt.Columns.Add("preopstatus");
                 dt.Columns.Add("bookingSheetStatus");
 
-                int counter = 0;
+                int counter = 1;
 
                 foreach (var proSX in data)
                 {
@@ -922,6 +924,379 @@ namespace PainTrax.Web.Controllers
             {
                 return Content("Error: " + ex.Message);
             }
+        }
+
+        [HttpGet]
+        public IActionResult ProBSReport()
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            var objPro = new ProBSReportVM();
+            objPro.lstProBSReport = new List<ProBSReportVM>();
+
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);            
+
+            return View(objPro);
+        }
+
+        [HttpPost]
+        public IActionResult ProBSReport(DateTime? fdate)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+            string query = " where pm.cmp_id=" + cmpid.ToString();
+
+            string _query = "";
+
+            if (fdate != null)
+            {
+                _query = " (tp.Scheduled = '" + fdate.Value.ToString("yyyy/MM/dd") + "' )";
+            }           
+
+            if (!string.IsNullOrEmpty(_query))
+            {
+                query = query + " and (" + _query + ")";
+            }
+
+
+            var data = _servicesProBS.GetProBSReport(query);
+            var objPOC = new ProBSReportVM();
+            objPOC.lstProBSReport = data;
+            TempData["ProBSquery"] = query;
+
+            //ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+            
+            //// for status dropdown. 
+            //var statusList = _pocStatusService.GetAll();
+
+            //ViewBag.StatusList = new SelectList(statusList, "Name", "Name");
+
+            
+
+            string cnd = " and cmp_id=" + cmpid;            
+            return View(objPOC);
+
+        }
+
+        public IActionResult ExportToExcelProBS()
+        {
+            try
+            {
+                string query = TempData["ProBSquery"].ToString();
+                var data = _servicesProBS.GetProBSReport(query);
+
+                // Build DataTable
+                DataTable dt = new DataTable();
+                dt.Columns.Add("SrNo");
+                dt.Columns.Add("Name");
+                dt.Columns.Add("Account_No");
+                dt.Columns.Add("DOB");
+                dt.Columns.Add("Sex");
+                dt.Columns.Add("Phone");
+                dt.Columns.Add("Address");
+                dt.Columns.Add("City");
+                dt.Columns.Add("State");
+                dt.Columns.Add("Zip");
+                dt.Columns.Add("SSN");
+                dt.Columns.Add("Case");
+                dt.Columns.Add("DOE");
+                dt.Columns.Add("DOA");
+                dt.Columns.Add("AttorneyName");
+                dt.Columns.Add("AttorneyPhone");
+                dt.Columns.Add("Mcode");
+                dt.Columns.Add("Sides");   // color name / hex
+                dt.Columns.Add("Level");
+                dt.Columns.Add("location");
+                dt.Columns.Add("Insurance");
+                dt.Columns.Add("ClaimNumber");
+                dt.Columns.Add("WCB");
+                dt.Columns.Add("scheduled");
+                dt.Columns.Add("sx_center_name");
+                dt.Columns.Add("Booking Status");
+                dt.Columns.Add("Note");
+                dt.Columns.Add("Procedures");
+                dt.Columns.Add("cptcodes");
+                dt.Columns.Add("icdcodes");
+                dt.Columns.Add("specialequ");    
+                int counter = 1;
+                List<string> rowColors = new List<string>();
+                Dictionary<string, tbl_pdfproccode?> mcodeCache = new Dictionary<string, tbl_pdfproccode?>();
+
+                foreach (var proBS in data)
+                {
+                    // -----------------------------
+                    // GET PROC DETAILS BY MCODE
+                    // -----------------------------
+                    tbl_pdfproccode? procData = null;
+                    string cleanMcode = CleanMcode(proBS.mcode);
+
+                    if (!string.IsNullOrEmpty(cleanMcode))
+                    {
+                        if (!mcodeCache.ContainsKey(cleanMcode))
+                        {
+                            mcodeCache[cleanMcode] = _servicesProcCode.GetMcode(cleanMcode);
+                        }
+
+                        procData = mcodeCache[cleanMcode];
+                    }
+                    string rowColor = null;
+                    if (!string.IsNullOrEmpty(proBS.Bookingsheet_sent))
+                    {
+                        switch (proBS.Bookingsheet_sent.Trim().ToLower())
+                        {
+                            case "yes":
+                                rowColor = "green";
+                                break;
+
+                            case "no":
+                                rowColor = "red";
+                                break;
+
+                            case "n/a":
+                            case "na":
+                                rowColor = "yellow";
+                                break;
+                        }
+                    }
+
+                    rowColors.Add(rowColor);
+                    dt.Rows.Add(
+                        counter++.ToString(),
+                        proBS.name,
+                        proBS.account_no,
+                        proBS.DOB,
+                        proBS.gender,
+                        proBS.Phone,
+                        proBS.Address,
+                        proBS.City,
+                        proBS.State,
+                        proBS.Zip,
+                        proBS.SSN,
+                        proBS.casetype,
+                        proBS.doe,
+                        proBS.doa,
+                        proBS.AttorneyName,
+                        proBS.AttorneyPhone,
+                        proBS.mcode,
+                        proBS.sides,
+                        proBS.level,
+                        proBS.location,
+                        proBS.Insurance,
+                        proBS.ClaimNumber,
+                        proBS.WCB,
+                        proBS.scheduled,
+                        proBS.sx_center_name,
+                        proBS.Bookingsheet_sent,
+                        proBS.Note,
+
+                        // 🔽 NEW COLUMNS FROM tbl_pdfproccode
+                        procData?.mprocedure,
+                        procData?.cptcodes,
+                        procData?.icdcodes,
+                        procData?.specialequ
+                    );
+                }
+
+                // Create Excel
+                var memoryStream = new MemoryStream();
+
+                using (var document = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook))
+                {
+                    var workbookPart = document.AddWorkbookPart();
+                    workbookPart.Workbook = new Workbook();
+
+                    //------------------------------------
+                    // CREATE VALID STYLESHEET
+                    //------------------------------------
+                    var stylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
+                    var stylesheet = new Stylesheet();
+
+                    // FONTS (required)
+                    var fonts = new DocumentFormat.OpenXml.Spreadsheet.Fonts();
+                    fonts.Append(new Font());
+                    fonts.Count = 1;
+
+                    // FILLS (Excel requires min 2)
+                    var fills = new Fills();
+                    fills.Append(new Fill(new PatternFill() { PatternType = PatternValues.None }));     // 0
+                    fills.Append(new Fill(new PatternFill() { PatternType = PatternValues.Gray125 }));   // 1
+                    fills.Count = 2;
+
+                    // BORDERS (required)
+                    var borders = new Borders();
+                    borders.Append(new DocumentFormat.OpenXml.Spreadsheet.Border());
+                    borders.Count = 1;
+
+                    // CELL STYLE FORMATS (required)
+                    var cellStyleFormats = new CellStyleFormats();
+                    cellStyleFormats.Append(new CellFormat());
+                    cellStyleFormats.Count = 1;
+
+                    // CELL FORMATS
+                    var cellFormats = new CellFormats();
+                    cellFormats.Append(new CellFormat());
+                    cellFormats.Count = 1;
+
+                    // attach to stylesheet
+                    stylesheet.Append(fonts);
+                    stylesheet.Append(fills);
+                    stylesheet.Append(borders);
+                    stylesheet.Append(cellStyleFormats);
+                    stylesheet.Append(cellFormats);
+
+                    stylesPart.Stylesheet = stylesheet;
+
+                    // cache styles
+                    Dictionary<string, uint> colorStyleCache = new Dictionary<string, uint>();
+
+                    //------------------------------------
+                    // COLOR NAME → HEX
+                    //------------------------------------
+                    string ConvertColorNameToHex(string colorName)
+                    {
+                        if (string.IsNullOrWhiteSpace(colorName)) return null;
+
+                        colorName = colorName.Trim().ToLower();
+
+                        return colorName switch
+                        {
+                            "red" => "FF0000",
+                            "green" => "00FF00",
+                            "yellow" => "FFFF00",
+                            "orange" => "FFA500",
+                            "blue" => "0000FF",
+                            "pink" => "FFC0CB",
+                            "purple" => "800080",
+                            "black" => "000000",
+                            "gray" => "808080",
+                            _ => colorName.Replace("#", "").ToUpper()
+                        };
+                    }
+
+                    //------------------------------------
+                    // CREATE COLOR STYLES
+                    //------------------------------------
+                    uint GetStyleForColor(string colorName)
+                    {
+                        string hex = ConvertColorNameToHex(colorName);
+                        if (hex == null) return 0;
+
+                        if (colorStyleCache.ContainsKey(hex))
+                            return colorStyleCache[hex];
+
+                        // ADD FILL
+                        fills.Append(new Fill(
+                            new PatternFill(
+                                new ForegroundColor() { Rgb = hex }
+                            )
+                            { PatternType = PatternValues.Solid }
+                        ));
+                        fills.Count = (uint)fills.ChildElements.Count;
+
+                        uint fillId = (uint)(fills.Count - 1);
+
+                        // ADD FORMAT
+                        var format = new CellFormat()
+                        {
+                            FillId = fillId,
+                            ApplyFill = true
+                        };
+
+                        cellFormats.Append(format);
+                        cellFormats.Count = (uint)cellFormats.ChildElements.Count;
+
+                        uint styleIndex = (uint)(cellFormats.Count - 1);
+                        colorStyleCache[hex] = styleIndex;
+
+                        return styleIndex;
+                    }
+
+                    //------------------------------------
+                    // SAVE STYLES EXACTLY ONCE
+                    //------------------------------------
+                    stylesheet.Save();
+
+                    //------------------------------------
+                    // WORKSHEET
+                    //------------------------------------
+                    var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                    var sheetData = new SheetData();
+                    worksheetPart.Worksheet = new Worksheet(sheetData);
+
+                    var sheets = workbookPart.Workbook.AppendChild(new Sheets());
+                    sheets.Append(new Sheet()
+                    {
+                        Id = workbookPart.GetIdOfPart(worksheetPart),
+                        SheetId = 1,
+                        Name = "Users"
+                    });
+
+
+                    ////------------------------------------
+                    //// REMOVE COLOR COLUMN FROM SHEET
+                    ////------------------------------------
+
+                    //// Save color values first (these match row order exactly)
+                    //List<string> rowColors = new List<string>();
+                    //foreach (DataRow row in dt.Rows)
+                    //    rowColors.Add(row["Color"]?.ToString());
+
+                    //// Remove Color column so Excel does NOT show it
+                    //dt.Columns.Remove("Color");
+
+
+
+                    // HEADER
+                    var headerRow = new Row();
+                    foreach (DataColumn col in dt.Columns)
+                        headerRow.Append(new Cell()
+                        {
+                            DataType = CellValues.String,
+                            CellValue = new CellValue(col.ColumnName)
+                        });
+
+                    sheetData.Append(headerRow);
+
+                    // DATA
+                    int rowIndex = 0;
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        var r = new Row();
+
+                        // uint styleIndex = GetStyleForColor(row["Color"]?.ToString());
+                        uint styleIndex = GetStyleForColor(rowColors[rowIndex++]);
+
+                        foreach (var value in row.ItemArray)
+                        {
+                            r.Append(new Cell()
+                            {
+                                DataType = CellValues.String,
+                                CellValue = new CellValue(value?.ToString()),
+                                StyleIndex = styleIndex
+                            });
+                        }
+
+                        sheetData.Append(r);
+                    }
+                }
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                return File(memoryStream.ToArray(),
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "ProBS Report.xlsx");
+            }
+            catch (Exception ex)
+            {
+                return Content("Error: " + ex.Message);
+            }
+        }
+
+        private string CleanMcode(string mcode)
+        {
+            if (string.IsNullOrWhiteSpace(mcode))
+                return mcode;
+
+            // Take value before #
+            return mcode.Split('#')[0].Trim();
         }
         private Stylesheet CreateStylesheet()
         {

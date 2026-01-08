@@ -100,17 +100,41 @@ namespace PainTrax.Web.Services
 
             foreach (var item in model.lstProSXReport)
             {
-              
-                string query = @"UPDATE tbl_Procedures_Details 
-                         SET sx_center_name = @sx_center_name,
-                             sx_Notes = @sx_Notes,
-                             sx_Status = @sx_Status,
-                             mc_Status = @mc_Status,
-                             SX_Ins_Ver_Status = @SX_Ins_Ver_Status,
-                             Ver_comment = @Ver_comment,
-                             Preop_notesent = @Preop_notesent,
-                             Bookingsheet_sent = @Bookingsheet_sent
-                         WHERE procedureDetail_id = @Id";
+
+                //string query = @"UPDATE tbl_Procedures_Details 
+                //         SET sx_center_name = @sx_center_name,
+                //             sx_Notes = @sx_Notes,
+                //             sx_Status = @sx_Status,
+                //             mc_Status = @mc_Status,
+                //             SX_Ins_Ver_Status = @SX_Ins_Ver_Status,
+                //             Ver_comment = @Ver_comment,
+                //             Preop_notesent = @Preop_notesent,
+                //             Bookingsheet_sent = @Bookingsheet_sent,
+                //             is_booked = CASE 
+                //            WHEN @Bookingsheet_sent = 'Yes' THEN 1
+                //            WHEN @Bookingsheet_sent = 'No' THEN 0
+                //            WHEN @Bookingsheet_sent = 'N/A' THEN 0
+                //            ELSE 0
+                //            ELSE 0
+                //         END
+                //         WHERE procedureDetail_id = @Id";
+
+                string query = @"
+            UPDATE tbl_Procedures_Details 
+            SET sx_center_name = @sx_center_name,
+                sx_Notes = @sx_Notes,
+                sx_Status = @sx_Status,
+                mc_Status = @mc_Status,
+                SX_Ins_Ver_Status = @SX_Ins_Ver_Status,
+                Ver_comment = @Ver_comment,
+                Preop_notesent = @Preop_notesent,
+                Bookingsheet_sent = @Bookingsheet_sent,
+                is_booked = CASE 
+                                WHEN @Bookingsheet_sent = 'Yes' THEN 1
+                                WHEN @Bookingsheet_sent IN ('No', 'N/A') THEN 0
+                                ELSE 0
+                            END
+            WHERE procedureDetail_id = @Id";
                 // using (var con = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConn"].ConnectionString))
                 using (var cmd = new MySqlCommand(query, conn))
                 {

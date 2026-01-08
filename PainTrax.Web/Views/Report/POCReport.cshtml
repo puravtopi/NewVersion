@@ -109,13 +109,18 @@
 
 
                                         @{
-                                            if (columns.Contains("Sex"))
-                                            {
-                                                <th scope="col" id="sex" onclick="sortTable(1);">Sex</th>
-                                            }
+                                            
                                             if (columns.Contains("Name"))
                                             {
                                                 <th scope="col" id="name" onclick="sortTable(1);">Name</th>
+                                            }
+                                            if (columns.Contains("Account_No"))
+                                            {
+                                                <th scope="col" id="account_no" onclick="sortTable(1);">Account_No</th>
+                                            }
+                                            if (columns.Contains("Sex"))
+                                            {
+                                                <th scope="col" id="sex" onclick="sortTable(1);">Sex</th>
                                             }
                                             if (columns.Contains("Case"))
                                             {
@@ -186,11 +191,7 @@
                                             if (columns.Contains("Attorney"))
                                             {
                                                 <th scope="col" id="Attorney" onclick="sortTable(1);">Attorney</th>
-                                            }
-                                            if (columns.Contains("account_no"))
-                                            {
-                                                <th scope="col" id="account_no" onclick="sortTable(1);">AccountNo</th>
-                                            }
+                                            }                                            
                                             if (columns.Contains("Policy"))
                                             {
                                                 <th scope="col" id="PolicyNo" onclick="sortTable(1);">PolicyNo</th>
@@ -225,13 +226,18 @@
                                                     <input type="hidden" value="@item.procedureDetail_id" id="hid" />
                                                 </td>
                                                 @{
-                                                    if (columnsval.Contains("Sex"))
-                                                    {
-                                                        <td>@item.gender</td>
-                                                    }
+                                                   
                                                     if (columnsval.Contains("Name"))
                                                     {
                                                         <td>@item.name</td>
+                                                    }
+                                                    if (columnsval.Contains("Account_No"))
+                                                    {
+                                                        <td>@item.acct_no</td>
+                                                    }
+                                                    if (columnsval.Contains("Sex"))
+                                                    {
+                                                        <td>@item.gender</td>
                                                     }
                                                     if (columnsval.Contains("Case"))
                                                     {
@@ -335,10 +341,7 @@
                                                     {
                                                         <td>@item.Attorney</td>
                                                     }
-                                                    if (columnsval.Contains("Account_no"))
-                                                    {
-                                                        <td>@item.acct_no</td>
-                                                    }
+                                                    
                                                     if (columnsval.Contains("Policy"))
                                                     {
                                                         <td>@item.PolicyNo</td>

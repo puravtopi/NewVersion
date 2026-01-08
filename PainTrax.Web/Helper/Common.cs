@@ -289,7 +289,7 @@ namespace PainTrax.Web.Helper
 
             var list = new List<CheckBoxItem>();
 
-            string input = "Sex,Name,Case,DOE,DOB,DOA,MCODE,Side,Level,Phone,Location,Insurance,ClaimNo,MC,Allergies,Request,Scheduled,Executed,Note,SC_Name,Account_No,Policy,Attorney,Vaccinated";
+            string input = "Name,Account_No,Sex,Case,DOE,DOB,DOA,MCODE,Side,Level,Phone,Location,Insurance,ClaimNo,MC,Allergies,Request,Scheduled,Executed,Note,SC_Name,Policy,Attorney,Vaccinated";
 
 
 
@@ -372,7 +372,7 @@ namespace PainTrax.Web.Helper
 
             var list = new List<CheckBoxItem>();
 
-            string input = "Sex,Name,Case,DOE,DOB,DOA,MCODE,Side,Level,Phone,Location,Insurance,ClaimNo,MC,Allergies,Request,Scheduled,Executed,Note,SC_Name,account_no,Policy,Attorney,Vaccinated";
+            string input = "Name,Account_No,Sex,Case,DOE,DOB,DOA,MCODE,Side,Level,Phone,Location,Insurance,ClaimNo,MC,Allergies,Request,Scheduled,Executed,Note,SC_Name,Policy,Attorney,Vaccinated";
 
 
 

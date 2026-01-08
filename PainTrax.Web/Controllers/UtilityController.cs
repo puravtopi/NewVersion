@@ -179,7 +179,50 @@ namespace PainTrax.Web.Controllers
                         }
                         else if (patientData != null && patientData.Count > 1)
                         {
-                            sb.AppendFormat("<li style='color:red'>{0} - More than 1 entry found for this patient</li>", file.FileName);
+
+                            var match = Regex.Match(fname, @"_C(\d{1,2})_");
+
+                            if (match.Success)
+                            {
+                                string accountNo = "C" + match.Groups[1].Value;
+                                patientData = _patientservices.GetAll(" and fname='" + firstname + "' and lname='" + lastname + "' and account_no='" + accountNo + "' and cmp_id=" + cmpid);
+
+                                if (patientData != null)
+                                {
+                                    string PatientID = patientData[0].id.ToString();
+
+                                    var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", obj.DirName, PatientID);
+
+
+                                    bool folderExists = Directory.Exists(FolderPath);
+                                    if (!folderExists)
+                                        Directory.CreateDirectory(FolderPath);
+
+                                    var filePath = Path.Combine(FolderPath, file.FileName);
+
+                                    // Check If file with same name exists and delete it
+                                    if (System.IO.File.Exists(filePath))
+                                    {
+                                        System.IO.File.Delete(filePath);
+                                    }
+
+                                    // Create a new local file and copy contents of uploaded file
+                                    using (var localFile = System.IO.File.OpenWrite(filePath))
+                                    using (var uploadedFile = file.OpenReadStream())
+                                    {
+                                        uploadedFile.CopyTo(localFile);
+                                    }
+                                    sb.AppendFormat("<li style='color:green'>{0} - Uploaded Successfully</li>", file.FileName);
+                                }
+                                else
+                                {
+                                    sb.AppendFormat("<li style='color:red'>{0} - No Patient found</li>", file.FileName);
+                                }
+                            }
+                            else
+                            {
+                                sb.AppendFormat("<li style='color:red'>{0} - More than 1 entry found for this patient</li>", file.FileName);
+                            }
                         }
                         else
                         {
@@ -454,9 +497,9 @@ namespace PainTrax.Web.Controllers
 
                                 if (string.IsNullOrEmpty(objNE.other_content))
                                 {
-                                    if(dt.Columns.Contains("Reflexes"))
+                                    if (dt.Columns.Contains("Reflexes"))
                                         objNE.other_content = dt.Columns.Contains("Reflexes") ? dt.Rows[i]["Reflexes"]?.ToString() ?? string.Empty : string.Empty;
-                                    else  if(dt.Columns.Contains("Reflex"))
+                                    else if (dt.Columns.Contains("Reflex"))
                                         objNE.other_content = dt.Columns.Contains("Reflex") ? dt.Rows[i]["Reflex"]?.ToString() ?? string.Empty : string.Empty;
                                 }
 

@@ -43,8 +43,8 @@ public class PatientService : ParentService
     public int Insert(tbl_patient data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_patient
-		(fname,lname,mname,gender,dob,age,email,handeness,ssn,address,city,state,zip,home_ph,mobile,vaccinated,mc,account_no,createddate,createdby,cmp_id)Values
-				(@fname,@lname,@mname,@gender,@dob,@age,@email,@handeness,@ssn,@address,@city,@state,@zip,@home_ph,@mobile,@vaccinated,@mc,@account_no,@createddate,@createdby,@cmp_id);select @@identity;", conn);
+		(fname,lname,mname,gender,dob,age,email,handeness,ssn,address,city,state,zip,home_ph,mobile,vaccinated,mc,mc_details,account_no,createddate,createdby,cmp_id)Values
+				(@fname,@lname,@mname,@gender,@dob,@age,@email,@handeness,@ssn,@address,@city,@state,@zip,@home_ph,@mobile,@vaccinated,@mc,@mc_details,@account_no,@createddate,@createdby,@cmp_id);select @@identity;", conn);
         cm.Parameters.AddWithValue("@fname", data.fname);
         cm.Parameters.AddWithValue("@lname", data.lname);
         cm.Parameters.AddWithValue("@mname", data.mname);
@@ -67,7 +67,7 @@ public class PatientService : ParentService
         cm.Parameters.AddWithValue("@createdby", data.createdby);
         cm.Parameters.AddWithValue("@cmp_id", data.cmp_id);
         //cm.Parameters.AddWithValue("@physicianid", data.physicianid);
-        //cm.Parameters.AddWithValue("@mc_details", data.mc_details);
+        cm.Parameters.AddWithValue("@mc_details", data.mc_details);
         var result = ExecuteScalar(cm);
         return result;
     }
@@ -91,6 +91,7 @@ public class PatientService : ParentService
 		mobile=@mobile,
 		vaccinated=@vaccinated,
 		mc=@mc,
+        mc_details=@mc_details,
 		account_no=@account_no,        
 		updatedate=@updatedate,
 		updatedby=@updatedby
@@ -115,7 +116,7 @@ public class PatientService : ParentService
         cm.Parameters.AddWithValue("@mobile", data.mobile);
         cm.Parameters.AddWithValue("@vaccinated", data.vaccinated);
         cm.Parameters.AddWithValue("@mc", data.mc);
-      //  cm.Parameters.AddWithValue("@mc_details", data.mc_details);
+        cm.Parameters.AddWithValue("@mc_details", data.mc_details);
         cm.Parameters.AddWithValue("@account_no", data.account_no);
        // cm.Parameters.AddWithValue("@physicianid", data.physicianid);
         cm.Parameters.AddWithValue("@updatedate", System.DateTime.Now);

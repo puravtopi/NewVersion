@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var designation = HttpContextAccessor.HttpContext.Session.GetString(SessionKeys.SessionDesignation);
 }
 
 <main id="main" class="main">
@@ -417,7 +418,7 @@
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowComment(' + full.id + ')" href="#" ><i class="bi bi-chat-right-text-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Comments" data-bs-original-title="Add Comments"></i><span>Add Comments</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSign(' + full.patient_id + ')" href="#" ><i class="bi bi-pencil-square" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Sign" data-bs-original-title="Add Sign"></i><span>Add Sign</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + appurl + '/' + full.id + '"><i class="bi bi-calendar-week" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Appointments" data-bs-original-title="Print"></i><span>Appointments</span></a></li>';
-                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnDeletePatient(' + full.id + ',' + full.patient_id + ',' + '\'' + `${full.fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${full.lname.replace(/'/g, "\\'")}` + '\')" href="#"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove" data-bs-original-title="Remove"></i><span>Delete</span></a></li>';
+                            index += ' <li style="@(designation.ToLower()=="admin" || designation.ToLower()=="super admin"?"display:list-item":"display:none")"><a class="dropdown-item d-flex align-items-center" onclick="fnDeletePatient(' + full.id + ',' + full.patient_id + ',' + '\'' + `${full.fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${full.lname.replace(/'/g, "\\'")}` + '\')" href="#"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove" data-bs-original-title="Remove"></i><span>Delete</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Document"  href="' + editurldocument + '/' + full.patient_id + '"><i class="bi bi-folder-fill" title="Document"></i><span>Document</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"  href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" title="Edit"></i><span>Edit</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowPOCSummary(' + full.id + ',0)" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i><span>POC Summary</span></a></li>';

@@ -700,6 +700,7 @@ namespace PainTrax.Web.Controllers
                     home_ph = model.home_ph,
                     lname = model.lname,
                     mc = model.mc,
+                    mc_details= model.mc_details,
                     mname = model.mname,
                     mobile = model.mobile,
                     handeness = model.handeness,

@@ -109,7 +109,10 @@
 
 
                                         @{
-                                            
+                                            if (columns.Contains("Sex"))
+                                            {
+                                                <th scope="col" id="sex" onclick="sortTable(1);">Sex</th>
+                                            }
                                             if (columns.Contains("Name"))
                                             {
                                                 <th scope="col" id="name" onclick="sortTable(1);">Name</th>
@@ -118,10 +121,7 @@
                                             {
                                                 <th scope="col" id="account_no" onclick="sortTable(1);">Account_No</th>
                                             }
-                                            if (columns.Contains("Sex"))
-                                            {
-                                                <th scope="col" id="sex" onclick="sortTable(1);">Sex</th>
-                                            }
+                                            
                                             if (columns.Contains("Case"))
                                             {
                                                 <th scope="col" id="case" onclick="sortTable(2);">Case</th>
@@ -226,7 +226,10 @@
                                                     <input type="hidden" value="@item.procedureDetail_id" id="hid" />
                                                 </td>
                                                 @{
-                                                   
+                                                    if (columnsval.Contains("Sex"))
+                                                    {
+                                                        <td>@item.gender</td>
+                                                    }
                                                     if (columnsval.Contains("Name"))
                                                     {
                                                         <td>@item.name</td>
@@ -235,10 +238,7 @@
                                                     {
                                                         <td>@item.acct_no</td>
                                                     }
-                                                    if (columnsval.Contains("Sex"))
-                                                    {
-                                                        <td>@item.gender</td>
-                                                    }
+                                                   
                                                     if (columnsval.Contains("Case"))
                                                     {
                                                         <td>@item.casetype</td>

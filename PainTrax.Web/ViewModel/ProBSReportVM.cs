@@ -8,7 +8,7 @@ namespace PainTrax.Web.ViewModel
         public int procedureDetail_id { get; set; }
         public string name { get; set; }
         public string account_no { get; set; }
-        public DateTime DOB { get; set; }
+        public DateTime? DOB { get; set; }
         public string gender { get; set; }
         public string Phone { get; set; }
         public string Address { get; set; }

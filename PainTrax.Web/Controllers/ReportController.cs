@@ -374,6 +374,10 @@ namespace PainTrax.Web.Controllers
                             case "Name":
                                 dr[col] = user.name;
                                 break;
+                            case "account_no":
+                                dr[col] = user.acct_no;
+                                break;
+                            
                             case "Case":
                                 dr[col] = user.casetype;
                                 break;
@@ -411,10 +415,7 @@ namespace PainTrax.Web.Controllers
                                 dr[col] = user.mc;
                                 break;
                             case "MC_Details":
-                                dr[col] = user.mc_details;
-                                break;
-                            case "Account_No":
-                                dr[col] = user.acct_no;
+                                dr[col] = user.mc_details;                            
                                 break;
                             case "Allergies":
                                 dr[col] = user.allergies;
@@ -434,9 +435,7 @@ namespace PainTrax.Web.Controllers
                             case "SC_Name":
                                 dr[col] = user.sx_center_name;
                                 break;
-                            case "account_no":
-                                dr[col] = user.acct_no;
-                                break;
+                            
                             case "Policy":
                                 dr[col] = user.PolicyNo;
                                 break;
@@ -987,10 +986,10 @@ namespace PainTrax.Web.Controllers
                 // Build DataTable
                 DataTable dt = new DataTable();
                 dt.Columns.Add("SrNo");
+                dt.Columns.Add("Sex");
                 dt.Columns.Add("Name");
                 dt.Columns.Add("Account_No");
-                dt.Columns.Add("DOB");
-                dt.Columns.Add("Sex");
+                dt.Columns.Add("DOB");                
                 dt.Columns.Add("Phone");
                 dt.Columns.Add("Address");
                 dt.Columns.Add("City");
@@ -1061,10 +1060,10 @@ namespace PainTrax.Web.Controllers
                     rowColors.Add(rowColor);
                     dt.Rows.Add(
                         counter++.ToString(),
+                        proBS.gender,
                         proBS.name,
                         proBS.account_no,
-                        proBS.DOB,
-                        proBS.gender,
+                        proBS.DOB?.ToShortDateString() ?? "",                        
                         proBS.Phone,
                         proBS.Address,
                         proBS.City,
@@ -1072,8 +1071,8 @@ namespace PainTrax.Web.Controllers
                         proBS.Zip,
                         proBS.SSN,
                         proBS.casetype,
-                        proBS.doe,
-                        proBS.doa,
+                        proBS.doe?.ToShortDateString() ?? "",
+                        proBS.doa?.ToShortDateString() ?? "",
                         proBS.AttorneyName,
                         proBS.AttorneyPhone,
                         proBS.mcode,

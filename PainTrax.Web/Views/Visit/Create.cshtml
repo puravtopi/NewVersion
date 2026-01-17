@@ -79,7 +79,6 @@
 </style>
 
 <main id="main" class="main">
-
     <div class="pagetitle">
         <h1>Manage Visit</h1>
         <nav>
@@ -90,7 +89,6 @@
 
         </nav>
     </div><!-- End Page Title -->
-
     <section class="section">
         <div class="row">
             <div class="col-md-9 col-sm-12">
@@ -1094,8 +1092,8 @@
     $(document).ready(function () {
 
 
-        $(".msktxt").inputmask("999-999-9999");
-        $("#ssn").inputmask("999-99-9999");
+        // $(".msktxt").inputmask("999-999-9999");
+        // $("#ssn").inputmask("999-99-9999");
 
         $("body").addClass("toggle-sidebar");
 
@@ -1277,11 +1275,8 @@
         }
         else if (id === "bordered-poc") {
             $(t).tab('show');
-
         }
         else if (id === "bordered-ps") {
-
-
             $(t).tab('show');
         }
         else if (id === "bordered-doc") {
@@ -1326,163 +1321,163 @@
         //     },
         //     callback: function (result) {
 
-                // if (result) {
-                    var url = '@Url.Action("SaveDetails", "Visit")';
+        // if (result) {
+        var url = '@Url.Action("SaveDetails", "Visit")';
 
 
-                    if ($("#id").val() == '0')
-                        isnew = true;
+        if ($("#id").val() == '0')
+            isnew = true;
 
-                    var model = {
-                        "id": $("#id").val(),
-                        "patientid": $("#patientid").val(),
-                        "locationid": $("#locationid").val(),
-                        "providerid": $("#providerid").val(),
-                        "dos": $("#dos").val(),
-                        "doa": $("#doa").val(),
-                        "old_dos": $("#hdOldDOS").val(),
-                        "compensation": $("#compensation").val(),
-                        "accidentType": $("#accidentType").val(),
-                        "fname": $("#fname").val(),
-                        "lname": $("#lname").val(),
-                        "mname": $("#mname").val(),
-                        "gender": $("#gender").val(),
-                        "dob": $("#dob").val(),
-                        "email": $("#email").val(),
-                        "handeness": $("#handeness").val(),
-                        "ssn": $("#ssn").val(),
-                        "address": $("#address").val(),
-                        "city": $("#city").val(),
-                        "state": $("#state").val(),
-                        "zip": $("#zip").val(),
-                        "home_ph": $("#home_ph").val(),
-                        "mobile": $("#mobile").val(),
-                        "vaccinated": $("#vaccinated").val(),
-                        "mc": $("#mc").val(),
-                        "mc_details": $("#mc_details").val(),
-                        "account_no": $("#account_no").val(),
-                        "prime_cmpname": $("#prime_cmpname").val(),
-                        "prime_address": $("#prime_address").val(),
-                        "prime_phone": $("#prime_phone").val(),
-                        "prime_claim_no": $("#prime_claim_no").val(),
-                        "prime_policy_no": $("#prime_policy_no").val(),
-                        "prime_WCB_group": $("#prime_WCB_group").val(),
-                        "sec_WCB_group": $("#sec_WCB_group").val(),
-                        "sec_cmpname": $("#sec_cmpname").val(),
-                        "sec_address": $("#sec_address").val(),
-                        "sec_phone": $("#sec_phone").val(),
-                        "sec_claim_no": $("#sec_claim_no").val(),
-                        "sec_policy_no": $("#sec_policy_no").val(),
-                        "emp_name": $("#emp_name").val(),
-                        "emp_address": $("#emp_address").val(),
-                        "emp_phone": $("#emp_phone").val(),
-                        "emp_fax_no": $("#emp_fax_no").val(),
-                        "attory_name": $("#attory_name").val(),
-                        "attory_phone": $("#attory_phone").val(),
-                        "attory_fax_no": $("#attory_fax_no").val(),
-                        "attory_email": $("#attory_email").val(),
-                        "adj_name": $("#adj_name").val(),
-                        "adj_phone": $("#adj_phone").val(),
-                        "adj_email": $("#adj_email").val(),
-                        "adj_fax_no": $("#adj_fax_no").val(),
-                        "alert_note": $("#alert_note").val(),
-                        "physicianid": $("#physicianid").val(),
-                        "paralegal": $("#paralegal").val()
+        var model = {
+            "id": $("#id").val(),
+            "patientid": $("#patientid").val(),
+            "locationid": $("#locationid").val(),
+            "providerid": $("#providerid").val(),
+            "dos": $("#dos").val(),
+            "doa": $("#doa").val(),
+            "old_dos": $("#hdOldDOS").val(),
+            "compensation": $("#compensation").val(),
+            "accidentType": $("#accidentType").val(),
+            "fname": $("#fname").val(),
+            "lname": $("#lname").val(),
+            "mname": $("#mname").val(),
+            "gender": $("#gender").val(),
+            "dob": $("#dob").val(),
+            "email": $("#email").val(),
+            "handeness": $("#handeness").val(),
+            "ssn": $("#ssn").val(),
+            "address": $("#address").val(),
+            "city": $("#city").val(),
+            "state": $("#state").val(),
+            "zip": $("#zip").val(),
+            "home_ph": $("#home_ph").val(),
+            "mobile": $("#mobile").val(),
+            "vaccinated": $("#vaccinated").val(),
+            "mc": $("#mc").val(),
+            "mc_details": $("#mc_details").val(),
+            "account_no": $("#account_no").val(),
+            "prime_cmpname": $("#prime_cmpname").val(),
+            "prime_address": $("#prime_address").val(),
+            "prime_phone": $("#prime_phone").val(),
+            "prime_claim_no": $("#prime_claim_no").val(),
+            "prime_policy_no": $("#prime_policy_no").val(),
+            "prime_WCB_group": $("#prime_WCB_group").val(),
+            "sec_WCB_group": $("#sec_WCB_group").val(),
+            "sec_cmpname": $("#sec_cmpname").val(),
+            "sec_address": $("#sec_address").val(),
+            "sec_phone": $("#sec_phone").val(),
+            "sec_claim_no": $("#sec_claim_no").val(),
+            "sec_policy_no": $("#sec_policy_no").val(),
+            "emp_name": $("#emp_name").val(),
+            "emp_address": $("#emp_address").val(),
+            "emp_phone": $("#emp_phone").val(),
+            "emp_fax_no": $("#emp_fax_no").val(),
+            "attory_name": $("#attory_name").val(),
+            "attory_phone": $("#attory_phone").val(),
+            "attory_fax_no": $("#attory_fax_no").val(),
+            "attory_email": $("#attory_email").val(),
+            "adj_name": $("#adj_name").val(),
+            "adj_phone": $("#adj_phone").val(),
+            "adj_email": $("#adj_email").val(),
+            "adj_fax_no": $("#adj_fax_no").val(),
+            "alert_note": $("#alert_note").val(),
+            "physicianid": $("#physicianid").val(),
+            "paralegal": $("#paralegal").val()
+        }
+        $.ajax({
+            type: "Post",
+            url: url,
+            data: model,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                if (data.status === 1) {
+                    $('#patientid').val(data.patintid);
+                    $('#id').val(data.ieid);
+                    $("#hdIEId").val(data.ieid);
+                    $('#myModalMessage').modal('show');
+                    $('#messBody').html('<p>Saved.</p>');
+                    autoclosepopup();
+                    fnShowPOCSummary();
+                    fnShowPOC();
+                    $('#printButton').show();
+
+
+                    if ($("#alert_note").val() !== '') {
+
+                        $("#alert_card").show();
+                        $("#alert_short").text($("#alert_note").val());
                     }
-                    $.ajax({
-                        type: "Post",
-                        url: url,
-                        data: model,
-                        contentType: "application/x-www-form-urlencoded",
-                        success: function (data, status, xhr) {
-
-                            if (data.status === 1) {
-                                $('#patientid').val(data.patintid);
-                                $('#id').val(data.ieid);
-                                $("#hdIEId").val(data.ieid);
-                                $('#myModalMessage').modal('show');
-                                $('#messBody').html('<p>Saved.</p>');
-                                autoclosepopup();
-                                fnShowPOCSummary();
-                                fnShowPOC();
-                                $('#printButton').show();
+                    else {
+                        $("#alert_card").hide();
+                    }
+                    if (t !== null) {
+                        $(t).tab('show');
 
 
-                                if ($("#alert_note").val() !== '') {
-
-                                    $("#alert_card").show();
-                                    $("#alert_short").text($("#alert_note").val());
-                                }
-                                else {
-                                    $("#alert_card").hide();
-                                }
-                                if (t !== null) {
-                                    $(t).tab('show');
+                        var age = calcAge($("#dob").val());
+                        var doi = $("#doa").val();
 
 
-                                    var age = calcAge($("#dob").val());
-                                    var doi = $("#doa").val();
+                        if (doi != '') {
+                            doi = formatDate(doi);
+                        }
+
+                        var dos = $("#dos").val();
+
+                        if (dos != '') {
+                            dos = formatDate(dos);
+                        }
 
 
-                                    if (doi != '') {
-                                        doi = formatDate(doi);
-                                    }
+                        //var gender = $("#gender option:selected").text().toLowerCase();
+                        var accidenttype = $("#accidentType option:selected").text().toLowerCase();
+                        var fullName = $("#fname").val() + ' ' + $("#mname").val() + ' ' + $("#lname").val()
 
-                                    var dos = $("#dos").val();
+                        var content = (ckHistory.getData());
+                        //content = content.replace("#doi", doi == undefined ? "" : doi);
+                        // content = content.replace("#age", age);
+                        //content = content.replace("#gender", gender);
+                        content = content.replace("#dos", dos == undefined ? "" : dos)
+                        content = content.replace("#patientname", fullName == undefined ? "" : fullName);
+                        content = content.replace("#lname", $("#lname").val());
+                        content = content.replace("#fname", $("#fname").val());
+                        content = content.replace("#ln", $("#lname").val());
+                        content = content.replace("#fn", $("#fname").val());
+                        content = content.replace("#accidenttype", accidenttype);
+                        content = content.replace("#handedness", $("#handeness option:selected").text().toLowerCase());
+                        ckHistory.data.set(content);
 
-                                    if (dos != '') {
-                                        dos = formatDate(dos);
-                                    }
+                        content = (ckAssessment.getData());
+                        //content = content.replace("#doi", doi);
+                        //content = content.replace("#age", age);
+                        //content = content.replace("#gender", gender);
+                        ckAssessment.data.set(content);
+                    }
 
-
-                                    //var gender = $("#gender option:selected").text().toLowerCase();
-                                    var accidenttype = $("#accidentType option:selected").text().toLowerCase();
-                                    var fullName = $("#fname").val() + ' ' + $("#mname").val() + ' ' + $("#lname").val()
-
-                                    var content = (ckHistory.getData());
-                                    //content = content.replace("#doi", doi == undefined ? "" : doi);
-                                    // content = content.replace("#age", age);
-                                    //content = content.replace("#gender", gender);
-                                    content = content.replace("#dos", dos == undefined ? "" : dos)
-                                    content = content.replace("#patientname", fullName == undefined ? "" : fullName);
-                                    content = content.replace("#lname", $("#lname").val());
-                                    content = content.replace("#fname", $("#fname").val());
-                                    content = content.replace("#ln", $("#lname").val());
-                                    content = content.replace("#fn", $("#fname").val());
-                                    content = content.replace("#accidenttype", accidenttype);
-                                    content = content.replace("#handedness", $("#handeness option:selected").text().toLowerCase());
-                                    ckHistory.data.set(content);
-
-                                    content = (ckAssessment.getData());
-                                    //content = content.replace("#doi", doi);
-                                    //content = content.replace("#age", age);
-                                    //content = content.replace("#gender", gender);
-                                    ckAssessment.data.set(content);
-                                }
-
-                                if (isnew) {
-                                    fnPage1Save(null);
-                                    fnPage2Save(null);
-                                    fnPage3Save(null);
-                                    fnNESave(null);
-                                    fnOtherSave(null);
-                                }
-                            }
-                            else
-                                alert("Error in Data Saving.");
-                        },
-                        error: function (xhr, status, error) {
-                            alert("Error!" + xhr.status);
-                        },
-                    });
-                // }
-                // else {
-                //     if (t !== null)
-                //         $(t).tab('show');
-                //     fnShowPOC();
-                // }
-            //}
-       // });
+                    if (isnew) {
+                        fnPage1Save(null);
+                        fnPage2Save(null);
+                        fnPage3Save(null);
+                        fnNESave(null);
+                        fnOtherSave(null);
+                    }
+                }
+                else
+                    alert("Error in Data Saving.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+        // }
+        // else {
+        //     if (t !== null)
+        //         $(t).tab('show');
+        //     fnShowPOC();
+        // }
+        //}
+        // });
     }
     function formatDate(inputDate) {
 

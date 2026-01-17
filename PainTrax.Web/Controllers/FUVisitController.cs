@@ -1382,6 +1382,8 @@ namespace PainTrax.Web.Controllers
                 foreach (var ii in injurbodyparts)
                 {
                     var _bodyparts = _commonservices.GetBodyPart(ii);
+                    _bodyparts = _bodyparts.TrimStart();
+                    _bodyparts = _bodyparts.TrimEnd();
                     if (_bodyparts.ToLower().Contains("left"))
                     {
                         potion = "Left";

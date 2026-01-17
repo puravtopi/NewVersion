@@ -1586,7 +1586,6 @@ namespace PainTrax.Web.Controllers
                 var injurbodyparts = _pocService.GetInjuredPartsPOC(patientIEId);
 
 
-
                 if (injurbodyparts.Any(x => x.Equals("lumbar", StringComparison.OrdinalIgnoreCase)))
                 {
                     injurbodyparts = injurbodyparts
@@ -1621,6 +1620,7 @@ namespace PainTrax.Web.Controllers
                 foreach (var ii in injurbodyparts)
                 {
                     var _bodyparts = _commonservices.GetBodyPart(ii);
+                   
                     if (_bodyparts.ToLower().Contains("left"))
                     {
                         potion = "Left";
@@ -1639,8 +1639,6 @@ namespace PainTrax.Web.Controllers
 
                     int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                     var x = _pocService.GetAllProcedures(iinew.Trim(), patientIEId, potion, cmpid.Value);
-
-
 
                     if (x != null)
                     {

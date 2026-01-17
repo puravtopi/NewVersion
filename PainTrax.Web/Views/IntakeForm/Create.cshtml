@@ -42,15 +42,17 @@
                                                     <td style="width:20%">
                                                         <label>Last Name:</label>
                                                         
-                                                        <input type="text" id="l_name" asp-for="l_name" style="width:80%;display:inline;">
-                                                        <button type="button" id="btnMic_l_name" class="btn btn-secondary" style="display:inline;line-height:15px;">
+                                                        <input type="text" id="l_name" asp-for="l_name" style="width:80%;display:inline;" >
+                                                        <button type="button" id="btnMic_l_name" class="btn btn-secondary" style="display:inline;line-height:15px;"
+                                                                onclick="startVoiceInput('btnMic_l_name','l_name','audioContainer')">
                                                             🎤 
                                                         </button>
                                                     </td>
                                                     <td style="width:20%">
                                                         <label>First Name:</label>
                                                         <input type="text" id="f_name" asp-for="f_name" style="width:80%;display:inline;">
-                                                        <button type="button" id="btnMic_f_name" class="btn btn-secondary" style="display:inline;line-height:15px;">
+                                                        <button type="button" id="btnMic_f_name" class="btn btn-secondary" style="display:inline;line-height:15px;"
+                                                                onclick="startVoiceInput('btnMic_f_name','f_name','audioContainer')">
                                                             🎤 
                                                         </button>
                                                     </td>
@@ -207,8 +209,7 @@
                                                         <label>Temperature :(degrees Fahrenheit):</label>
 
                                                         <input type="text" id="temperature" asp-for="temperature" style="width:5%">
-
-                                                   
+                                                
                                                     
 
                                         </td>
@@ -220,7 +221,8 @@
                                     <tr>
                                         <td>
                                             <label style="font-weight: bold;font-size:18px;display:inline">Description of the accident:</label>
-                                             <button type="button" id="btnMic_desc_accident" class="btn btn-secondary" style="display:inline;line-height:15px;">
+                                             <button type="button" id="btnMic_desc_accident" class="btn btn-secondary" style="display:inline;line-height:15px;"
+                                                    onclick="startVoiceInput('btnMic_desc_accident','description_of_the_accident','audioContainer')">
                                                             🎤 
                                                         </button>
                                             <textarea style="width:100%" id="description_of_the_accident" asp-for="description_of_the_accident"></textarea>
@@ -3940,6 +3942,8 @@
         </div>
     </section>
 </main>
+<audio id="audioContainer" controls style="display:none"></audio>
+
 <!-- End #main -->
 @section Scripts {
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -3947,172 +3951,86 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
 <script>
-    let mediaRecorder;
+    let mediaRecorder = null;
+    let recognition = null;
     let audioChunks = [];
-    let audioBlob;
-    const lName = document.getElementById("l_name");
-    const fName = document.getElementById("f_name");
-    const desc_accident = document.getElementById("description_of_the_accident");
 
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'en-US';
-    recognition.continuous = true;
-    recognition.interimResults = false;
+    // 🔁 Dynamic voice input handler
+    async function startVoiceInput(btnId, inputId, audioPreviewId = null) {
 
+        const btn = document.getElementById(btnId);
+        const input = document.getElementById(inputId);
 
-    document.getElementById('btnMic_l_name').addEventListener('click', async () => {
-        if (!mediaRecorder || mediaRecorder.state === 'inactive') {
-            // Start recording audio
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-
-            audioChunks = [];
-            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-
-            mediaRecorder.onstop = async () => {
-                audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                const audioURL = URL.createObjectURL(audioBlob);
-                const audioPreview = document.getElementById('audioContainer');
-                audioPreview.src = audioURL;
-                audioPreview.style.display = 'block';
-
-                // 🧠 Auto save immediately when recording stops
-                // await autoSaveDictation();
-            };
-
-           @*  // 🧠 configure recognition for dictation
+        if (!recognition) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = true;
             recognition.lang = 'en-US';
-            recognition.maxAlternatives = 1; *@
-
-            mediaRecorder.start();
-            recognition.start();
-            document.getElementById('btnMic_l_name').textContent = "⏹";
-
-            recognition.onresult = (event) => {
-                const text = Array.from(event.results)
-                    .map(result => result[0].transcript)
-                    .join(' ');
-                // document.getElementById('txtHistory').value = text;
-                // 🪄 replace spoken punctuation words
-                const _text = replaceText(text);
-                    
-                lName.value = _text;
-            };
-        } else {
-            // Stop recording
-            mediaRecorder.stop();
-            recognition.stop();
-            document.getElementById('btnMic_l_name').textContent = "🎤 ";
+            recognition.maxAlternatives = 1;
         }
-    });
 
-    document.getElementById('btnMic_f_name').addEventListener('click', async () => {
         if (!mediaRecorder || mediaRecorder.state === 'inactive') {
-            // Start recording audio
+
+            // 🎙 Start recording
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
-
             audioChunks = [];
+
             mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
 
-            mediaRecorder.onstop = async () => {
-                audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            mediaRecorder.onstop = () => {
+                if (!audioPreviewId) return;
+
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                 const audioURL = URL.createObjectURL(audioBlob);
-                const audioPreview = document.getElementById('audioContainer');
-                audioPreview.src = audioURL;
-                audioPreview.style.display = 'block';
 
-                // 🧠 Auto save immediately when recording stops
-                // await autoSaveDictation();
+                const audioPreview = document.getElementById(audioPreviewId);
+                if (audioPreview) {
+                    audioPreview.src = audioURL;
+                    audioPreview.style.display = 'block';
+                }
             };
-
-            
-            mediaRecorder.start();
-            recognition.start();
-            document.getElementById('btnMic_f_name').textContent = "⏹";
-
-            recognition.onresult = (event) => {
-                const text = Array.from(event.results)
-                    .map(result => result[0].transcript)
-                    .join(' ');
-                // document.getElementById('txtHistory').value = text;
-                // 🪄 replace spoken punctuation words
-                const _text = replaceText(text);
-                    
-                fName.value = _text;
-            };
-        } else {
-            // Stop recording
-            mediaRecorder.stop();
-            recognition.stop();
-            document.getElementById('btnMic_f_name').textContent = "🎤 ";
-        }
-    });
-
-
-    document.getElementById('btnMic_desc_accident').addEventListener('click', async () => {
-        if (!mediaRecorder || mediaRecorder.state === 'inactive') {
-            // Start recording audio
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
-
-            audioChunks = [];
-            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-
-            mediaRecorder.onstop = async () => {
-                audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                const audioURL = URL.createObjectURL(audioBlob);
-                const audioPreview = document.getElementById('audioContainer');
-                audioPreview.src = audioURL;
-                audioPreview.style.display = 'block';
-
-                // 🧠 Auto save immediately when recording stops
-                // await autoSaveDictation();
-            };
-
 
             mediaRecorder.start();
             recognition.start();
-            document.getElementById('btnMic_desc_accident').textContent = "⏹";
+            btn.textContent = "⏹";
 
             recognition.onresult = (event) => {
                 const text = Array.from(event.results)
-                    .map(result => result[0].transcript)
+                    .map(r => r[0].transcript)
                     .join(' ');
-                // document.getElementById('txtHistory').value = text;
-                // 🪄 replace spoken punctuation words
-                const _text = replaceText(text);
 
-                desc_accident.value = _text;
+                // ✨ Replace spoken punctuation
+                input.value = replaceText(text);
             };
+
         } else {
-            // Stop recording
+            // ⏹ Stop recording
             mediaRecorder.stop();
             recognition.stop();
-            document.getElementById('btnMic_desc_accident').textContent = "🎤 ";
+            btn.textContent = "🎤";
         }
-    });
+    }
 
-    function replaceText(text)
-    {
-         const _text = text
-                    .replace(/\bcomma\b/gi, ',')
-                    .replace(/\bperiod\b/gi, '.')
-                    .replace(/\bfull stop\b/gi, '.')
-                    .replace(/\bcolon\b/gi, ':')
-                    .replace(/\bsemicolon\b/gi, ';')
-                    .replace(/\bopen bracket\b/gi, '(')
-                    .replace(/\bclose bracket\b/gi, ')')
-                    .replace(/\bopen parenthesis\b/gi, '[')
-                    .replace(/\bclose parenthesis\b/gi, ']')
-                    .replace(/\bslash\b/gi, '\\')
-                    .replace(/\bequal to\b/gi, '=')
-                    .replace(/\bnew line\b/gi, '<br>')
-                    .replace(/\bquestion mark\b/gi, '?')
-                    .replace(/\bexclamation mark\b/gi, '!');
+    function replaceText(text) {
+        const _text = text
+            .replace(/\bcomma\b/gi, ',')
+            .replace(/\bperiod\b/gi, '.')
+            .replace(/\bfull stop\b/gi, '.')
+            .replace(/\bcolon\b/gi, ':')
+            .replace(/\bsemicolon\b/gi, ';')
+            .replace(/\bopen bracket\b/gi, '(')
+            .replace(/\bclose bracket\b/gi, ')')
+            .replace(/\bopen parenthesis\b/gi, '[')
+            .replace(/\bclose parenthesis\b/gi, ']')
+            .replace(/\bslash\b/gi, '\\')
+            .replace(/\bequal to\b/gi, '=')
+            .replace(/\bnew line\b/gi, '<br>')
+            .replace(/\bquestion mark\b/gi, '?')
+            .replace(/\bexclamation mark\b/gi, '!');
         return _text;
     }
 </script>

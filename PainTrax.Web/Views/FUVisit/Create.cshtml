@@ -428,7 +428,13 @@
                                                             Insurance Co.
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            <input class="form-control" type="text" asp-for="prime_cmpname">
+                                                            @* <input class="form-control" type="text" asp-for="prime_cmpname"> *@
+                                                            <select asp-for="prime_cmpname" name="prime_cmpname" class="form-select">
+                                                                @foreach (var item in ViewBag.insuranceList)
+                                                                {
+                                                                    <option value="@item.cmpname">@item.cmpname</option>
+                                                                }
+                                                            </select>
                                                         </div>
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
                                                             Address.
@@ -486,7 +492,13 @@
                                                             Insurance Co.
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            <input class="form-control" type="text" asp-for="sec_cmpname">
+                                                           @*  <input class="form-control" type="text" asp-for="sec_cmpname"> *@
+                                                            <select asp-for="sec_cmpname" name="sec_cmpname" class="form-select">
+                                                                @foreach (var item in ViewBag.insuranceList)
+                                                                {
+                                                                    <option value="@item.cmpname">@item.cmpname</option>
+                                                                }
+                                                            </select>
                                                         </div>
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
                                                             Address.
@@ -1650,72 +1662,48 @@
 @*Auto Complete*@
 <script>
     $(function () {
-        $("#prime_cmpname").autocomplete({
-            source: function (request, response) {
-
-                var url = "@Url.Action("InsCoAutoComplete", "AutoComplete")";
-
+        $("#prime_cmpname").change(function () {
+            var companyName = $(this).val();
+            var url = "@Url.Action("GetInsuranceDetails", "Visit")";
+            if (companyName !== "") {
                 $.ajax({
                     url: url,
-                    data: { "prefix": request.term },
-                    type: "POST",
-                    success: function (data) {
-                        response($.map(data, function (item) {
+                    type: 'GET',
+                    data: { companyName: companyName },
+                    success: function (item) {
+                        console.log(item);
 
-                            return item;
-                        }))
+                        // Example: fill fields
+                        $("#prime_address").val(item.address)
+                        $("#prime_phone").val(item.phone)
                     },
-                    error: function (response) {
-                        alert(response.responseText);
-                    },
-                    failure: function (response) {
-                        alert(response.responseText);
+                    error: function () {
+                        alert("Error fetching insurance details");
                     }
                 });
-            },
-            select: function (e, i) {
-                var item = i.item;
-
-                $("#prime_address").val(item.address1)
-                $("#prime_phone").val(item.telephone)
-
-
-            },
-            minLength: 1
+            }
         });
 
-        $("#sec_cmpname").autocomplete({
-            source: function (request, response) {
-
-                var url = "@Url.Action("InsCoAutoComplete", "AutoComplete")";
-
+        $("#sec_cmpname").change(function () {
+            var companyName = $(this).val();
+            var url = "@Url.Action("GetInsuranceDetails", "Visit")";
+            if (companyName !== "") {
                 $.ajax({
                     url: url,
-                    data: { "prefix": request.term },
-                    type: "POST",
-                    success: function (data) {
-                        response($.map(data, function (item) {
+                    type: 'GET',
+                    data: { companyName: companyName },
+                    success: function (item) {
+                        console.log(item);
 
-                            return item;
-                        }))
+                        // Example: fill fields
+                        $("#sec_address").val(item.address)
+                        $("#sec_phone").val(item.phone)
                     },
-                    error: function (response) {
-                        alert(response.responseText);
-                    },
-                    failure: function (response) {
-                        alert(response.responseText);
+                    error: function () {
+                        alert("Error fetching insurance details");
                     }
                 });
-            },
-            select: function (e, i) {
-                var item = i.item;
-
-                $("#sec_address").val(item.address1)
-                $("#sec_phone").val(item.telephone)
-
-
-            },
-            minLength: 1
+            }
         });
 
         $("#attory_name").autocomplete({

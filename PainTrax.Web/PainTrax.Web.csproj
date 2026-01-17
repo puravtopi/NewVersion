@@ -133,6 +133,8 @@
     <None Include="Views\PdfProcCode\Import.cshtml" />
     <None Include="Views\PdfProcCode\Index.cshtml" />
     <None Include="Views\PdfProcCode\_Form.cshtml" />
+    <None Include="Views\Pdf\Index.cshtml" />
+    <None Include="Views\Pdf\MapPdf.cshtml" />
     <None Include="Views\PrintSetting\Index.cshtml" />
     <None Include="Views\PrintSetting\ModifyTemplate.cshtml" />
     <None Include="Views\PrintSetting\Templates.cshtml" />

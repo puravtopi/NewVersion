@@ -374,7 +374,7 @@ namespace PainTrax.Web.Controllers
                             case "Name":
                                 dr[col] = user.name;
                                 break;
-                            case "account_no":
+                            case "Account_No":
                                 dr[col] = user.acct_no;
                                 break;
                             

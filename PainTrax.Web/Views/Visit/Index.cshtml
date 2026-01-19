@@ -1,5 +1,17 @@
 ﻿@using PainTrax.Web.Helper
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var locationOptions = "";
+    var locList = ViewBag.locList as IEnumerable<SelectListItem>;
+
+    if (locList != null)
+    {
+        foreach (var item in locList)
+        {
+            locationOptions += $"<option value=\"{item.Value}\" {(item.Selected ? "selected" : "")}>{item.Text}</option>";
+        }
+    }
+}
 
 @{
     ViewData["Title"] = "Home Page";
@@ -175,7 +187,7 @@
             </div><!-- End Large Modal-->
         </div>
     </div>
-
+   
     <input type="hidden" id="hfilter" value="@ViewBag.filterCase" />
 
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@latest/dist/signature_pad.umd.js"></script>
@@ -289,23 +301,80 @@
 
                 initComplete: function () {
 
-                    // Create dropdown
-                    var ddl = `
-                    <select id="statusFilter" class="form-control form-control-sm ml-2" style="width:120px; display:inline-block;">
-                        <option value="All">All</option>
-                        <option value="Active" selected="selected">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
-                `;
+                              $("#tbl_filter").append(`
+            <span class="ms-2">
+                <select id="statusFilter"
+                        class="form-control form-control-sm"
+                        style="width:120px; display:inline-block;">
+                    <option value="All">All</option>
+                    <option value="Active" selected>Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </span>
+        `);
 
-                    // Append dropdown after search box
-                    $('#tbl_filter').append(ddl);
+                                var otherFiltersHtml = `
+        <div class="dt-custom-filters mt-2">
+
+            <div class="d-flex flex-wrap align-items-center gap-3">
+
+                <!-- Location -->
+                <div class="d-flex align-items-center gap-2">
+                    <label class="mb-0 fw-normal">Location</label>
+                    <select id="locationFilter" class="form-control form-control-sm" style="width:180px;">
+                        <option value="">--Select Location--</option>
+        @Html.Raw(locationOptions)
+                    </select>
+                </div>
+
+                <!-- From -->
+                <div class="d-flex align-items-center gap-2">
+                    <label class="mb-0 fw-normal">From</label>
+                    <input type="date" id="fDate" class="form-control form-control-sm" style="width:150px;" />
+                </div>
+
+                <!-- To -->
+                <div class="d-flex align-items-center gap-2">
+                    <label class="mb-0 fw-normal">To</label>
+                    <input type="date" id="tDate" class="form-control form-control-sm" style="width:150px;" />
+                </div>
+
+                <!-- Apply -->
+                <button id="btnApplyDate" class="btn btn-sm btn-primary">
+                    Apply
+                </button>
+
+            </div>
+
+        </div>
+        `;
+
+        $("#tbl_filter").closest(".row").after(otherFiltersHtml);
+                            
 
                     // Filter DataTable when dropdown changes
                     $('#statusFilter').on('change', function () {
                         var val = $(this).val();
                         $('#tbl').DataTable().column(3).search(val).draw();  // Column index to filter
                     });
+
+                        // Location filter
+        $('#locationFilter').on('change', function () {
+            $('#tbl').DataTable().ajax.reload();
+        });
+                                $('#btnApplyDate').on('click', function () {
+
+            var fDate = $('#fDate').val();
+            var tDate = $('#tDate').val();
+
+            // Optional validation
+            if (fDate && tDate && fDate > tDate) {
+                alert('From Date cannot be greater than To Date');
+                return;
+            }
+
+            $('#tbl').DataTable().ajax.reload();
+        });
                 },
 
                 "lengthMenu": [[25, 50, 100], [25, 50, 100]],
@@ -320,7 +389,11 @@
                     "datatype": "json",
                     "data": function (d) {
                         d.f = $("#hfilter").val();
-                        d.statusFilter = $('#statusFilter').val();  // <-- passes dropdown value correctly
+                        d.statusFilter = $('#statusFilter').val();  
+                         d.locid = $('#locationFilter').val();
+                         // NEW
+        d.fDate = $('#fDate').val();
+        d.tDate = $('#tDate').val();// <-- passes dropdown value correctly
                     }
                 },
 
@@ -918,4 +991,12 @@
 
 
     </script>
+
+    <style>
+        
+
+            .dt-custom-filters label {
+                white-space: nowrap;
+            }
+    </style>
 </main>

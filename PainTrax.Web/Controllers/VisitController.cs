@@ -80,16 +80,37 @@ namespace PainTrax.Web.Controllers
 
             ViewBag.visitTypeList = _commonservices.GetVisitType();
 
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            var locdata = _commonservices.GetLocations(Convert.ToInt32(cmpid));
+
+            List<SelectListItem> lst = new List<SelectListItem>();
+
+            int defaultlocation = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId).Value;
+
+            foreach (var item in locdata)
+            {
+                var obj = new SelectListItem()
+                {
+                    Text = item.Text,
+                    Value = item.Value,
+                    Selected = item.Value == defaultlocation.ToString() ? true : false
+                };
+                lst.Add(obj);
+
+            }
+            ViewBag.locList = lst;
+
             return View();
         }
 
-        public IActionResult List(string f = "", string statusFilter = "Active")
+        public IActionResult List(string f = "", string statusFilter = "Active", DateTime? fdate = null,DateTime? tdate = null, int? locid = null)
         {
             try
             {
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
-
+                //ViewBag.locList
+                
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
                 // Skiping number of Rows count
                 var start = Request.Form["start"].FirstOrDefault();
@@ -116,8 +137,15 @@ namespace PainTrax.Web.Controllers
                 {
                     cnd = cnd + " and (is_close=1) ";
                 }
+                if (locid == 0)
+                {
+                    locid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
+                }
+                else
+                {
+                    locid = locid;
+                }
 
-                int? locid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
@@ -130,6 +158,21 @@ namespace PainTrax.Web.Controllers
                     if (locid > 0 && (statusFilter == "Active"))
                         cnd = cnd + " and location_id=" + locid;
                 }
+                if(locid > 0)
+                {
+                    cnd = cnd + " and location_id=" + locid;
+
+                }
+                //if (fdate != null)
+                //{
+                //    cnd = cnd  + " (doe = '" + fdate.Value.ToString("yyyy/MM/dd") + "' )";
+                //}
+                //if (tdate != null)
+                //{
+                //    cnd = cnd + " (doe = '" + tdate.Value.ToString("yyyy/MM/dd") + "' )";
+                //}
+
+                
 
                 if (!string.IsNullOrEmpty(f))
                 {
@@ -146,7 +189,14 @@ namespace PainTrax.Web.Controllers
                         cnd = cnd + " AND  (primary_claim_no IS NULL OR primary_claim_no='') AND patient_id IN (SELECT id FROM tbl_patient WHERE cmp_id=" + cmpid + ")";
                     }
                 }
-
+                if (fdate != null && tdate != null)
+                {
+                    cnd += " and DATE(DOE) BETWEEN '"
+                           + fdate.Value.ToString("yyyy-MM-dd")
+                           + "' AND '"
+                           + tdate.Value.ToString("yyyy-MM-dd")
+                           + "'";
+                }
                 var Data = _ieService.GetAll(cnd);
                 //tbl_users user = new tbl_users();
                 //for (int i = 0; i < Data.Count; i++)

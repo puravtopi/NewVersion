@@ -149,9 +149,14 @@ namespace PainTrax.Web.Controllers
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
+                    //cnd = cnd + " and (fname like '%" + searchValue + "%' or lname  like '%" + searchValue + "%' or CONCAT(fname,' ',lname)  LIKE '%" + searchValue + "%' or CONCAT(lname,' ',fname)  LIKE '%" + searchValue + "%' or " +
+                    //    "location  like '%" + searchValue + "%' or DATE_FORMAT(dob,\"%m/%d/%Y\") = '" + searchValue + "' or DATE_FORMAT(doe,\"%m/%d/%Y\") = '" + searchValue + "'  or " +
+                    //    "compensation like '%" + searchValue + "%' or DATE_FORMAT(doa,\"%m/%d/%Y\") = '" + searchValue + "') ";
+
                     cnd = cnd + " and (fname like '%" + searchValue + "%' or lname  like '%" + searchValue + "%' or CONCAT(fname,' ',lname)  LIKE '%" + searchValue + "%' or CONCAT(lname,' ',fname)  LIKE '%" + searchValue + "%' or " +
-                        "location  like '%" + searchValue + "%' or DATE_FORMAT(dob,\"%m/%d/%Y\") = '" + searchValue + "' or DATE_FORMAT(doe,\"%m/%d/%Y\") = '" + searchValue + "'  or " +
-                        "compensation like '%" + searchValue + "%' or DATE_FORMAT(doa,\"%m/%d/%Y\") = '" + searchValue + "') ";
+                      "location  like '%" + searchValue + "%' or DATE_FORMAT(dob,\"%m/%d/%Y\") = '" + searchValue + "' or DATE_FORMAT(doe,\"%m/%d/%Y\") = '" + searchValue + "'  or " +
+                      "compensation like '%" + searchValue + "%' or DATE_FORMAT(doa,\"%m/%d/%Y\") = '" + searchValue + "') or " +
+                      " id in (SELECT fu.patientIE_ID FROM tbl_patient_fu fu WHERE (DATE_FORMAT(fu.doe,\"%m/%d/%Y\") = '" + searchValue + "'))";
                 }
                 else
                 {
@@ -286,6 +291,8 @@ namespace PainTrax.Web.Controllers
 
                 var providers = _userService.GetProviders(cmpid.Value);
                 ViewBag.providerList = providers;
+
+                ViewBag.insuranceList = _inscosservices.GetAautoComplete("");
 
                 if (id > 0)
                 {
@@ -1636,7 +1643,6 @@ namespace PainTrax.Web.Controllers
                 var injurbodyparts = _pocService.GetInjuredPartsPOC(patientIEId);
 
 
-
                 if (injurbodyparts.Any(x => x.Equals("lumbar", StringComparison.OrdinalIgnoreCase)))
                 {
                     injurbodyparts = injurbodyparts
@@ -1671,6 +1677,7 @@ namespace PainTrax.Web.Controllers
                 foreach (var ii in injurbodyparts)
                 {
                     var _bodyparts = _commonservices.GetBodyPart(ii);
+                   
                     if (_bodyparts.ToLower().Contains("left"))
                     {
                         potion = "Left";
@@ -1689,8 +1696,6 @@ namespace PainTrax.Web.Controllers
 
                     int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                     var x = _pocService.GetAllProcedures(iinew.Trim(), patientIEId, potion, cmpid.Value);
-
-
 
                     if (x != null)
                     {
@@ -5101,6 +5106,21 @@ namespace PainTrax.Web.Controllers
             {
                 return Json(new { success = false, error = ex.Message });
             }
+        }
+
+        public IActionResult GetInsuranceDetails(string companyName)
+        {
+            var data = _inscosservices.GetAll().ToList()
+                .Where(x => x.cmpname == companyName)
+                .Select(x => new
+                {
+                    address = x.address1,
+                    phone = x.telephone
+                  
+                })
+                .FirstOrDefault();
+
+            return Json(data);
         }
 
 

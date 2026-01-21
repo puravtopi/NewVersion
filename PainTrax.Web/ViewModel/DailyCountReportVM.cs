@@ -7,6 +7,9 @@ namespace PainTrax.Web.ViewModel
         public DateTime? doe { get; set; }
 
         public string location { get; set; }
+        public Int64 WC { get; set; }
+        public Int64 NF { get; set; }
+        public Int64 LIEN { get; set; }
         public Int64 NoOFIE { get; set; }
 
 

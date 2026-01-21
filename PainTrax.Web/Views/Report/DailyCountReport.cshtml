@@ -4,7 +4,7 @@
 <main id="main" class="main">
 
     <div class="pagetitle">
-        <h1>Designation List</h1>
+        <h1>Daily Count Report</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="">Home</a></li>
@@ -60,6 +60,9 @@
                                 <tr>
                                     <th scope="col">DOE</th>
                                     <th scope="col">Location</th>
+                                    <th scope="col">WC</th>
+                                    <th scope="col">NF</th>
+                                    <th scope="col">LIEN</th>
                                     <th scope="col">NoOFIE</th>
                                     <th scope="col">NoOFFU</th>
                                 </tr>
@@ -72,6 +75,9 @@
                                         <tr>
                                             <td>@(item.doe == null ? "" : item.doe.Value.ToString("MM/dd/yyyy"))</td>
                                             <td>@item.location</td>
+                                            <td>@item.WC</td>
+                                            <td>@item.NF</td>
+                                            <td>@item.LIEN</td>
                                             <td>@item.NoOFIE</td>
                                             <td>@item.NoOFFU</td>
                                         </tr>

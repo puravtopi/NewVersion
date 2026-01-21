@@ -137,7 +137,7 @@ namespace PainTrax.Web.Controllers
                 {
                     cnd = cnd + " and (is_close=1) ";
                 }
-                if (locid == null || locid == 0)
+                if (locid == null)
                 {
                     locid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
                 }

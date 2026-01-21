@@ -1628,6 +1628,9 @@ namespace PainTrax.Web.Controllers
                 {
                     new DataColumn("DOE", typeof(string)),
                     new DataColumn("Location", typeof(string)),
+                    new DataColumn("WC", typeof(Int64)),
+                    new DataColumn("NF", typeof(Int64)),
+                    new DataColumn("LIEN", typeof(Int64)),
                     new DataColumn("NoOfIE", typeof(Int64)),
                     new DataColumn("NoOfFU", typeof(Int64)),
 
@@ -1637,7 +1640,7 @@ namespace PainTrax.Web.Controllers
                 // Populate the DataTable with data from the list of attorneys
                 foreach (var cnt in data)
                 {
-                    dt.Rows.Add(cnt.doe, cnt.location, cnt.NoOFIE, cnt.NoOFFU);
+                    dt.Rows.Add(cnt.doe?.ToShortDateString() ?? "", cnt.location,cnt.WC,cnt.NF,cnt.LIEN , cnt.NoOFIE, cnt.NoOFFU);
                 }
 
                 // Create a new Excel file
@@ -1663,14 +1666,50 @@ namespace PainTrax.Web.Controllers
                     }
                     sheetData.AppendChild(headerRow);
 
+                    //foreach (DataRow row in dt.Rows)
+                    //{
+                    //    var newRow = new Row();
+                    //    foreach (var value in row.ItemArray)
+                    //    {
+                    //        var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
+                    //        newRow.AppendChild(cell);
+                    //    }
+                    //    sheetData.AppendChild(newRow);
+                    //}
                     foreach (DataRow row in dt.Rows)
                     {
                         var newRow = new Row();
-                        foreach (var value in row.ItemArray)
+
+                        for (int i = 0; i < dt.Columns.Count; i++)
                         {
-                            var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
+                            var value = row[i];
+                            Cell cell;
+
+                            // Numeric columns
+                            if (dt.Columns[i].ColumnName == "WC" ||
+                                dt.Columns[i].ColumnName == "NF" ||
+                                dt.Columns[i].ColumnName == "LIEN" ||
+                                dt.Columns[i].ColumnName == "NoOfIE" ||
+                                dt.Columns[i].ColumnName == "NoOfFU")
+                            {
+                                cell = new Cell
+                                {
+                                    CellValue = new CellValue(value.ToString())
+                                    // IMPORTANT: no DataType for numbers
+                                };
+                            }
+                            else // Text columns
+                            {
+                                cell = new Cell
+                                {
+                                    DataType = CellValues.String,
+                                    CellValue = new CellValue(value.ToString())
+                                };
+                            }
+
                             newRow.AppendChild(cell);
                         }
+
                         sheetData.AppendChild(newRow);
                     }
                 }

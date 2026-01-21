@@ -25,7 +25,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h6> Date: @ViewBag.SelectedDate </h6>  <h6> 123 -  @ViewBag.SelectedLocation </h6>
+
                         <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToSISheetReport" asp-controller="SignInSheet">Export</a>
+                        <a class="btn btn-info" style="float:right; margin-left:10px;" asp-action="ExportToSISheetReportPdf" asp-controller="SignInSheet">Export PDF</a>
                         <a class="btn bi-skip-backward-btn" style="float:right; margin-left:10px;" asp-action="Index" asp-controller="SignInSheet">Back</a>
                         <br />
 

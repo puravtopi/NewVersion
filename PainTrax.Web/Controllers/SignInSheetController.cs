@@ -14,7 +14,11 @@ using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using PainTrax.Web.ViewModel;
 using System.Data;
-using System.Net;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using iText.Kernel.Colors;
 
 
 
@@ -163,7 +167,7 @@ namespace PainTrax.Web.Controllers
                         // AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos);
                     }
                 }
-                
+
                 int? providorId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
 
                 string providerName = string.Empty;
@@ -322,7 +326,7 @@ namespace PainTrax.Web.Controllers
                     var headerRow1 = new Row();
                     foreach (DataColumn column in dt1.Columns)
                     {
-                        var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName) };
+                        var cell = new DocumentFormat.OpenXml.Spreadsheet.Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName) };
                         headerRow1.AppendChild(cell);
                     }
                     sheetData.AppendChild(headerRow1);
@@ -332,7 +336,7 @@ namespace PainTrax.Web.Controllers
                         var newRow = new Row();
                         foreach (var value in row.ItemArray)
                         {
-                            var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
+                            var cell = new DocumentFormat.OpenXml.Spreadsheet.Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
                             newRow.AppendChild(cell);
                         }
                         sheetData.AppendChild(newRow);
@@ -343,7 +347,7 @@ namespace PainTrax.Web.Controllers
                     var headerRow = new Row();
                     foreach (DataColumn column in dt.Columns)
                     {
-                        var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName) };
+                        var cell = new DocumentFormat.OpenXml.Spreadsheet.Cell() { DataType = CellValues.String, CellValue = new CellValue(column.ColumnName) };
                         headerRow.AppendChild(cell);
                     }
                     sheetData.AppendChild(headerRow);
@@ -357,7 +361,7 @@ namespace PainTrax.Web.Controllers
                         var newRow = new Row();
                         foreach (var value in row.ItemArray)
                         {
-                            var cell = new Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
+                            var cell = new DocumentFormat.OpenXml.Spreadsheet.Cell() { DataType = CellValues.String, CellValue = new CellValue(value.ToString()) };
                             newRow.AppendChild(cell);
                         }
                         sheetData.AppendChild(newRow);
@@ -374,6 +378,130 @@ namespace PainTrax.Web.Controllers
             }
         }
 
+        public IActionResult ExportToSISheetReportPdf()
+        {
+            try
+            {
+                string LocationID = HttpContext.Session.GetString(SessionKeys.Sessiondldlloc);
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+
+                var data = _SIservice.GetPatientsSIDNL(
+                    HttpContext.Session.GetString(SessionKeys.Sessiondldoe),
+                    LocationID,
+                    cmpid
+                );
+
+                string LocationName = string.Empty;
+                var dtloc = _locService.GetAll(" and cmp_id=" + cmpid + " and id=" + LocationID);
+                if (dtloc.Count > 0)
+                    LocationName = Convert.ToString(dtloc[0].location);
+
+                int? providerId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
+                string providerName = string.Empty;
+
+                if (providerId > 0)
+                {
+                    var user = _userService.GetOne(new tbl_users { Id = providerId });
+                    providerName = user?.providername;
+                }
+
+                // =========================
+                // Create DataTables (same as your logic)
+                // =========================
+
+                DataTable dt = new DataTable();
+
+                if (Convert.ToInt32(LocationID) > 0)
+                {
+                    dt.Columns.AddRange(new[]
+                    {
+                new DataColumn("Name - Acct#"),
+                new DataColumn("Case Type"),
+                new DataColumn("Visit"),
+                new DataColumn("InH Proc"),
+                new DataColumn("Proc Req"),
+                new DataColumn("Proc Sched"),
+                new DataColumn("Alert")
+            });
+
+                    foreach (var cnt in data)
+                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.inhouse, cnt.requested, cnt.scheduled, cnt.alert);
+                }
+                else
+                {
+                    dt.Columns.AddRange(new[]
+                    {
+                new DataColumn("Name - Acct#"),
+                new DataColumn("Case Type"),
+                new DataColumn("Visit"),
+                new DataColumn("InH Proc"),
+                new DataColumn("Location"),
+                new DataColumn("Proc Req"),
+                new DataColumn("Proc Sched"),
+                new DataColumn("Alert")
+            });
+
+                    foreach (var cnt in data)
+                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.inhouse, cnt.location, cnt.requested, cnt.scheduled, cnt.alert);
+                }
+
+                // =========================
+                // PDF Generation
+                // =========================
+
+                using var ms = new MemoryStream();
+                using var writer = new PdfWriter(ms);
+                using var pdf = new PdfDocument(writer);
+                using var document = new iText.Layout.Document(pdf);
+
+                document.Add(new Paragraph("SI Sheet Report")
+                    .SetTextAlignment(TextAlignment.CENTER)
+                    .SetFontSize(16)
+                    .SetBold());
+
+                document.Add(new Paragraph($"Date: {HttpContext.Session.GetString(SessionKeys.Sessiondldoe)}"));
+                if (!string.IsNullOrEmpty(LocationName))
+                    document.Add(new Paragraph($"Location: {LocationName}"));
+
+                document.Add(new Paragraph($"MA / Provider: {providerName}"));
+                document.Add(new Paragraph(" "));
+
+                // =========================
+                // Create Table
+                // =========================
+
+                iText.Layout.Element.Table table = new iText.Layout.Element.Table(dt.Columns.Count).UseAllAvailableWidth();
+
+                // Header
+                foreach (DataColumn col in dt.Columns)
+                {
+                    table.AddHeaderCell(
+                        new iText.Layout.Element.Cell()
+                            .Add(new Paragraph(col.ColumnName))
+                            .SetBackgroundColor(ColorConstants.LIGHT_GRAY)
+                            .SetBold()
+                    );
+                }
+
+                // Rows
+                foreach (DataRow row in dt.Rows)
+                {
+                    foreach (var item in row.ItemArray)
+                    {
+                        table.AddCell(new iText.Layout.Element.Cell().Add(new Paragraph(item?.ToString() ?? string.Empty)));
+                    }
+                }
+
+                document.Add(table);
+                document.Close();
+
+                return File(ms.ToArray(), "application/pdf", "SI_Sheet_Report.pdf");
+            }
+            catch (Exception ex)
+            {
+                return Content("Error: " + ex.Message);
+            }
+        }
 
         [HttpPost]
         public IActionResult GetSIDate(string SIDate, string Location_ID)

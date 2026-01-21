@@ -430,6 +430,7 @@
                                                         <div class="col-sm-4">
                                                             @* <input class="form-control" type="text" asp-for="prime_cmpname"> *@
                                                             <select asp-for="prime_cmpname" name="prime_cmpname" class="form-select">
+                                                                <option value="">-- Select ---</option>
                                                                 @foreach (var item in ViewBag.insuranceList)
                                                                 {
                                                                     <option value="@item.cmpname">@item.cmpname</option>
@@ -494,6 +495,7 @@
                                                         <div class="col-sm-4">
                                                            @*  <input class="form-control" type="text" asp-for="sec_cmpname"> *@
                                                             <select asp-for="sec_cmpname" name="sec_cmpname" class="form-select">
+                                                                <option value="">-- Select ---</option>
                                                                 @foreach (var item in ViewBag.insuranceList)
                                                                 {
                                                                     <option value="@item.cmpname">@item.cmpname</option>

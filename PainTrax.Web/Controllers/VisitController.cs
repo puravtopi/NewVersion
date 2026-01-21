@@ -103,14 +103,14 @@ namespace PainTrax.Web.Controllers
             return View();
         }
 
-        public IActionResult List(string f = "", string statusFilter = "Active", DateTime? fdate = null,DateTime? tdate = null, int? locid = null)
+        public IActionResult List(string f = "", string statusFilter = "Active", DateTime? fdate = null, DateTime? tdate = null, int? locid = null)
         {
             try
             {
                 string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
 
                 //ViewBag.locList
-                
+
                 var draw = HttpContext.Request.Form["draw"].FirstOrDefault();
                 // Skiping number of Rows count
                 var start = Request.Form["start"].FirstOrDefault();
@@ -137,7 +137,7 @@ namespace PainTrax.Web.Controllers
                 {
                     cnd = cnd + " and (is_close=1) ";
                 }
-                if (locid == 0)
+                if (locid == null || locid == 0)
                 {
                     locid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
                 }
@@ -163,7 +163,7 @@ namespace PainTrax.Web.Controllers
                     if (locid > 0 && (statusFilter == "Active"))
                         cnd = cnd + " and location_id=" + locid;
                 }
-                if(locid > 0)
+                if (locid > 0)
                 {
                     cnd = cnd + " and location_id=" + locid;
 
@@ -177,7 +177,7 @@ namespace PainTrax.Web.Controllers
                 //    cnd = cnd + " (doe = '" + tdate.Value.ToString("yyyy/MM/dd") + "' )";
                 //}
 
-                
+
 
                 if (!string.IsNullOrEmpty(f))
                 {
@@ -572,9 +572,9 @@ namespace PainTrax.Web.Controllers
                     obj.Page2 = new tbl_ie_page2();
                     obj.Page3 = new tbl_ie_page3();
 
-                    obj.Page3.diagcervialbulge_text = "reveals ";
-                    obj.Page3.diagthoracicbulge_text = "reveals ";
-                    obj.Page3.diaglumberbulge_text = "reveals ";
+                    //obj.Page3.diagcervialbulge_text = "reveals ";
+                    //obj.Page3.diagthoracicbulge_text = "reveals ";
+                    //obj.Page3.diaglumberbulge_text = "reveals ";
                     obj.Page3.gait = HttpContext.Session.GetString(SessionKeys.SessionGAIT);
 
                     obj.NE = new tbl_ie_ne();
@@ -757,7 +757,7 @@ namespace PainTrax.Web.Controllers
                     home_ph = model.home_ph,
                     lname = model.lname,
                     mc = model.mc,
-                    mc_details= model.mc_details,
+                    mc_details = model.mc_details,
                     mname = model.mname,
                     mobile = model.mobile,
                     handeness = model.handeness,
@@ -1677,7 +1677,7 @@ namespace PainTrax.Web.Controllers
                 foreach (var ii in injurbodyparts)
                 {
                     var _bodyparts = _commonservices.GetBodyPart(ii);
-                   
+
                     if (_bodyparts.ToLower().Contains("left"))
                     {
                         potion = "Left";
@@ -3063,6 +3063,7 @@ namespace PainTrax.Web.Controllers
             return base64String;
         }
         #endregion
+
         #region private method
         //public MemoryStream ConvertHtmlToWord(string htmlContent)
         //{
@@ -5116,7 +5117,7 @@ namespace PainTrax.Web.Controllers
                 {
                     address = x.address1,
                     phone = x.telephone
-                  
+
                 })
                 .FirstOrDefault();
 

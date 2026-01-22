@@ -157,13 +157,15 @@ namespace PainTrax.Web.Controllers
                       "location  like '%" + searchValue + "%' or DATE_FORMAT(dob,\"%m/%d/%Y\") = '" + searchValue + "' or DATE_FORMAT(doe,\"%m/%d/%Y\") = '" + searchValue + "'  or " +
                       "compensation like '%" + searchValue + "%' or DATE_FORMAT(doa,\"%m/%d/%Y\") = '" + searchValue + "') or " +
                       " id in (SELECT fu.patientIE_ID FROM tbl_patient_fu fu WHERE (DATE_FORMAT(fu.doe,\"%m/%d/%Y\") = '" + searchValue + "')))";
+
+
                 }
                 else
                 {
                     if (locid > 0 && (statusFilter == "Active"))
                         cnd = cnd + " and location_id=" + locid;
                 }
-                if (locid > 0)
+                if (locid > 0 && string.IsNullOrEmpty(searchValue))
                 {
                     cnd = cnd + " and location_id=" + locid;
 
@@ -203,18 +205,7 @@ namespace PainTrax.Web.Controllers
                            + "'";
                 }
                 var Data = _ieService.GetAll(cnd);
-                //tbl_users user = new tbl_users();
-                //for (int i = 0; i < Data.Count; i++)
-                //{
-                //    user.Id = Data[i].provider_id;
-                //    var providerData = _userService.GetOne(user);
-                //    if (providerData != null)
-                //    {
-                //        Data[i].providerName = providerData.fullname;
-                //    }
 
-
-                //}
 
                 //Sorting
                 if (sortColumn != "0")
@@ -292,7 +283,7 @@ namespace PainTrax.Web.Controllers
                 var providers = _userService.GetProviders(cmpid.Value);
                 ViewBag.providerList = providers;
 
-                ViewBag.insuranceList = _inscosservices.GetAautoComplete("");
+                ViewBag.insuranceList = _inscosservices.GetAautoComplete(" and cmp_id=" + cmpid);
 
                 if (id > 0)
                 {

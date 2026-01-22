@@ -30,6 +30,9 @@
 
     <!-- Template Main CSS File -->
     <link href="~/assets/css/style.css" rel="stylesheet" asp-append-version="true">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    
 
     <style>
 
@@ -890,14 +893,14 @@
         setInterval(checkSession, 1 * 60 * 1000);
     </script>
 
-    <script src="~/assets/vendor/apexcharts/apexcharts.min.js" asp-append-version="true"></script>
+ @*    <script src="~/assets/vendor/apexcharts/apexcharts.min.js" asp-append-version="true"></script> *@
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/assets/vendor/chart.js/chart.umd.js" asp-append-version="true"></script>
     <script src="~/assets/vendor/echarts/echarts.min.js" asp-append-version="true"></script>
     <script src="~/assets/vendor/quill/quill.min.js" asp-append-version="true"></script>
     <script src="~/assets/vendor/simple-datatables/simple-datatables.js" asp-append-version="true"></script>
     <script src="~/assets/vendor/tinymce/tinymce.min.js" asp-append-version="true"></script>
-    <script src="~/assets/vendor/php-email-form/validate.js" asp-append-version="true"></script>
+@*     <script src="~/assets/vendor/php-email-form/validate.js" asp-append-version="true"></script> *@
     <script src="~/assets/vendor/bootbox/bootbox.js" asp-append-version="true"></script>
     <script src="~/assets/js/main.js" asp-append-version="true"></script>
 
@@ -906,6 +909,8 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js" asp-append-version="true"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" asp-append-version="true"></script>
+   @*  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

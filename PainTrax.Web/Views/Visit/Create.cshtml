@@ -8,6 +8,11 @@
 <link rel="stylesheet" href="~/assets/dist/bootstrap-tagsinput.css">
 <script src="~/ckeditor/build/ckeditor.js"></script>
 
+
+
+
+
+
 <style>
     :root {
         /* Make the mention background blue. */
@@ -42,6 +47,17 @@
             position: absolute;
             width: calc(100% - 20px);
         }
+</style>
+
+<style>
+    .select2-container .select2-selection--single {
+        height: 38px !important;
+        padding-top: 4px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        margin-top: 1px !important;
+    }
 </style>
 
 <style>
@@ -409,11 +425,11 @@
                                                         </label>
                                                         <div class="col-sm-4">
                                                             @* <input class="form-control" type="text" asp-for="prime_cmpname"> *@
-                                                            <select asp-for="prime_cmpname" name="prime_cmpname" class="form-select">
+                                                            <select asp-for="prime_cmpname" name="prime_cmpname" style="width:100% !important" class="form-select searchable-dropdown">
                                                                 <option value="">-- Select ---</option>
                                                                 @foreach (var item in ViewBag.insuranceList)
                                                                 {
-                                                                    <option value="@item.cmpname">@item.cmpname</option>
+                                                                    <option value="@item.val">@item.val</option>
                                                                 }
                                                             </select>
                                                         </div>
@@ -474,11 +490,11 @@
                                                         </label>
                                                         <div class="col-sm-4">
                                                             @*    <input class="form-control" type="text" asp-for="sec_cmpname"> *@
-                                                            <select asp-for="sec_cmpname" name="sec_cmpname" class="form-select">
+                                                            <select asp-for="sec_cmpname" name="sec_cmpname" style="width:100%!important;" class="form-select searchable-dropdown">
                                                                 <option value="">-- Select ---</option>
                                                                 @foreach (var item in ViewBag.insuranceList)
                                                                 {
-                                                                    <option value="@item.cmpname">@item.cmpname</option>
+                                                                    <option value="@item.val">@item.val</option>
                                                                 }
                                                             </select>
 
@@ -1102,6 +1118,7 @@
     }
 </script>
 
+
 <script>
 
     $(document).ready(function () {
@@ -1213,6 +1230,11 @@
             }
 
         })
+
+        $('.searchable-dropdown').select2({
+            placeholder: "-- Select ---",
+            allowClear: true
+        });
     });
 
     $('#borderedTab a').on('click', function (e) {
@@ -1859,6 +1881,7 @@
             },
             minLength: 1
         })
+
     });
 
     function autoclosepopup() {

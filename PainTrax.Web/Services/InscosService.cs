@@ -20,8 +20,9 @@ namespace PainTrax.Web.Services
 
         public List<tbl_inscos> GetAautoComplete(string cnd = "")
         {
-            string query = "select *,cmpname as label,cmpname as val from tbl_inscos where 1=1 ";
-            query += cnd;
+            string query = "select distinct cmpname as label,cmpname as val from tbl_inscos where isactive=1 ";
+            query += cnd + " order by cmpname";
+           
             List<tbl_inscos> dataList = ConvertDataTable<tbl_inscos>(GetData(query));
             return dataList;
         }

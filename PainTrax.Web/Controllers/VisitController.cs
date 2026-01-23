@@ -713,7 +713,7 @@ namespace PainTrax.Web.Controllers
                     obj.Page3.other7_study = (obj.Page3.other7_study == null) ? "0" : obj.Page3.other7_study;
                     obj.Page3.other7_comma = (obj.Page3.other7_comma == null) ? _page3Setting.other7_comma : obj.Page3.other7_comma;
 
-                    obj.Page3.gait = _page3Setting.gait_default;
+                    obj.Page3.gait = string.IsNullOrEmpty(obj.Page3.gait)? _page3Setting.gait_default: obj.Page3.gait;
                 }
 
             }

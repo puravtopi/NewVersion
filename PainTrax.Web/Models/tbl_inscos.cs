@@ -7,17 +7,15 @@ namespace PainTrax.Web.Models
 
         [Required(ErrorMessage = "Please enter Insco Name ")]
         public string? cmpname { get; set; }
-
-        [Required(ErrorMessage = "Please enter Insco EmailId ")]
-        public string emailid { get; set; }
-        public string? telephone { get; set; }        
+        public string? emailid { get; set; }
+        public string? telephone { get; set; }
         public string? address1 { get; set; }
         public int? id { get; set; }
         public string? address2 { get; set; }
         public string? city { get; set; }
-        public string? state { get; set; }        
-        public string? zipcode { get; set; }       
-        public string? faxno { get; set; }       
+        public string? state { get; set; }
+        public string? zipcode { get; set; }
+        public string? faxno { get; set; }
         public bool? setasdefault { get; set; }
         public bool isactive { get; set; }
         public int? cmp_id { get; set; }
@@ -28,6 +26,7 @@ namespace PainTrax.Web.Models
         public int? old_id { get; set; }
         public string? label { get; set; }
         public string? val { get; set; }
+        public int? ival { get; set; }
 
     }
 }

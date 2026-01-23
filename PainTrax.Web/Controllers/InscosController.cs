@@ -169,7 +169,17 @@ namespace PainTrax.Web.Controllers
                 if (postedFile != null && postedFile.Length > 0)
                 {
 
-                    DataTable dt = this.Read2007Xlsx(postedFile);
+                    //DataTable dt = this.Read2007Xlsx(postedFile);
+                    //DataTable dt = this.Read2007Xlsx(patient);
+                    DataTable dt = new DataTable();
+                    using (var stream = new MemoryStream())
+                    {
+                        postedFile.CopyToAsync(stream);
+                        stream.Position = 0;
+
+                        // Convert uploaded Excel to DataTable
+                        dt = ReadExcelToDataTable(stream);
+                    }
 
                     int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
                     int? userid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpUserId);
@@ -181,17 +191,17 @@ namespace PainTrax.Web.Controllers
                             tbl_inscos obj = new tbl_inscos()
                             {
                                 cmp_id = cmpid,
-                                cmpname = dt.Rows[i]["InsCo"].ToString(),
-                                address1 = dt.Rows[i]["Address1"].ToString(),
-                                address2 = dt.Rows[i]["Address2"].ToString(),
-                                city = dt.Rows[i]["City"].ToString(),
-                                state = dt.Rows[i]["State"].ToString(),
-                                emailid = dt.Rows[i]["EmailAddress"].ToString(),
-                                telephone = dt.Rows[i]["Telephone"].ToString(),
-                                contactpersonname = dt.Rows[i]["ContactPerson"].ToString(),
+                                cmpname = (dt.Columns.Contains("InsCo") && dt.Rows[i]["InsCo"] != DBNull.Value ? dt.Rows[i]["InsCo"].ToString() : ""),
+                                address1 = (dt.Columns.Contains("Address1") && dt.Rows[i]["Address1"] != DBNull.Value ? dt.Rows[i]["Address1"].ToString() : ""),
+                                address2 = (dt.Columns.Contains("Address2") && dt.Rows[i]["Address2"] != DBNull.Value ? dt.Rows[i]["Address2"].ToString() : ""),
+                                city = (dt.Columns.Contains("City") && dt.Rows[i]["City"] != DBNull.Value ? dt.Rows[i]["City"].ToString() : ""),
+                                state = (dt.Columns.Contains("State") && dt.Rows[i]["State"] != DBNull.Value ? dt.Rows[i]["State"].ToString() : ""),
+                                emailid = (dt.Columns.Contains("EmailAddress") && dt.Rows[i]["EmailAddress"] != DBNull.Value ? dt.Rows[i]["EmailAddress"].ToString() : ""),
+                                telephone = (dt.Columns.Contains("Telephone") && dt.Rows[i]["Telephone"] != DBNull.Value ? dt.Rows[i]["Telephone"].ToString() : ""),
+                                contactpersonname = (dt.Columns.Contains("ContactPerson") && dt.Rows[i]["ContactPerson"] != DBNull.Value ? dt.Rows[i]["ContactPerson"].ToString() : ""),
                                 setasdefault = false,
                                 isactive = true,
-                                zipcode = dt.Rows[i]["Zip"].ToString(),
+                                zipcode = (dt.Columns.Contains("Zip") && dt.Rows[i]["Zip"] != DBNull.Value ? dt.Rows[i]["Zip"].ToString() : ""),
                                 faxno = "",
                                 createdby = userid,
                                 createddate = System.DateTime.Now
@@ -209,113 +219,166 @@ namespace PainTrax.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        public DataTable Read2007Xlsx(IFormFile postedFile)
+        private DataTable ReadExcelToDataTable(Stream stream)
         {
-            DataTable dt = new DataTable();
-            try
+            DataTable dataTable = new DataTable();
+
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(stream, false))
             {
-                if (postedFile != null && postedFile.Length > 0)
-                {                    // Read the uploaded Excel file using Open XML
-                    using (Stream stream = postedFile.OpenReadStream())
-                    {
-                        using (SpreadsheetDocument spreadSheetDocument = SpreadsheetDocument.Open(stream, false))
-                        {
-                            WorkbookPart workbookPart = spreadSheetDocument.WorkbookPart;
-                            IEnumerable<Sheet> sheets = spreadSheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
-                            string relationshipId = sheets.First().Id.Value;
-                            WorksheetPart worksheetPart = (WorksheetPart)spreadSheetDocument.WorkbookPart.GetPartById(relationshipId);
-                            Worksheet workSheet = worksheetPart.Worksheet;
-                            SheetData sheetData = workSheet.GetFirstChild<SheetData>();
-                            IEnumerable<Row> rows = sheetData.Descendants<Row>();
-                            foreach (Cell cell in rows.ElementAt(0))
-                            {
-                                dt.Columns.Add(GetCellValue(spreadSheetDocument, cell));
-                            }
-                            foreach (Row row in rows) //this will also include your header row...
-                            {
-                                DataRow tempRow = dt.NewRow();
-                                int columnIndex = 0;
-                                foreach (Cell cell in row.Descendants<Cell>())
-                                {                                    // Gets the column index of the cell with data
-                                    int cellColumnIndex = (int)GetColumnIndexFromName(GetColumnName(cell.CellReference));
-                                    cellColumnIndex--; //zero based index
-                                    if (columnIndex < cellColumnIndex)
-                                    {
-                                        do
-                                        {
-                                            tempRow[columnIndex] = ""; //Insert blank data here;
-                                            columnIndex++;
-                                        }
-                                        while (columnIndex < cellColumnIndex);
-                                    }//end if block
-                                    tempRow[columnIndex] = GetCellValue(spreadSheetDocument, cell);
-                                    columnIndex++;
-                                }//end inner foreach loop
-                                dt.Rows.Add(tempRow);
-                            }//end outer foreach loop
-                        }//end using block
-                        dt.Rows.RemoveAt(0); //...so i'm taking it out here.
-                    }
+                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                Sheets sheets = workbookPart.Workbook.Sheets;
+
+                // Get the first sheet
+                Sheet sheet = sheets.Elements<Sheet>().FirstOrDefault();
+
+                if (sheet == null)
+                {
+                    throw new Exception("No sheet found in the Excel file.");
                 }
-            }//end try
-            catch (Exception ex)
-            {
-                SaveLog(ex, "Read2007Xlsx");
+
+                // Get the WorksheetPart based on the sheet's relationship ID
+                WorksheetPart worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id);
+
+                SheetData sheetData = worksheetPart.Worksheet.Elements<SheetData>().FirstOrDefault();
+
+                bool isFirstRow = true;
+                foreach (Row row in sheetData.Elements<Row>())
+                {
+                    DataRow dataRow = dataTable.NewRow();
+
+
+                    int columnIndex = 0;
+
+                    /*                   foreach (Cell cell in row.Elements<Cell>())
+                                       {
+                                           Console.WriteLine(cell.Count());
+                                           string cellValue = GetCellValue(spreadsheetDocument, cell);
+
+                                           if (isFirstRow)
+                                           {
+                                               // Use the first row to add columns to the DataTable
+                                               dataTable.Columns.Add(cellValue);
+                                           }
+                                           else
+                                           {
+                                               // Clean HTML tags and add data to the DataTable
+                                               string cleanCellValue = cellValue; //System.Text.RegularExpressions.Regex.Replace(cellValue, "<.*?>", string.Empty);
+                                               dataRow[columnIndex] = cleanCellValue;
+                                           }
+                                           columnIndex++;
+                                       }
+
+                                       if (!isFirstRow)
+                                       {
+                                           dataTable.Rows.Add(dataRow);
+                                       }
+                                       isFirstRow = false;
+
+                    */
+
+                    int currentColumnIndex = 0;
+                    int previousColumnIndex = -1;
+
+                    foreach (Cell cell in row.Elements<Cell>())
+                    {
+                        // Get the column index from the cell reference (e.g., A1, B1)
+                        string cellReference = cell.CellReference?.Value;
+                        int cellColumnIndex = GetColumnIndexFromCellReference(cellReference);
+
+                        // Check for missing cells by comparing current cell index with previous one
+                        if (cellColumnIndex - previousColumnIndex > 1)
+                        {
+                            // Fill missing columns with null
+                            int missingCells = cellColumnIndex - previousColumnIndex - 1;
+                            for (int i = 0; i < missingCells; i++)
+                            {
+                                if (isFirstRow)
+                                {
+                                    // Add placeholder column headers for missing columns
+                                    dataTable.Columns.Add($"Column {currentColumnIndex + 1}");
+                                }
+                                else
+                                {
+                                    // Add null for missing cells in the data row
+                                    dataRow[currentColumnIndex] = DBNull.Value;
+                                }
+                                currentColumnIndex++;
+                            }
+                        }
+
+                        // Process current cell value
+                        string cellValue = GetCellValue(spreadsheetDocument, cell);
+
+                        if (isFirstRow)
+                        {
+                            // Add the column header for non-empty cells
+                            dataTable.Columns.Add(cellValue ?? $"Column {currentColumnIndex + 1}");
+                        }
+                        else
+                        {
+                            // Clean HTML tags and add data to the DataTable
+                            string cleanCellValue = System.Text.RegularExpressions.Regex.Replace(cellValue, "<.*?>", string.Empty);
+                            dataRow[currentColumnIndex] = string.IsNullOrEmpty(cleanCellValue) ? DBNull.Value : cleanCellValue;
+                        }
+
+                        previousColumnIndex = cellColumnIndex;
+                        currentColumnIndex++;
+                    }
+
+                    // Fill any remaining columns with nulls if the row is shorter than the header
+                    while (currentColumnIndex < dataTable.Columns.Count)
+                    {
+                        dataRow[currentColumnIndex] = DBNull.Value;
+                        currentColumnIndex++;
+                    }
+
+                    if (!isFirstRow)
+                    {
+                        dataTable.Rows.Add(dataRow);
+                    }
+
+                    isFirstRow = false;
+
+                }
             }
-            return dt;
-        }//end Read2007Xlsx method
 
-        /// <summary>
-        /// Given a cell name, parses the specified cell to get the column name.
-        /// </summary>
-        /// <param name="cellReference">Address of the cell (ie. B2)</param>
-        /// <returns>Column Name (ie. B)</returns>
-        public static string GetColumnName(string cellReference)
-        {
-            // Create a regular expression to match the column name portion of the cell name.
-            Regex regex = new Regex("[A-Za-z]+");
-            Match match = regex.Match(cellReference);
-            return match.Value;
-        } //end GetColumnName method
+            return dataTable;
+        }
 
-        /// <summary>
-        /// Given just the column name (no row index), it will return the zero based column index.
-        /// Note: This method will only handle columns with a length of up to two (ie. A to Z and AA to ZZ). 
-        /// A length of three can be implemented when needed.
-        /// </summary>
-        /// <param name="columnName">Column Name (ie. A or AB)</param>
-        /// <returns>Zero based index if the conversion was successful; otherwise null</returns>
-        public static int? GetColumnIndexFromName(string columnName)
+        private int GetColumnIndexFromCellReference(string cellReference)
         {
-            //return columnIndex;
-            string name = columnName;
-            int number = 0;
-            int pow = 1;
-            for (int i = name.Length - 1; i >= 0; i--)
+            if (string.IsNullOrEmpty(cellReference))
             {
-                number += (name[i] - 'A' + 1) * pow;
-                pow *= 26;
+                return -1;
             }
-            return number;
-        } //end GetColumnIndexFromName method
 
-        public static string GetCellValue(SpreadsheetDocument document, Cell cell)
-        {
-            SharedStringTablePart stringTablePart = document.WorkbookPart.SharedStringTablePart;
-            if (cell.CellValue == null)
+            // Extract the column part (e.g., "A" from "A1")
+            string columnPart = new string(cellReference.Where(c => char.IsLetter(c)).ToArray());
+
+            int columnIndex = 0;
+            foreach (char c in columnPart)
             {
+                columnIndex = (columnIndex * 26) + (c - 'A' + 1);
+            }
+
+            return columnIndex - 1; // Zero-based index
+        }
+        private string GetCellValue(SpreadsheetDocument doc, Cell cell)
+        {
+            if (cell == null)
                 return "";
-            }
-            string value = cell.CellValue.InnerXml;
+
+            string value = cell.InnerText;
+
             if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
             {
-                return stringTablePart.SharedStringTable.ChildElements[Int32.Parse(value)].InnerText;
+                var stringTable = doc.WorkbookPart.SharedStringTablePart.SharedStringTable;
+                value = stringTable.ChildElements[int.Parse(value)].InnerText;
             }
-            else
-            {
-                return value;
-            }
-        }//end GetCellValue method
+
+
+            return value;
+        }
 
         [HttpGet]
         public ActionResult DownloadDocument()

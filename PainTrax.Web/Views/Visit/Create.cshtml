@@ -424,14 +424,14 @@
                                                             Insurance Co.
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            @* <input class="form-control" type="text" asp-for="prime_cmpname"> *@
-                                                            <select asp-for="prime_cmpname" name="prime_cmpname" style="width:100% !important" class="form-select searchable-dropdown">
+                                                            <input class="form-control" type="text" asp-for="prime_cmpname">
+                                                           @*  <select asp-for="prime_cmpname" name="prime_cmpname" style="width:100% !important" class="form-select searchable-dropdown">
                                                                 <option value="">-- Select ---</option>
                                                                 @foreach (var item in ViewBag.insuranceList)
                                                                 {
-                                                                    <option value="@item.val">@item.val</option>
+                                                                    <option value="@item.ival">@item.val</option>
                                                                 }
-                                                            </select>
+                                                            </select> *@
                                                         </div>
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
                                                             Address.
@@ -489,14 +489,14 @@
                                                             Insurance Co.
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            @*    <input class="form-control" type="text" asp-for="sec_cmpname"> *@
-                                                            <select asp-for="sec_cmpname" name="sec_cmpname" style="width:100%!important;" class="form-select searchable-dropdown">
+                                                               <input class="form-control" type="text" asp-for="sec_cmpname">
+                                                          @*   <select asp-for="sec_cmpname" name="sec_cmpname" style="width:100%!important;" class="form-select searchable-dropdown">
                                                                 <option value="">-- Select ---</option>
                                                                 @foreach (var item in ViewBag.insuranceList)
                                                                 {
-                                                                    <option value="@item.val">@item.val</option>
+                                                                    <option value="@item.ival">@item.val</option>
                                                                 }
-                                                            </select>
+                                                            </select> *@
 
                                                         </div>
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
@@ -1704,26 +1704,59 @@
 <script>
     $(function () {
 
-        $("#prime_cmpname").change(function () {
-            var companyName = $(this).val();
-            var url = "@Url.Action("GetInsuranceDetails", "Visit")";
-            if (companyName !== "") {
+        // $("#prime_cmpname").change(function () {
+        //     var companyName = $(this).val();
+        //     var url = "@Url.Action("GetInsuranceDetails", "Visit")";
+        //     if (companyName !== "") {
+        //         $.ajax({
+        //             url: url,
+        //             type: 'GET',
+        //             data: { companyName: companyName },
+        //             success: function (item) {
+        //                 console.log(item);
+
+        //                 // Example: fill fields
+        //                 $("#prime_address").val(item.address)
+        //                 $("#prime_phone").val(item.phone)
+        //             },
+        //             error: function () {
+        //                 alert("Error fetching insurance details");
+        //             }
+        //         });
+        //     }
+        // });
+
+        $("#prime_cmpname").autocomplete({
+            source: function (request, response) {
+
+                var url = "@Url.Action("InsCoAutoComplete", "AutoComplete")";
+
                 $.ajax({
                     url: url,
-                    type: 'GET',
-                    data: { companyName: companyName },
-                    success: function (item) {
-                        console.log(item);
-
-                        // Example: fill fields
-                        $("#prime_address").val(item.address)
-                        $("#prime_phone").val(item.phone)
+                    data: { "prefix": request.term },
+                    type: "POST",
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return item;
+                        }))
                     },
-                    error: function () {
-                        alert("Error fetching insurance details");
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
                     }
                 });
-            }
+            },
+            select: function (e, i) {
+                var item = i.item;
+
+                $("#prime_address").val(item.address1)
+                $("#prime_phone").val(item.telephone)
+
+
+            },
+            minLength: 1
         });
 
         $("#state").autocomplete({
@@ -1756,27 +1789,62 @@
         });
 
 
-        $("#sec_cmpname").change(function () {
-            var companyName = $(this).val();
-            var url = "@Url.Action("GetInsuranceDetails", "Visit")";
-            if (companyName !== "") {
+        // $("#sec_cmpname").change(function () {
+        //     var companyName = $(this).val();
+        //     var url = "@Url.Action("GetInsuranceDetails", "Visit")";
+        //     if (companyName !== "") {
+        //         $.ajax({
+        //             url: url,
+        //             type: 'GET',
+        //             data: { companyName: companyName },
+        //             success: function (item) {
+        //                 console.log(item);
+
+        //                 // Example: fill fields
+        //                 $("#sec_address").val(item.address)
+        //                 $("#sec_phone").val(item.phone)
+        //             },
+        //             error: function () {
+        //                 alert("Error fetching insurance details");
+        //             }
+        //         });
+        //     }
+        // });
+
+        $("#sec_cmpname").autocomplete({
+            source: function (request, response) {
+
+                var url = "@Url.Action("InsCoAutoComplete", "AutoComplete")";
+
                 $.ajax({
                     url: url,
-                    type: 'GET',
-                    data: { companyName: companyName },
-                    success: function (item) {
-                        console.log(item);
+                    data: { "prefix": request.term },
+                    type: "POST",
+                    success: function (data) {
+                        response($.map(data, function (item) {
 
-                        // Example: fill fields
-                        $("#sec_address").val(item.address)
-                        $("#sec_phone").val(item.phone)
+                            return item;
+                        }))
                     },
-                    error: function () {
-                        alert("Error fetching insurance details");
+                    error: function (response) {
+                        alert(response.responseText);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
                     }
                 });
-            }
+            },
+            select: function (e, i) {
+                var item = i.item;
+
+                $("#sec_address").val(item.address1)
+                $("#sec_phone").val(item.telephone)
+
+
+            },
+            minLength: 1
         });
+
 
         $("#attory_name").autocomplete({
             source: function (request, response) {

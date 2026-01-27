@@ -511,7 +511,7 @@ namespace PainTrax.Web.Services
 
 
             string query = "SELECT a.Attorney,pm.id,REPLACE(pm.lname,' ','') AS lname,REPLACE(pm.fname,' ','') AS fname,tp.ProcedureDetail_ID," +
-                "CONCAT(pm.lname, ', ', pm.fname) AS Name,pm.MC AS MC,pm.mc_details as MC_Details,pm.account_no as acct_no,ie.Compensation AS CaseType," +
+                "CONCAT(pm.lname, ', ', pm.fname) AS Name,CASE WHEN pm.MC = 'TRUE' THEN 'Yes' WHEN  pm.MC = 'FALSE' THEN 'No' ELSE pm.MC END AS MC,pm.mc_details as MC_Details,pm.account_no as acct_no,ie.Compensation AS CaseType," +
                 "ie.doa, pm.dob,IFNULL((SELECT _fu.doe FROM tbl_patient_fu _fu WHERE _fu.patientIE_ID=ie.id ORDER BY _fu.doe DESC LIMIT 0,1),ie.doe) AS doe, pm.mobile AS Phone,ie.primary_policy_no AS PolicyNo, ie.primary_claim_no,ins.cmpname, tp.sides, tp.level,lc.location," +
                 "CASE WHEN pm.Vaccinated=1 THEN 'Yes' ELSE 'No' END AS Vaccinated,tp.MCODE,CONCAT(u.fname,' ',u.lname) AS providerName," +
                 "tp.Requested, p1.allergies, pm.mc_details as note,tp.surgercy_center, tp.surgon_name, tp.assistent_name,sc.Surgerycenter_name, tp.Executed," +

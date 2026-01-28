@@ -48,7 +48,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Index()
         {
 
-            // var _data = _dataTransferService.UpdateDetails();
+            // var _data = _dataTransferService.UpdateInsurance();
             // this code is use to delete unwanted mcode from procedure table
 
             //// Static path (adjust as per your environment)

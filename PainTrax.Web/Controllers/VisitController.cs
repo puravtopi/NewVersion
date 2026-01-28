@@ -283,7 +283,7 @@ namespace PainTrax.Web.Controllers
                 var providers = _userService.GetProviders(cmpid.Value);
                 ViewBag.providerList = providers;
 
-                ViewBag.insuranceList = _inscosservices.GetAautoComplete("");
+                //ViewBag.insuranceList = _inscosservices.GetAautoComplete("");
 
                 if (id > 0)
                 {

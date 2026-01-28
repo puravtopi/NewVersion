@@ -16,6 +16,7 @@ namespace PainTrax.Web.Services
         private readonly ProcedureService _procedureService = new ProcedureService();
         private readonly PatientIEService _patientIEService = new PatientIEService();
         private readonly PatientFUService _patientFUService = new PatientFUService();
+        private readonly InscosService _inscosService = new InscosService();
         private readonly POCServices _pocServices = new POCServices();
         private readonly LogService _logServices = new LogService();
 
@@ -247,6 +248,134 @@ namespace PainTrax.Web.Services
                         {
                             if (dataSet.Tables[0].Rows.Count > 0)
                                 _patientIEService.UpdateMCNoteOldId(data.Rows[i]["old_id"].ToString(), dataSet.Tables[0].Rows[0]["MC"].ToString(), "");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                tbl_log log = new tbl_log()
+                {
+                    CreatedBy = 1,
+                    CreatedDate = System.DateTime.Now,
+                    Message = ex.Message
+                };
+                _logServices.Insert(log);
+            }
+
+            return insertedCount;
+        }
+
+        public int UpdateInsurance()
+        {
+            int insertedCount = 0;
+
+
+            try
+            {
+
+
+                var pdVM = new DataSet();
+
+                //// Step 1: Read from SQL Server
+                _sqlServerConn = "Data Source=10.10.93.20\\SQLEXPRESS,18667;Initial Catalog=dbPainTrax_AKS_Live;uid=PTU_BHFPC;pwd=Il0ve$ql@321";
+                //_sqlServerConn = "Data Source=10.10.93.20\\SQLEXPRESS,18667;Initial Catalog=dbPainTrax_AKS_Live;uid=PTU_ASMPC;pwd=Il0ve$ql@321";
+
+
+
+                //using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
+                //{
+                //    sqlConn.Open();
+                //    string sqlQuery = "select ie.POCSummary,ie.Patient_ID from tblPatientIE as ie where (ie.POCSummary is not null and ie.POCSummary<>'')";
+
+                //    SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
+                //    DataSet dataSet = new DataSet();
+                //    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(cmd);
+                //    sqlDataAdapter.Fill(dataSet);
+
+                //    pdVM = dataSet;
+
+                //}
+
+                //foreach (DataRow row in pdVM.Tables[0].Rows)
+                //{
+                //    _patientIEService.UpdateProcedurePerformedOldId(row["Patient_ID"].ToString(), row["POCSummary"].ToString());
+                //}
+
+
+                //using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
+                //{
+                //    sqlConn.Open();
+                //    string sqlQuery = "select ie.InsNote,ie.Patient_ID from tblPatientIE as ie where (ie.InsNote is not null and ie.InsNote<>'')";
+
+                //    SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
+                //    DataSet dataSet = new DataSet();
+                //    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(cmd);
+                //    sqlDataAdapter.Fill(dataSet);
+
+                //    pdVM = dataSet;
+
+                //}
+
+                //foreach (DataRow row in pdVM.Tables[0].Rows)
+                //{
+                //    _patientIEService.UpdateNoteOldId(row["Patient_ID"].ToString(), row["InsNote"].ToString());
+                //}
+
+                //using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
+                //{
+                //    sqlConn.Open();
+                //    string sqlQuery = "select p.Patient_ID,p.MC,p.Note from tblPatientMaster p where (p.mc is not null and p.mc<>'')";
+
+                //    SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
+                //    DataSet dataSet = new DataSet();
+                //    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(cmd);
+                //    sqlDataAdapter.Fill(dataSet);
+
+                //    pdVM = dataSet;
+
+                //}
+
+                //foreach (DataRow row in pdVM.Tables[0].Rows)
+                //{
+                //    _patientIEService.UpdateMCNoteOldId(row["Patient_ID"].ToString(), row["MC"].ToString(), row["Note"].ToString());
+                //}
+
+                var data = _inscosService.GetData("  SELECT id,old_id FROM tbl_patient_ie ie WHERE ie.cmp_id=13  AND  (ie.primary_ins_cmp_id=NULL OR ie.primary_ins_cmp_id=0)");
+
+                for (var i = 0; i < data.Rows.Count; i++)
+                {
+                    if (!string.IsNullOrEmpty(data.Rows[i]["old_id"].ToString()))
+                    {
+                        using (SqlConnection sqlConn = new SqlConnection(_sqlServerConn))
+                        {
+                            sqlConn.Open();
+                            string sqlQuery = "select PatientIE_ID,insco from View_PatientIE where PatientIE_ID=" + data.Rows[i]["old_id"];
+
+                            SqlCommand cmd = new SqlCommand(sqlQuery, sqlConn);
+                            DataSet dataSet = new DataSet();
+                            SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(cmd);
+                            sqlDataAdapter.Fill(dataSet);
+                            sqlConn.Close();
+
+                            if (dataSet != null)
+                            {
+                                if (dataSet.Tables[0].Rows.Count > 0)
+                                {
+                                    if (!string.IsNullOrEmpty(dataSet.Tables[0].Rows[0]["insco"].ToString()))
+                                    {
+                                       var result= _inscosService.GetData(" SELECT inc.id FROM tbl_inscos inc WHERE inc.cmpname='"+ dataSet.Tables[0].Rows[0]["insco"].ToString() + "' AND inc.cmp_id=13");
+
+                                        for (var j = 0; j < result.Rows.Count; j++)
+                                        {
+                                            if (!string.IsNullOrEmpty(result.Rows[j]["id"].ToString()))
+                                            {
+                                                _patientIEService.UpdateInsurance(data.Rows[i]["id"].ToString(), result.Rows[j]["id"].ToString());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }

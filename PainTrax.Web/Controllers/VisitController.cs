@@ -543,7 +543,8 @@ namespace PainTrax.Web.Controllers
                         obj.account_no = patientData.account_no;
                         obj.home_ph = patientData.home_ph;
                         obj.mobile = patientData.mobile;
-                        obj.mc = patientData.mc;
+                        //obj.mc = patientData.mc;
+                        obj.mc = patientData.mc == "true" ? "Yes": patientData.mc == "false" ? "No" : patientData.mc;
                         obj.mc_details = patientData.mc_details;
                         obj.vaccinated = patientData.vaccinated;
                         obj.patientid = patientData.id;
@@ -747,7 +748,7 @@ namespace PainTrax.Web.Controllers
                     gender = model.gender,
                     home_ph = model.home_ph,
                     lname = model.lname,
-                    mc = model.mc,
+                    mc = model.mc == "true" ? "Yes" : model.mc == "false" ? "No" : model.mc,
                     mc_details = model.mc_details,
                     mname = model.mname,
                     mobile = model.mobile,

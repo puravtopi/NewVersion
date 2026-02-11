@@ -374,7 +374,18 @@
                                                         <div class="col-sm-4">
                                                             <input type="text" class="form-control msktxt" asp-for="ssn" placeholder="xxx-xx-xxxx">
                                                         </div>
-                                                        <label for="inputDate" class="col-sm-2 col-form-label">MC</label>
+                                                        <label for="inputNumber" class="col-sm-2 col-form-label">
+                                                            MC
+                                                        </label>
+                                                        <div class="col-sm-4">
+                                                            <select class="form-select" asp-for="mc" aria-label="Default select example">
+
+                                                                <option value="Yes">Yes</option>
+                                                                <option value="No">No</option>
+
+                                                            </select>
+                                                        </div>
+                                                        @* <label for="inputDate" class="col-sm-2 col-form-label">MC</label>
                                                         <div class="col-sm-4">
                                                             @*   <select class="form-select" asp-for="mc" arial--label="Default select example">
                                                             <option value=""></option>
@@ -382,14 +393,14 @@
                                                             <option value="false">No</option>
                                                             </select>
 
-                                                            *@
+                                                            
 
                                                             <section class="dropdown">
-                                                                <input type="text" asp-for="mc" class="form-control" style="width:88%" onchange="txtMe(this)" />
+                                                               <input type="text" asp-for="mc" class="form-control" style="width:88%" onchange="txtMe(this)" /> 
                                                                 <select id="ddl_mc" class="form-select" onchange="this.previousElementSibling.value = this.value; this.previousElementSibling.focus();selectVal('mc', this.value)">
-                                                                    <option value=""></option>
+                                                                   @*  <option value=""></option> 
                                                                     <option value="Yes">Yes</option>
-                                                                    <option value="No">No</option>
+                                                                    <option value="No" selected>No</option>
                                                                 </select>
                                                             </section>
 

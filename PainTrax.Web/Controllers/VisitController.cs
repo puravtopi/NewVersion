@@ -257,7 +257,7 @@ namespace PainTrax.Web.Controllers
             try
             {
                 obj.vaccinated = false;
-                obj.mc = "";
+                obj.mc = "No";
 
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
 

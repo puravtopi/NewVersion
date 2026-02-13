@@ -2,8 +2,11 @@
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using GroupDocs.Viewer.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MS.Models;
+using MS.Services;
 using Org.BouncyCastle.Asn1.Sec;
 using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
@@ -11,14 +14,17 @@ using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using System.Data;
 using System.Text.RegularExpressions;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace PainTrax.Web.Controllers
 {
-    [SessionCheckFilter]
+    //[SessionCheckFilter]
     public class IntakeFormController : Controller
     {
         private readonly Common _commonservices = new Common();
-        private readonly IntakeService service=new IntakeService();
+        private readonly IntakeService service = new IntakeService();
+        private readonly PatientIEService _ieService = new PatientIEService();
+        private readonly PatientService _patientservices = new PatientService();
         public IActionResult Index()
         {
             return View();
@@ -42,22 +48,22 @@ namespace PainTrax.Web.Controllers
                 cc_r_shoulder = "", cc_r_shoulder_increase = "", cc_l_knee = "", cc_l_knee_increase = "",
                 cc_r_knee = "", cc_r_knee_increase = "", cc_other_1 = "", cc_other_2 = "";
 
-            if (model.what_tests_xray=="true")
+            if (model.what_tests_xray == "true")
                 what_test = what_test + "," + model.what_tests_xray;
-            if (model.what_tests_ct=="true")
+            if (model.what_tests_ct == "true")
                 what_test = what_test + "," + model.what_tests_ct;
-            if (model.what_tests_mri=="true")
+            if (model.what_tests_mri == "true")
                 what_test = what_test + "," + model.what_tests_mri;
 
             model.what_test = what_test.TrimStart(',');
 
-            if (model.any_medical_conditions_Diabeties=="true")
+            if (model.any_medical_conditions_Diabeties == "true")
                 medical_condition = medical_condition + "," + model.any_medical_conditions_Diabeties;
-            if (model.any_medical_conditions_bp=="true")
+            if (model.any_medical_conditions_bp == "true")
                 medical_condition = medical_condition + "," + model.any_medical_conditions_bp;
-            if (model.any_medical_conditions_ashthma=="true")
+            if (model.any_medical_conditions_ashthma == "true")
                 medical_condition = medical_condition + "," + model.any_medical_conditions_ashthma;
-            if (model.any_medical_conditions_heart=="true")
+            if (model.any_medical_conditions_heart == "true")
                 medical_condition = medical_condition + "," + model.any_medical_conditions_heart;
             if (model.any_medical_conditions_none == "true")
                 medical_condition = medical_condition + "," + model.any_medical_conditions_none;
@@ -587,5 +593,155 @@ namespace PainTrax.Web.Controllers
 
             return RedirectToAction("Create", "IntakeForm");
         }
+
+        public IActionResult InitialIntake(int id = 0, string cid = "D0+uiKgkwrEBGsfnh/WxjL7DJy1b6slN3GKDydEumf0=")
+        {
+            var c_id = EncryptionHelper.Decrypt(cid);
+            //int cmpid = Convert.ToInt32(c_id);
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+            ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
+
+            InitialIntake obj = new InitialIntake();
+
+            if (id > 0)
+            {
+                obj = service.GetInitialIntakeById(id);
+            }
+
+            obj.cmp_id = cmpid.Value;
+            return View(obj);
+        }
+        [HttpPost]
+        public IActionResult InitialIntake(InitialIntake model)
+        {
+
+            var result = service.SaveInitialIntake(model);
+
+            if (result != "0")
+            {
+
+                tbl_patient objPatient = new tbl_patient()
+                {
+                    account_no = null,
+                    address = null,
+                    city = null,
+                    dob = model.dob,
+                    email = null,
+                    fname = model.fname,
+                    gender = model.gender,
+                    home_ph = null,
+                    lname = model.lname,
+                    mc = null,
+                    mc_details = null,
+                    mname = null,
+                    mobile = null,
+                    handeness = model.handedness,
+                    ssn = null,
+                    state = null,
+                    age = 1,
+                    cmp_id = model.cmp_id,
+                };
+
+                var patientId = _patientservices.Insert(objPatient);
+
+                if (patientId > 0)
+                {
+                    var objIE = new tbl_patient_ie()
+                    {
+
+                        doa = model.doa,
+                        doe = System.DateTime.Now,
+                        location_id = model.location_id,
+                        is_active = true,
+                        patient_id = patientId,
+                        intakeid = Convert.ToInt32(result)
+
+                    };
+
+                    var ie = _ieService.Insert(objIE);
+
+                    if (ie > 0)
+                    {
+                        var objPage1 = new tbl_ie_page1()
+                        {
+                            pmh= this.getPMH(model),
+                            psh= this.getPSH(model),
+                            allergies= this.getAllergies(model),
+                            ie_id= ie
+                        };
+
+                        _ieService.InsertPage1(objPage1);
+                    }
+
+                }
+            }
+
+            return RedirectToAction("Index", "Visit");
+        }
+
+        private string getPMH(InitialIntake model)
+        {
+            string str = "Noncontributory.";
+
+            if (model.PMHNone == "false")
+            {
+                str = "";
+
+                if (model.PMHDiabetes == "true")
+                    str = ", Diabetes";
+                if (model.PMHHTN == "true")
+                    str += ", HTN";
+                if (model.PMHHLD == "true")
+                    str += ", HLD";
+                if (model.PMHAsthma == "true")
+                    str += ", Asthma";
+                if (model.PMHCardiac == "true")
+                    str += ", Cardiac";
+                if (model.PMHThyroid == "true")
+                    str += ", Thyroid";
+                if (model.PMHCA == "true")
+                    str += ", CA";
+
+                if (!string.IsNullOrEmpty(str))
+                {
+                    str = " Patient have " + str.TrimStart(',');
+                }
+            }
+
+            return str;
+        }
+
+
+        private string getPSH(InitialIntake model)
+        {
+            string str = "Noncontributory.";
+
+            if (model.PSHNone == "false")
+            {
+                str = "";
+
+                if (!string.IsNullOrEmpty(model.description_of_the_PSH))
+                    str = model.description_of_the_PSH;
+            }
+
+            return str;
+        }
+
+        private string getAllergies(InitialIntake model)
+        {
+            string str = "NO KNOWN DRUG ALLERGIES.";
+
+            if (model.DrugAllergy_yes.ToLower() == "yes")
+            {
+                str = "";
+
+                if (!string.IsNullOrEmpty(model.DrugAllergy))
+                    str = model.DrugAllergy;
+            }
+
+            return str;
+        }
+
     }
 }

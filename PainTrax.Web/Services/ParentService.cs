@@ -189,7 +189,7 @@ namespace PainTrax.Services
             try
             {
                 conn.Open();
-                return sqlCommand.ExecuteNonQuery().ToString();
+                return sqlCommand.ExecuteScalar().ToString();
             }
             catch (Exception ex)
             {

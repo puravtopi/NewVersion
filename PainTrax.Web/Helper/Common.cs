@@ -74,7 +74,7 @@ namespace PainTrax.Web.Helper
 
         public List<SelectListItem> GetLocations(int cmp_id)
         {
-            string cnd = " and cmp_id=" + cmp_id;
+            string cnd = " and cmp_id=" + cmp_id+ " and isactive=1 order by location";
             var data = _locationservices.GetAll(cnd);
             var list = new List<SelectListItem>();
 

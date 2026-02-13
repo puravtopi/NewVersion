@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using PainTrax.Services;
 using PainTrax.Web.Models;
+using System.Data;
 
 namespace PainTrax.Web.Services
 {
@@ -178,5 +179,144 @@ namespace PainTrax.Web.Services
             var result = ExecuteScalar(cm);
             return result;
         }
+
+
+        public string SaveInitialIntake(InitialIntake model)
+        {
+            List<MySqlParameter> param = new List<MySqlParameter>();
+
+            param.Add(new MySqlParameter("p_location_id", model.location_id));
+            param.Add(new MySqlParameter("p_fname", model.fname));
+            param.Add(new MySqlParameter("p_lname", model.lname));
+            param.Add(new MySqlParameter("p_dob", model.dob));
+            param.Add(new MySqlParameter("p_doa", model.doa));
+            param.Add(new MySqlParameter("p_wcb", model.wcb));
+            param.Add(new MySqlParameter("p_age", model.age));
+            param.Add(new MySqlParameter("p_gender", model.gender));
+            param.Add(new MySqlParameter("p_handedness", model.handedness));
+
+            param.Add(new MySqlParameter("p_rsh", model.rsh));
+            param.Add(new MySqlParameter("p_lsh", model.lsh));
+            param.Add(new MySqlParameter("p_rkn", model.rkn));
+            param.Add(new MySqlParameter("p_lkn", model.lkn));
+            param.Add(new MySqlParameter("p_lelb", model.lelb));
+            param.Add(new MySqlParameter("p_relb", model.relb));
+            param.Add(new MySqlParameter("p_rhip", model.rhip));
+            param.Add(new MySqlParameter("p_lhip", model.lhip));
+            param.Add(new MySqlParameter("p_rank", model.rank));
+            param.Add(new MySqlParameter("p_lank", model.lank));
+            param.Add(new MySqlParameter("p_rwri", model.rwri));
+            param.Add(new MySqlParameter("p_lwri", model.lwri));
+
+            param.Add(new MySqlParameter("p_weight", model.weight));
+            param.Add(new MySqlParameter("p_height", model.height));
+
+            param.Add(new MySqlParameter("p_MVA", model.MVA));
+            param.Add(new MySqlParameter("p_workrelated", model.workrelated));
+            param.Add(new MySqlParameter("p_working_yes", model.working_yes));
+            param.Add(new MySqlParameter("p_degreeofDisability", model.degreeofDisability));
+
+            param.Add(new MySqlParameter("p_asymptomaticpriortoaccident_yes", model.asymptomaticpriortoaccident_yes));
+            param.Add(new MySqlParameter("p_historyofpriortrauma_yes", model.historyofpriortrauma_yes));
+            param.Add(new MySqlParameter("p_description_of_the_priortrauma", model.description_of_the_priortrauma));
+
+            param.Add(new MySqlParameter("p_Pedestrian", model.Pedestrian));
+            param.Add(new MySqlParameter("p_Bicyclist", model.Bicyclist));
+            param.Add(new MySqlParameter("p_Motorcyclist", model.Motorcyclist));
+            param.Add(new MySqlParameter("p_Buspass", model.Buspass));
+            param.Add(new MySqlParameter("p_Driver", model.Driver));
+            param.Add(new MySqlParameter("p_FrontPass", model.FrontPass));
+            param.Add(new MySqlParameter("p_RearPass", model.RearPass));
+            param.Add(new MySqlParameter("p_Rear", model.Rear));
+            param.Add(new MySqlParameter("p_Front", model.Front));
+
+            param.Add(new MySqlParameter("p_Driversidefront", model.Driversidefront));
+            param.Add(new MySqlParameter("p_Driversiderear", model.Driversiderear));
+            param.Add(new MySqlParameter("p_DriverSideswipe", model.DriverSideswipe));
+            param.Add(new MySqlParameter("p_TBonedDriverside", model.TBonedDriverside));
+            param.Add(new MySqlParameter("p_Passengersidefront", model.Passengersidefront));
+            param.Add(new MySqlParameter("p_Passengersiderear", model.Passengersiderear));
+            param.Add(new MySqlParameter("p_TBonePassengerside", model.TBonePassengerside));
+            param.Add(new MySqlParameter("p_PassengerSideswipe", model.PassengerSideswipe));
+
+            param.Add(new MySqlParameter("p_airbagsdeployed_yes", model.airbagsdeployed_yes));
+            param.Add(new MySqlParameter("p_EMSArrived_yes", model.EMSArrived_yes));
+            param.Add(new MySqlParameter("p_PoliceatScene_yes", model.PoliceatScene_yes));
+            param.Add(new MySqlParameter("p_WenttoHospital_yes", model.WenttoHospital_yes));
+            param.Add(new MySqlParameter("p_Hospitalname", model.Hospitalname));
+
+            param.Add(new MySqlParameter("p_PMHNone", model.PMHNone));
+            param.Add(new MySqlParameter("p_PMHDiabetes", model.PMHDiabetes));
+            param.Add(new MySqlParameter("p_PMHHTN", model.PMHHTN));
+            param.Add(new MySqlParameter("p_PMHHLD", model.PMHHLD));
+            param.Add(new MySqlParameter("p_PMHAsthma", model.PMHAsthma));
+            param.Add(new MySqlParameter("p_PMHCardiac", model.PMHCardiac));
+            param.Add(new MySqlParameter("p_PMHThyroid", model.PMHThyroid));
+            param.Add(new MySqlParameter("p_PMHCA", model.PMHCA));
+            param.Add(new MySqlParameter("p_description_of_the_PMH", model.description_of_the_PMH));
+
+            param.Add(new MySqlParameter("p_PSHNone", model.PSHNone));
+            param.Add(new MySqlParameter("p_description_of_the_PSH", model.description_of_the_PSH));
+
+            param.Add(new MySqlParameter("p_MedsNone", model.MedsNone));
+            param.Add(new MySqlParameter("p_PainmedsPRN", model.PainmedsPRN));
+            param.Add(new MySqlParameter("p_description_of_the_Meds", model.description_of_the_Meds));
+            param.Add(new MySqlParameter("p_Unabletorecall", model.Unabletorecall));
+
+            param.Add(new MySqlParameter("p_DrugAllergy_yes", model.DrugAllergy_yes));
+            param.Add(new MySqlParameter("p_DrugAllergy", model.DrugAllergy));
+
+            param.Add(new MySqlParameter("p_Smoke_yes", model.Smoke_yes));
+            param.Add(new MySqlParameter("p_ppd_txt", model.ppd_txt));
+            param.Add(new MySqlParameter("p_Alcohol_yes", model.Alcohol_yes));
+            param.Add(new MySqlParameter("p_Cannabis_yes", model.Cannabis_yes));
+            param.Add(new MySqlParameter("p_RecreationalDrugs_yes", model.RecreationalDrugs_yes));
+
+            param.Add(new MySqlParameter("p_PTChiro_yes", model.PTChiro_yes));
+            param.Add(new MySqlParameter("p_Duration_txt", model.Duration_txt));
+
+            param.Add(new MySqlParameter("p_ReliefGood", model.ReliefGood));
+            param.Add(new MySqlParameter("p_ReliefLittle", model.ReliefLittle));
+            param.Add(new MySqlParameter("p_ReliefNone", model.ReliefNone));
+
+            param.Add(new MySqlParameter("p_Walk_yes", model.Walk_yes));
+            param.Add(new MySqlParameter("p_blocks_txt", model.blocks_txt));
+            param.Add(new MySqlParameter("p_Stand_yes", model.Stand_yes));
+            param.Add(new MySqlParameter("p_Stand_txt", model.Stand_txt));
+            param.Add(new MySqlParameter("p_Sit_yes", model.Sit_yes));
+            param.Add(new MySqlParameter("p_Sit_txt", model.Sit_txt));
+
+            param.Add(new MySqlParameter("p_Garden", model.Garden));
+            param.Add(new MySqlParameter("p_Playsports", model.Playsports));
+            param.Add(new MySqlParameter("p_Drive", model.Drive));
+            param.Add(new MySqlParameter("p_Lift", model.Lift));
+            param.Add(new MySqlParameter("p_Childcare", model.Childcare));
+            param.Add(new MySqlParameter("p_Carry", model.Carry));
+            param.Add(new MySqlParameter("p_Reachoverhead", model.Reachoverhead));
+            param.Add(new MySqlParameter("p_Laundry", model.Laundry));
+            param.Add(new MySqlParameter("p_Shopping", model.Shopping));
+            param.Add(new MySqlParameter("p_Errands", model.Errands));
+            param.Add(new MySqlParameter("p_Kneel", model.Kneel));
+            param.Add(new MySqlParameter("p_Squat", model.Squat));
+            param.Add(new MySqlParameter("p_Stairs", model.Stairs));
+            param.Add(new MySqlParameter("p_Jog", model.Jog));
+            param.Add(new MySqlParameter("p_Exercise", model.Exercise));
+            param.Add(new MySqlParameter("p_Cmp_Id", model.cmp_id));
+
+            var data = ExecuteSP("sp_InsertInitialIntake", param);
+
+            return data;
+        }
+
+        public InitialIntake? GetInitialIntakeById(int id)
+        {
+            DataTable dt = new DataTable();
+            MySqlCommand cm = new MySqlCommand("select * from initialintake where Id=@id ", conn);
+            cm.Parameters.AddWithValue("@Id", id);
+            var datalist = ConvertDataTable<InitialIntake>(GetData(cm)).FirstOrDefault();
+            return datalist;
+        }
+
+
     }
 }

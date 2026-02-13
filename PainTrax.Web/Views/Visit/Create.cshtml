@@ -8,7 +8,9 @@
 <link rel="stylesheet" href="~/assets/dist/bootstrap-tagsinput.css">
 <script src="~/ckeditor/build/ckeditor.js"></script>
 
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 
 
 
@@ -111,51 +113,52 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row" style="padding:10px">
-                            <div class="col-md-10 col-sm-10">
+                            <div class="col-md-9 col-sm-9">
                                 <!-- Bordered Tabs -->
                                 <ul class="nav nav-tabs nav-tabs-bordered" id="borderedTab" role="tablist">
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link active" id="home-tab" data-bs-target="#bordered-home" role="tab" aria-controls="home" aria-selected="true">Patient Details</a>
                                     </li>
-                                    <li class="nav-item" role="presentation">
+                                    <li class="nav-item" role="presentation" onclick="fnGetPage1()">
                                         <a class="nav-link " id="page1-tab" data-bs-target="#bordered-profile" role="tab" aria-controls="profile" aria-selected="false">SOAP</a>
                                     </li>
-                                    <li class="nav-item" role="presentation">
+                                    <li class="nav-item" role="presentation" onclick="fnGetPage2()">
                                         <a class="nav-link" id="page2-tab" data-bs-target="#bordered-contact" role="tab" aria-controls="contact" aria-selected="false">Page2</a>
                                     </li>
-                                    <li class="nav-item" role="presentation">
+                                    <li class="nav-item" role="presentation" onclick="fnGetPageNE()">
                                         <a class="nav-link" id="ne-tab" data-bs-target="#bordered-ne" role="tab" aria-controls="contact" aria-selected="false">NE</a>
                                     </li>
-                                    <li class="nav-item" role="presentation">
+                                    <li class="nav-item" role="presentation" onclick="fnGetPage3()">
                                         <a class="nav-link" id="p4-tab" data-bs-target="#bordered-p4" role="tab" aria-controls="contact" aria-selected="false">Diagnostics</a>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="poc-tab" data-bs-target="#bordered-poc" role="tab" aria-controls="contact" aria-selected="false">POC</a>
                                     </li>
-                                    <li class="nav-item" role="presentation">
+                                    <li class="nav-item" role="presentation" onclick="fnGetOthers()">
                                         <a class="nav-link" id="other-tab" data-bs-target="#bordered-other" role="tab" aria-controls="contact" aria-selected="false">Others</a>
                                     </li>
-                                    <li class="nav-item" role="presentation">
+                                    <li class="nav-item" role="presentation" onclick="fnGetComments()">
                                         <a class="nav-link" id="ps-tab" data-bs-target="#bordered-comments" role="tab" aria-controls="contact" aria-selected="false">Comments</a>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link" id="ps-tab" data-bs-target="#bordered-ps" role="tab" aria-controls="contact" aria-selected="false">POC Summary</a>
                                     </li>
-                                    <li class="nav-item" role="presentation">
+                                    <li class="nav-item" role="presentation" onclick="fnGetDocumentList()">
                                         <a class="nav-link" id="ps-tab" data-bs-target="#bordered-doc" role="tab" aria-controls="contact" aria-selected="false">Documents</a>
                                     </li>
 
                                 </ul>
                             </div>
-                            <div class="col-md-2 col-sm-2">
-
+                            <div class="col-md-3 col-sm-3">
+                                &nbsp; &nbsp;
+                                <a id="defaultSaveButton" name="defaultSaveButton" target="_new" onclick="fnSaveDefault()" class="btn btn-warning bi bi-capslock" title="Save Default" style="float:right;display:none;margin-left:5px;"></a>
                                 <a id="printButton" name="printButton" target="_new" onclick="fnPrint()" class="btn btn-success bi bi-printer" title="Print Report" style="float:right;display:none"></a> &nbsp; &nbsp;
                                 <button type="button" id="btnSaveAll" class="btn btn-secondary bi bi-floppy" style="margin-right:4px; margin-left:4px; float:right;">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-floppy" viewBox="0 0 16 16">
                                         <path d="M11 2H9v3h2z"></path>
                                         <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"></path>
                                     </svg>
-                                </button>
+                                </button> 
                                 <a id="printButtonSOAP" name="printButtonSOAP" onclick="DownloadPdf(@Model.patientid  ,'@Model.fname','@Model.lname')" href="#" class="btn btn-warning bi bi-printer" title="Print Demo" style="float:right;display:block"></a> &nbsp; &nbsp;
                             </div>
                             <div class="clearfix"></div>
@@ -425,12 +428,12 @@
                                                         </label>
                                                         <div class="col-sm-4">
                                                             <input class="form-control" type="text" asp-for="prime_cmpname">
-                                                           @*  <select asp-for="prime_cmpname" name="prime_cmpname" style="width:100% !important" class="form-select searchable-dropdown">
-                                                                <option value="">-- Select ---</option>
-                                                                @foreach (var item in ViewBag.insuranceList)
-                                                                {
-                                                                    <option value="@item.ival">@item.val</option>
-                                                                }
+                                                            @*  <select asp-for="prime_cmpname" name="prime_cmpname" style="width:100% !important" class="form-select searchable-dropdown">
+                                                            <option value="">-- Select ---</option>
+                                                            @foreach (var item in ViewBag.insuranceList)
+                                                            {
+                                                            <option value="@item.ival">@item.val</option>
+                                                            }
                                                             </select> *@
                                                         </div>
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
@@ -489,13 +492,13 @@
                                                             Insurance Co.
                                                         </label>
                                                         <div class="col-sm-4">
-                                                               <input class="form-control" type="text" asp-for="sec_cmpname">
-                                                          @*   <select asp-for="sec_cmpname" name="sec_cmpname" style="width:100%!important;" class="form-select searchable-dropdown">
-                                                                <option value="">-- Select ---</option>
-                                                                @foreach (var item in ViewBag.insuranceList)
-                                                                {
-                                                                    <option value="@item.ival">@item.val</option>
-                                                                }
+                                                            <input class="form-control" type="text" asp-for="sec_cmpname">
+                                                            @*   <select asp-for="sec_cmpname" name="sec_cmpname" style="width:100%!important;" class="form-select searchable-dropdown">
+                                                            <option value="">-- Select ---</option>
+                                                            @foreach (var item in ViewBag.insuranceList)
+                                                            {
+                                                            <option value="@item.ival">@item.val</option>
+                                                            }
                                                             </select> *@
 
                                                         </div>
@@ -691,19 +694,24 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="bordered-profile" role="tabpanel" aria-labelledby="profile-tab">
-                                        @Html.Partial("_Page1", Model.Page1)
+                                        @*  @Html.Partial("_Page1", Model.Page1) *@
+                                        <div id="divPage1"></div>
 
                                     </div>
                                     <div class="tab-pane fade" id="bordered-contact" role="tabpanel" aria-labelledby="contact-tab">
-                                        @Html.Partial("_Page2", Model.Page2)
+                                        @*  @Html.Partial("_Page2", Model.Page2) *@
+                                        <div id="divPage2"></div>
+
                                     </div>
                                     <div class="tab-pane fade" id="bordered-ne" role="tabpanel" aria-labelledby="contact-tab">
-                                        @Html.Partial("_NE", Model.NE)
+                                        @* @Html.Partial("_NE", Model.NE) *@
+                                        <div id="divNE"></div>
                                     </div>
                                     <div class="tab-pane fade" id="bordered-p4" role="tabpanel" aria-labelledby="contact-tab">
-                                        <div class="col-lg-12">
-                                            @Html.Partial("_Page3", Model.Page3)
-                                        </div>
+                                        @*  <div class="col-lg-12">
+                                        @Html.Partial("_Page3", Model.Page3)
+                                        </div> *@
+                                        <div id="divPage3"></div>
                                     </div><!-- End Bordered Tabs -->
                                     <div class="tab-pane fade" id="bordered-poc" role="tabpanel" aria-labelledby="poc-tab">
                                         <div class="col-lg-12">
@@ -713,7 +721,8 @@
                                     </div>
                                     <div class="tab-pane fade" id="bordered-other" role="tabpanel" aria-labelledby="other-tab">
                                         <div class="col-lg-12">
-                                            @Html.Partial("_OtherPage", Model.Other)
+                                            @*  @Html.Partial("_OtherPage", Model.Other) *@
+                                            <div id="divOthers"></div>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="bordered-ps" role="tabpanel" aria-labelledby="ps-tab">
@@ -722,11 +731,13 @@
                                     </div>
                                     <div class="tab-pane fade" id="bordered-doc" role="tabpanel" aria-labelledby="doc-tab">
                                         <div class="col-lg-12">
-                                            @Html.Partial("_documents", Model)
+                                            @*   @Html.Partial("_documents", Model) *@
+                                            <div id="divDocuments"></div>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="bordered-comments" role="tabpanel" aria-labelledby="comments-tab">
-                                        @Html.Partial("_Comments", Model.Comment)
+                                        @*    @Html.Partial("_Comments", Model.Comment) *@
+                                        <div id="divComment"></div>
                                     </div>
                                 </div>
                             </div>
@@ -1095,6 +1106,21 @@
         );
     }
 
+    function fnSaveDefault() {
+         var url = "@Url.Action("SaveDefault", "Visit")?id=" + $("#hdIEId").val();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (data) {
+                $('#myModalMessage').modal('show');
+                $('#messBody').html("Details Saved.");
+            },
+            error: function (xhr, status, error) {
+                alert("Error fetching physicians: " + error);
+            }
+        });
+    }
+
     function fnSaveProcedurePerformd() {
         var id = $("#hdIEId").val();
         if (id != null && id != undefined) {
@@ -1164,14 +1190,9 @@
         }
 
         $("#btnSaveAll").click(function () {
-
-
-            // var id = $("#hd-active-tab").val();
             var id = $('.tab-content .active').attr('id');
 
-
             if (id === "bordered-home") {
-
                 if (isDetaildValid()) {
 
                     if ($("#id").val() === "0") {
@@ -1257,7 +1278,7 @@
         if (id === "bordered-home") {
 
             $('#printButton').hide();
-
+            $('#defaultSaveButton').hide();
 
             if (isDetaildValid()) {
 
@@ -1438,6 +1459,7 @@
                     fnShowPOCSummary();
                     fnShowPOC();
                     $('#printButton').show();
+                    $('#defaultSaveButton').show();
 
 
                     if ($("#alert_note").val() !== '') {
@@ -1452,53 +1474,53 @@
                         $(t).tab('show');
 
 
-                        var age = calcAge($("#dob").val());
-                        var doi = $("#doa").val();
+                        // var age = calcAge($("#dob").val());
+                        // var doi = $("#doa").val();
 
 
-                        if (doi != '') {
-                            doi = formatDate(doi);
-                        }
+                        // if (doi != '') {
+                        //     doi = formatDate(doi);
+                        // }
 
-                        var dos = $("#dos").val();
+                        // var dos = $("#dos").val();
 
-                        if (dos != '') {
-                            dos = formatDate(dos);
-                        }
+                        // if (dos != '') {
+                        //     dos = formatDate(dos);
+                        // }
 
 
-                        //var gender = $("#gender option:selected").text().toLowerCase();
-                        var accidenttype = $("#accidentType option:selected").text().toLowerCase();
-                        var fullName = $("#fname").val() + ' ' + $("#mname").val() + ' ' + $("#lname").val()
+                        // //var gender = $("#gender option:selected").text().toLowerCase();
+                        // var accidenttype = $("#accidentType option:selected").text().toLowerCase();
+                        // var fullName = $("#fname").val() + ' ' + $("#mname").val() + ' ' + $("#lname").val()
 
-                        var content = (ckHistory.getData());
-                        //content = content.replace("#doi", doi == undefined ? "" : doi);
-                        // content = content.replace("#age", age);
-                        //content = content.replace("#gender", gender);
-                        content = content.replace("#dos", dos == undefined ? "" : dos)
-                        content = content.replace("#patientname", fullName == undefined ? "" : fullName);
-                        content = content.replace("#lname", $("#lname").val());
-                        content = content.replace("#fname", $("#fname").val());
-                        content = content.replace("#ln", $("#lname").val());
-                        content = content.replace("#fn", $("#fname").val());
-                        content = content.replace("#accidenttype", accidenttype);
-                        content = content.replace("#handedness", $("#handeness option:selected").text().toLowerCase());
-                        ckHistory.data.set(content);
+                        // var content = (ckHistory.getData());
+                        // //content = content.replace("#doi", doi == undefined ? "" : doi);
+                        // // content = content.replace("#age", age);
+                        // //content = content.replace("#gender", gender);
+                        // content = content.replace("#dos", dos == undefined ? "" : dos)
+                        // content = content.replace("#patientname", fullName == undefined ? "" : fullName);
+                        // content = content.replace("#lname", $("#lname").val());
+                        // content = content.replace("#fname", $("#fname").val());
+                        // content = content.replace("#ln", $("#lname").val());
+                        // content = content.replace("#fn", $("#fname").val());
+                        // content = content.replace("#accidenttype", accidenttype);
+                        // content = content.replace("#handedness", $("#handeness option:selected").text().toLowerCase());
+                        // ckHistory.data.set(content);
 
-                        content = (ckAssessment.getData());
-                        content = content.replace("#doi", doi);
-                        //content = content.replace("#age", age);
-                        //content = content.replace("#gender", gender);
-                        ckAssessment.data.set(content);
+                        // content = (ckAssessment.getData());
+                        // content = content.replace("#doi", doi);
+                        // //content = content.replace("#age", age);
+                        // //content = content.replace("#gender", gender);
+                        // ckAssessment.data.set(content);
                     }
 
-                    if (isnew) {
-                        fnPage1Save(null);
-                        fnPage2Save(null);
-                        fnPage3Save(null);
-                        fnNESave(null);
-                        fnOtherSave(null);
-                    }
+                    // if (isnew) {
+                    //     // fnPage1Save(null);
+                    //     // fnPage2Save(null);
+                    //     // fnPage3Save(null);
+                    //     // fnNESave(null);
+                    //     //fnOtherSave(null);
+                    // }
                 }
                 else
                     alert("Error in Data Saving.");
@@ -1605,6 +1627,152 @@
             },
         });
     }
+
+    function fnGetPage1() {
+
+
+        var doi = $("#doa").val();
+
+
+        if (doi != '') {
+            doi = formatDate(doi);
+        }
+
+        var dos = $("#dos").val();
+
+        if (dos != '') {
+            dos = formatDate(dos);
+        }
+
+
+        var accidenttype = $("#accidentType option:selected").text().toLowerCase();
+        var fullName = $("#fname").val() + ' ' + $("#mname").val() + ' ' + $("#lname").val()
+        var fname = $("#fname").val();
+        var lname = $("#lname").val();
+        var handeness = $("#handeness option:selected").text().toLowerCase();
+        var gender = $("#gender option:selected").text().toLowerCase();
+
+
+        url = '@Url.Action("GetPage1", "Visit")?doi=' + doi + '&gender=' + gender + '&dos=' + dos + '&accidenttype=' + accidenttype + '&fname=' + fname + '&lname=' + lname + '&handeness=' + handeness + '&patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divPage1").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnGetPage2() {
+        url = '@Url.Action("GetPage2", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divPage2").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnGetPageNE() {
+        url = '@Url.Action("GetNE", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divNE").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnGetPage3() {
+        url = '@Url.Action("GetPage3", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divPage3").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnGetComments() {
+        url = '@Url.Action("GetCommentPage", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+                $("#divComment").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnGetDocumentList() {
+        url = '@Url.Action("GetDocuments", "Visit")?patientId=' + $("#patientid").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                $("#divDocuments").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
+    function fnGetOthers() {
+        url = '@Url.Action("GetOthers", "Visit")?patientIEId=' + $("#hdIEId").val();
+
+        $.ajax({
+            type: "Post",
+            url: url,
+            contentType: "application/x-www-form-urlencoded",
+            success: function (data, status, xhr) {
+
+                $("#divOthers").html(data);
+
+            },
+            error: function (xhr, status, error) {
+                alert("Error!" + xhr.status);
+            },
+        });
+    }
+
 
     function fnShowPOCSummary() {
         var url = '@Url.Action("POCSummary", "Visit")?patientIEId=' + $("#hdIEId").val();

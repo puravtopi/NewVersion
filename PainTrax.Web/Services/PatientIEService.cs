@@ -83,8 +83,8 @@ public class PatientIEService : ParentService
     public int Insert(tbl_patient_ie data)
     {
         MySqlCommand cm = new MySqlCommand(@"INSERT INTO tbl_patient_ie
-		(patient_id,location_id,attorney_id,primary_ins_cmp_id,secondary_ins_cmp_id,emp_id,adjuster_id,provider_id,doe,doa,primary_claim_no,secondary_claim_no,primary_policy_no,secondary_policy_no,compensation,note,ins_note,alert_note,created_date,created_by,is_active,secondary_wcb_group,primary_wcb_group,referring_physician,accident_type,physicianid)Values
-				(@patient_id,@location_id,@attorney_id,@primary_ins_cmp_id,@secondary_ins_cmp_id,@emp_id,@adjuster_id,@provider_id,@doe,@doa,@primary_claim_no,@secondary_claim_no,@primary_policy_no,@secondary_policy_no,@compensation,@note,@ins_note,@alert_note,@created_date,@created_by,@is_active,@secondary_wcb_group,@primary_wcb_group,@referring_physician,@accident_type,@physicianid);select @@identity;", conn);
+		(patient_id,location_id,attorney_id,primary_ins_cmp_id,secondary_ins_cmp_id,emp_id,adjuster_id,provider_id,doe,doa,primary_claim_no,secondary_claim_no,primary_policy_no,secondary_policy_no,compensation,note,ins_note,alert_note,created_date,created_by,is_active,secondary_wcb_group,primary_wcb_group,referring_physician,accident_type,physicianid,intakeid)Values
+				(@patient_id,@location_id,@attorney_id,@primary_ins_cmp_id,@secondary_ins_cmp_id,@emp_id,@adjuster_id,@provider_id,@doe,@doa,@primary_claim_no,@secondary_claim_no,@primary_policy_no,@secondary_policy_no,@compensation,@note,@ins_note,@alert_note,@created_date,@created_by,@is_active,@secondary_wcb_group,@primary_wcb_group,@referring_physician,@accident_type,@physicianid,@intakeid);select @@identity;", conn);
         cm.Parameters.AddWithValue("@patient_id", data.patient_id);
         cm.Parameters.AddWithValue("@location_id", data.location_id);
         cm.Parameters.AddWithValue("@attorney_id", data.attorney_id);
@@ -111,6 +111,7 @@ public class PatientIEService : ParentService
         cm.Parameters.AddWithValue("@referring_physician", data.referring_physician);
         cm.Parameters.AddWithValue("@accident_type", data.accident_type);
         cm.Parameters.AddWithValue("@physicianid", data.physicianid);
+        cm.Parameters.AddWithValue("@intakeid", data.intakeid);
         var result = ExecuteScalar(cm);
         return result;
     }

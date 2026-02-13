@@ -94,8 +94,10 @@ namespace PainTrax.Web.Controllers
             //};
 
             //var t = _mapper.Map<CompanyVM>(tbl);
-                
+
             //var respose = _service.Save(t);
+
+            var c_id = EncryptionHelper.Encrypt("10");
             try
             {
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);

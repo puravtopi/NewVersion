@@ -1,5 +1,4 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml;
 using HtmlToOpenXml;
@@ -386,141 +385,141 @@ namespace PainTrax.Web.Controllers
                         }
                     }
 
-                    var page1Data = _ieService.GetOnePage1(id);
+                    //var page1Data = _ieService.GetOnePage1(id);
 
-                    if (page1Data != null)
-                    {
-                        obj.Page1 = page1Data;
+                    //if (page1Data != null)
+                    //{
+                    //    obj.Page1 = page1Data;
 
-                        //if (!string.IsNullOrEmpty(dataPOC.strCCDesc))
-                        //    obj.Page1.cc = obj.Page1.cc + "<p>" + dataPOC.strCCDesc + "</p>";
+                    //    //if (!string.IsNullOrEmpty(dataPOC.strCCDesc))
+                    //    //    obj.Page1.cc = obj.Page1.cc + "<p>" + dataPOC.strCCDesc + "</p>";
 
-                        //if (!string.IsNullOrEmpty(dataPOC.strPEDesc))
-                        //    obj.Page1.pe = obj.Page1.pe + "<p>" + dataPOC.strPEDesc + "</p>";
+                    //    //if (!string.IsNullOrEmpty(dataPOC.strPEDesc))
+                    //    //    obj.Page1.pe = obj.Page1.pe + "<p>" + dataPOC.strPEDesc + "</p>";
 
-                        //if (!string.IsNullOrEmpty(dataPOC.strADesc))
-                        //    obj.Page1.assessment = obj.Page1.assessment + "<p>" + dataPOC.strADesc + "</p>";
+                    //    //if (!string.IsNullOrEmpty(dataPOC.strADesc))
+                    //    //    obj.Page1.assessment = obj.Page1.assessment + "<p>" + dataPOC.strADesc + "</p>";
 
-                        ViewBag.Assessment = page1Data.assessment;
+                    //    ViewBag.Assessment = page1Data.assessment;
 
-                        string daignoLink = "";
-                        if (!string.IsNullOrEmpty(page1Data.bodypart))
-                        {
-                            for (int i = 0; i < page1Data.bodypart.Split(',').Length; i++)
-                            {
-                                var linkbody = page1Data.bodypart.Split(',')[i].Replace(" ", "_");
-                                daignoLink += "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + page1Data.bodypart.Split(',')[i] + "</a><br/>";
-                            }
+                    //    string daignoLink = "";
+                    //    if (!string.IsNullOrEmpty(page1Data.bodypart))
+                    //    {
+                    //        for (int i = 0; i < page1Data.bodypart.Split(',').Length; i++)
+                    //        {
+                    //            var linkbody = page1Data.bodypart.Split(',')[i].Replace(" ", "_");
+                    //            daignoLink += "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + page1Data.bodypart.Split(',')[i] + "</a><br/>";
+                    //        }
 
-                        }
-                        ViewBag.DaignoLink = daignoLink;
-                    }
-                    else
-                        obj.Page1 = new tbl_ie_page1();
+                    //    }
+                    //    ViewBag.DaignoLink = daignoLink;
+                    //}
+                    //else
+                    //    obj.Page1 = new tbl_ie_page1();
 
-                    if (dataPOC != null && string.IsNullOrEmpty(obj.Page1.plan))
-                        obj.Page1.plan = dataPOC.strPoc;
-
-
-                    var page2Data = _ieService.GetOnePage2(id);
-
-                    if (page2Data != null)
-                    {
-                        obj.Page2 = page2Data;
-                    }
-                    else
-                        obj.Page2 = new tbl_ie_page2();
-
-                    var NEData = _ieService.GetOneNE(id);
-
-                    if (NEData != null)
-                    {
-                        obj.NE = NEData;
-                    }
-                    else
-                    {
-                        obj.NE = new tbl_ie_ne();
-                    }
-
-                    obj.NE.neurological_exam = string.IsNullOrEmpty(obj.NE.neurological_exam) ? _defaultdata.ne : obj.NE.neurological_exam;
-
-                    var page3Data = _ieService.GetOnePage3(id);
-
-                    if (page3Data != null)
-                    {
-                        obj.Page3 = page3Data;
-                    }
-                    else
-                        obj.Page3 = new tbl_ie_page3();
+                    //if (dataPOC != null && string.IsNullOrEmpty(obj.Page1.plan))
+                    //    obj.Page1.plan = dataPOC.strPoc;
 
 
+                    //var page2Data = _ieService.GetOnePage2(id);
+
+                    //if (page2Data != null)
+                    //{
+                    //    obj.Page2 = page2Data;
+                    //}
+                    //else
+                    //    obj.Page2 = new tbl_ie_page2();
+
+                    //var NEData = _ieService.GetOneNE(id);
+
+                    //if (NEData != null)
+                    //{
+                    //    obj.NE = NEData;
+                    //}
+                    //else
+                    //{
+                    //    obj.NE = new tbl_ie_ne();
+                    //}
+
+                    //obj.NE.neurological_exam = string.IsNullOrEmpty(obj.NE.neurological_exam) ? _defaultdata.ne : obj.NE.neurological_exam;
+
+                    //var page3Data = _ieService.GetOnePage3(id);
+
+                    //if (page3Data != null)
+                    //{
+                    //    obj.Page3 = page3Data;
+                    //}
+                    //else
+                    //    obj.Page3 = new tbl_ie_page3();
 
 
-                    obj.Page3.care = string.IsNullOrEmpty(obj.Page3.care) ? _defaultdata.care : obj.Page3.care;
-                    obj.Page3.goal = string.IsNullOrEmpty(obj.Page3.goal) ? _defaultdata.goal : obj.Page3.goal;
 
 
-                    var pageComment = _ieService.GetOneComment(id);
-
-                    if (pageComment != null)
-                    {
-                        obj.Comment = pageComment;
-                    }
-                    else
-                        obj.Comment = new tbl_ie_comment();
-
-                    var pageOther = _ieService.GetOneOtherPage(id);
-
-                    if (pageOther != null)
-                    {
-                        obj.Other = pageOther;
+                    //obj.Page3.care = string.IsNullOrEmpty(obj.Page3.care) ? _defaultdata.care : obj.Page3.care;
+                    //obj.Page3.goal = string.IsNullOrEmpty(obj.Page3.goal) ? _defaultdata.goal : obj.Page3.goal;
 
 
-                        var tretmentdesc = string.IsNullOrEmpty(pageOther.treatment_delimit_desc) ? null : pageOther.treatment_delimit_desc.Split('^');
+                    //var pageComment = _ieService.GetOneComment(id);
+
+                    //if (pageComment != null)
+                    //{
+                    //    obj.Comment = pageComment;
+                    //}
+                    //else
+                    //    obj.Comment = new tbl_ie_comment();
+
+                    //var pageOther = _ieService.GetOneOtherPage(id);
+
+                    //if (pageOther != null)
+                    //{
+                    //    obj.Other = pageOther;
 
 
-                        var _data = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
+                    //    var tretmentdesc = string.IsNullOrEmpty(pageOther.treatment_delimit_desc) ? null : pageOther.treatment_delimit_desc.Split('^');
 
-                        List<tbl_treatment_master> lst = new List<tbl_treatment_master>();
-                        int i = 0;
-                        try
-                        {
-                            foreach (var item in _data)
-                            {
-                                if (!string.IsNullOrEmpty(pageOther.treatment_delimit))
-                                {
-                                    if (pageOther.treatment_delimit.Contains(item.id.ToString()))
-                                    {
-                                        if (tretmentdesc != null)
-                                        {
-                                            if (tretmentdesc.Length >= (i + 1))
-                                                item.treatment_details = tretmentdesc[i];
-                                        }
-                                        item.pre_select = true;
-                                        i++;
-                                    }
-                                    else
-                                        item.pre_select = false;
-                                }
 
-                                lst.Add(item);
+                    //    var _data = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
 
-                            }
-                        }
-                        catch (Exception ex)
-                        {
+                    //    List<tbl_treatment_master> lst = new List<tbl_treatment_master>();
+                    //    int i = 0;
+                    //    try
+                    //    {
+                    //        foreach (var item in _data)
+                    //        {
+                    //            if (!string.IsNullOrEmpty(pageOther.treatment_delimit))
+                    //            {
+                    //                if (pageOther.treatment_delimit.Contains(item.id.ToString()))
+                    //                {
+                    //                    if (tretmentdesc != null)
+                    //                    {
+                    //                        if (tretmentdesc.Length >= (i + 1))
+                    //                            item.treatment_details = tretmentdesc[i];
+                    //                    }
+                    //                    item.pre_select = true;
+                    //                    i++;
+                    //                }
+                    //                else
+                    //                    item.pre_select = false;
+                    //            }
 
-                        }
+                    //            lst.Add(item);
 
-                        obj.Other.listTreatmentMaster = lst;
-                    }
-                    else
-                    {
-                        obj.Other = new tbl_ie_other();
-                        var _data = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
-                        obj.Other.followup_duration = "2 weeks.";
-                        obj.Other.listTreatmentMaster = _data;
-                    }
+                    //        }
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+
+                    //    }
+
+                    //    obj.Other.listTreatmentMaster = lst;
+                    //}
+                    //else
+                    //{
+                    //    obj.Other = new tbl_ie_other();
+                    //    var _data = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
+                    //    obj.Other.followup_duration = "2 weeks.";
+                    //    obj.Other.listTreatmentMaster = _data;
+                    //}
 
 
 
@@ -544,7 +543,7 @@ namespace PainTrax.Web.Controllers
                         obj.home_ph = patientData.home_ph;
                         obj.mobile = patientData.mobile;
                         //obj.mc = patientData.mc;
-                        obj.mc = patientData.mc == "true" ? "Yes": patientData.mc == "false" ? "No" : patientData.mc;
+                        obj.mc = patientData.mc == "true" ? "Yes" : patientData.mc == "false" ? "No" : patientData.mc;
                         obj.mc_details = patientData.mc_details;
                         obj.vaccinated = patientData.vaccinated;
                         obj.patientid = patientData.id;
@@ -557,164 +556,164 @@ namespace PainTrax.Web.Controllers
                 {
                     obj.patientid = 0;
                     obj.id = 0;
-                    obj.Page1 = new tbl_ie_page1();
+                    // obj.Page1 = new tbl_ie_page1();
 
                     obj.providerid = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
 
-                    obj.Page2 = new tbl_ie_page2();
-                    obj.Page3 = new tbl_ie_page3();
+                    //obj.Page2 = new tbl_ie_page2();
+                    //obj.Page3 = new tbl_ie_page3();
 
                     //obj.Page3.diagcervialbulge_text = "reveals ";
                     //obj.Page3.diagthoracicbulge_text = "reveals ";
                     //obj.Page3.diaglumberbulge_text = "reveals ";
-                    obj.Page3.gait = HttpContext.Session.GetString(SessionKeys.SessionGAIT);
+                    //obj.Page3.gait = HttpContext.Session.GetString(SessionKeys.SessionGAIT);
 
-                    obj.NE = new tbl_ie_ne();
-                    obj.Comment = new tbl_ie_comment();
-                    obj.Other = new tbl_ie_other();
-                    obj.Other.followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
+                    //obj.NE = new tbl_ie_ne();
+                    //obj.Comment = new tbl_ie_comment();
+                    //obj.Other = new tbl_ie_other();
+                    //obj.Other.followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
                     obj.dos = System.DateTime.Now;
                     obj.locationid = HttpContext.Session.GetInt32(SessionKeys.SessionLocationId);
 
-                    var _data = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
+                    //var _data = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
 
-                    if (_defaultdata != null)
-                    {
-                        obj.NE.neurological_exam = _defaultdata.ne;
-                        obj.Page3.goal = _defaultdata.goal;
-                        obj.Page3.care = _defaultdata.care;
-                    }
+                    //if (_defaultdata != null)
+                    //{
+                    //    obj.NE.neurological_exam = _defaultdata.ne;
+                    //    //obj.Page3.goal = _defaultdata.goal;
+                    //    //obj.Page3.care = _defaultdata.care;
+                    //}
 
-                    obj.Other.listTreatmentMaster = _data;
+                    //obj.Other.listTreatmentMaster = _data;
 
-                    var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
+                    //var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
 
-                    if (defaultPage1 != null)
-                    {
+                    //if (defaultPage1 != null)
+                    //{
 
 
-                        obj.Page1.allergies = defaultPage1.allergies;
-                        obj.Page1.dd = defaultPage1.dd;
-                        obj.Page1.daignosis_desc = defaultPage1.daignosis_desc;
-                        obj.Page1.assessment = defaultPage1.daignosis_desc;
-                        obj.Page1.cc = defaultPage1.cc;
-                        obj.Page1.pe = defaultPage1.pe;
-                        obj.Page1.family_history = defaultPage1.family_history;
-                        obj.Page1.history = defaultPage1.history;
-                        obj.Page1.medication = defaultPage1.medication;
-                        obj.Page1.note = defaultPage1.note;
+                    //    obj.Page1.allergies = defaultPage1.allergies;
+                    //    obj.Page1.dd = defaultPage1.dd;
+                    //    obj.Page1.daignosis_desc = defaultPage1.daignosis_desc;
+                    //    obj.Page1.assessment = defaultPage1.daignosis_desc;
+                    //    obj.Page1.cc = defaultPage1.cc;
+                    //    obj.Page1.pe = defaultPage1.pe;
+                    //    obj.Page1.family_history = defaultPage1.family_history;
+                    //    obj.Page1.history = defaultPage1.history;
+                    //    obj.Page1.medication = defaultPage1.medication;
+                    //    obj.Page1.note = defaultPage1.note;
 
-                        obj.Page1.occupation = defaultPage1.occupation;
-                        obj.Page1.plan = defaultPage1.plan;
-                        obj.Page1.pmh = defaultPage1.pmh;
-                        obj.Page1.psh = defaultPage1.psh;
-                        obj.Page1.rom = defaultPage1.rom;
-                        obj.Page1.social_history = defaultPage1.social_history;
-                        obj.Page1.vital = defaultPage1.vital;
-                        obj.Page1.work_status = defaultPage1.work_status;
-                        ViewBag.Assessment = defaultPage1.assessment;
-                    }
+                    //    obj.Page1.occupation = defaultPage1.occupation;
+                    //    obj.Page1.plan = defaultPage1.plan;
+                    //    obj.Page1.pmh = defaultPage1.pmh;
+                    //    obj.Page1.psh = defaultPage1.psh;
+                    //    obj.Page1.rom = defaultPage1.rom;
+                    //    obj.Page1.social_history = defaultPage1.social_history;
+                    //    obj.Page1.vital = defaultPage1.vital;
+                    //    obj.Page1.work_status = defaultPage1.work_status;
+                    //    ViewBag.Assessment = defaultPage1.assessment;
+                    //}
 
-                    var defaultPage2 = _defaultSettingService.GetOnePage2(cmpid.Value);
+                    //var defaultPage2 = _defaultSettingService.GetOnePage2(cmpid.Value);
 
-                    if (defaultPage2 != null)
-                    {
-                        obj.Page2.aod = defaultPage2.aod;
-                        obj.Page2.other = defaultPage2.other;
-                        obj.Page2.ros = defaultPage2.ros;
+                    //if (defaultPage2 != null)
+                    //{
+                    //    obj.Page2.aod = defaultPage2.aod;
+                    //    obj.Page2.other = defaultPage2.other;
+                    //    obj.Page2.ros = defaultPage2.ros;
 
-                    }
-                    var defaultNE = _defaultSettingService.GetOneNE(cmpid.Value);
+                    //}
+                    //var defaultNE = _defaultSettingService.GetOneNE(cmpid.Value);
 
-                    if (defaultNE != null)
-                    {
-                        obj.NE.neurological_exam = defaultNE.neurological_exam;
-                        obj.NE.sensory = defaultNE.sensory;
-                        obj.NE.manual_muscle_strength_testing = defaultNE.manual_muscle_strength_testing;
-                        obj.NE.other_content = defaultNE.other_content;
-                    }
+                    //if (defaultNE != null)
+                    //{
+                    //    obj.NE.neurological_exam = defaultNE.neurological_exam;
+                    //    obj.NE.sensory = defaultNE.sensory;
+                    //    obj.NE.manual_muscle_strength_testing = defaultNE.manual_muscle_strength_testing;
+                    //    obj.NE.other_content = defaultNE.other_content;
+                    //}
 
                 }
 
                 ViewBag.showPrint = id > 0 ? true : false;
 
                 //for documents
-                {
+                //{
 
-                    HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, patientId);
+                //    HttpContext.Session.SetInt32(SessionKeys.SessionPatientId, patientId);
 
-                    var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments");
-                    bool folderExists = Directory.Exists(FolderPath);
-                    if (!folderExists)
-                        Directory.CreateDirectory(FolderPath);
+                //    var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments");
+                //    bool folderExists = Directory.Exists(FolderPath);
+                //    if (!folderExists)
+                //        Directory.CreateDirectory(FolderPath);
 
-                    string[] dirs = Directory.GetDirectories(FolderPath, "*", SearchOption.TopDirectoryOnly);
+                //    string[] dirs = Directory.GetDirectories(FolderPath, "*", SearchOption.TopDirectoryOnly);
 
-                    List<TreeViewNode> nodes = new List<TreeViewNode>();
+                //    List<TreeViewNode> nodes = new List<TreeViewNode>();
 
-                    int i = 0;
-                    foreach (var item in dirs)
-                    {
-                        i++;
-                        string FolderName = System.IO.Path.GetFileName(item);
-                        var FolderPathFile = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", FolderName.ToString(), patientId.ToString());
-                        int j = 0;
+                //    int i = 0;
+                //    foreach (var item in dirs)
+                //    {
+                //        i++;
+                //        string FolderName = System.IO.Path.GetFileName(item);
+                //        var FolderPathFile = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", FolderName.ToString(), patientId.ToString());
+                //        int j = 0;
 
-                        bool folderExistsNew = Directory.Exists(FolderPathFile);
-                        if (!folderExistsNew)
-                            Directory.CreateDirectory(FolderPathFile);
+                //        bool folderExistsNew = Directory.Exists(FolderPathFile);
+                //        if (!folderExistsNew)
+                //            Directory.CreateDirectory(FolderPathFile);
 
-                        foreach (var item1 in Directory.GetFiles(FolderPathFile))
-                        {
-                            j++;
-                            nodes.Add(new TreeViewNode { id = j.ToString() + "-" + i.ToString() + "~" + FolderName.ToString() + "$" + System.IO.Path.GetFileName(item1), parent = i.ToString(), text = System.IO.Path.GetFileName(item1) });
-                        }
+                //        foreach (var item1 in Directory.GetFiles(FolderPathFile))
+                //        {
+                //            j++;
+                //            nodes.Add(new TreeViewNode { id = j.ToString() + "-" + i.ToString() + "~" + FolderName.ToString() + "$" + System.IO.Path.GetFileName(item1), parent = i.ToString(), text = System.IO.Path.GetFileName(item1) });
+                //        }
 
-                        nodes.Add(new TreeViewNode { id = i.ToString(), parent = "#", text = FolderName.ToString() + "(" + j + ")" });
-                    }
+                //        nodes.Add(new TreeViewNode { id = i.ToString(), parent = "#", text = FolderName.ToString() + "(" + j + ")" });
+                //    }
 
-                    obj.doc_json = JsonConvert.SerializeObject(nodes, Formatting.Indented);
+                //    obj.doc_json = JsonConvert.SerializeObject(nodes, Formatting.Indented);
 
-                }
+                //}
                 if (obj.Page3 != null)
                 {
 
 
-                    var _page3Setting = _settingservices.GetOne(cmpid.Value);
+                    //var _page3Setting = _settingservices.GetOne(cmpid.Value);
 
-                    obj.Page3.diagcervialbulge_study = (obj.Page3.diagcervialbulge_study == null) ? "1" : obj.Page3.diagcervialbulge_study;
-                    obj.Page3.diagcervialbulge_comma = (obj.Page3.diagcervialbulge_comma == null) ? _page3Setting.diagcervialbulge_comma : obj.Page3.diagcervialbulge_comma;
-                    obj.Page3.diagthoracicbulge_study = (obj.Page3.diagthoracicbulge_study == null) ? "1" : obj.Page3.diagthoracicbulge_study;
-                    obj.Page3.diagthoracicbulge_comma = (obj.Page3.diagthoracicbulge_comma == null) ? _page3Setting.diagthoracicbulge_comma : obj.Page3.diagthoracicbulge_comma;
-                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null) ? "1" : obj.Page3.diaglumberbulge_study;
-                    obj.Page3.diaglumberbulge_comma = (obj.Page3.diaglumberbulge_comma == null) ? _page3Setting.diaglumberbulge_comma : obj.Page3.diaglumberbulge_comma;
-                    obj.Page3.diagleftshoulder_study = (obj.Page3.diagleftshoulder_study == null) ? "1" : obj.Page3.diagleftshoulder_study;
-                    obj.Page3.diagleftshoulder_comma = (obj.Page3.diagleftshoulder_comma == null) ? _page3Setting.diagleftshoulder_comma : obj.Page3.diagleftshoulder_comma;
-                    obj.Page3.diagrightshoulder_study = (obj.Page3.diagrightshoulder_study == null) ? "1" : obj.Page3.diagrightshoulder_study;
-                    obj.Page3.diagrightshoulder_comma = (obj.Page3.diagrightshoulder_comma == null) ? _page3Setting.diagrightshoulder_comma : obj.Page3.diagrightshoulder_comma;
-                    obj.Page3.diagleftknee_study = (obj.Page3.diagleftknee_study == null) ? "1" : obj.Page3.diagleftknee_study;
-                    obj.Page3.diagleftknee_comma = (obj.Page3.diagleftknee_comma == null) ? _page3Setting.diagleftknee_comma : obj.Page3.diagleftknee_comma;
-                    obj.Page3.diagrightknee_study = (obj.Page3.diagrightknee_study == null) ? "1" : obj.Page3.diagrightknee_study;
-                    obj.Page3.diagrightknee_comma = (obj.Page3.diagrightknee_comma == null) ? _page3Setting.diagrightknee_comma : obj.Page3.diagrightknee_comma;
-                    obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null) ? "1" : obj.Page3.diaglumberbulge_study;
-                    obj.Page3.diaglumberbulge_comma = (obj.Page3.diaglumberbulge_comma == null) ? _page3Setting.diaglumberbulge_comma : obj.Page3.diaglumberbulge_comma;
+                    //obj.Page3.diagcervialbulge_study = (obj.Page3.diagcervialbulge_study == null) ? "1" : obj.Page3.diagcervialbulge_study;
+                    //obj.Page3.diagcervialbulge_comma = (obj.Page3.diagcervialbulge_comma == null) ? _page3Setting.diagcervialbulge_comma : obj.Page3.diagcervialbulge_comma;
+                    //obj.Page3.diagthoracicbulge_study = (obj.Page3.diagthoracicbulge_study == null) ? "1" : obj.Page3.diagthoracicbulge_study;
+                    //obj.Page3.diagthoracicbulge_comma = (obj.Page3.diagthoracicbulge_comma == null) ? _page3Setting.diagthoracicbulge_comma : obj.Page3.diagthoracicbulge_comma;
+                    //obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null) ? "1" : obj.Page3.diaglumberbulge_study;
+                    //obj.Page3.diaglumberbulge_comma = (obj.Page3.diaglumberbulge_comma == null) ? _page3Setting.diaglumberbulge_comma : obj.Page3.diaglumberbulge_comma;
+                    //obj.Page3.diagleftshoulder_study = (obj.Page3.diagleftshoulder_study == null) ? "1" : obj.Page3.diagleftshoulder_study;
+                    //obj.Page3.diagleftshoulder_comma = (obj.Page3.diagleftshoulder_comma == null) ? _page3Setting.diagleftshoulder_comma : obj.Page3.diagleftshoulder_comma;
+                    //obj.Page3.diagrightshoulder_study = (obj.Page3.diagrightshoulder_study == null) ? "1" : obj.Page3.diagrightshoulder_study;
+                    //obj.Page3.diagrightshoulder_comma = (obj.Page3.diagrightshoulder_comma == null) ? _page3Setting.diagrightshoulder_comma : obj.Page3.diagrightshoulder_comma;
+                    //obj.Page3.diagleftknee_study = (obj.Page3.diagleftknee_study == null) ? "1" : obj.Page3.diagleftknee_study;
+                    //obj.Page3.diagleftknee_comma = (obj.Page3.diagleftknee_comma == null) ? _page3Setting.diagleftknee_comma : obj.Page3.diagleftknee_comma;
+                    //obj.Page3.diagrightknee_study = (obj.Page3.diagrightknee_study == null) ? "1" : obj.Page3.diagrightknee_study;
+                    //obj.Page3.diagrightknee_comma = (obj.Page3.diagrightknee_comma == null) ? _page3Setting.diagrightknee_comma : obj.Page3.diagrightknee_comma;
+                    //obj.Page3.diaglumberbulge_study = (obj.Page3.diaglumberbulge_study == null) ? "1" : obj.Page3.diaglumberbulge_study;
+                    //obj.Page3.diaglumberbulge_comma = (obj.Page3.diaglumberbulge_comma == null) ? _page3Setting.diaglumberbulge_comma : obj.Page3.diaglumberbulge_comma;
 
-                    obj.Page3.other1_study = (obj.Page3.other1_study == null) ? "0" : obj.Page3.other1_study;
-                    obj.Page3.other1_comma = (obj.Page3.other1_comma == null) ? _page3Setting.other1_comma : obj.Page3.other1_comma;
-                    obj.Page3.other2_study = (obj.Page3.other2_study == null) ? "0" : obj.Page3.other2_study;
-                    obj.Page3.other2_comma = (obj.Page3.other2_comma == null) ? _page3Setting.other2_comma : obj.Page3.other2_comma;
-                    obj.Page3.other3_study = (obj.Page3.other3_study == null) ? "0" : obj.Page3.other3_study;
-                    obj.Page3.other3_comma = (obj.Page3.other3_comma == null) ? _page3Setting.other3_comma : obj.Page3.other3_comma;
-                    obj.Page3.other4_study = (obj.Page3.other4_study == null) ? "0" : obj.Page3.other4_study;
-                    obj.Page3.other4_comma = (obj.Page3.other4_comma == null) ? _page3Setting.other4_comma : obj.Page3.other4_comma;
-                    obj.Page3.other5_study = (obj.Page3.other5_study == null) ? "0" : obj.Page3.other5_study;
-                    obj.Page3.other5_comma = (obj.Page3.other5_comma == null) ? _page3Setting.other5_comma : obj.Page3.other5_comma;
-                    obj.Page3.other6_study = (obj.Page3.other6_study == null) ? "0" : obj.Page3.other6_study;
-                    obj.Page3.other6_comma = (obj.Page3.other6_comma == null) ? _page3Setting.other6_comma : obj.Page3.other6_comma;
-                    obj.Page3.other7_study = (obj.Page3.other7_study == null) ? "0" : obj.Page3.other7_study;
-                    obj.Page3.other7_comma = (obj.Page3.other7_comma == null) ? _page3Setting.other7_comma : obj.Page3.other7_comma;
+                    //obj.Page3.other1_study = (obj.Page3.other1_study == null) ? "0" : obj.Page3.other1_study;
+                    //obj.Page3.other1_comma = (obj.Page3.other1_comma == null) ? _page3Setting.other1_comma : obj.Page3.other1_comma;
+                    //obj.Page3.other2_study = (obj.Page3.other2_study == null) ? "0" : obj.Page3.other2_study;
+                    //obj.Page3.other2_comma = (obj.Page3.other2_comma == null) ? _page3Setting.other2_comma : obj.Page3.other2_comma;
+                    //obj.Page3.other3_study = (obj.Page3.other3_study == null) ? "0" : obj.Page3.other3_study;
+                    //obj.Page3.other3_comma = (obj.Page3.other3_comma == null) ? _page3Setting.other3_comma : obj.Page3.other3_comma;
+                    //obj.Page3.other4_study = (obj.Page3.other4_study == null) ? "0" : obj.Page3.other4_study;
+                    //obj.Page3.other4_comma = (obj.Page3.other4_comma == null) ? _page3Setting.other4_comma : obj.Page3.other4_comma;
+                    //obj.Page3.other5_study = (obj.Page3.other5_study == null) ? "0" : obj.Page3.other5_study;
+                    //obj.Page3.other5_comma = (obj.Page3.other5_comma == null) ? _page3Setting.other5_comma : obj.Page3.other5_comma;
+                    //obj.Page3.other6_study = (obj.Page3.other6_study == null) ? "0" : obj.Page3.other6_study;
+                    //obj.Page3.other6_comma = (obj.Page3.other6_comma == null) ? _page3Setting.other6_comma : obj.Page3.other6_comma;
+                    //obj.Page3.other7_study = (obj.Page3.other7_study == null) ? "0" : obj.Page3.other7_study;
+                    //obj.Page3.other7_comma = (obj.Page3.other7_comma == null) ? _page3Setting.other7_comma : obj.Page3.other7_comma;
 
-                    obj.Page3.gait = string.IsNullOrEmpty(obj.Page3.gait)? _page3Setting.gait_default: obj.Page3.gait;
+                    //obj.Page3.gait = string.IsNullOrEmpty(obj.Page3.gait) ? _page3Setting.gait_default : obj.Page3.gait;
                 }
 
             }
@@ -723,6 +722,297 @@ namespace PainTrax.Web.Controllers
                 SaveLog(ex, "Create");
             }
             return View(obj);
+        }
+
+        public IActionResult GetPage1(string doi, string gender, string dos, string accidenttype, string fname, string lname, string handeness, int patientIEId = 0)
+        {
+
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            var data = new tbl_ie_page1();
+            var page1Data = _ieService.GetOnePage1(patientIEId);
+            if (page1Data != null)
+            {
+                data = page1Data;
+
+                ViewBag.Assessment = page1Data.assessment;
+
+                string daignoLink = "";
+                if (!string.IsNullOrEmpty(page1Data.bodypart))
+                {
+                    for (int i = 0; i < page1Data.bodypart.Split(',').Length; i++)
+                    {
+                        var linkbody = page1Data.bodypart.Split(',')[i].Replace(" ", "_");
+                        daignoLink += "<a href='javascript:void(0)' onclick=openDaignoModel('" + linkbody + "')>" + page1Data.bodypart.Split(',')[i] + "</a><br/>";
+                    }
+                }
+                ViewBag.DaignoLink = daignoLink;
+            }
+            else
+            {
+                var defaultPage1 = _defaultSettingService.GetOnePage1(cmpid.Value);
+
+                if (defaultPage1 != null)
+                {
+
+                    string history = defaultPage1.history;
+
+                    history = history.Replace("#fname", fname);
+                    history = history.Replace("#fn", fname);
+                    history = history.Replace("#lname", lname);
+                    history = history.Replace("#ln", lname);
+                    history = history.Replace("#accidenttype", accidenttype);
+                    history = history.Replace("#dos", dos);
+                    history = history.Replace("#doi", doi);
+                    history = history.Replace("#handedness", handeness);
+                    history = history.Replace("#sex", gender);
+                    history = history.Replace("#gender", Common.GetMrMrsFromSex(gender == "male" ? "1" : "2"));
+
+                    data.allergies = defaultPage1.allergies;
+                    data.dd = defaultPage1.dd;
+                    data.daignosis_desc = defaultPage1.daignosis_desc;
+                    data.assessment = defaultPage1.daignosis_desc;
+                    data.cc = defaultPage1.cc;
+                    data.pe = defaultPage1.pe;
+                    data.family_history = defaultPage1.family_history;
+                    data.history = history;
+                    data.medication = defaultPage1.medication;
+                    data.note = defaultPage1.note;
+
+                    data.occupation = defaultPage1.occupation;
+                    data.plan = defaultPage1.plan;
+                    data.pmh = defaultPage1.pmh;
+                    data.psh = defaultPage1.psh;
+                    data.rom = defaultPage1.rom;
+                    data.social_history = defaultPage1.social_history;
+                    data.vital = defaultPage1.vital;
+                    data.work_status = defaultPage1.work_status;
+                    ViewBag.Assessment = defaultPage1.assessment;
+                }
+            }
+
+            return PartialView("_Page1", data);
+        }
+
+        public IActionResult GetPage2(int patientIEId = 0)
+        {
+
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            var data = new tbl_ie_page2();
+            var page2Data = _ieService.GetOnePage2(patientIEId);
+            if (page2Data != null)
+            {
+                data = page2Data;
+            }
+            else
+            {
+                var defaultPage2 = _defaultSettingService.GetOnePage2(cmpid.Value);
+
+                if (defaultPage2 != null)
+                {
+                    data.aod = defaultPage2.aod;
+                    data.other = defaultPage2.other;
+                    data.ros = defaultPage2.ros;
+                }
+            }
+
+            return PartialView("_Page2", data);
+        }
+
+        public IActionResult GetNE(int patientIEId = 0)
+        {
+
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            var data = new tbl_ie_ne();
+            var pageNEData = _ieService.GetOneNE(patientIEId);
+            if (pageNEData != null)
+            {
+                data = pageNEData;
+            }
+            else
+            {
+                var defaultNE = _defaultSettingService.GetOneNE(cmpid.Value);
+
+                if (defaultNE != null)
+                {
+                    data.neurological_exam = defaultNE.neurological_exam;
+                    data.sensory = defaultNE.sensory;
+                    data.manual_muscle_strength_testing = defaultNE.manual_muscle_strength_testing;
+                    data.other_content = defaultNE.other_content;
+                }
+
+            }
+
+            return PartialView("_NE", data);
+        }
+
+        public IActionResult GetPage3(int patientIEId = 0)
+        {
+
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            var data = new tbl_ie_page3();
+            var page3Data = _ieService.GetOnePage3(patientIEId);
+            if (page3Data != null)
+            {
+                data = page3Data;
+            }
+            else
+            {
+                data.gait = HttpContext.Session.GetString(SessionKeys.SessionGAIT);
+
+                var _page3Setting = _settingservices.GetOne(cmpid.Value);
+
+                data.diagcervialbulge_study = (data.diagcervialbulge_study == null) ? "1" : data.diagcervialbulge_study;
+                data.diagcervialbulge_comma = (data.diagcervialbulge_comma == null) ? _page3Setting.diagcervialbulge_comma : data.diagcervialbulge_comma;
+                data.diagthoracicbulge_study = (data.diagthoracicbulge_study == null) ? "1" : data.diagthoracicbulge_study;
+                data.diagthoracicbulge_comma = (data.diagthoracicbulge_comma == null) ? _page3Setting.diagthoracicbulge_comma : data.diagthoracicbulge_comma;
+                data.diaglumberbulge_study = (data.diaglumberbulge_study == null) ? "1" : data.diaglumberbulge_study;
+                data.diaglumberbulge_comma = (data.diaglumberbulge_comma == null) ? _page3Setting.diaglumberbulge_comma : data.diaglumberbulge_comma;
+                data.diagleftshoulder_study = (data.diagleftshoulder_study == null) ? "1" : data.diagleftshoulder_study;
+                data.diagleftshoulder_comma = (data.diagleftshoulder_comma == null) ? _page3Setting.diagleftshoulder_comma : data.diagleftshoulder_comma;
+                data.diagrightshoulder_study = (data.diagrightshoulder_study == null) ? "1" : data.diagrightshoulder_study;
+                data.diagrightshoulder_comma = (data.diagrightshoulder_comma == null) ? _page3Setting.diagrightshoulder_comma : data.diagrightshoulder_comma;
+                data.diagleftknee_study = (data.diagleftknee_study == null) ? "1" : data.diagleftknee_study;
+                data.diagleftknee_comma = (data.diagleftknee_comma == null) ? _page3Setting.diagleftknee_comma : data.diagleftknee_comma;
+                data.diagrightknee_study = (data.diagrightknee_study == null) ? "1" : data.diagrightknee_study;
+                data.diagrightknee_comma = (data.diagrightknee_comma == null) ? _page3Setting.diagrightknee_comma : data.diagrightknee_comma;
+                data.diaglumberbulge_study = (data.diaglumberbulge_study == null) ? "1" : data.diaglumberbulge_study;
+                data.diaglumberbulge_comma = (data.diaglumberbulge_comma == null) ? _page3Setting.diaglumberbulge_comma : data.diaglumberbulge_comma;
+
+                data.other1_study = (data.other1_study == null) ? "0" : data.other1_study;
+                data.other1_comma = (data.other1_comma == null) ? _page3Setting.other1_comma : data.other1_comma;
+                data.other2_study = (data.other2_study == null) ? "0" : data.other2_study;
+                data.other2_comma = (data.other2_comma == null) ? _page3Setting.other2_comma : data.other2_comma;
+                data.other3_study = (data.other3_study == null) ? "0" : data.other3_study;
+                data.other3_comma = (data.other3_comma == null) ? _page3Setting.other3_comma : data.other3_comma;
+                data.other4_study = (data.other4_study == null) ? "0" : data.other4_study;
+                data.other4_comma = (data.other4_comma == null) ? _page3Setting.other4_comma : data.other4_comma;
+                data.other5_study = (data.other5_study == null) ? "0" : data.other5_study;
+                data.other5_comma = (data.other5_comma == null) ? _page3Setting.other5_comma : data.other5_comma;
+                data.other6_study = (data.other6_study == null) ? "0" : data.other6_study;
+                data.other6_comma = (data.other6_comma == null) ? _page3Setting.other6_comma : data.other6_comma;
+                data.other7_study = (data.other7_study == null) ? "0" : data.other7_study;
+                data.other7_comma = (data.other7_comma == null) ? _page3Setting.other7_comma : data.other7_comma;
+
+                data.gait = string.IsNullOrEmpty(data.gait) ? _page3Setting.gait_default : data.gait;
+
+
+                var _defaultdata = _defaultService.GetOneByCompany(cmpid.Value);
+
+                if (_defaultdata != null)
+                {
+                    data.goal = _defaultdata.goal;
+                    data.care = _defaultdata.care;
+                }
+            }
+            return PartialView("_Page3", data);
+        }
+
+        public IActionResult GetCommentPage(int patientIEId = 0)
+        {
+
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            var data = new tbl_ie_comment();
+            var pageComment = _ieService.GetOneComment(patientIEId);
+            if (pageComment != null)
+            {
+                data = pageComment;
+            }
+            return PartialView("_Comments", data);
+        }
+        public IActionResult GetDocuments(int patientId = 0)
+        {
+            VisitVM obj = new VisitVM();
+
+            var FolderPath = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments");
+            bool folderExists = Directory.Exists(FolderPath);
+            if (!folderExists)
+                Directory.CreateDirectory(FolderPath);
+
+            string[] dirs = Directory.GetDirectories(FolderPath, "*", SearchOption.TopDirectoryOnly);
+
+            List<TreeViewNode> nodes = new List<TreeViewNode>();
+
+            int i = 0;
+            foreach (var item in dirs)
+            {
+                i++;
+                string FolderName = System.IO.Path.GetFileName(item);
+                var FolderPathFile = Path.Combine(Directory.GetCurrentDirectory(), "PatientDocuments", FolderName.ToString(), patientId.ToString());
+                int j = 0;
+
+                bool folderExistsNew = Directory.Exists(FolderPathFile);
+                if (!folderExistsNew)
+                    Directory.CreateDirectory(FolderPathFile);
+
+                foreach (var item1 in Directory.GetFiles(FolderPathFile))
+                {
+                    j++;
+                    nodes.Add(new TreeViewNode { id = j.ToString() + "-" + i.ToString() + "~" + FolderName.ToString() + "$" + System.IO.Path.GetFileName(item1), parent = i.ToString(), text = System.IO.Path.GetFileName(item1) });
+                }
+
+                nodes.Add(new TreeViewNode { id = i.ToString(), parent = "#", text = FolderName.ToString() + "(" + j + ")" });
+            }
+
+            obj.doc_json = JsonConvert.SerializeObject(nodes, Formatting.Indented);
+
+            return PartialView("_documents", obj);
+
+
+        }
+
+        public IActionResult GetOthers(int patientIEId = 0)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            var data = new tbl_ie_other();
+            data.followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
+            var pageOther = _ieService.GetOneOtherPage(patientIEId);
+            var _data = _treatmentService.GetAll(" and cmp_id=" + cmpid.Value);
+            if (pageOther != null)
+            {
+                data = pageOther;
+
+                var tretmentdesc = string.IsNullOrEmpty(pageOther.treatment_delimit_desc) ? null : pageOther.treatment_delimit_desc.Split('^');
+
+
+                List<tbl_treatment_master> lst = new List<tbl_treatment_master>();
+                int i = 0;
+                try
+                {
+                    foreach (var item in _data)
+                    {
+                        if (!string.IsNullOrEmpty(pageOther.treatment_delimit))
+                        {
+                            if (pageOther.treatment_delimit.Contains(item.id.ToString()))
+                            {
+                                if (tretmentdesc != null)
+                                {
+                                    if (tretmentdesc.Length >= (i + 1))
+                                        item.treatment_details = tretmentdesc[i];
+                                }
+                                item.pre_select = true;
+                                i++;
+                            }
+                            else
+                                item.pre_select = false;
+                        }
+
+                        lst.Add(item);
+
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+                data.listTreatmentMaster = lst;
+            }
+            else
+            {
+                data.followup_duration = HttpContext.Session.GetString(SessionKeys.SessionFUDate);
+                data.listTreatmentMaster = _data;
+
+            }
+            return PartialView("_OtherPage", data);
         }
 
         [HttpPost]
@@ -3057,20 +3347,6 @@ namespace PainTrax.Web.Controllers
         #endregion
 
         #region private method
-        //public MemoryStream ConvertHtmlToWord(string htmlContent)
-        //{
-        //    MemoryStream memoryStream = new MemoryStream();
-        //    using (WordprocessingDocument doc = WordprocessingDocument.Create(memoryStream, WordprocessingDocumentType.Document))
-        //    {
-        //        MainDocumentPart mainPart = doc.AddMainDocumentPart();
-        //        mainPart.Document = new Document();
-        //        Body body = mainPart.Document.AppendChild(new Body());
-        //        HtmlConverter converter = new HtmlConverter(mainPart);
-        //        var generatedBody = converter.Parse(htmlContent);
-        //        body.Append(generatedBody);
-        //    }
-        //    return memoryStream;
-        //}
 
         public MemoryStream ConvertHtmlToWord(string htmlContent)
         {
@@ -3899,6 +4175,13 @@ namespace PainTrax.Web.Controllers
                 ),
                             new Text("Page ") // Static "Page " text
                         ),
+        // Explicit space
+        new Run(
+            new Text(" ")
+            {
+                Space = SpaceProcessingModeValues.Preserve
+            }
+        ),
                         new Run(
                             new SimpleField() // Dynamic page number field
                             {
@@ -3929,6 +4212,13 @@ namespace PainTrax.Web.Controllers
                                    ),
                                    new Text("Page ") // Static "Page " text
                               ),
+        // Explicit space
+        new Run(
+            new Text(" ")
+            {
+                Space = SpaceProcessingModeValues.Preserve
+            }
+        ),
                               new Run(
                                    new RunProperties(
                            new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
@@ -3960,6 +4250,13 @@ namespace PainTrax.Web.Controllers
                     ),
                                new Text("Page ") // Static "Page " text
                            ),
+        // Explicit space
+        new Run(
+            new Text(" ")
+            {
+                Space = SpaceProcessingModeValues.Preserve
+            }
+        ),
                            new Run(
                                 new RunProperties(
                         new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
@@ -5114,6 +5411,99 @@ namespace PainTrax.Web.Controllers
                 .FirstOrDefault();
 
             return Json(data);
+        }
+
+        public IActionResult SaveDefault(int id)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+           
+            var page2Data = _ieService.GetOnePage2(id);
+            if (page2Data == null)
+            {
+                page2Data = new tbl_ie_page2();
+                var defaultPage2 = _defaultSettingService.GetOnePage2(cmpid.Value);
+
+                if (defaultPage2 != null)
+                {
+                    page2Data.aod = defaultPage2.aod;
+                    page2Data.other = defaultPage2.other;
+                    page2Data.ros = defaultPage2.ros;
+                    page2Data.ie_id = id;
+                    page2Data.cmp_id = cmpid;
+
+                }
+                _ieService.InsertPage2(page2Data);
+            }
+
+          
+            var pageNEData = _ieService.GetOneNE(id);
+            if (pageNEData == null)
+            {
+                pageNEData = new tbl_ie_ne();
+                var defaultNE = _defaultSettingService.GetOneNE(cmpid.Value);
+
+                if (defaultNE != null)
+                {
+                    pageNEData.neurological_exam = defaultNE.neurological_exam;
+                    pageNEData.sensory = defaultNE.sensory;
+                    pageNEData.manual_muscle_strength_testing = defaultNE.manual_muscle_strength_testing;
+                    pageNEData.other_content = defaultNE.other_content;
+                    pageNEData.ie_id = id;
+                    pageNEData.cmp_id = cmpid;
+
+                    _ieService.InsertNE(pageNEData);
+                }
+              
+            }
+
+            var page3Data = _ieService.GetOnePage3(id);
+            if (page3Data == null)
+            {
+                page3Data = new tbl_ie_page3();
+                page3Data.gait = HttpContext.Session.GetString(SessionKeys.SessionGAIT);
+
+                var _page3Setting = _settingservices.GetOne(cmpid.Value);
+
+                page3Data.diagcervialbulge_study = (page3Data.diagcervialbulge_study == null) ? "1" : page3Data.diagcervialbulge_study;
+                page3Data.diagcervialbulge_comma = (page3Data.diagcervialbulge_comma == null) ? _page3Setting.diagcervialbulge_comma : page3Data.diagcervialbulge_comma;
+                page3Data.diagthoracicbulge_study = (page3Data.diagthoracicbulge_study == null) ? "1" : page3Data.diagthoracicbulge_study;
+                page3Data.diagthoracicbulge_comma = (page3Data.diagthoracicbulge_comma == null) ? _page3Setting.diagthoracicbulge_comma : page3Data.diagthoracicbulge_comma;
+                page3Data.diaglumberbulge_study = (page3Data.diaglumberbulge_study == null) ? "1" : page3Data.diaglumberbulge_study;
+                page3Data.diaglumberbulge_comma = (page3Data.diaglumberbulge_comma == null) ? _page3Setting.diaglumberbulge_comma : page3Data.diaglumberbulge_comma;
+                page3Data.diagleftshoulder_study = (page3Data.diagleftshoulder_study == null) ? "1" : page3Data.diagleftshoulder_study;
+                page3Data.diagleftshoulder_comma = (page3Data.diagleftshoulder_comma == null) ? _page3Setting.diagleftshoulder_comma : page3Data.diagleftshoulder_comma;
+                page3Data.diagrightshoulder_study = (page3Data.diagrightshoulder_study == null) ? "1" : page3Data.diagrightshoulder_study;
+                page3Data.diagrightshoulder_comma = (page3Data.diagrightshoulder_comma == null) ? _page3Setting.diagrightshoulder_comma : page3Data.diagrightshoulder_comma;
+                page3Data.diagleftknee_study = (page3Data.diagleftknee_study == null) ? "1" : page3Data.diagleftknee_study;
+                page3Data.diagleftknee_comma = (page3Data.diagleftknee_comma == null) ? _page3Setting.diagleftknee_comma : page3Data.diagleftknee_comma;
+                page3Data.diagrightknee_study = (page3Data.diagrightknee_study == null) ? "1" : page3Data.diagrightknee_study;
+                page3Data.diagrightknee_comma = (page3Data.diagrightknee_comma == null) ? _page3Setting.diagrightknee_comma : page3Data.diagrightknee_comma;
+                page3Data.diaglumberbulge_study = (page3Data.diaglumberbulge_study == null) ? "1" : page3Data.diaglumberbulge_study;
+                page3Data.diaglumberbulge_comma = (page3Data.diaglumberbulge_comma == null) ? _page3Setting.diaglumberbulge_comma : page3Data.diaglumberbulge_comma;
+
+                page3Data.other1_study = (page3Data.other1_study == null) ? "0" : page3Data.other1_study;
+                page3Data.other1_comma = (page3Data.other1_comma == null) ? _page3Setting.other1_comma : page3Data.other1_comma;
+                page3Data.other2_study = (page3Data.other2_study == null) ? "0" : page3Data.other2_study;
+                page3Data.other2_comma = (page3Data.other2_comma == null) ? _page3Setting.other2_comma : page3Data.other2_comma;
+                page3Data.other3_study = (page3Data.other3_study == null) ? "0" : page3Data.other3_study;
+                page3Data.other3_comma = (page3Data.other3_comma == null) ? _page3Setting.other3_comma : page3Data.other3_comma;
+                page3Data.other4_study = (page3Data.other4_study == null) ? "0" : page3Data.other4_study;
+                page3Data.other4_comma = (page3Data.other4_comma == null) ? _page3Setting.other4_comma : page3Data.other4_comma;
+                page3Data.other5_study = (page3Data.other5_study == null) ? "0" : page3Data.other5_study;
+                page3Data.other5_comma = (page3Data.other5_comma == null) ? _page3Setting.other5_comma : page3Data.other5_comma;
+                page3Data.other6_study = (page3Data.other6_study == null) ? "0" : page3Data.other6_study;
+                page3Data.other6_comma = (page3Data.other6_comma == null) ? _page3Setting.other6_comma : page3Data.other6_comma;
+                page3Data.other7_study = (page3Data.other7_study == null) ? "0" : page3Data.other7_study;
+                page3Data.other7_comma = (page3Data.other7_comma == null) ? _page3Setting.other7_comma : page3Data.other7_comma;
+
+                page3Data.gait = string.IsNullOrEmpty(page3Data.gait) ? _page3Setting.gait_default : page3Data.gait;
+                page3Data.ie_id = id;
+                page3Data.cmp_id = cmpid;
+
+                _ieService.InsertPage3(page3Data);
+            }
+
+            return Json("1");
         }
 
 

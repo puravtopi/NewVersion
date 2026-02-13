@@ -34,6 +34,7 @@ public class tbl_patient_ie{
 	public bool? is_active {get;set; }
 	public string? state { get; set; }
 	public int? physicianid { get;set;}
+	public int? intakeid { get;set;}
 
     public string? procedure_performed { get; set; }
 

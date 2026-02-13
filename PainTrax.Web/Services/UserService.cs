@@ -164,7 +164,7 @@ namespace PainTrax.Web.Services
 
         public List<SelectListItem> GetProviders(int cmpid)
         {
-            string query = "SELECT Id,fullname FROM vm_cm_user WHERE desig_name = 'provider' and cmp_id=" + cmpid;
+            string query = "SELECT Id,fullname FROM vm_cm_user WHERE desig_name = 'provider' and cmp_id=" + cmpid+" order by fullname";
             DataTable dataTable = GetData(query);
 
             List<SelectListItem> providers = new List<SelectListItem>();

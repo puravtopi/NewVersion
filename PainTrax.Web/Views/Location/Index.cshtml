@@ -138,7 +138,8 @@
                     {
                         "render": function (data, type, full, meta) {
                             var index = '<a href="' + editurl + '/' + full.id + '"><i class="ri-edit-line" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Edit"></i></a> &nbsp; &nbsp;'
-                            index += '<a href="' + deleteurl + '/' + full.id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+                            //index += '<a href="' + deleteurl + '/' + full.id + '"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
+                            index += '<a href="#" onclick="DeleteData(' + full.id + ')"><i class="bi bi-x-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Remove"></i></a> &nbsp; &nbsp;';
                             return index;
                         }
                     }
@@ -161,8 +162,21 @@
         }
 
 
+        // function Delete(CustomerID) {
+        //     var url = '@Url.Content("~/")' + "DemoGrid/Delete";
+
+        //     $.post(url, { ID: CustomerID }, function (data) {
+        //         if (data) {
+        //             oTable = $('#example').DataTable();
+        //             oTable.draw();
+        //         }
+        //         else {
+        //             alert("Something Went Wrong!");
+        //         }
+        //     });
+        // }
         function Delete(CustomerID) {
-            var url = '@Url.Content("~/")' + "DemoGrid/Delete";
+            var url = '@Url.Content("~/")' + "Location/Delete";
 
             $.post(url, { ID: CustomerID }, function (data) {
                 if (data) {

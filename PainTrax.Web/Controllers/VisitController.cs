@@ -1574,7 +1574,55 @@ namespace PainTrax.Web.Controllers
                     data = _ieService.InsertPage3(model);
 
                 if (data > 0)
+                {
+
+                    var daignoCodeDetails = "<ol>";
+
+                    if (!string.IsNullOrEmpty(model.diagcervialbulge_text))
+                    {
+                        daignoCodeDetails += "<li>" + model.diagcervialbulge_text + "</li>";
+                    }
+                    if (!string.IsNullOrEmpty(model.diagcervialbulge_hnp1))
+                    {
+                        daignoCodeDetails += "<li>" + model.diagcervialbulge_hnp1 + "</li>";
+                    }
+                    if (!string.IsNullOrEmpty(model.diagcervialbulge_hnp2))
+                    {
+                        daignoCodeDetails += "<li>" + model.diagcervialbulge_hnp2 + "</li>";
+                    }
+
+                    if (!string.IsNullOrEmpty(model.diagthoracicbulge_text))
+                    {
+                        daignoCodeDetails += "<li>" + model.diagthoracicbulge_text + "</li>";
+                    }
+                    if (!string.IsNullOrEmpty(model.diagthoracicbulge_hnp1))
+                    {
+                        daignoCodeDetails += "<li>" + model.diagthoracicbulge_hnp1 + "</li>";
+                    }
+                    if (!string.IsNullOrEmpty(model.diagthoracicbulge_hnp2))
+                    {
+                        daignoCodeDetails += "<li>" + model.diagthoracicbulge_hnp2 + "</li>";
+                    }
+
+                    if (!string.IsNullOrEmpty(model.diaglumberbulge_text))
+                    {
+                        daignoCodeDetails += "<li>" + model.diaglumberbulge_text + "</li>";
+                    }
+                    if (!string.IsNullOrEmpty(model.diagthoracicbulge_hnp1))
+                    {
+                        daignoCodeDetails += "<li>" + model.diaglumberbulge_hnp1 + "</li>";
+                    }
+                    if (!string.IsNullOrEmpty(model.diaglumberbulge_hnp2))
+                    {
+                        daignoCodeDetails += "<li>" + model.diaglumberbulge_hnp2 + "</li>";
+                    }
+                   
+
+                    var htmlDaignosis = daignoCodeDetails + "</ol>";
+
+                    _ieService.UpdatePOCAssessment(model.ie_id.Value, htmlDaignosis);
                     return Json(1);
+                }
                 else
                     return Json(0);
             }
@@ -3675,7 +3723,7 @@ namespace PainTrax.Web.Controllers
             int age = today.Year - bday.Year;
 
             if (today.Month < bday.Month ||
-       ((today.Month == bday.Month) && (today.Day < bday.Day)))
+        ((today.Month == bday.Month) && (today.Day < bday.Day)))
             {
                 age--;  //birthday in current year not yet reached, we are 1 year younger ;)
                         //+ no birthday for 29.2. guys ... sorry, just wrong date for birth

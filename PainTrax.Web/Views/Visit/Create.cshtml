@@ -283,7 +283,7 @@
                                                             <span style="color: red;">*</span>
                                                         </label>
                                                         <div class="col-sm-4">
-                                                            <input type="date" class="form-control" asp-for="dob" onchange="fnUpdateSidePanel()">
+                                                            <input type="date" class="form-control" asp-for="dob" onblur="fnUpdateSidePanel()">
                                                             <span id="error-dob" style="display:none" class="errorSpan">Please Enter DOB.</span>
                                                         </div>
                                                         <label for="inputText" class="col-sm-2 col-form-label">
@@ -1607,19 +1607,50 @@
 
     }
 
+    // function requirValidation(id) {
+    //     var result = true;
+    //     var text = $("#" + id).val();
+
+    //     if (text.length === 0 || text === "0") {
+    //         $("#error-" + id).show();
+    //         result = false;
+    //     }
+    //     else {
+    //         $("#error-" + id).hide();
+
+    //     }
+    //     return result;
+    // }
     function requirValidation(id) {
         var result = true;
         var text = $("#" + id).val();
 
         if (text.length === 0 || text === "0") {
             $("#error-" + id).show();
-            result = false;
+            return false;
         }
-        else {
-            $("#error-" + id).hide();
 
+        // ✅ Extra validation only for DOB
+        if (id === "dob") {
+
+            var selectedDate = new Date(text);   // yyyy-MM-dd format
+            var today = new Date();
+
+            var minDate = new Date("1900-01-01");
+
+            if (selectedDate < minDate) {
+                $("#error-" + id).text("DOB must be after 01/01/1900").show();
+                return false;
+            }
+
+            if (selectedDate > today) {
+                $("#error-" + id).text("DOB cannot be future date").show();
+                return false;
+            }
         }
-        return result;
+
+        $("#error-" + id).hide();
+        return true;
     }
 
     function fnShowPOC() {
@@ -1798,35 +1829,113 @@
         })
     }
 
-    function fnUpdateSidePanel() {
+    // function fnUpdateSidePanel() {
 
+    //     var fullname = $("#lname").val() + ' ' + $("#fname").val();
+    //     $('#pdName').text(fullname);
+
+    //     $('#pdCT').text($("#compensation option:selected").text());
+    //     $('#pdLoc').text($("#locationid option:selected").text());
+    //     $('#pdDOS').text(fngetAGE($("#dos").val()));
+    //     $('#pdDOS').text(fngetAGE($("#dos").val()));
+    //     $('#pdDOA').text(fngetAGE($("#doa").val()));
+    //     $('#pdGender').text($("#gender option:selected").text());
+
+    //     var dob = $('#dob').val();
+    //     var dos = $('#dos').val();
+    //     if (dob) {
+    //         var today = new Date(dos);
+    //         var birthDate = new Date(dob);
+    //         var age = today.getFullYear() - birthDate.getFullYear();
+    //         var monthDiff = today.getMonth() - birthDate.getMonth();
+
+    //         // Adjust age if birthday hasn't occurred yet this year
+    //         if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    //             age--;
+    //         }
+
+    //         $('#pdAge').text(age);
+    //         $('#pdDOB').text(fngetAGE(dob));
+    //     }
+
+    // }
+        function fnUpdateSidePanel() {
+
+        var dos = $('#dos').val();
+        var doa = $('#doa').val();
+        var dob = $('#dob').val();
+
+        var isDobValid = true; // 👈 flag
+
+        // ---------- DOA vs DOS validation ----------
+        if (dos && doa) {
+            if (new Date(doa) > new Date(dos)) {
+                alert('DOA cannot be greater than DOS');
+                $('#doa').val('');
+                $('#pdDOA').text('');
+                return;
+            }
+        }
+
+        // ---------- DOB validation ----------
+        if (dob && dob.length === 10) {
+            var birthDate = new Date(dob);
+            var todayDate = new Date();
+            todayDate.setHours(0, 0, 0, 0);
+
+            var minDate = new Date("1900-01-01");
+
+            if (birthDate < minDate) {
+                if (!dobAlertShown) {
+                    alert("DOB must be after 01/01/1900");
+                    dobAlertShown = true;
+                }
+                isDobValid = false;
+            }
+            else if (birthDate > todayDate) {
+                if (!dobAlertShown) {
+                    alert("DOB cannot be future date");
+                    dobAlertShown = true;
+                }
+                isDobValid = false;
+            }
+            else {
+                dobAlertShown = false; // reset once valid
+            }
+        }
+
+        // ---------- Existing UI logic ----------
         var fullname = $("#lname").val() + ' ' + $("#fname").val();
         $('#pdName').text(fullname);
 
         $('#pdCT').text($("#compensation option:selected").text());
         $('#pdLoc').text($("#locationid option:selected").text());
-        $('#pdDOS').text(fngetAGE($("#dos").val()));
-        $('#pdDOS').text(fngetAGE($("#dos").val()));
-        $('#pdDOA').text(fngetAGE($("#doa").val()));
+
+        if (dos) $('#pdDOS').text(fngetAGE(dos));
+        if (doa) $('#pdDOA').text(fngetAGE(doa));
+
         $('#pdGender').text($("#gender option:selected").text());
 
-        var dob = $('#dob').val();
-        var dos = $('#dos').val();
-        if (dob) {
-            var today = new Date(dos);
+        // ---------- Age calculation (ONLY if DOB is valid) ----------
+        if (dob && dos && isDobValid) {
             var birthDate = new Date(dob);
-            var age = today.getFullYear() - birthDate.getFullYear();
-            var monthDiff = today.getMonth() - birthDate.getMonth();
+            var refDate = new Date(dos);
 
-            // Adjust age if birthday hasn't occurred yet this year
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            var age = refDate.getFullYear() - birthDate.getFullYear();
+            var monthDiff = refDate.getMonth() - birthDate.getMonth();
+
+            if (monthDiff < 0 || (monthDiff === 0 && refDate.getDate() < birthDate.getDate())) {
                 age--;
+            }
+
+            // ✅ Age alert only when DOB is valid
+            if (age > 90) {
+                alert('Age should not be greater than 90 years');
             }
 
             $('#pdAge').text(age);
             $('#pdDOB').text(fngetAGE(dob));
         }
-
     }
 
     function fngetAGE(inputDate) {

@@ -465,6 +465,42 @@
             $('#' + this.id).val('');
         }
     });
+        $(".pdate").on("change", function () {
+    debugger;
+            var enteredDateVal = this.value;
+            if (!enteredDateVal) return;
+
+            var enteredDate = new Date(enteredDateVal);
+
+            var dosVal = $("#dos").val();   // existing DOS
+            var doaVal = $("#doa").val();   // DOA
+
+            // Validate against DOS
+            if (dosVal) {
+                var dosDate = new Date(dosVal);
+                if (enteredDate > dosDate) {
+                    $('#messBody').html(
+                        '<p>Date must be less than or equal to DOS <b>' + dosVal + '</b>.</p>'
+                    );
+                    $('#myModalMessage').modal('show');
+                    $(this).focus();
+                    return;
+                }
+            }
+
+            // Validate against DOA
+            if (doaVal) {
+                var doaDate = new Date(doaVal);
+                if (enteredDate < doaDate) {
+                    $('#messBody').html(
+                        '<p>Date is less than DOA <b>' + doaVal + '</b>.</p>'
+                    );
+                    $('#myModalMessage').modal('show');
+                    $(this).focus();
+                    return;
+                }
+                }
+    });
 
     $(document).ready(function () {
         ClassicEditor.create(document.querySelector('#txtDisMediction'), {

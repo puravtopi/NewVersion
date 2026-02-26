@@ -119,7 +119,7 @@
                                     <li class="nav-item" role="presentation">
                                         <a class="nav-link active" id="home-tab" data-bs-target="#bordered-home" role="tab" aria-controls="home" aria-selected="true">Patient Details</a>
                                     </li>
-                                    <li class="nav-item" role="presentation" onclick="fnGetPage1()">
+                                    <li class="nav-item" role="presentation" onclick="fnGetPage1()" target="_blank">
                                         <a class="nav-link " id="page1-tab" data-bs-target="#bordered-profile" role="tab" aria-controls="profile" aria-selected="false">SOAP</a>
                                     </li>
                                     <li class="nav-item" role="presentation" onclick="fnGetPage2()">
@@ -408,7 +408,7 @@
                                                             </section>
 
                                                             @*  <input type="text" class="form-control" asp-for="mc"> *@
-                                                        </div>
+                                                       
                                                     </div>
                                                     <div class="row mb-3">
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
@@ -1263,10 +1263,10 @@
 
         })
 
-        $('.searchable-dropdown').select2({
-            placeholder: "-- Select ---",
-            allowClear: true
-        });
+        // $('.searchable-dropdown').select2({
+        //     placeholder: "-- Select ---",
+        //     allowClear: true
+        // });
     });
 
     $('#borderedTab a').on('click', function (e) {
@@ -1672,8 +1672,7 @@
             contentType: "application/x-www-form-urlencoded",
             success: function (data, status, xhr) {
                 $("#divPage1").html(data);
-
-            },
+            }
             error: function (xhr, status, error) {
                 alert("Error!" + xhr.status);
             },

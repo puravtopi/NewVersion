@@ -112,6 +112,61 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="grid">
+                                    <div>
+                                        <label> Currently working</label>
+                                        <div class="radio-group">
+                                            <label class="inline-option">
+                                                <input asp-for="working_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="working_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                    <div>
+                                        <label>Job title</label>
+                                        <input type="text" asp-for="JobTitle" />
+                                    </div>
+                                </div>
+                                <div class="grid">
+                                    <div>
+                                        <label>
+                                            If not working: Stopped immediately after accident
+                                            <label class="inline-option">
+                                                <input asp-for="Stopped_yes" type="radio" value="Yes" />
+                                                Yes
+                                            </label>
+                                            <label class="inline-option">
+                                                <input asp-for="Stopped_yes" type="radio" value="No" />
+                                                No
+                                            </label>
+                                            (
+
+                                            <label class="inline-option">
+                                                <input asp-for="Retired" type="checkbox" />
+                                                Retired
+                                            </label>
+
+                                            <label class="inline-option">
+                                                <input asp-for="Unemployed" type="checkbox" />
+                                                Unemployed
+                                            </label>
+                                            )
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="grid">
+                                    <div>
+                                        <label class="inline-option">
+                                            If yes, Why?
+                                            <input type="text" asp-for="working_why" />
+                                        </label>
+                                    </div>
+                                </div>
                                 <div class="gird">
                                     <label>Chief Complaint</label>
                                     <div class="checkbox-grid">
@@ -184,29 +239,16 @@
                                         <label>Type of Injury:</label>
                                         <div class="checkbox-grid">
                                             <label class="inline-option">
-                                                <input asp-for="MVA"  type="checkbox" />
+                                                <input asp-for="MVA" type="checkbox" />
                                                 MVA
                                             </label>
                                             <label class="inline-option">
-                                                <input asp-for="workrelated"  type="checkbox" />
+                                                <input asp-for="workrelated" type="checkbox" />
                                                 Work-Related
                                             </label>
                                         </div>
                                     </div>
-                                    <div>
-                                        <label> Working</label>
-                                        <div class="radio-group">
-                                            <label class="inline-option">
-                                                <input asp-for="working_yes" type="radio" value="Yes" />
-                                                Yes
-                                            </label>
-                                            <label class="inline-option">
-                                                <input asp-for="working_yes" type="radio" value="No" />
-                                                No
-                                            </label>
-                                        </div>
 
-                                    </div>
                                     <div>
                                         <label>Degree of Disability</label>
 
@@ -219,6 +261,36 @@
 
 
                                 </div>
+                                <div class="grid">
+                                    <label class="inline-option">
+                                        The patient reports that on ___/___/____, while
+                                        <select name="wr1" id="wr1" class="form-control" asp-for="wr1" style="width:200px" asp-items="@ViewBag.WR1"></select>,
+                                        they sustained a work-related injury when
+                                        <select name="wr2" id="wr2" class="form-control" asp-for="wr2" style="width:200px" asp-items="@ViewBag.WR2"></select>
+                                    </label>
+                                </div>
+                                <br />
+                                <div class="grid">
+
+                                    <label class="inline-option">
+                                        The incident occurred
+                                        <select name="wr3" id="wr3" class="form-control" asp-for="wr3" style="width:200px" asp-items="@ViewBag.wr3"></select>,
+                                        and involved
+                                        <select name="wr4" id="wr4" class="form-control" asp-for="wr4" style="width:200px" asp-items="@ViewBag.WR4"></select>
+                                    </label>
+                                </div>
+                                <br />
+                                <br />
+                                <div class="grid">
+
+                                    <label class="inline-option">
+                                        As a result of this event, the patient experienced
+                                        <select name="wr5" id="wr5" class="form-control" asp-for="wr5" style="width:200px" asp-items="@ViewBag.WR5"></select>,
+                                        and involved
+                                        <select name="wr6" id="wr6" class="form-control" asp-for="wr6" style="width:200px" asp-items="@ViewBag.WR6"></select>
+                                    </label>
+                                </div>
+                                <br />
                                 <div class="grid">
                                     <div>
                                         <label> Asymptomatic prior to accident:</label>
@@ -495,16 +567,16 @@
                                     <div class="checkbox-grid">
                                         <label class="inline-option">
                                             Meds:
-                                            <input asp-for="MedsNone"type="checkbox" />
+                                            <input asp-for="MedsNone" type="checkbox" />
                                             None
                                         </label>
                                         <label class="inline-option">
-                                            <input asp-for="PainmedsPRN"  type="checkbox" />
+                                            <input asp-for="PainmedsPRN" type="checkbox" />
                                             Pain meds PRN
                                             <input type="text" id="description_of_the_Meds" asp-for="description_of_the_Meds">
                                         </label>
                                         <label class="inline-option">
-                                            <input asp-for="Unabletorecall"  type="checkbox" />
+                                            <input asp-for="Unabletorecall" type="checkbox" />
                                             Unable to recall
                                         </label>
                                     </div>
@@ -623,7 +695,7 @@
                                         <div>
                                             <label class="inline-option">
                                                 Relief:
-                                                <input asp-for="ReliefGood"  type="checkbox" />
+                                                <input asp-for="ReliefGood" type="checkbox" />
                                                 Good
                                             </label>
                                             <label class="inline-option" for="isactive">
@@ -631,7 +703,7 @@
                                                 Little
                                             </label>
                                             <label class="inline-option" for="isactive">
-                                                <input asp-for="ReliefNone"  type="checkbox" />
+                                                <input asp-for="ReliefNone" type="checkbox" />
                                                 None
                                             </label>
                                         </div>

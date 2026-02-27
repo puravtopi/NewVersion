@@ -5,6 +5,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using GroupDocs.Viewer.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MS.Models;
 using MS.Services;
 using Org.BouncyCastle.Asn1.Sec;
@@ -13,7 +14,9 @@ using PainTrax.Web.Helper;
 using PainTrax.Web.Models;
 using PainTrax.Web.Services;
 using System.Data;
+using System.Diagnostics.Metrics;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace PainTrax.Web.Controllers
@@ -602,12 +605,27 @@ namespace PainTrax.Web.Controllers
 
             ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
 
+
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "IntakeForm//WR1.xml");
+            ViewBag.WR1 = new SelectList(this.GetDropDownList(path, "WR1"), "Name", "Name");
+            path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "IntakeForm//WR2.xml");
+            ViewBag.WR2 = new SelectList(this.GetDropDownList(path, "WR2"), "Name", "Name");
+            path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "IntakeForm//WR3.xml");
+            ViewBag.WR3 = new SelectList(this.GetDropDownList(path, "WR3"), "Name", "Name");
+            path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "IntakeForm//WR4.xml");
+            ViewBag.WR4 = new SelectList(this.GetDropDownList(path, "WR4"), "Name", "Name");
+
+
             InitialIntake obj = new InitialIntake();
 
             if (id > 0)
             {
                 obj = service.GetInitialIntakeById(id);
             }
+
+            if (obj == null)
+                obj = new InitialIntake();
 
             obj.cmp_id = cmpid.Value;
             return View(obj);
@@ -665,10 +683,10 @@ namespace PainTrax.Web.Controllers
                     {
                         var objPage1 = new tbl_ie_page1()
                         {
-                            pmh= this.getPMH(model),
-                            psh= this.getPSH(model),
-                            allergies= this.getAllergies(model),
-                            ie_id= ie
+                            pmh = this.getPMH(model),
+                            psh = this.getPSH(model),
+                            allergies = this.getAllergies(model),
+                            ie_id = ie
                         };
 
                         _ieService.InsertPage1(objPage1);
@@ -741,6 +759,23 @@ namespace PainTrax.Web.Controllers
             }
 
             return str;
+        }
+
+        private List<IntakeDropDown> GetDropDownList(string path, string node)
+        {
+            var intakeDropDowns = new List<IntakeDropDown>();
+
+            XDocument doc = XDocument.Load(path);
+
+            foreach (var item in doc.Descendants(node))
+            {
+                intakeDropDowns.Add(new IntakeDropDown
+                {
+                    Name = item.Element("Name")?.Value
+                });
+            }
+
+            return intakeDropDowns;
         }
 
     }

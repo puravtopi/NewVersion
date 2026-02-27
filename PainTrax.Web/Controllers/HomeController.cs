@@ -1,4 +1,4 @@
-﻿    using AutoMapper;
+﻿using AutoMapper;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Http;
@@ -101,7 +101,7 @@ namespace PainTrax.Web.Controllers
             try
             {
                 int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-               
+
                 ViewBag.TotalPatient = _dashboardservices.GetTotalPatient(cmpid.Value, 4);
                 ViewBag.TodaysPatient = _dashboardservices.GetTotalPatient(cmpid.Value, 1);
                 ViewBag.TodaysAttorny = _dashboardservices.GetTotalAttorny(cmpid.Value);
@@ -257,6 +257,8 @@ namespace PainTrax.Web.Controllers
                         HttpContext.Session.SetString(SessionKeys.SessionFUDate, setting.fu_default == null ? "" : setting.fu_default.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionSideCase, setting.casetype == null ? "U" : setting.casetype.ToString());
                         HttpContext.Session.SetString(SessionKeys.SessionShowTableBorder, setting.table_border.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionFontFamily, setting.font_family == null ? "" : setting.font_family.ToString());
+                        HttpContext.Session.SetString(SessionKeys.SessionFontSize, setting.font_size == null ? "" : setting.font_size.ToString());
 
                     }
                     else
@@ -574,10 +576,10 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateSurgoryCenter(string sProcedureDetailIDs, string sId, string sSCName, string sAssistant,string sSurgeon,DateTime sDate)
+        public IActionResult UpdateSurgoryCenter(string sProcedureDetailIDs, string sId, string sSCName, string sAssistant, string sSurgeon, DateTime sDate)
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-            var result = _pocservices.UpdatePOCSurgoryCenter(sProcedureDetailIDs, sId, sSCName, sAssistant, sSurgeon,cmpid.Value,sDate);
+            var result = _pocservices.UpdatePOCSurgoryCenter(sProcedureDetailIDs, sId, sSCName, sAssistant, sSurgeon, cmpid.Value, sDate);
             return Json(result);
         }
 

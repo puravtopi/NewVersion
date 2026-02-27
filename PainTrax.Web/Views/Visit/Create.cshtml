@@ -158,7 +158,7 @@
                                         <path d="M11 2H9v3h2z"></path>
                                         <path d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z"></path>
                                     </svg>
-                                </button> 
+                                </button>
                                 <a id="printButtonSOAP" name="printButtonSOAP" onclick="DownloadPdf(@Model.patientid  ,'@Model.fname','@Model.lname')" href="#" class="btn btn-warning bi bi-printer" title="Print Demo" style="float:right;display:block"></a> &nbsp; &nbsp;
                             </div>
                             <div class="clearfix"></div>
@@ -388,27 +388,7 @@
 
                                                             </select>
                                                         </div>
-                                                        @* <label for="inputDate" class="col-sm-2 col-form-label">MC</label>
-                                                        <div class="col-sm-4">
-                                                            @*   <select class="form-select" asp-for="mc" arial--label="Default select example">
-                                                            <option value=""></option>
-                                                            <option value="true">Yes</option>
-                                                            <option value="false">No</option>
-                                                            </select>
 
-                                                            
-
-                                                            <section class="dropdown">
-                                                               <input type="text" asp-for="mc" class="form-control" style="width:88%" onchange="txtMe(this)" /> 
-                                                                <select id="ddl_mc" class="form-select" onchange="this.previousElementSibling.value = this.value; this.previousElementSibling.focus();selectVal('mc', this.value)">
-                                                                   @*  <option value=""></option> 
-                                                                    <option value="Yes">Yes</option>
-                                                                    <option value="No" selected>No</option>
-                                                                </select>
-                                                            </section>
-
-                                                            @*  <input type="text" class="form-control" asp-for="mc"> *@
-                                                        @* </div> *@
                                                     </div>
                                                     <div class="row mb-3">
                                                         <label for="inputNumber" class="col-sm-2 col-form-label">
@@ -1118,7 +1098,7 @@
     }
 
     function fnSaveDefault() {
-         var url = "@Url.Action("SaveDefault", "Visit")?id=" + $("#hdIEId").val();
+        var url = "@Url.Action("SaveDefault", "Visit")?id=" + $("#hdIEId").val();
         $.ajax({
             url: url,
             type: 'GET',
@@ -1266,10 +1246,10 @@
 
         })
 
-        $('.searchable-dropdown').select2({
-            placeholder: "-- Select ---",
-            allowClear: true
-        });
+        // $('.searchable-dropdown').select2({
+        //     placeholder: "-- Select ---",
+        //     allowClear: true
+        // });
     });
 
     $('#borderedTab a').on('click', function (e) {
@@ -1706,7 +1686,6 @@
             contentType: "application/x-www-form-urlencoded",
             success: function (data, status, xhr) {
                 $("#divPage1").html(data);
-
             },
             error: function (xhr, status, error) {
                 alert("Error!" + xhr.status);
@@ -1863,7 +1842,7 @@
     //     }
 
     // }
-        function fnUpdateSidePanel() {
+    function fnUpdateSidePanel() {
 
         var dos = $('#dos').val();
         var doa = $('#doa').val();

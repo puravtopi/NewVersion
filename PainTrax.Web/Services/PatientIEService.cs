@@ -974,4 +974,14 @@ WHERE Executed = @fDate and PatientIE_ID=@ieId;Select 1;", conn);
         var dataList = GetData(query);
         return dataList;
     }
+
+    public void UpdatePOCAssessment(int ie_id, string poc_assesment)
+    {
+        MySqlCommand cm = new MySqlCommand(@"UPDATE tbl_ie_page1 SET
+		poc_assesment=@poc_assesment	where ie_id=@ie_id ", conn);
+        cm.Parameters.AddWithValue("@ie_id", ie_id);
+        cm.Parameters.AddWithValue("@poc_assesment", poc_assesment);
+
+        Execute(cm);
+    }
 }

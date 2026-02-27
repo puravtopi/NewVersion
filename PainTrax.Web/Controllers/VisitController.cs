@@ -729,8 +729,10 @@ namespace PainTrax.Web.Controllers
 
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             var data = new tbl_ie_page1();
+
+
             var page1Data = _ieService.GetOnePage1(patientIEId);
-            if (page1Data != null)
+            if (page1Data != null && patientIEId != 0)
             {
                 data = page1Data;
 
@@ -799,7 +801,7 @@ namespace PainTrax.Web.Controllers
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             var data = new tbl_ie_page2();
             var page2Data = _ieService.GetOnePage2(patientIEId);
-            if (page2Data != null)
+            if (page2Data != null && patientIEId != 0)
             {
                 data = page2Data;
             }
@@ -824,7 +826,7 @@ namespace PainTrax.Web.Controllers
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             var data = new tbl_ie_ne();
             var pageNEData = _ieService.GetOneNE(patientIEId);
-            if (pageNEData != null)
+            if (pageNEData != null && patientIEId != 0)
             {
                 data = pageNEData;
             }
@@ -851,7 +853,7 @@ namespace PainTrax.Web.Controllers
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             var data = new tbl_ie_page3();
             var page3Data = _ieService.GetOnePage3(patientIEId);
-            if (page3Data != null)
+            if (page3Data != null && patientIEId != 0)
             {
                 data = page3Data;
             }
@@ -1572,7 +1574,55 @@ namespace PainTrax.Web.Controllers
                     data = _ieService.InsertPage3(model);
 
                 if (data > 0)
+                {
+
+                    var daignoCodeDetails = "<ol>";
+
+                    if (!string.IsNullOrEmpty(model.diagcervialbulge_text))
+                    {
+                        daignoCodeDetails += "<li>" + model.diagcervialbulge_text + "</li>";
+                    }
+                    if (!string.IsNullOrEmpty(model.diagcervialbulge_hnp1))
+                    {
+                        daignoCodeDetails += "<li>" + model.diagcervialbulge_hnp1 + "</li>";
+                    }
+                    if (!string.IsNullOrEmpty(model.diagcervialbulge_hnp2))
+                    {
+                        daignoCodeDetails += "<li>" + model.diagcervialbulge_hnp2 + "</li>";
+                    }
+
+                    if (!string.IsNullOrEmpty(model.diagthoracicbulge_text))
+                    {
+                        daignoCodeDetails += "<li>" + model.diagthoracicbulge_text + "</li>";
+                    }
+                    if (!string.IsNullOrEmpty(model.diagthoracicbulge_hnp1))
+                    {
+                        daignoCodeDetails += "<li>" + model.diagthoracicbulge_hnp1 + "</li>";
+                    }
+                    if (!string.IsNullOrEmpty(model.diagthoracicbulge_hnp2))
+                    {
+                        daignoCodeDetails += "<li>" + model.diagthoracicbulge_hnp2 + "</li>";
+                    }
+
+                    if (!string.IsNullOrEmpty(model.diaglumberbulge_text))
+                    {
+                        daignoCodeDetails += "<li>" + model.diaglumberbulge_text + "</li>";
+                    }
+                    if (!string.IsNullOrEmpty(model.diagthoracicbulge_hnp1))
+                    {
+                        daignoCodeDetails += "<li>" + model.diaglumberbulge_hnp1 + "</li>";
+                    }
+                    if (!string.IsNullOrEmpty(model.diaglumberbulge_hnp2))
+                    {
+                        daignoCodeDetails += "<li>" + model.diaglumberbulge_hnp2 + "</li>";
+                    }
+                   
+
+                    var htmlDaignosis = daignoCodeDetails + "</ol>";
+
+                    _ieService.UpdatePOCAssessment(model.ie_id.Value, htmlDaignosis);
                     return Json(1);
+                }
                 else
                     return Json(0);
             }
@@ -3673,7 +3723,7 @@ namespace PainTrax.Web.Controllers
             int age = today.Year - bday.Year;
 
             if (today.Month < bday.Month ||
-       ((today.Month == bday.Month) && (today.Day < bday.Day)))
+        ((today.Month == bday.Month) && (today.Day < bday.Day)))
             {
                 age--;  //birthday in current year not yet reached, we are 1 year younger ;)
                         //+ no birthday for 29.2. guys ... sorry, just wrong date for birth
@@ -4151,27 +4201,39 @@ namespace PainTrax.Web.Controllers
         public Header CreateHeaderWithPageNumber(string text1, string text2)
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            string fontSize = HttpContext.Session.GetString(SessionKeys.SessionFontSize);
+            string fontFamily = HttpContext.Session.GetString(SessionKeys.SessionFontFamily);
+
+            fontFamily = !string.IsNullOrEmpty(fontFamily) ? fontFamily : "Times New Roman";
+            fontSize = !string.IsNullOrEmpty(fontSize) ? (Convert.ToInt16(fontSize) * 2).ToString() : "20";
+
             if (text2 != "")
             {
                 return new Header(
                     new Paragraph(
                         new Run(
                             new RunProperties(
-                    new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                     new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
                 ),
                             new Text(text1) // First line
                         ),
                         new Break(), // Line break
                         new Run(
                             new RunProperties(
-                    new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                      new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
                 ),
                             new Text(text2) // Second line
                         ),
                         new Break(), // Another line break if needed
                         new Run(
                             new RunProperties(
-                    new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                     new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
                 ),
                             new Text("Page ") // Static "Page " text
                         ),
@@ -4180,7 +4242,10 @@ namespace PainTrax.Web.Controllers
             new Text(" ")
             {
                 Space = SpaceProcessingModeValues.Preserve
-            }
+            },
+             new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
         ),
                         new Run(
                             new SimpleField() // Dynamic page number field
@@ -4200,7 +4265,9 @@ namespace PainTrax.Web.Controllers
                           new Paragraph(
                               new Run(
                                    new RunProperties(
-                           new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                           new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                             new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
                        ),
                                   new Text(text1) // First line
                               ),
@@ -4208,7 +4275,9 @@ namespace PainTrax.Web.Controllers
 
                               new Run(
                                    new RunProperties(
-                                        new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                                         new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                           new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
                                    ),
                                    new Text("Page ") // Static "Page " text
                               ),
@@ -4221,7 +4290,9 @@ namespace PainTrax.Web.Controllers
         ),
                               new Run(
                                    new RunProperties(
-                           new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                             new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
 
                        ),
                                   new SimpleField() // Dynamic page number field
@@ -4238,7 +4309,7 @@ namespace PainTrax.Web.Controllers
                        new Paragraph(
                            new Run(
                                 new RunProperties(
-                        new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                         new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily }
                     ),
                                new Text(text1) // First line
                            ),
@@ -4246,7 +4317,9 @@ namespace PainTrax.Web.Controllers
 
                            new Run(
                                 new RunProperties(
-                        new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                          new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
                     ),
                                new Text("Page ") // Static "Page " text
                            ),
@@ -4259,7 +4332,9 @@ namespace PainTrax.Web.Controllers
         ),
                            new Run(
                                 new RunProperties(
-                        new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }
+                         new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
 
                     ),
                                new SimpleField() // Dynamic page number field
@@ -4276,21 +4351,26 @@ namespace PainTrax.Web.Controllers
         public Footer CreateFooterWithPageNumber(string text1, string text2, string text3)
         {
             Paragraph paragraph = new Paragraph();
+            string fontSize = HttpContext.Session.GetString(SessionKeys.SessionFontSize);
+            string fontFamily = HttpContext.Session.GetString(SessionKeys.SessionFontFamily);
+
+            fontFamily = !string.IsNullOrEmpty(fontFamily) ? fontFamily : "Times New Roman";
+            fontSize = !string.IsNullOrEmpty(fontSize) ? (Convert.ToInt16(fontSize) * 2).ToString() : "20";
 
             paragraph.Append(
-                new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
-        new FontSizeComplexScript { Val = "20" }), new Text(text1))
+                new Run(new RunProperties(new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily }, new FontSize { Val = fontSize }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = fontSize }), new Text(text1))
             );
 
             if (!string.IsNullOrEmpty(text2))
             {
                 paragraph.Append(
                     new Run(new TabChar()), new Run(new TabChar()),
-                    new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
-        new FontSizeComplexScript { Val = "20" }), new Text(text2)),
+                    new Run(new RunProperties(new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily }, new FontSize { Val = fontSize }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = fontSize }), new Text(text2)),
                     new Run(new TabChar()), new Run(new TabChar()),
-                    new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
-        new FontSizeComplexScript { Val = "20" }), new Text(text3)),
+                    new Run(new RunProperties(new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily }, new FontSize { Val = fontSize }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = fontSize }), new Text(text3)),
                     new Run(new TabChar()), new Run(new TabChar()), new Run(new TabChar())
                 );
             }
@@ -4302,14 +4382,14 @@ namespace PainTrax.Web.Controllers
             }
 
             paragraph.Append(
-                new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
-        new FontSizeComplexScript { Val = "20" }), new Text("Page ") { Space = SpaceProcessingModeValues.Preserve }),
-                new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
-        new FontSizeComplexScript { Val = "20" }), new SimpleField() { Instruction = "PAGE" }),
-                new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
-        new FontSizeComplexScript { Val = "20" }), new Text(" of ") { Space = SpaceProcessingModeValues.Preserve }),
-                new Run(new RunProperties(new RunFonts { Ascii = "Times New Roman", HighAnsi = "Times New Roman" }, new FontSize { Val = "20" }, // 10 pt = 20 half-points
-        new FontSizeComplexScript { Val = "20" }), new SimpleField() { Instruction = "NUMPAGES" })
+                new Run(new RunProperties(new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily }, new FontSize { Val = fontSize }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = fontSize }), new Text("Page ") { Space = SpaceProcessingModeValues.Preserve }),
+                new Run(new RunProperties(new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily }, new FontSize { Val = fontSize }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = fontSize }), new SimpleField() { Instruction = "PAGE" }),
+                new Run(new RunProperties(new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily }, new FontSize { Val = fontSize }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = fontSize }), new Text(" of ") { Space = SpaceProcessingModeValues.Preserve }),
+                new Run(new RunProperties(new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily }, new FontSize { Val = fontSize }, // 10 pt = 20 half-points
+        new FontSizeComplexScript { Val = fontSize }), new SimpleField() { Instruction = "NUMPAGES" })
             );
 
             return new Footer(paragraph);
@@ -5416,7 +5496,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult SaveDefault(int id)
         {
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
-           
+
             var page2Data = _ieService.GetOnePage2(id);
             if (page2Data == null)
             {
@@ -5435,7 +5515,7 @@ namespace PainTrax.Web.Controllers
                 _ieService.InsertPage2(page2Data);
             }
 
-          
+
             var pageNEData = _ieService.GetOneNE(id);
             if (pageNEData == null)
             {
@@ -5453,7 +5533,7 @@ namespace PainTrax.Web.Controllers
 
                     _ieService.InsertNE(pageNEData);
                 }
-              
+
             }
 
             var page3Data = _ieService.GetOnePage3(id);

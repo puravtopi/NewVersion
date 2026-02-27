@@ -123,6 +123,18 @@ namespace PainTrax.Web.Models
         public string? Jog { get; set; }
         public string? Exercise { get; set; }
         public int cmp_id { get; set; }
+
+        public string? JobTitle { get; set; }
+        public bool? Stopped_yes { get; set; }
+        public string? Retired { get; set; }
+        public string? Unemployed { get; set; }
+        public string? working_why { get; set; }
+        public string? wr1 { get; set; }
+        public string? wr2 { get; set; }
+        public string? wr3 { get; set; }
+        public string? wr4 { get; set; }
+        public string? wr5 { get; set; }
+        public string? wr6 { get; set; }
         //public string? txt_PC_RSH { get; set; }
         //public string? PC_RSH_Constant { get; set; }
         //public string? PC_RSH_Intermittent { get; set; }
@@ -236,7 +248,7 @@ namespace PainTrax.Web.Models
 
 
         //public string? description_of_the_OtherComplaint { get; set; }
-        
+
         //public string? txt_Temp { get; set; }
         //public string? txt_HR { get; set; }
         //public string? txt_RR { get; set; }
@@ -330,7 +342,7 @@ namespace PainTrax.Web.Models
 
         //public string? plan_followup12weekspostop { get; set; }
 
-        
+
 
         //public string? plan_Followupin2weeks { get; set; }
         //public string? plan_Referral { get; set; }
@@ -340,7 +352,7 @@ namespace PainTrax.Web.Models
 
         //public string? inj_RKN { get; set; }
 
-       
+
         //public string? inj_LKN { get; set; }
         //public string? inj_RHIP { get; set; }
         //public string? inj_LHIP { get; set; }
@@ -393,9 +405,9 @@ namespace PainTrax.Web.Models
 
         //public string? plan_Patientscheduledfor { get; set; }
 
-        
+
         //public string? plan_Patientscheduledfor_recommend_RSH { get; set; }
-       
+
         //public string? plan_Patientscheduledfor_recommend_LSH { get; set; }
         //public string? plan_Patientscheduledfor_recommend_RKN { get; set; }
         //public string? plan_Patientscheduledfor_recommend_LKN { get; set; }
@@ -407,12 +419,14 @@ namespace PainTrax.Web.Models
         //public string? plan_Patientscheduledfor_recommend_LWRI { get; set; }
         //public string? plan_Patientscheduledfor_recommend_RELB { get; set; }
         //public string? plan_Patientscheduledfor_recommend_LELB { get; set; }
-        
+
 
 
         public int? Cmp_Id { get; set; }
 
+    }
 
-
+    public class IntakeDropDown {
+        public string Name { get; set; }
     }
 }

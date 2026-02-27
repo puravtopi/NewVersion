@@ -341,9 +341,9 @@ namespace PainTrax.Web.Controllers
                                 else
                                     item.pre_select = false;
                             }
-                                                      
+
                             lst.Add(item);
-                       
+
                         }
 
                         obj.Other.listTreatmentMaster = lst;
@@ -892,7 +892,7 @@ namespace PainTrax.Web.Controllers
                             ContactNo = model.attory_phone,
                             cmp_id = cmpid,
                             CreatedBy = userid,
-                            Paralegal= model.paralegal
+                            Paralegal = model.paralegal
 
                         };
 
@@ -2126,7 +2126,7 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteFU(int fuId,string pName)
+        public IActionResult DeleteFU(int fuId, string pName)
         {
             try
             {
@@ -2594,469 +2594,470 @@ namespace PainTrax.Web.Controllers
         public IActionResult FUPrint(int ieid, int fuid)
         {
 
-            try
+            //try
+            //{
+            string plan = "";
+            ViewBag.url = HttpContext.Request.GetEncodedUrl();
+
+            string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+            string body = string.Empty;
+            //using streamreader for reading my htmltemplate   
+
+            var fuData = _patientFuservices.GetOne(fuid);
+            var fed = _patientFuservices.GetFirstIEDateOne(fuData.patientIE_ID.Value);
+
+            var templateData = _printService.GetTemplate(cmpid, fuData.type);
+            var gender = "";
+
+            body = templateData.content;
+
+            var patientData = _ieService.GetOnebyPatientId(ieid);
+
+            if (patientData != null)
             {
-                string plan = "";
-                ViewBag.url = HttpContext.Request.GetEncodedUrl();
-
-                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
-                string body = string.Empty;
-                //using streamreader for reading my htmltemplate   
-
-                var fuData = _patientFuservices.GetOne(fuid);
-                var fed = _patientFuservices.GetFirstIEDateOne(fuData.patientIE_ID.Value);
-
-                var templateData = _printService.GetTemplate(cmpid, fuData.type);
-                var gender = "";
-
-                body = templateData.content;
-
-                var patientData = _ieService.GetOnebyPatientId(ieid);
-
-                if (patientData != null)
-                {
-                    gender = Common.GetMrMrsFromSex(patientData.gender);
-                    body = body.Replace("#wcbgroup", patientData.primary_wcb_group);
-                    body = body.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
-                    body = body.Replace("#fn", patientData.fname);
-                    body = body.Replace("#ln", patientData.lname);
-                    body = body.Replace("#dob", Common.commonDate(patientData.dob));
-                    body = body.Replace("#doi", Common.commonDate(patientData.doa));
-                    body = body.Replace("#dos", Common.commonDate(fuData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
-                    body = body.Replace("#location", patientData.location);
-                    body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
-                    body = body.Replace("#gender", gender);
-                    body = body.Replace("#pp", string.IsNullOrEmpty(fuData.procedure_performed) ? "" : fuData.procedure_performed.Replace("^", "<br/>"));
-                    body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
-
-
-                    // body = body.Replace("#CT", System.Enum.GetName(typeof(CaseType), Convert.ToInt32(patientData.compensation)));
-                    body = body.Replace("#CT", patientData.compensation);
-                    body = body.Replace("#fed", fed == null ? "" : Common.commonDate(fed.Value, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
-                }
-
-                //header printing
-
-                var locData = _locService.GetAll(" and id=" + patientData.location_id);
-
-                if (locData != null && locData.Count > 0)
-                {
-                    if (locData[0].nameofpractice != null)
-                        body = body.Replace("#drFLName", locData[0].drfname + " " + locData[0].drlname);
-                    else
-                        body = body.Replace("#drFLName", "");
-                    body = body.Replace("#drName", locData[0].nameofpractice == null ? "" : (locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice));
-                    body = body.Replace("#address", locData[0].address);
-                    //body = body.Replace("#Address", locData[0].address);
-                    body = body.Replace("#Address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
-                    body = body.Replace("#loc", locData[0].location);
-                    body = body.Replace("#Location", locData[0].location);
-                    body = body.Replace("#Nameofpractice", locData[0].nameofpractice == null ? "" : (locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice));
-                    body = body.Replace("#Phone", locData[0].telephone);
-
-                    if (locData[0].drfname != null)
-                        body = body.Replace("#NameofDr", locData[0].drfname + " " + locData[0].drlname);
-                    else
-                        body = body.Replace("#NameofDr", "");
-
-
-                    string drAddress = "";
-                    if (!string.IsNullOrEmpty(locData[0].address))
-                        drAddress = locData[0].address;
-
-                    if (!string.IsNullOrEmpty(locData[0].city))
-                        drAddress = drAddress + "<br/>" + locData[0].city + " " + locData[0].state + " " + locData[0].zipcode;
-
-                    body = body.Replace("#DrAddress", drAddress);
-
-                }
-
-                //ADL printing
-
-                var page2Data = _fuPage2services.GetOne(fuid);
-
-                if (page2Data != null)
-                {
-                    body = body.Replace("#ADL", this.removePtag(page2Data.aod));
-                    body = body.Replace("#Ros", this.removePtag(page2Data.ros));
-                }
-                else
-                {
-                    body.Replace("#ADL", "");
-                    body = body.Replace("#Ros", "");
-                }
-
-
-                var page1DataIE = _ieService.GetOnePage1(ieid);
-
-                //POC printing
-
-                var pocData = this.getPOCPrint(fuid);
-
-                //CC printing
-
-                var page1Data = _fuPage1services.GetOne(fuid);
-                if (page1Data != null)
-                {
-                    body = body.Replace("#Reason", string.IsNullOrEmpty(page1Data.appt_reason) ? "" : this.removePtag(page1Data.appt_reason));
-
-
-                    string cc = "";
-                    string pe = "";
-
-                    cc = string.IsNullOrEmpty(page1Data.cc) ? "" : this.removePtag(page1Data.cc);
-                    pe = string.IsNullOrEmpty(page1Data.pe) ? "" : page1Data.pe;
-
-                    if (pocData != null)
-                    {
-                        cc = string.IsNullOrEmpty(pocData.strCCDesc) ? cc : cc + "<br/><br/>" + pocData.strCCDesc;
-                        pe = string.IsNullOrEmpty(pocData.strPEDesc) ? pe : pe + "<br/><br/>" + pocData.strPEDesc;
-                    }
-
-
-                    body = body.Replace("#CC", HtmlCleaner.ClearPE(cc));
-                    body = body.Replace("#PE", HtmlCleaner.ClearPE(pe));
-                    var history = string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history;
-                    var hstryPresentIllness = string.IsNullOrEmpty(page1Data.history) ? "" : "<p><b>HISTORY OF PRESENT ILLNESS: </b>" + page1Data.history.Replace("<p>", "<span>").Replace("</p>", "</span>") + "</p>";
-
-                    history = history.Replace("#dos", Common.commonDate(patientData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
-                    history = history.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
-                    //  history.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
-                    history = history.Replace("#patientname", gender + " " + patientData.lname + " " + patientData.fname + " " + patientData.lname);
-                    history = history.Replace("#accidenttype", patientData.accidentType);
-                    history = history.Replace("#accidenttype", patientData.accidentType);
-                    body = body.Replace("#history", history);
-
-                    body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
-                    body = body.Replace("#DD", string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd);
-                    body = body.Replace("#WorkStatus", string.IsNullOrEmpty(page1Data.work_status) ? "" : page1Data.work_status);
-                    body = body.Replace("#POPlan", string.IsNullOrEmpty(page1Data.plan) ? "" : page1Data.plan);
-                    body = body.Replace("#fn", patientData.fname);
-                    body = body.Replace("#ln", patientData.lname);
-                    body = body.Replace("#gender", Common.GetMrMrsFromSex(patientData.gender));
-                    body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
-                    body = body.Replace("#accountno", patientData.account_no);
-
-                    if (patientData.compensation == "WC")
-                    {
-                        var dd = string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd;
-                        var workstatus = string.IsNullOrEmpty(page1Data.work_status) ? "" : page1Data.work_status;
-                        var impart = "<p><b>IMPAIRMENT RATING: </b>" + dd + "" + workstatus + "</p>";
-
-                        body = body.Replace("#impart", impart);
-
-                    }
-                    else
-                    {
-                        body = body.Replace("#impart", "");
-                    }
-                    plan = string.IsNullOrEmpty(page1Data.plan) ? "" : page1Data.plan;
-                    string bodypart = "";
-
-                    if (!string.IsNullOrEmpty(page1Data.bodypart))
-                        bodypart = Common.ReplceCommowithAnd(page1Data.bodypart.ToLower());
-
-                    body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart) + " pain.");
-                    body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
-                    hstryPresentIllness = hstryPresentIllness.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
-                    body = body.Replace("#hstryPresentIllness", hstryPresentIllness);
-
-                    string assessment = "";
-                    if (!string.IsNullOrEmpty(page1Data.assessment))
-                    {
-                        if (!string.IsNullOrEmpty(bodypart))
-                            assessment = page1Data.assessment.Replace("#PC", Common.FirstCharToUpper(bodypart) + " pain.");
-                        else
-                            assessment = page1Data.assessment.Replace("#PC", "");
-                        assessment = assessment.Replace("#accidenttype", fuData.accident_type);
-                    }
-
-
-                    if (pocData != null)
-                    {
-                        assessment = string.IsNullOrEmpty(pocData.strADesc) ? assessment : assessment + "<br/><br/>" + pocData.strADesc;
-                    }
-
-                    body = body.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
-
-                    body = body.Replace("#PastMedicalHistory", this.removePtag(page1Data.pmh));
-                    body = body.Replace("#PastSurgicalHistory", this.removePtag(page1Data.psh));
-                    body = body.Replace("#SocialHistory", this.removePtag(page1Data.social_history));
-                    body = body.Replace("#Allergies", this.removePtag(page1Data.allergies));
-                    body = body.Replace("#FamilyHistory", this.removePtag(page1Data.family_history));
-                    body = body.Replace("#Vital", this.removePtag(page1Data.vital));
-                    body = body.Replace("#Diagnoses", this.removePtag(assessment));
-                    body = body.Replace("#Occupation", this.removePtag(page1Data.occupation));
-                    body = body.Replace("#PastMedications", this.removePtag(page1Data.medication));
-                    body = body.Replace("#DD", this.removePtag(page1Data.dd));
-                    body = body.Replace("#WorkStatus", this.removePtag(page1Data.work_status));
-                    body = body.Replace("#IR", this.removePtag(page1Data.impairment_rating));
-                    body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
-                    body = body.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
-
-                }
-                else
-                {
-                    body = body.Replace("#WorkStatus", "");
-                    body = body.Replace("#DD", "");
-                    body = body.Replace("#PastMedications", "");
-                    body = body.Replace("#Occupation", "");
-                    body = body.Replace("#Diagnoses", "");
-                    body = body.Replace("#Vital", "");
-                    body = body.Replace("#Allergies", "");
-                    body = body.Replace("#FamilyHistory", "");
-                    body = body.Replace("#PastSurgicalHistory", "");
-                    body = body.Replace("#SocialHistory", "");
-                    body = body.Replace("#PastMedicalHistory", "");
-                    body = body.Replace("#IR", "");
-                }
-
-                //last line 
-                string lastline = "";
-                if (page1Data != null)
-                    lastline = "It is my opinion that the injuries and symptoms " + gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname + " sustained to " + page1Data.bodypart + " are causally related to the incident that occurred on " + Common.commonDate(patientData.doa) + " as described by the patient.";
-                body = body.Replace("#lastline", lastline);
-
-                //NE printing
-
-                var pageNEData = _fuNEservices.GetOne(fuid);
-                if (pageNEData != null)
-                {
-
-                    body = body.Replace("#Sen_Exm", this.removePtag(pageNEData.sensory));
-                    body = body.Replace("#SE", this.removePtag(pageNEData.sensory));
-
-                    body = body.Replace("#MMST", this.removePtag(pageNEData.manual_muscle_strength_testing));
-
-                    body = body.Replace("#NE", this.removePtag(pageNEData.neurological_exam));
-
-                    body = body.Replace("#DTR", this.removePtag(pageNEData.other_content));
-
-                }
-                else
-                {
-                    body = body.Replace("#DTR", "");
-                    body = body.Replace("#SE", "");
-                    body = body.Replace("#NE", "");
-                    body = body.Replace("#MMST", "");
-                    body = body.Replace("#Sen_Exm", "");
-                }
-
-                //NE printing
-
-                var page3Data = _fuPage3services.GetOne(fuid);
-                if (page3Data != null)
-                {
-                    body = body.Replace("#Gait", this.removePtag(page3Data.gait));
-                    body = body.Replace("#Care", this.removePtag(page3Data.care));
-                    body = body.Replace("#Procedures", this.removePtag(page3Data.universal));
-                    body = body.Replace("#Goal", this.removePtag(page3Data.goal));
-                }
-                else
-                {
-                    body = body.Replace("#Goal", "");
-                    body = body.Replace("#Procedures", "");
-                    body = body.Replace("#Care", "");
-                    body = body.Replace("#Gait", "");
-                }
-
-                //Treatment printing
-
-                var pageOtherData = _fuOtherService.GetOne(fuid);
-                if (pageOtherData != null)
-                {
-
-                    body = body.Replace("#Treatment", this.removePtag(pageOtherData.treatment_details));
-                    body = body.Replace("#heshe", Common.GethesheFromSex(patientData.gender));
-                    body = body.Replace("#hisher", Common.GethisherFromSex(patientData.gender));
-                    body = body.Replace("#note1", this.removePtag(pageOtherData.note1));
-                    body = body.Replace("#note2", this.removePtag(pageOtherData.note2));
-                    body = body.Replace("#note3", this.removePtag(pageOtherData.note3));
-
-
-                    string fup_duration = "";
-
-                    if (!string.IsNullOrEmpty(pageOtherData.followup_duration))
-                        fup_duration = pageOtherData.followup_duration;
-                    else if (pageOtherData.followup_date.HasValue)
-                        fup_duration = Common.commonDate(pageOtherData.followup_date);
-
-
-                    body = body.Replace("#FollowUp", this.removePtag(fup_duration));
-                    body = body.Replace("#fup", this.removePtag(fup_duration));
-                }
-                else
-                {
-                    body = body.Replace("#FollowUp", "");
-                    body = body.Replace("#Treatment", "");
-                }
-
-                //POC printing
-
-                var dataPOC = this.getPOCPrint(fuid);
-
-                if (string.IsNullOrEmpty(plan))
-                    body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
-                else
-                    body = body.Replace("#Plan", this.removePtag(plan));
-
-                //var dataPOC = this.getPOC(ieid);
-
-
-
-                //body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
-
-                body = body.Replace("#ReflexExam", "");
-                string injectionHtml = dataPOC.strInjectionDesc;
-                //string injectionHtml = "<h2>Injection Test</h2>";
-
-                //string SessionDiffPage = HttpContext.Session.GetString(SessionKeys.SessionPageBreak);
-                string SessionDiffDoc = HttpContext.Session.GetString(SessionKeys.SessionInjectionAsSeparateBlock);
-
-                if (SessionDiffDoc != "true")
-                {
-
-                    if (HttpContext.Session.GetString(SessionKeys.SessionPageBreak) == "true")
-                    {
-                        if (!string.IsNullOrEmpty(injectionHtml))
-                        {
-                            // Create HTML with a page break before the injection section
-                            string pageBreakHtml = "<div style='page-break-before: always;'>";
-                            pageBreakHtml += injectionHtml;
-                            pageBreakHtml += "</div>";
-
-                            body = body.Replace("#injection", pageBreakHtml);
-                        }
-                        else {
-                            body = body.Replace("#injection", "");
-                        }
-                    }
-                    else
-                    {
-                        body = body.Replace("#injection", injectionHtml);
-                    }
-                }
-                else
-                {
-                    body = body.Replace("#injection", "");
-                }
-
-
-                body = body.Replace("#ReflexExam", "");
-
-
-                var strDiagnostic = this.getDiagnostic(fuid);
-
-
-                if (string.IsNullOrEmpty(strDiagnostic))
-                {
-                    if (HttpContext.Session.GetString(SessionKeys.SessionIsDaignosis) == "true")
-                    {
-                        strDiagnostic = HttpContext.Session.GetString(SessionKeys.SessionDaignosisNotFoundStatment);
-                    }
-                }
-                else
-                {
-                    if (HttpContext.Session.GetString(SessionKeys.SessionIsDaignosis) == "true")
-                    {
-                        strDiagnostic = strDiagnostic + "<br/><br/>" + HttpContext.Session.GetString(SessionKeys.SessionDaignosisFoundStatment); ;
-                    }
-                }
-
-
-                body = body.Replace("#Diagnostic", this.removePtag(strDiagnostic));
-
-
-                var data = _fuPage3services.GetOne(fuid);
-
-                if (data != null)
-                {
-                    body = body.Replace("#PrescribedMedications", data.discharge_medications);
-                }
-                else
-                {
-                    body = body.Replace("#PrescribedMedications", "");
-                }
-
-                body = body.Replace("#LastNote", "");
+                gender = Common.GetMrMrsFromSex(patientData.gender);
+                body = body.Replace("#wcbgroup", patientData.primary_wcb_group);
+                body = body.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
+                body = body.Replace("#fn", patientData.fname);
+                body = body.Replace("#ln", patientData.lname);
+                body = body.Replace("#dob", Common.commonDate(patientData.dob));
+                body = body.Replace("#doi", Common.commonDate(patientData.doa));
+                body = body.Replace("#dos", Common.commonDate(fuData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
+                body = body.Replace("#location", patientData.location);
+                body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
+                body = body.Replace("#gender", gender);
+                body = body.Replace("#pp", string.IsNullOrEmpty(fuData.procedure_performed) ? "" : fuData.procedure_performed.Replace("^", "<br/>"));
                 body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
+
+
+                // body = body.Replace("#CT", System.Enum.GetName(typeof(CaseType), Convert.ToInt32(patientData.compensation)));
+                body = body.Replace("#CT", patientData.compensation);
+                body = body.Replace("#fed", fed == null ? "" : Common.commonDate(fed.Value, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
+            }
+
+            //header printing
+
+            var locData = _locService.GetAll(" and id=" + patientData.location_id);
+
+            if (locData != null && locData.Count > 0)
+            {
+                if (locData[0].nameofpractice != null)
+                    body = body.Replace("#drFLName", locData[0].drfname + " " + locData[0].drlname);
+                else
+                    body = body.Replace("#drFLName", "");
+                body = body.Replace("#drName", locData[0].nameofpractice == null ? "" : (locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice));
+                body = body.Replace("#address", locData[0].address);
+                //body = body.Replace("#Address", locData[0].address);
+                body = body.Replace("#Address", locData[0].address + "<br/>" + locData[0].city + ", " + locData[0].state + " " + locData[0].zipcode);
+                body = body.Replace("#loc", locData[0].location);
+                body = body.Replace("#Location", locData[0].location);
+                body = body.Replace("#Nameofpractice", locData[0].nameofpractice == null ? "" : (locData[0].nameofpractice.ToLower().Contains("dr") ? locData[0].nameofpractice : locData[0].nameofpractice));
+                body = body.Replace("#Phone", locData[0].telephone);
+
+                if (locData[0].drfname != null)
+                    body = body.Replace("#NameofDr", locData[0].drfname + " " + locData[0].drlname);
+                else
+                    body = body.Replace("#NameofDr", "");
+
+
+                string drAddress = "";
+                if (!string.IsNullOrEmpty(locData[0].address))
+                    drAddress = locData[0].address;
+
+                if (!string.IsNullOrEmpty(locData[0].city))
+                    drAddress = drAddress + "<br/>" + locData[0].city + " " + locData[0].state + " " + locData[0].zipcode;
+
+                body = body.Replace("#DrAddress", drAddress);
+
+            }
+
+            //ADL printing
+
+            var page2Data = _fuPage2services.GetOne(fuid);
+
+            if (page2Data != null)
+            {
+                body = body.Replace("#ADL", this.removePtag(page2Data.aod));
+                body = body.Replace("#Ros", this.removePtag(page2Data.ros));
+            }
+            else
+            {
+                body.Replace("#ADL", "");
+                body = body.Replace("#Ros", "");
+            }
+
+
+            var page1DataIE = _ieService.GetOnePage1(ieid);
+
+            //POC printing
+
+            var pocData = this.getPOCPrint(fuid);
+
+            //CC printing
+
+            var page1Data = _fuPage1services.GetOne(fuid);
+            if (page1Data != null)
+            {
+                body = body.Replace("#Reason", string.IsNullOrEmpty(page1Data.appt_reason) ? "" : this.removePtag(page1Data.appt_reason));
+
+
+                string cc = "";
+                string pe = "";
+
+                cc = string.IsNullOrEmpty(page1Data.cc) ? "" : this.removePtag(page1Data.cc);
+                pe = string.IsNullOrEmpty(page1Data.pe) ? "" : page1Data.pe;
+
+                if (pocData != null)
+                {
+                    cc = string.IsNullOrEmpty(pocData.strCCDesc) ? cc : cc + "<br/><br/>" + pocData.strCCDesc;
+                    pe = string.IsNullOrEmpty(pocData.strPEDesc) ? pe : pe + "<br/><br/>" + pocData.strPEDesc;
+                }
+
+
+                body = body.Replace("#CC", HtmlCleaner.ClearPE(cc));
+                body = body.Replace("#PE", HtmlCleaner.ClearPE(pe));
+                var history = string.IsNullOrEmpty(page1Data.history) ? "" : page1Data.history;
+                var hstryPresentIllness = string.IsNullOrEmpty(page1Data.history) ? "" : "<p><b>HISTORY OF PRESENT ILLNESS: </b>" + page1Data.history.Replace("<p>", "<span>").Replace("</p>", "</span>") + "</p>";
+
+                history = history.Replace("#dos", Common.commonDate(patientData.doe, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
+                history = history.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
+                //  history.Replace("#patientname", gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname);
+                history = history.Replace("#patientname", gender + " " + patientData.lname + " " + patientData.fname + " " + patientData.lname);
+                history = history.Replace("#accidenttype", patientData.accidentType);
+                history = history.Replace("#accidenttype", patientData.accidentType);
+                body = body.Replace("#history", history);
+
+                body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
+                body = body.Replace("#DD", string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd);
+                body = body.Replace("#WorkStatus", string.IsNullOrEmpty(page1Data.work_status) ? "" : page1Data.work_status);
+                body = body.Replace("#POPlan", string.IsNullOrEmpty(page1Data.plan) ? "" : page1Data.plan);
+                body = body.Replace("#fn", patientData.fname);
+                body = body.Replace("#ln", patientData.lname);
                 body = body.Replace("#gender", Common.GetMrMrsFromSex(patientData.gender));
+                body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
+                body = body.Replace("#accountno", patientData.account_no);
 
-                ViewBag.ieId = patientData.id;
-                ViewBag.fuId = fuid;
-                ViewBag.locId = patientData.location_id;
-
-
-                string signName = "";
-                int signUserId = 0;
-
-                int? providorId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
-
-                if (fuData.provider_id != null)
+                if (patientData.compensation == "WC")
                 {
-                    signUserId = fuData.provider_id.Value;
+                    var dd = string.IsNullOrEmpty(page1Data.dd) ? "" : page1Data.dd;
+                    var workstatus = string.IsNullOrEmpty(page1Data.work_status) ? "" : page1Data.work_status;
+                    var impart = "<p><b>IMPAIRMENT RATING: </b>" + dd + "" + workstatus + "</p>";
+
+                    body = body.Replace("#impart", impart);
+
                 }
-                else if (providorId != null)
+                else
                 {
-                    signUserId = providorId.Value;
+                    body = body.Replace("#impart", "");
                 }
-                body = HtmlCleaner.ClearHTML(body);
-                ViewBag.content = body;
-                if (signUserId > 0)
-                {
-                    tbl_users _user = new tbl_users()
-                    {
-                        Id = signUserId
-                    };
-                    var userData = _userService.GetOne(_user);
-                    signName = userData.signature;
+                plan = string.IsNullOrEmpty(page1Data.plan) ? "" : page1Data.plan;
+                string bodypart = "";
 
-                    if (!string.IsNullOrEmpty(signName))
+                if (!string.IsNullOrEmpty(page1Data.bodypart))
+                    bodypart = Common.ReplceCommowithAnd(page1Data.bodypart.ToLower());
+
+                body = body.Replace("#PC", string.IsNullOrEmpty(bodypart) ? "" : Common.FirstCharToUpper(bodypart) + " pain.");
+                body = body.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
+                hstryPresentIllness = hstryPresentIllness.Replace("#bodypart", string.IsNullOrEmpty(bodypart) ? "" : bodypart.Replace(",", ", "));
+                body = body.Replace("#hstryPresentIllness", hstryPresentIllness);
+
+                string assessment = "";
+                if (!string.IsNullOrEmpty(page1Data.assessment))
+                {
+                    if (!string.IsNullOrEmpty(bodypart))
+                        assessment = page1Data.assessment.Replace("#PC", Common.FirstCharToUpper(bodypart) + " pain.");
+                    else
+                        assessment = page1Data.assessment.Replace("#PC", "");
+                    assessment = assessment.Replace("#accidenttype", fuData.accident_type);
+                }
+
+
+                if (pocData != null)
+                {
+                    assessment = string.IsNullOrEmpty(pocData.strADesc) ? assessment : assessment + "<br/><br/>" + pocData.strADesc;
+                }
+
+                body = body.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
+
+                body = body.Replace("#PastMedicalHistory", this.removePtag(page1Data.pmh));
+                body = body.Replace("#PastSurgicalHistory", this.removePtag(page1Data.psh));
+                body = body.Replace("#SocialHistory", this.removePtag(page1Data.social_history));
+                body = body.Replace("#Allergies", this.removePtag(page1Data.allergies));
+                body = body.Replace("#FamilyHistory", this.removePtag(page1Data.family_history));
+                body = body.Replace("#Vital", this.removePtag(page1Data.vital));
+                body = body.Replace("#Diagnoses", this.removePtag(assessment));
+                body = body.Replace("#Occupation", this.removePtag(page1Data.occupation));
+                body = body.Replace("#PastMedications", this.removePtag(page1Data.medication));
+                body = body.Replace("#DD", this.removePtag(page1Data.dd));
+                body = body.Replace("#WorkStatus", this.removePtag(page1Data.work_status));
+                body = body.Replace("#IR", this.removePtag(page1Data.impairment_rating));
+                body = body.Replace("#age", patientData.age == null ? "0" : patientData.age.Value.ToString());
+                body = body.Replace("#doi", Common.commonDate(patientData.doa, HttpContext.Session.GetString(SessionKeys.SessionDateFormat)));
+
+            }
+            else
+            {
+                body = body.Replace("#WorkStatus", "");
+                body = body.Replace("#DD", "");
+                body = body.Replace("#PastMedications", "");
+                body = body.Replace("#Occupation", "");
+                body = body.Replace("#Diagnoses", "");
+                body = body.Replace("#Vital", "");
+                body = body.Replace("#Allergies", "");
+                body = body.Replace("#FamilyHistory", "");
+                body = body.Replace("#PastSurgicalHistory", "");
+                body = body.Replace("#SocialHistory", "");
+                body = body.Replace("#PastMedicalHistory", "");
+                body = body.Replace("#IR", "");
+            }
+
+            //last line 
+            string lastline = "";
+            if (page1Data != null)
+                lastline = "It is my opinion that the injuries and symptoms " + gender + " " + patientData.fname + " " + patientData.mname + " " + patientData.lname + " sustained to " + page1Data.bodypart + " are causally related to the incident that occurred on " + Common.commonDate(patientData.doa) + " as described by the patient.";
+            body = body.Replace("#lastline", lastline);
+
+            //NE printing
+
+            var pageNEData = _fuNEservices.GetOne(fuid);
+            if (pageNEData != null)
+            {
+
+                body = body.Replace("#Sen_Exm", this.removePtag(pageNEData.sensory));
+                body = body.Replace("#SE", this.removePtag(pageNEData.sensory));
+
+                body = body.Replace("#MMST", this.removePtag(pageNEData.manual_muscle_strength_testing));
+
+                body = body.Replace("#NE", this.removePtag(pageNEData.neurological_exam));
+
+                body = body.Replace("#DTR", this.removePtag(pageNEData.other_content));
+
+            }
+            else
+            {
+                body = body.Replace("#DTR", "");
+                body = body.Replace("#SE", "");
+                body = body.Replace("#NE", "");
+                body = body.Replace("#MMST", "");
+                body = body.Replace("#Sen_Exm", "");
+            }
+
+            //NE printing
+
+            var page3Data = _fuPage3services.GetOne(fuid);
+            if (page3Data != null)
+            {
+                body = body.Replace("#Gait", this.removePtag(page3Data.gait));
+                body = body.Replace("#Care", this.removePtag(page3Data.care));
+                body = body.Replace("#Procedures", this.removePtag(page3Data.universal));
+                body = body.Replace("#Goal", this.removePtag(page3Data.goal));
+            }
+            else
+            {
+                body = body.Replace("#Goal", "");
+                body = body.Replace("#Procedures", "");
+                body = body.Replace("#Care", "");
+                body = body.Replace("#Gait", "");
+            }
+
+            //Treatment printing
+
+            var pageOtherData = _fuOtherService.GetOne(fuid);
+            if (pageOtherData != null)
+            {
+
+                body = body.Replace("#Treatment", this.removePtag(pageOtherData.treatment_details));
+                body = body.Replace("#heshe", Common.GethesheFromSex(patientData.gender));
+                body = body.Replace("#hisher", Common.GethisherFromSex(patientData.gender));
+                body = body.Replace("#note1", this.removePtag(pageOtherData.note1));
+                body = body.Replace("#note2", this.removePtag(pageOtherData.note2));
+                body = body.Replace("#note3", this.removePtag(pageOtherData.note3));
+
+
+                string fup_duration = "";
+
+                if (!string.IsNullOrEmpty(pageOtherData.followup_duration))
+                    fup_duration = pageOtherData.followup_duration;
+                else if (pageOtherData.followup_date.HasValue)
+                    fup_duration = Common.commonDate(pageOtherData.followup_date);
+
+
+                body = body.Replace("#FollowUp", this.removePtag(fup_duration));
+                body = body.Replace("#fup", this.removePtag(fup_duration));
+            }
+            else
+            {
+                body = body.Replace("#FollowUp", "");
+                body = body.Replace("#Treatment", "");
+            }
+
+            //POC printing
+
+            var dataPOC = this.getPOCPrint(fuid);
+
+            if (string.IsNullOrEmpty(plan))
+                body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
+            else
+                body = body.Replace("#Plan", this.removePtag(plan));
+
+            //var dataPOC = this.getPOC(ieid);
+
+
+
+            //body = body.Replace("#Plan", this.removePtag(dataPOC.strPoc));
+
+            body = body.Replace("#ReflexExam", "");
+            string injectionHtml = dataPOC.strInjectionDesc;
+            //string injectionHtml = "<h2>Injection Test</h2>";
+
+            //string SessionDiffPage = HttpContext.Session.GetString(SessionKeys.SessionPageBreak);
+            string SessionDiffDoc = HttpContext.Session.GetString(SessionKeys.SessionInjectionAsSeparateBlock);
+
+            if (SessionDiffDoc != "true")
+            {
+
+                if (HttpContext.Session.GetString(SessionKeys.SessionPageBreak) == "true")
+                {
+                    if (!string.IsNullOrEmpty(injectionHtml))
                     {
-                        string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
-                        //string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
-                        string base64Image = ImageToBase64(Environment.WebRootPath + signatureUrl);
-                        body = body.Replace("#Sign", $" <img src='data:image/jpg;base64,{base64Image}' alt='My Image' />");
-                        // body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
+                        // Create HTML with a page break before the injection section
+                        string pageBreakHtml = "<div style='page-break-before: always;'>";
+                        pageBreakHtml += injectionHtml;
+                        pageBreakHtml += "</div>";
+
+                        body = body.Replace("#injection", pageBreakHtml);
                     }
                     else
-                        body = body.Replace("#Sign", "");
+                    {
+                        body = body.Replace("#injection", "");
+                    }
+                }
+                else
+                {
+                    body = body.Replace("#injection", injectionHtml);
+                }
+            }
+            else
+            {
+                body = body.Replace("#injection", "");
+            }
 
-                    body = body.Replace("#ProviderName", userData.providername);
-                    body = body.Replace("#AssProviderName", userData.assistant_providername);
-                    ViewBag.ProviderName = userData.providername;
+
+            body = body.Replace("#ReflexExam", "");
+
+
+            var strDiagnostic = this.getDiagnostic(fuid);
+
+
+            if (string.IsNullOrEmpty(strDiagnostic))
+            {
+                if (HttpContext.Session.GetString(SessionKeys.SessionIsDaignosis) == "true")
+                {
+                    strDiagnostic = HttpContext.Session.GetString(SessionKeys.SessionDaignosisNotFoundStatment);
+                }
+            }
+            else
+            {
+                if (HttpContext.Session.GetString(SessionKeys.SessionIsDaignosis) == "true")
+                {
+                    strDiagnostic = strDiagnostic + "<br/><br/>" + HttpContext.Session.GetString(SessionKeys.SessionDaignosisFoundStatment); ;
+                }
+            }
+
+
+            body = body.Replace("#Diagnostic", this.removePtag(strDiagnostic));
+
+
+            var data = _fuPage3services.GetOne(fuid);
+
+            if (data != null)
+            {
+                body = body.Replace("#PrescribedMedications", data.discharge_medications);
+            }
+            else
+            {
+                body = body.Replace("#PrescribedMedications", "");
+            }
+
+            body = body.Replace("#LastNote", "");
+            body = body.Replace("#sex", Common.GetGenderFromSex(patientData.gender));
+            body = body.Replace("#gender", Common.GetMrMrsFromSex(patientData.gender));
+
+            ViewBag.ieId = patientData.id;
+            ViewBag.fuId = fuid;
+            ViewBag.locId = patientData.location_id;
+
+
+            string signName = "";
+            int signUserId = 0;
+
+            int? providorId = HttpContext.Session.GetInt32(SessionKeys.SessionSelectedProviderId);
+
+            if (fuData.provider_id != null)
+            {
+                signUserId = fuData.provider_id.Value;
+            }
+            else if (providorId != null)
+            {
+                signUserId = providorId.Value;
+            }
+            body = HtmlCleaner.ClearHTML(body);
+            ViewBag.content = body;
+            if (signUserId > 0)
+            {
+                tbl_users _user = new tbl_users()
+                {
+                    Id = signUserId
+                };
+                var userData = _userService.GetOne(_user);
+                signName = userData.signature;
+
+                if (!string.IsNullOrEmpty(signName))
+                {
+                    string signatureUrl = $"/Uploads/Sign/" + cmpid + "/" + signName;
+                    //string signatureUrl = "https://paintrax.com/newversionlive/Uploads/Sign/" + cmpid + "/" + signName;
+                    string base64Image = ImageToBase64(Environment.WebRootPath + signatureUrl);
+                    body = body.Replace("#Sign", $" <img src='data:image/jpg;base64,{base64Image}' alt='My Image' />");
+                    // body = body.Replace("#Sign", $"<img crossorigin='anonymous|use-credentials' src='{signatureUrl}' alt='Patient Signature' />");
                 }
                 else
                     body = body.Replace("#Sign", "");
 
-                body = body.Replace("<ol>", "<ol style='font-family: 'Times New Roman', Times, serif;'>");
-                if (HttpContext.Session.GetString(SessionKeys.SessionShowTableBorder) == "false")
-                {
-                    body = body.Replace("<table>", "<table style='width:100%;border:none;'>");
-                    body = body.Replace("<tr>", "<tr style='border:none;'>");
-                    body = body.Replace("<td>", "<td style='border:none;'>");
-                }
-                else
-                {
-                    body = body.Replace("<table>", "<table style='width:100%;'>");
-                }
-                //body = HtmlCleaner.CleanHtmlContent(body);
-
-                if (SessionDiffDoc == "true")
-                {
-                    body += "<br><br><!--Diff Doc-->";
-                    body += injectionHtml;
-                }
-
-                // string updatedHtml = HtmlCleaner.ClearHTML(body);
-
-                ViewBag.content = body;
-
+                body = body.Replace("#ProviderName", userData.providername);
+                body = body.Replace("#AssProviderName", userData.assistant_providername);
+                ViewBag.ProviderName = userData.providername;
             }
-            catch (Exception ex)
+            else
+                body = body.Replace("#Sign", "");
+
+            body = body.Replace("<ol>", "<ol style='font-family: 'Times New Roman', Times, serif;'>");
+            if (HttpContext.Session.GetString(SessionKeys.SessionShowTableBorder) == "false")
             {
-                SaveLog(ex, "FUPrint");
+                body = body.Replace("<table>", "<table style='width:100%;border:none;'>");
+                body = body.Replace("<tr>", "<tr style='border:none;'>");
+                body = body.Replace("<td>", "<td style='border:none;'>");
             }
+            else
+            {
+                body = body.Replace("<table>", "<table style='width:100%;'>");
+            }
+            //body = HtmlCleaner.CleanHtmlContent(body);
+
+            if (SessionDiffDoc == "true")
+            {
+                body += "<br><br><!--Diff Doc-->";
+                body += injectionHtml;
+            }
+
+            // string updatedHtml = HtmlCleaner.ClearHTML(body);
+
+            ViewBag.content = body;
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    SaveLog(ex, "FUPrint");
+            //}
             return View();
         }
 
@@ -3856,7 +3857,7 @@ namespace PainTrax.Web.Controllers
                             heading = heading.Replace("(level)", dsPOC.Rows[i]["Level"].ToString());
                             heading = heading.Replace("(LEVEL)", dsPOC.Rows[i]["Level"].ToString());
                         }
-                       
+
                         if (dsPOC.Rows[i]["pn"].ToString() == "1" && dsPOC.Rows[i]["Executed"] != DBNull.Value)
                         {
                             if (!string.IsNullOrEmpty(dsPOC.Rows[i]["injection_description"].ToString()))
@@ -3869,7 +3870,7 @@ namespace PainTrax.Web.Controllers
 
                                 if (cnt > 0)
                                     inject_desc = "<div style='page-break-before: always;'>" + inject_desc + "</div>";
-                                
+
                                 pageBreakHtml = pageBreakHtml + inject_desc;
                                 cnt++;
 
@@ -4000,7 +4001,7 @@ namespace PainTrax.Web.Controllers
 
             int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
             if (cmpid.Value == 18 || cmpid.Value == 15 || cmpid.Value == 10 || cmpid.Value == 2)
-                strPoc = strPoc.Replace("<li>", "").Replace("</li>", "<br/>"); 
+                strPoc = strPoc.Replace("<li>", "").Replace("</li>", "<br/>");
 
             pocDetails pocDetails = new pocDetails()
             {

@@ -366,6 +366,67 @@
 <script>
 
     var ckDisMediction;
+            $(document).on("blur", ".pdate", function () {
+
+        var enteredVal = $(this).val();
+        if (!enteredVal || enteredVal.length !== 10) return;
+
+        var enteredDate = new Date(enteredVal);
+
+        // ---------- Validate Year >= 1900 ----------
+        var year = enteredDate.getFullYear();
+
+        if (year < 1900) {
+            $('#messBody').html(
+                '<p>Year must be greater than or equal to <b>1900</b>.</p>'
+            );
+            $('#myModalMessage').modal('show');
+            return;
+        }
+
+        // ---------- Validate valid date ----------
+        if (isNaN(enteredDate.getTime())) {
+            $('#messBody').html(
+                '<p>Please enter a valid date.</p>'
+            );
+            $('#myModalMessage').modal('show');
+            return;
+        }
+
+        var dosVal = $("#dos").val();
+        var doaVal = $("#doa").val();
+
+        // ---------- Validate against DOS ----------
+        if (dosVal && dosVal.length === 10) {
+
+            var dosDate = new Date(dosVal);
+
+            if (enteredDate > dosDate) {
+                $('#messBody').html(
+                    '<p>Date must be less than or equal to DOS <b>' + dosVal + '</b>.</p>'
+                );
+                $('#myModalMessage').modal('show');
+
+                $(this).val('');   // clear only this field
+                return;
+            }
+        }
+
+        // ---------- Validate against DOA ----------
+        if (doaVal && doaVal.length === 10) {
+
+            var doaDate = new Date(doaVal);
+
+            if (enteredDate < doaDate) {
+                $('#messBody').html(
+                    '<p>Date is less than DOA <b>' + doaVal + '</b>.</p>'
+                );
+                $('#myModalMessage').modal('show');
+                return;
+            }
+        }
+
+    });
 
     function fnPage3Save(t) {
         if (t != null) {
@@ -454,53 +515,53 @@
         });
     }
 
-    $(".pdate").change(function () {
-        const date1 = new Date(this.value);
-        const date2 = new Date($("#dos").val());
+    // $(".pdate").change(function () {
+    //     const date1 = new Date(this.value);
+    //     const date2 = new Date($("#dos").val());
 
-        if (date1 > date2) {
-            $('#messBody').html('<p>Date need to be less than DOS date <b>' + $("#dos").val() + '</b>.</p>');
-            $('#myModalMessage').modal('show');
+    //     if (date1 > date2) {
+    //         $('#messBody').html('<p>Date need to be less than DOS date <b>' + $("#dos").val() + '</b>.</p>');
+    //         $('#myModalMessage').modal('show');
 
-            $('#' + this.id).val('');
-        }
-    });
-        $(".pdate").on("change", function () {
-    debugger;
-            var enteredDateVal = this.value;
-            if (!enteredDateVal) return;
+    //         $('#' + this.id).val('');
+    //     }
+    // });
+    //     $(".pdate").on("change", function () {
+    // debugger;
+    //         var enteredDateVal = this.value;
+    //         if (!enteredDateVal) return;
 
-            var enteredDate = new Date(enteredDateVal);
+    //         var enteredDate = new Date(enteredDateVal);
 
-            var dosVal = $("#dos").val();   // existing DOS
-            var doaVal = $("#doa").val();   // DOA
+    //         var dosVal = $("#dos").val();   // existing DOS
+    //         var doaVal = $("#doa").val();   // DOA
 
-            // Validate against DOS
-            if (dosVal) {
-                var dosDate = new Date(dosVal);
-                if (enteredDate > dosDate) {
-                    $('#messBody').html(
-                        '<p>Date must be less than or equal to DOS <b>' + dosVal + '</b>.</p>'
-                    );
-                    $('#myModalMessage').modal('show');
-                    $(this).focus();
-                    return;
-                }
-            }
+    //         // Validate against DOS
+    //         if (dosVal) {
+    //             var dosDate = new Date(dosVal);
+    //             if (enteredDate > dosDate) {
+    //                 $('#messBody').html(
+    //                     '<p>Date must be less than or equal to DOS <b>' + dosVal + '</b>.</p>'
+    //                 );
+    //                 $('#myModalMessage').modal('show');
+    //                 $(this).focus();
+    //                 return;
+    //             }
+    //         }
 
-            // Validate against DOA
-            if (doaVal) {
-                var doaDate = new Date(doaVal);
-                if (enteredDate < doaDate) {
-                    $('#messBody').html(
-                        '<p>Date is less than DOA <b>' + doaVal + '</b>.</p>'
-                    );
-                    $('#myModalMessage').modal('show');
-                    $(this).focus();
-                    return;
-                }
-                }
-    });
+    //         // Validate against DOA
+    //         if (doaVal) {
+    //             var doaDate = new Date(doaVal);
+    //             if (enteredDate < doaDate) {
+    //                 $('#messBody').html(
+    //                     '<p>Date is less than DOA <b>' + doaVal + '</b>.</p>'
+    //                 );
+    //                 $('#myModalMessage').modal('show');
+    //                 $(this).focus();
+    //                 return;
+    //             }
+    //             }
+    // });
 
     $(document).ready(function () {
         ClassicEditor.create(document.querySelector('#txtDisMediction'), {

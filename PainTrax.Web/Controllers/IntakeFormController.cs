@@ -605,8 +605,6 @@ namespace PainTrax.Web.Controllers
 
             ViewBag.locList = _commonservices.GetLocations(cmpid.Value);
 
-
-
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "IntakeForm//WR1.xml");
             ViewBag.WR1 = new SelectList(this.GetDropDownList(path, "WR1"), "Name", "Name");
             path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "IntakeForm//WR2.xml");
@@ -776,6 +774,15 @@ namespace PainTrax.Web.Controllers
             }
 
             return intakeDropDowns;
+        }
+
+        [HttpPost]
+        public IActionResult SaveForm([FromBody] object formData)
+        {
+            var json = System.Text.Json.JsonSerializer.Serialize(formData);
+
+            // save json to database
+            return Ok();
         }
 
     }

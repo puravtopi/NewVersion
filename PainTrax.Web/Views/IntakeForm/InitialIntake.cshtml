@@ -860,6 +860,10 @@
                                             Submit
                                         </button>
 
+                                        <button type="button" class="btn btn-primary px-4 me-2" onclick="fnSave()">
+                                            Save
+                                        </button>
+
                                         <button type="button"
                                                 class="btn btn-outline-secondary px-4"
                                                 onclick="location.href='@Url.Action("InitialIntake", "IntakeForm")'">
@@ -976,6 +980,46 @@
 
         document.getElementById("age").value = age >= 0 ? age : "";
     });
+
+    function fnSave() {
+        //var formData = getFormJson("#frmIntake");
+        var url = '@Url.Action("SaveForm", "IntakeForm")'
+        var formData = getFormJson("#frmIntake");
+        console.log(formData);
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: function (res) {
+                console.log("Saved");
+            }
+        });
+    }
+
+    function getFormJson(form) {
+        var data = {};
+
+        $(form).find("input, select, textarea").each(function () {
+            var name = $(this).attr("name");
+            var type = $(this).attr("type");
+
+            if (type === "checkbox") {
+                data[name] = $(this).is(":checked");
+            }
+            else if (type === "radio") {
+                if ($(this).is(":checked")) {
+                    data[name] = $(this).val();
+                }
+            }
+            else {
+                data[name] = $(this).val();
+            }
+        });
+
+        return data;
+    }
 </script>
 
 

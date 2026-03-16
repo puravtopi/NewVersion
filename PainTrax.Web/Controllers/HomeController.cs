@@ -206,6 +206,7 @@ namespace PainTrax.Web.Controllers
         public IActionResult Login()
         {
             //var password = EncryptionHelper.Encrypt("P@ssword123$");
+            var id = EncryptionHelper.Encrypt("5709");
 
             if (Request.Cookies["LoginCookie"] != null)
             {
@@ -515,7 +516,6 @@ namespace PainTrax.Web.Controllers
 
         }
 
-
         [HttpPost]
         public IActionResult ResetPassword(ResetPassword model)
         {
@@ -549,7 +549,6 @@ namespace PainTrax.Web.Controllers
             return View(model);
 
         }
-
 
         [HttpPost]
         public IActionResult ChangePassword(ChangePassword model)
@@ -610,7 +609,6 @@ namespace PainTrax.Web.Controllers
 
     public class MyPOCExcelModel
     {
-
         public string mcode { get; set; }
 
     }

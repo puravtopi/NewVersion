@@ -62,12 +62,16 @@ namespace PainTrax.Web.Controllers
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
         private IMapper _mapper;
         string SessionDiffDoc = "true";
+        private readonly IEmailService _emailService;
 
         private readonly IWebHostEnvironment _env;
-        public VisitController(ILogger<VisitController> logger, IMapper mapper, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
+        public VisitController(ILogger<VisitController> logger, IMapper mapper,
+            Microsoft.AspNetCore.Hosting.IHostingEnvironment environment,
+            IEmailService emailService)
         {
             _logger = logger;
             _mapper = mapper; Environment = environment;
+            _emailService = emailService;
         }
 
         #region IE method
@@ -1616,7 +1620,7 @@ namespace PainTrax.Web.Controllers
                     {
                         daignoCodeDetails += "<li>" + model.diaglumberbulge_hnp2 + "</li>";
                     }
-                   
+
 
                     var htmlDaignosis = daignoCodeDetails + "</ol>";
 
@@ -1746,49 +1750,6 @@ namespace PainTrax.Web.Controllers
                    : signatureData.Trim();
         }
 
-        //public IActionResult SaveSign([FromBody] tbl_ie_sign model)
-        //{
-        //   // if (string.IsNullOrEmpty(model.signatureData))
-        //  //    return BadRequest("Invalid signature data.");
-        //    var data = model.id;   
-        //    try
-        //    {
-        //        var base64Data = model.signatureData.Contains(",")
-        //                        ? model.signatureData.Split(',')[1]
-        //                        : model.signatureData;
-        //        if (!IsBase64String(base64Data))
-        //        {
-        //            return BadRequest("Invalid Base-64 string.");
-        //        }
-
-        //        var imageData = Convert.FromBase64String(base64Data);
-
-        //        var signaturesDir = Path.Combine(Environment.WebRootPath, "signatures");
-        //        if (!Directory.Exists(signaturesDir))
-        //        {
-        //            Directory.CreateDirectory(signaturesDir);
-        //        }
-        //        var filename = $"{model.ie_id}.jpeg";
-        //        var savePath = Path.Combine(signaturesDir, filename);
-
-        //        System.IO.File.WriteAllBytes(savePath, imageData);
-        //        model.signatureData = savePath;
-        //        if (model.id > 0)
-        //        {
-        //            data = model.id;
-        //            _ieService.UpdateSign(model);
-        //        }
-        //        else
-        //        {
-        //            _ieService.InsertSign(model);
-        //        }
-        //        return Ok(new { FileName = filename });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, "Error saving signature: " + ex.Message);
-        //    }
-        //}
         private bool IsBase64String(string base64)
         {
             Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
@@ -5584,6 +5545,25 @@ namespace PainTrax.Web.Controllers
             }
 
             return Json("1");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendAuthorization(string id, string type, string email)
+        {
+            if (email != "null" && email != "")
+            {
+                string _id = EncryptionHelper.Encrypt(id);
+                string link = "https://www.paintrax.com/v2/SendForm/AuthoAckno?id=" + _id + "&type=" + type;
+                var subject = "Please Review and Sign Your Authorization Form";
+
+                var body = System.IO.File.ReadAllText("wwwroot/Uploads/EmailTemplate/PatientAuthorizationForm.html")
+                               .Replace("{RESET_LINK}", link);
+
+                await _emailService.SendEmailAsync(email, subject, body);
+                return Json("1");
+            }
+            else
+                return Json("-1");
         }
 
 

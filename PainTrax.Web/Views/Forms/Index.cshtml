@@ -329,8 +329,10 @@
                         //    console.log(full);
                             var fname=full.fname;
                             var lname = full.lname;
+                            var accno = full.account_no;
                            // var index = '<a onclick="DownloadPdf(' + full.patient_id + ',' + '\'' + fname + '\','+ '\'' + lname + '\')" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Download"></i></a> &nbsp; &nbsp;'
-                            var index = '<a onclick="DownloadPdf(' + full.patient_id + ',' + '\'' + `${fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${lname.replace(/'/g, "\\'")}` + '\')" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" style="font-size: 25px;" data-bs-placement="bottom" data-bs-original-title="Download"></i></a> &nbsp; &nbsp;'
+                           // var index = '<a onclick="DownloadPdf(' + full.patient_id + ',' + '\'' + `${fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${lname.replace(/'/g, "\\'")}` + '\')" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" style="font-size: 25px;" data-bs-placement="bottom" data-bs-original-title="Download"></i></a> &nbsp; &nbsp;'
+                            var index = '<a onclick="DownloadPdf(' + full.patient_id + ',' + '\'' + `${fname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${lname.replace(/'/g, "\\'")}` + '\',' + '\'' + `${accno}` + '\'' + ')" ><i class=" ri-file-download-fill" data-bs-toggle="tooltip" style="font-size: 25px;" data-bs-placement="bottom" data-bs-original-title="Download"></i></a> &nbsp; &nbsp;'
                             return index;
                         }
                     }
@@ -357,11 +359,53 @@
             });
 
         }
-        function DownloadPdf(id,fname,lname){
-            var downloadurl = '@Url.Action("GeneratePdf","Forms")';
+        // function DownloadPdf(id,fname,lname){
+        //     var downloadurl = '@Url.Action("GeneratePdf","Forms")';
+        //     //alert(fname);
+        //     var checkboxes = $('.pdfCheckbox');
+        //     var txt_date = $("#txt_date").val();    
+        //     var txt_surgery = $("#txt_surgery").val();
+        //     var txt_docName = $("#txt_docName").val();
+        //     var txt_MCode_Proc = $("#txt_MCode_Proc").val();
+        //     var txtProcedureCode = $("#txtProcedureCode").val();
+        //     // Loop through each checkbox element
+        //     checkboxes.each(function (index, checkbox) {
+        //         // Do something with the checkbox element
+        //         var isChecked = $(checkbox).prop('checked');
+        //         console.log(isChecked);
+        //         console.log($(checkbox).val());
+        //         if (isChecked) {
+        //             console.log($(checkbox).val());
+        //             downloadurl = downloadurl + '?pdffile=' + $(checkbox).val() + '&id=' + id + '&txt_date=' + txt_date + '&txt_surgery=' + txt_surgery + '&txt_docName=' + txt_docName + '&txt_MCode_Proc=' + txt_MCode_Proc + '&txtProcedureCode='+ txtProcedureCode ;
+        //             fetch(downloadurl)
+        //                 .then(response => {
+        //                     if (!response.ok) {
+        //                         throw new Error(`HTTP error! Status: ${response.status}`);
+        //                     }
+        //                     console.log(response);
+        //                     return response.blob();
+        //                 })
+        //                 .then(blob => {
+        //                     // Handle the Excel file data here
+                            
+        //                     var link = document.createElement('a');
+        //                     link.href = window.URL.createObjectURL(blob);
+        //                     link.download = lname + ", " + fname + "_" + $(checkbox).val().split('/').pop();
+        //                     link.click();
+        //                 })
+        //                 .catch(error => {
+        //                     console.error('Error downloading Excel file:', error);
+        //                 });
+
+        //         }
+        //     });
+        // }
+
+        function DownloadPdf(id, fname, lname, accno) {
+            var downloadurl = '@Url.Action("GeneratePdf", "Forms")';
             //alert(fname);
             var checkboxes = $('.pdfCheckbox');
-            var txt_date = $("#txt_date").val();    
+            var txt_date = $("#txt_date").val();
             var txt_surgery = $("#txt_surgery").val();
             var txt_docName = $("#txt_docName").val();
             var txt_MCode_Proc = $("#txt_MCode_Proc").val();
@@ -374,7 +418,7 @@
                 console.log($(checkbox).val());
                 if (isChecked) {
                     console.log($(checkbox).val());
-                    downloadurl = downloadurl + '?pdffile=' + $(checkbox).val() + '&id=' + id + '&txt_date=' + txt_date + '&txt_surgery=' + txt_surgery + '&txt_docName=' + txt_docName + '&txt_MCode_Proc=' + txt_MCode_Proc + '&txtProcedureCode='+ txtProcedureCode ;
+                    downloadurl = downloadurl + '?pdffile=' + $(checkbox).val() + '&id=' + id + '&txt_date=' + txt_date + '&txt_surgery=' + txt_surgery + '&txt_docName=' + txt_docName + '&txt_MCode_Proc=' + txt_MCode_Proc + '&txtProcedureCode=' + txtProcedureCode;
                     fetch(downloadurl)
                         .then(response => {
                             if (!response.ok) {
@@ -385,10 +429,9 @@
                         })
                         .then(blob => {
                             // Handle the Excel file data here
-                            
                             var link = document.createElement('a');
                             link.href = window.URL.createObjectURL(blob);
-                            link.download = lname + "," + fname + "_" + $(checkbox).val().split('/').pop();
+                            link.download = lname + ", " + fname + (accno && accno !== "null" && accno !== "undefined" ? "_" + accno : "") + "_" + $(checkbox).val().split('/').pop();
                             link.click();
                         })
                         .catch(error => {

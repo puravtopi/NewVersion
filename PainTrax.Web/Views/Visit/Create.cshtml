@@ -2022,6 +2022,10 @@
             $('#pdAge').text(age);
             $('#pdDOB').text(dob);
         }
+
+          $('#pdCT').text($("#compensation option:selected").text());
+          $('#pdLoc').text($("#locationid option:selected").text());
+          $('#pdGender').text($("#gender option:selected").text());
     }
     function fngetAGE(inputDate) {
         if (inputDate) {

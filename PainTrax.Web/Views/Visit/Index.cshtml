@@ -887,7 +887,7 @@
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowComment(' + value.patientFU + ')" href="#" ><i class="bi bi-chat-right-text-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add Comments" data-bs-original-title="Add Comments"></i><span>Add Comments</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowPOCSummary(0,' + value.patientIE_ID + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="POC Summary" data-bs-original-title="POC Summary"></i><span>POC Summary</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnShowSurgeryPOCSummary(' + value.patientFU + ')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Surgery POC Summary" data-bs-original-title="POC Summary"></i><span>Surgery POC Summary</span></a></li>';
-
+                            index += ' <li><a class="dropdown-item d-flex align-items-center" onclick="fnSendAuthorization(' + value.patientFU + ',\'FU\',' + '\'' + `${full.email}` + '\')" href="#" ><i class="bi bi-alarm-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Send Authorization" data-bs-original-title="Send Authorization"></i><span>Send Authorization</span></a></li>';
                             index += ' <li><a class="dropdown-item d-flex align-items-center" href="' + printurl + '/' + value.patientFU + '" ><i class="bi bi-printer-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Print" data-bs-original-title="Print"></i><span>Print</span></a></li></ul>';
 
 

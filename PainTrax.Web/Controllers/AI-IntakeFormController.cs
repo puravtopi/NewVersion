@@ -215,7 +215,7 @@ Document:
         }
             };
 
-            client.DefaultRequestHeaders.Add("Authorization", "Bearer");
+            
 
             var response = await client.PostAsJsonAsync(
                 "https://api.openai.com/v1/chat/completions",

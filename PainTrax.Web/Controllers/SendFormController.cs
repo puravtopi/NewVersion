@@ -17,7 +17,7 @@ namespace PainTrax.Web.Controllers
             _logger = logger;
         }
 
-        public IActionResult AuthoAckno(string id = "Tmy87eGD4pBwqmBnU1kYZhtyTy9oAonqlCLlpQzjACM=", string type = "IE")       
+        public IActionResult AuthoAckno(string id = "Tmy87eGD4pBwqmBnU1kYZhtyTy9oAonqlCLlpQzjACM=", string type = "IE")
         {
             var _id = EncryptionHelper.Decrypt(id);
 
@@ -88,7 +88,7 @@ namespace PainTrax.Web.Controllers
                 else
                     fu_id = model.id.ToString();
 
-                var id = _commonservices.InsertSign(filename, base64Data, ie_id, fu_id);
+                var id = _commonservices.InsertSign(filename, base64Data, ie_id == "" ? "0" : ie_id, fu_id == "" ? "0" : fu_id);
 
 
                 return Ok(new { id = id });

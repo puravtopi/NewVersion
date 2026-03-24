@@ -435,7 +435,9 @@ namespace PainTrax.Web.Controllers
                             case "SC_Name":
                                 dr[col] = user.sx_center_name;
                                 break;
-                            
+                            case "SurgoneName":
+                                dr[col] = user.surgon_name;
+                                break;
                             case "Policy":
                                 dr[col] = user.PolicyNo;
                                 break;

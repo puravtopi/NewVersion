@@ -2002,8 +2002,8 @@
         var fullname = $("#lname").val() + ' ' + $("#fname").val();
         $('#pdName').text(fullname);
 
-        if (dos) $('#pdDOS').text(dos);
-        if (doa) $('#pdDOA').text(doa);
+        if (dos) $('#pdDOS').text(fngetAGE(dos));
+        if (doa) $('#pdDOA').text(fngetAGE(doa));
 
         // ---------- Age ----------
         if (dobDate && dosDate) {
@@ -2020,7 +2020,7 @@
             }
 
             $('#pdAge').text(age);
-            $('#pdDOB').text(dob);
+            $('#pdDOB').text(fngetAGE(dob));
         }
 
           $('#pdCT').text($("#compensation option:selected").text());

@@ -30,7 +30,7 @@ namespace PainTrax.Web.Helper
                 document.Open();
                 using (var htmlStream = new MemoryStream(Encoding.UTF8.GetBytes(html)))
                 {
-                  //  XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, htmlStream, null, Encoding.UTF8);
+                    //  XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, htmlStream, null, Encoding.UTF8);
                 }
                 document.Close();
 
@@ -39,7 +39,7 @@ namespace PainTrax.Web.Helper
 
             return pdfBytes;
         }
-        public byte[] Stamping(string SourceFile, string ColumnName, string ID, Dictionary<string, string> controls, string cmpid = "0",string path="")
+        public byte[] Stamping(string SourceFile, string ColumnName, string ID, Dictionary<string, string> controls, string cmpid = "0", string path = "")
         {
             WebHostBuilderContext webHost = new WebHostBuilderContext();
             ParentService _parentService = new ParentService();
@@ -48,7 +48,7 @@ namespace PainTrax.Web.Helper
             String tabname = readPdfFields.GetField("txtTable");
             if (tabname == null || tabname == "")
                 tabname = "View_Pdf";
- 
+
 
             DataTable dt = _parentService.GetData("select * from " + tabname + " where " + ColumnName + "=" + ID);
 
@@ -133,22 +133,22 @@ namespace PainTrax.Web.Helper
                                 }
                                 else if (headpair.Length == 4)
                                 {
-                                try
-                                {
-                                    DataTable dtCode = _parentService.GetData("select * from " + headpair[0] + " where " + headpair[2] + "='" + controls[headpair[1]] + "' and cmp_id=" + cmpid);
-                                    if (dtCode.Rows.Count > 0)
+                                    try
                                     {
-                                        pdfFormFields.SetField(de.Key.ToString(), dtCode.Rows[0][headpair[3]].ToString());
+                                        DataTable dtCode = _parentService.GetData("select * from " + headpair[0] + " where " + headpair[2] + "='" + controls[headpair[1]] + "' and cmp_id=" + cmpid);
+                                        if (dtCode.Rows.Count > 0)
+                                        {
+                                            pdfFormFields.SetField(de.Key.ToString(), dtCode.Rows[0][headpair[3]].ToString());
+                                        }
+                                        else
+                                        {
+                                            pdfFormFields.SetField(de.Key.ToString(), "");
+                                        }
                                     }
-                                    else
+                                    catch (Exception ex)
                                     {
-                                        pdfFormFields.SetField(de.Key.ToString(), "");
+                                        pdfFormFields.SetField(de.Key.Substring(1), "");
                                     }
-                                }
-                                catch (Exception ex)
-                                {
-                                    pdfFormFields.SetField(de.Key.Substring(1), "");
-                                }
 
                                 }
                                 else
@@ -159,7 +159,7 @@ namespace PainTrax.Web.Helper
                             catch (Exception ex)
                             {
                                 pdfFormFields.SetField(textpair[0], "");
-                            }                    
+                            }
                         }
                         else
                             pdfFormFields.SetField(textpair[0], "");
@@ -175,7 +175,7 @@ namespace PainTrax.Web.Helper
                     {
                         if (path != "")
                         {
-                          //  path = System.IO.Path.Combine(path, "Sign");
+                            //  path = System.IO.Path.Combine(path, "Sign");
                             string[] files = System.IO.Directory.GetFiles(path, ID + ".jp*g", System.IO.SearchOption.TopDirectoryOnly);
                             if (files.Length > 0)
                             {
@@ -185,7 +185,7 @@ namespace PainTrax.Web.Helper
                                 fieldPosition = ae.GetFieldPositions(de.Key.ToString());
                                 var pdfContentByte = pdfStamper.GetOverContent((int)fieldPosition[0]);
                                 iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(inputImageStream);
-                                image.ScaleToFit(fieldPosition[3]- fieldPosition[1], fieldPosition[4]- fieldPosition[2] + 10);
+                                image.ScaleToFit(fieldPosition[3] - fieldPosition[1], fieldPosition[4] - fieldPosition[2] + 10);
                                 image.SetAbsolutePosition(fieldPosition[1], fieldPosition[2]);
                                 pdfContentByte.AddImage(image);
                             }
@@ -200,6 +200,76 @@ namespace PainTrax.Web.Helper
             pdfStamper.Close();
             pdfReader.Close();
             return pdfOutput.ToArray();
+
+        }
+
+
+        public void AcknoStamping(string SourceFile, Dictionary<string, string> controls, string path = "", string fileName = "", string signPath = "")
+        {
+            WebHostBuilderContext webHost = new WebHostBuilderContext();
+
+            PdfReader pdfReader = new PdfReader(SourceFile);
+            AcroFields readPdfFields = pdfReader.AcroFields;
+
+
+            MemoryStream pdfOutput = new MemoryStream();
+            PdfStamper pdfStamper = new PdfStamper(pdfReader, pdfOutput);
+            AcroFields pdfFormFields = pdfStamper.AcroFields;
+            pdfStamper.FormFlattening = false;
+            AcroFields ae = pdfReader.AcroFields;
+            foreach (KeyValuePair<string, iTextSharp.text.pdf.AcroFields.Item> de in pdfReader.AcroFields.Fields)
+            {
+                if (de.Key.ToLower().StartsWith("imgsign"))
+                {
+
+                    try
+                    {
+                        if (path != "")
+                        {
+
+                            if (!string.IsNullOrEmpty(signPath))
+                            {
+
+                                Stream inputImageStream = new FileStream(signPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                                float[] fieldPosition = null;
+                                fieldPosition = ae.GetFieldPositions(de.Key.ToString());
+                                var pdfContentByte = pdfStamper.GetOverContent((int)fieldPosition[0]);
+                                iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(inputImageStream);
+                                image.ScaleToFit((fieldPosition[3] - fieldPosition[1]) + 50, (fieldPosition[4] - fieldPosition[2]) - 10);
+                                image.SetAbsolutePosition(fieldPosition[1] + 50, fieldPosition[2] + 10);
+                                pdfContentByte.AddImage(image);
+                            }
+                        }
+                    }
+
+                    catch (Exception ex) { }
+                    finally { pdfFormFields.SetFieldProperty(de.Key.ToString(), "flags", PdfFormField.FLAGS_NOVIEW, null); }
+                }
+                else
+                {
+                    pdfFormFields.SetField(de.Key.ToString(), controls[de.Key.Substring(1)]);
+                }
+
+
+            }
+            pdfStamper.Close();
+            pdfReader.Close();
+            byte[] pdfBytes = pdfOutput.ToArray();
+
+            // ✅ Save to specific location
+            if (!string.IsNullOrEmpty(path))
+            {
+                // Ensure directory exists
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                string fullPath = System.IO.Path.Combine(path, fileName);
+
+                File.WriteAllBytes(fullPath, pdfBytes);
+            }
+
+
 
         }
 

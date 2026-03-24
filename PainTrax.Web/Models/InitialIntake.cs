@@ -429,4 +429,24 @@ namespace PainTrax.Web.Models
     public class IntakeDropDown {
         public string Name { get; set; }
     }
+
+    public class InitialIntakeAI
+    {
+        public int Id { get; set; }
+
+        public string PatientName { get; set; }
+
+        public DateTime? DOB { get; set; }
+
+        public DateTime? DOE { get; set; }
+
+        public DateTime? DOA { get; set; }
+
+        public string Visit_Type { get; set; }
+
+        // JSON column → store as string OR strongly typed object
+        public string FormData { get; set; }
+
+        public int? CmpId { get; set; }
+    }
 }

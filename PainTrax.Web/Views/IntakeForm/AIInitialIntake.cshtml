@@ -1,0 +1,1127 @@
+﻿<link href="~/assets/img/favicon.png" rel="icon">
+<link href="~/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+@{
+    Layout = "~/Views/Shared/_IntakeLayout.cshtml";  // Use the admin layout
+}
+<style>
+    input.form-control.d-inline,
+    select.form-select.d-inline {
+        border: none;
+        border-bottom: 1px solid black;
+        border-radius: 0;
+        padding: 2px 5px;
+    }
+
+    .mic-btn {
+        right: 10px;
+        top: 10px;
+        cursor: pointer;
+        color: #007bff;
+    }
+
+</style>
+<main id="main" class="main" style="margin-left:0px!important">
+
+    <section class="section">
+        <div class="col-lg-12">
+
+            <div class="row">
+                <!-- LEFT: FORM -->
+                <div class="col-md-7 col-12" id="formSection" name="formSection">
+                    <button id="openPreview"
+                            class="btn btn-sm btn-outline-primary mt-3"
+                            style="display:none;">
+                        Show Preview
+                    </button>
+                    <form method="post" id="patientForm" name="patientForm" class="container my-4">
+                        <input type="hidden" id="hdId" name="hdId" value="@ViewBag.Id" />
+                        <h4 class="text-center mb-4 fw-bold">Patient Injury Report</h4>
+
+                        <div class="border p-4 rounded shadow-sm" style="line-height: 2; font-size: 15px;background-color:white">
+
+                            <!-- Patient Info -->
+                            <p>
+                                Patient name:
+                                <input id="PatientName" name="PatientName" class="form-control d-inline w-auto" style="min-width:200px;" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i>
+                                Gender
+                                <select id="Gender" name="Gender" class="form-select d-inline w-auto" style="width:50px !important">
+                                    <option value="male">M</option>
+                                    <option value="female">F</option>
+                                </select>
+
+                                Dominant hand:
+                                <select id="DominantHand" name="DominantHand" class="form-select d-inline w-auto" style="width:50px !important">
+                                    <option value="right-handed">R</option>
+                                    <option value="left-handed">L</option>
+                                </select>
+                            </p>
+
+                            <p>
+                                DOB:
+                                <input id="DOB" name="DOB" type="date" class="form-control d-inline w-auto" />
+
+                                Age:
+                                <input id="Age" name="Age" class="form-control d-inline w-auto" /> years
+
+                                Height:
+                                <input id="Height" name="Height" class="form-control d-inline w-auto" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Height')"></i>
+                                Weight:
+                                <input id="Weight" name="Weight" class="form-control d-inline w-auto" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Weight')"></i>
+                            </p>
+
+                            <p>
+                                Date of Accident:
+                                <input id="DOA" name="DOA" type="date" class="form-control d-inline w-auto" />
+                            </p>
+
+                            <!-- Work -->
+                            <p>
+                                Currently working:
+                                <input type="radio" name="IsWorking" value="Yes" /> Yes
+                                <input type="radio" name="IsWorking" value="No" /> No
+
+                                Job title:
+                                <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:200px;" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'JobTitle')"></i>
+                            </p>
+
+                            <p>
+                                If not working, stopped immediately after accident:
+                                <input type="radio" name="StoppedAfterAccident" value="Yes" /> Yes
+                                <input type="radio" name="StoppedAfterAccident" value="No" /> No
+
+                                Reason:
+                                <input id="NotWorkingReason" name="NotWorkingReason" class="form-control d-inline w-50" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NotWorkingReason')"></i>
+                            </p>
+
+                            <!-- Chief Complaint -->
+                            <p>
+                                <b> Chief complaint:</b>
+                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Shoulder" data-section="rshSection" data-pe="rshPE" /> R/SH</label>
+                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Shoulder" data-section="lshSection" data-pe="lshPE" /> L/SH</label>
+                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Right Knee" data-section="rknSection" data-pe="rknPE" /> R/KN</label>
+                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="Left Knee" data-section="lknSection" data-pe="lknPE" /> L/KN</label>
+                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="R/Elb" /> R/Elb</label>
+                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="L/Elb" /> L/Elb</label>
+                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="R/Wrist" /> R/Wrist</label>
+                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="L/Wrist" /> L/Wrist</label>
+                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="R/Hip" /> R/Hip</label>
+                                <label><input type="checkbox" class="chkMulti" name="Complaints" value="L/Hip" /> L/Hip</label>
+                            </p>
+
+                            <!-- Injury Type -->
+                            <p>
+                                Type of Injury:
+                                <label><input type="radio" name="InjuryType" value="MVA" /> MVA</label>
+                                <label><input type="radio" name="InjuryType" value="Work-related" /> Work-related</label>
+                            </p>
+
+                            <!-- Paragraph Description -->
+                            <p>
+                                The patient reports that on
+                                <label id="lblDOA" name="lblDOA"></label>
+                                while
+                                <select id="Activity" class="form-select d-inline w-auto" name="Activity">
+                                    <option value=""></option>
+                                    <option value="performing regular job duties">performing regular job duties </option>
+                                    <option value="performing assigned work tasks">performing assigned work tasks </option>
+                                    <option value="engaged in usual occupational activities">engaged in usual occupational activities </option>
+                                </select>,
+                                they sustained a work-related injury when
+
+                                <select id="Incident" class="form-select d-inline w-auto" name="Incident">
+                                    <option value=""></option>
+                                    <option value="slipped">slipped</option>
+                                    <option value="tripped">tripped</option>
+                                    <option value="lost balance">lost balance</option>
+                                    <option value="was struck by an object">was struck by an object</option>
+                                    <option value="lifted or carried an object">lifted or carried an object</option>
+                                    <option value="pushed or pulled equipment">pushed or pulled equipment</option>
+                                    <option value="twisted or turned abruptly">twisted or turned abruptly</option>
+                                    <option value="experienced repetitive strain">experienced repetitive strain</option>
+                                    <option value="experienced sudden forceful movement">experienced sudden forceful movement</option>
+                                </select>.
+                            </p>
+
+                            <p>
+                                The incident occurred
+                                <select name="IncidentType" class="form-select d-inline w-auto" id="IncidentType">
+                                    <option value=""></option>
+                                    <option value="suddenly">suddenly</option>
+                                    <option value="unexpectedly">unexpectedly</option>
+                                    <option value="during normal work">during normal work</option>
+                                </select>
+                                and involved
+
+                                <select name="Mechanism" class="form-select d-inline w-auto" id="Mechanism">
+                                    <option value=""></option>
+                                    <option value="direct impact">direct impact </option>
+                                    <option value="overexertion">overexertion</option>
+                                    <option value="awkward positioning">awkward positioning </option>
+                                    <option value="forceful movement">forceful movement  </option>
+                                    <option value="repetitive motion">repetitive motion</option>
+                                    <option value="loss of footing">loss of footing</option>
+                                    <option value="sudden loading of the body">sudden loading of the body</option>
+                                </select>
+                            </p>
+
+                            <p>
+                                As a result, the patient experienced
+                                <select class="form-select d-inline w-auto" name="SymptomOnset" id="SymptomOnset">
+                                    <option value=""></option>
+                                    <option value="immediate">immediate</option>
+                                    <option value="same-day">same-day</option>
+                                    <option value="progressive">progressive</option>
+                                </select>
+                                pain affecting
+                                <input type="text" class="form-control d-inline w-25" name="BodyPart" id="BodyPart" placeholder="body part" />.
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'BodyPart')"></i>
+                                which was
+                                <select class="form-select d-inline w-auto" name="PainEffect" id="PainEffect">
+                                    <option value=""></option>
+                                    <option value="not present prior to this incident">not present prior to this incident</option>
+                                    <option value="significantly less severe prior to this incident">significantly less severe prior to this incident</option>
+                                    
+                                </select>.
+                            </p>
+
+                            <p>
+                                Since the time of injury, the patient reports
+                                <select class="form-select d-inline w-auto" name="SymptomPattern" id="SymptomPattern">
+                                    <option value=""></option>
+                                    <option value="persistent">persistent</option>
+                                    <option value="worsening">worsening</option>
+                                    <option value="fluctuating">fluctuating</option>
+                                </select>
+                                symptoms that interfere with .
+                                <select class="form-select d-inline w-auto" name="DailyActivities" id="DailyActivities">
+                                    <option value=""></option>
+                                    <option value="work duties">work duties</option>
+                                    <option value="activities of daily living ">activities of daily living</option>
+                                    <option value="physical tasks required for employment">physical tasks required for employment</option>
+                                </select>
+                            </p>
+
+
+
+                            <h6 class="fw-bold">Pre-Injury Functional Baseline</h6>
+
+                            <p>
+                                Prior to the patient’s
+                                <select class="form-select d-inline w-auto" name="AccidentType" id="AccidentType">
+                                    
+                                    <option value="work incident">accident</option>
+                                    <option value="work incident">work incident</option>
+                                   
+                                </select>
+                                , the patient reports being able to perform normal activities...
+
+                                <br />
+
+                                <label><input type="radio" name="PreInjury" value="Yes"> Yes</label>
+                                <label><input type="radio" name="PreInjury" value="No"> No</label>
+
+                                <span id="preInjuryDetailsBox" style="display:none;">
+                                    If no:
+                                    <input id="PreInjuryDetails" class="form-control d-inline w-50" placeholder="Specify details" />
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PreInjuryDetails')"></i>
+                                </span>
+                            </p>
+
+                            <!-- Patient Type -->
+                            <p>
+                                Patient reports being:
+                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Bicyclist"> Bicyclist</label>
+                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Pedestrian"> Pedestrian</label>
+                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Motorcyclist"> Motorcyclist</label>
+                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Driver"> Driver</label>
+                                <label><input type="checkbox" class="chkMulti" name="PatientType" value="Passenger"> Passenger</label>
+                            </p>
+
+                            <!-- Vehicle Hit -->
+                            <p>
+                                Vehicle hit:
+                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Rear"> Rear</label>
+                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Front"> Front</label>
+                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Driver side"> Driver-side</label>
+                                <label><input type="checkbox" class="chkMulti" name="VehicleHit" value="Passenger side"> Passenger-side</label>
+                            </p>
+
+                            <!-- Airbag -->
+                            <p>
+                                Air bags deployed:
+                                <label><input type="radio" name="Airbag" value="Yes"> Yes</label>
+                                <label><input type="radio" name="Airbag" value="No"> No</label>
+
+                                EMS arrived:
+                                <label><input type="radio" name="EMS" value="Yes"> Yes</label>
+                                <label><input type="radio" name="EMS" value="No"> No</label>
+
+                                Police contacted:
+                                <label><input type="radio" name="Police" value="Yes"> Yes</label>
+                                <label><input type="radio" name="Police" value="No"> No</label>
+                            </p>
+
+                            <!-- Hospital -->
+                            <p>
+                                Went to hospital:
+                                <label><input type="radio" name="Hospital" value="Yes"> Yes</label>
+                                <label><input type="radio" name="Hospital" value="No"> No</label>
+
+                                Hospital name:
+                                <input id="HospitalName" class="form-control d-inline w-25" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'HospitalName')"></i>
+
+                                Records:
+                                <label><input type="radio" name="Records" value="Yes"> Yes</label>
+                                <label><input type="radio" name="Records" value="No"> No</label>
+                            </p>
+
+                            <!-- Transport -->
+                            <p>
+                                How did you get to hospital:
+                                <label><input type="checkbox" class="chkMulti" name="Transport" value="Ambulance"> Ambulance</label>
+                                <label><input type="checkbox" class="chkMulti" name="Transport" value="Car"> Car</label>
+                                <label><input type="checkbox" class="chkMulti" name="Transport" value="Uber"> Uber</label>
+                                <label><input type="checkbox" class="chkMulti" name="Transport" value="Cab"> Cab</label>
+                                <label><input type="checkbox" class="chkMulti" name="Transport" value="Friend"> Friend</label>
+                            </p>
+
+                            <!-- Symptoms -->
+                            <p>
+                                Symptoms began:
+                                <label><input type="radio" name="SymptomsStart" value="Immediately"> Immediately</label>
+                                <label><input type="radio" name="SymptomsStart" value="Hours"> Within hours</label>
+                                <label><input type="radio" name="SymptomsStart" value="Same day"> Same day</label>
+                                <label><input type="radio" name="SymptomsStart" value="Next day"> Following day</label>
+                            </p>
+
+                            <p>
+                                Since onset, symptoms have:
+                                <label><input type="radio" name="SymptomsProgress" value="Persisted"> Persisted</label>
+                                <label><input type="radio" name="SymptomsProgress" value="Worsened"> Worsened</label>
+                                <label><input type="radio" name="SymptomsProgress" value="Improved"> Improved partially</label>
+                                <label><input type="radio" name="SymptomsProgress" value="Fluctuated"> Fluctuated</label>
+                            </p>
+
+
+
+                            <h6 class="fw-bold">Medical History & Functional Status</h6>
+
+                            <!-- PMH -->
+                            <p>
+                                PMH:
+                                <label><input type="checkbox" class="chkMulti" name="PMH" value="None"> None</label>
+                                <label><input type="checkbox" class="chkMulti" name="PMH" value="Diabetes"> Diabetes</label>
+                                <label><input type="checkbox" class="chkMulti" name="PMH" value="HTN"> HTN</label>
+                                <label><input type="checkbox" class="chkMulti" name="PMH" value="HLD"> HLD</label>
+                                <label><input type="checkbox" class="chkMulti" name="PMH" value="Asthma"> Asthma</label>
+                                <label><input type="checkbox" class="chkMulti" name="PMH" value="Cardiac"> Cardiac</label>
+
+                                Other:
+                                <input id="PMHOther" class="form-control d-inline w-25" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PMHOther')"></i>
+                            </p>
+
+                            <!-- PSH -->
+                            <p>
+                                PSH:
+                                <input id="PSH" class="form-control d-inline w-50" placeholder="None or details" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PSH')"></i>
+                            </p>
+
+                            <!-- Meds -->
+                            <p>
+                                Meds:
+                                <label><input type="radio"  name="Meds" value="The patient is not taking any medication at this time."> None</label>
+                                <label><input type="radio" name="Meds" value="The patient is taking {{MedsOther}} pain medications p.r.n."> Pain meds PRN</label>
+
+                                <input id="MedsOther" class="form-control d-inline w-25" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'MedsOther')"></i>
+                            </p>
+
+                            <!-- Allergies -->
+                            <p>
+                                Drug Allergies:
+                                <label><input type="radio" name="Allergy" value="NKDA"> NKDA</label>
+                                <label><input type="radio" name="Allergy" value="Yes"> Yes</label>
+
+                                Drug:
+                                <input id="AllergyDrug" class="form-control d-inline w-25" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyDrug')"></i>
+
+                                Reaction:
+                                <input id="AllergyReaction" class="form-control d-inline w-25" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyReaction')"></i>
+                            </p>
+
+                            <!-- Social History -->
+                            <p>
+                                Smoke:
+                                <label><input type="radio" name="Smoke" value="Yes"> Y</label>
+                                <label><input type="radio" name="Smoke" value="No"> N</label>
+                                <input id="PPD" class="form-control d-inline w-25" placeholder="PPD" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PPD')"></i>
+
+                                Alcohol:
+                                <label><input type="radio" name="Alcohol" value="Yes"> Y</label>
+                                <label><input type="radio" name="Alcohol" value="No"> N</label>
+
+                                Cannabis:
+                                <label><input type="radio" name="Cannabis" value="Yes"> Y</label>
+                                <label><input type="radio" name="Cannabis" value="No"> N</label>
+                            </p>
+
+                            <!-- Therapy -->
+                            <p>
+                                Physical therapy:
+                                <label><input type="radio" name="PT" value="Yes"> Y</label>
+                                <label><input type="radio" name="PT" value="No"> N</label>
+
+                                Frequency:
+                                <input id="PTFreq" class="form-control d-inline w-25" placeholder="x/week" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PTFreq')"></i>
+
+                                Duration:
+                                <input id="PTDuration" class="form-control d-inline w-25" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PTDuration')"></i>
+
+                                Relief:
+                                <select id="PTRelief" class="form-select d-inline w-auto">
+                                    <option>None</option>
+                                    <option>Partial</option>
+                                    <option>Minimal</option>
+                                    <option>Good</option>
+                                </select>
+                            </p>
+
+                            <!-- Chiropractor -->
+                            <p>
+                                Chiropractor:
+                                <label><input type="radio" name="Chiro" value="Yes"> Y</label>
+                                <label><input type="radio" name="Chiro" value="No"> N</label>
+
+                                Frequency:
+                                <input id="ChiroFreq" class="form-control d-inline w-25"/>
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ChiroFreq')"></i>
+
+                                Duration:
+                                <input id="ChiroDuration" class="form-control d-inline w-25"  />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ChiroDuration')"></i>
+
+                                Relief:
+                                <select id="ChiroRelief" class="form-select d-inline w-auto">
+                                    <option>None</option>
+                                    <option>Partial</option>
+                                    <option>Minimal</option>
+                                    <option>Good</option>
+                                </select>
+                            </p>
+
+                            <!-- Compliance -->
+                            <p>
+                                Compliance:
+                                <label><input type="radio" name="Compliance" value="Yes"> Y</label>
+                                <label><input type="radio" name="Compliance" value="No"> N</label>
+
+                                If discontinued:
+                                <input id="DiscontinueReason" class="form-control d-inline w-50"  />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiscontinueReason')"></i>
+                            </p>
+
+                            <!-- Functional Limitations -->
+                            <p>
+                                Difficulty Walking:
+                                <label><input type="radio" name="Walk" value="Yes"> Y</label>
+                                <label><input type="radio" name="Walk" value="No"> N</label>
+                                <input id="WalkBlocks" class="form-control d-inline w-25" placeholder="blocks"  />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'WalkBlocks')"></i>
+
+                                Standing:
+                                <label><input type="radio" name="Stand" value="Yes"> Y</label>
+                                <label><input type="radio" name="Stand" value="No"> N</label>
+                                <input id="StandMin" class="form-control d-inline w-25" placeholder="min" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'StandMin')"></i>
+
+                                Sitting:
+                                <label><input type="radio" name="Sit" value="Yes"> Y</label>
+                                <label><input type="radio" name="Sit" value="No"> N</label>
+                                <input id="SitMin" class="form-control d-inline w-25" placeholder="min"  />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'SitMin')"></i>
+                            </p>
+
+                            <!-- Unable -->
+                            <p>
+                                Unable to:
+                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Drive"> Drive</label>
+                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Lift"> Lift</label>
+                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Carry"> Carry</label>
+                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Exercise"> Exercise</label>
+                                <label><input type="checkbox" class="chkMulti" name="Unable" value="Stairs"> Stairs</label>
+                            </p>
+                            <p>
+                                Based on the patient’s history, symptom duration, prior treatment, and reported functional limitations:
+                            </p>
+                            <p>
+
+                                <input type="radio" name="TreatmentPlan" value="Initial" />
+                                Initial conservative management is indicated and will be initiated or continued in accordance with Medical Treatment Guidelines (MTG).
+
+                            </p>
+                            <p>
+
+                                <input type="radio" name="TreatmentPlan" value="Completed" />
+                                The patient reports completion of an adequate trial of conservative treatment prior to presentation, consisting of physical therapy, chiropractic care, medications, and/or activity modification for a duration of ≥ <input id="PTDuration" class="form-control d-inline w-25" /> weeks, with persistent functional limitation despite treatment.
+                            </p>
+                            <p>
+                                Accordingly, further diagnostic evaluation and/or discussion of escalation of care, including interventional or surgical options, may be appropriate if supported by physical examination and imaging findings.
+                            </p>
+                            <h6 class="fw-bold">Present Complaint</h6>
+
+                            <div id="rshSection" style="display:none;">
+                                <h6 class="fw-bold">Right Shoulder (R/Sh)</h6>
+
+                                <p>
+                                    Pain:
+                                    <input id="RShPain" class="form-control d-inline w-auto" style="width:80px;"  />
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RShPain')"></i>/10
+
+                                    <label><input type="checkbox" class="chkMulti" name="RShType" value="Constant"> Constant</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShType" value="Intermittent"> Intermittent</label>
+
+                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Stiff"> Stiff</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Weak"> Weak</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Pop"> Pop</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShSymptoms" value="Click"> Click</label>
+                                </p>
+
+                                <p>
+                                    Diff Reach overhead:
+                                    <label><input type="radio" name="RShReachOverhead" value="Yes"> Y</label>
+                                    <label><input type="radio" name="RShReachOverhead" value="No"> N</label>
+
+                                    Diff Reach back:
+                                    <label><input type="radio" name="RShReachBack" value="Yes"> Y</label>
+                                    <label><input type="radio" name="RShReachBack" value="No"> N</label>
+                                </p>
+
+                                <p>
+                                    Unable to sleep at night:
+                                    <label><input type="radio" name="RShSleepIssue" value="Yes"> Y</label>
+                                    <label><input type="radio" name="RShSleepIssue" value="No"> N</label>
+
+                                    Improved with:
+                                    <label><input type="checkbox" class="chkMulti" name="RShImprove" value="Rest"> Rest</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShImprove" value="Med"> Med</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShImprove" value="PT"> PT</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShImprove" value="Ice"> Ice</label>
+                                </p>
+
+                            </div>
+
+                            <div id="lshSection" style="display:none;">
+                                <h6 class="fw-bold">Left Shoulder (R/Sh)</h6>
+
+                                <p>
+                                    Pain:
+                                    <input id="LShPain" class="form-control d-inline w-auto" style="width:80px;"  /> 
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LShPain')"></i> /10
+
+                                    <label><input type="checkbox" class="chkMulti" name="LShType" value="Constant"> Constant</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LShType" value="Intermittent"> Intermittent</label>
+
+                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Stiff"> Stiff</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Weak"> Weak</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Pop"> Pop</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LShSymptoms" value="Click"> Click</label>
+                                </p>
+
+                                <p>
+                                    Diff Reach overhead:
+                                    <label><input type="radio" name="LShReachOverhead" value="Yes"> Y</label>
+                                    <label><input type="radio" name="LShReachOverhead" value="No"> N</label>
+
+                                    Diff Reach back:
+                                    <label><input type="radio" name="LShReachBack" value="Yes"> Y</label>
+                                    <label><input type="radio" name="LShReachBack" value="No"> N</label>
+                                </p>
+
+                                <p>
+                                    Unable to sleep at night:
+                                    <label><input type="radio" name="LShSleepIssue" value="Yes"> Y</label>
+                                    <label><input type="radio" name="LShSleepIssue" value="No"> N</label>
+
+                                    Improved with:
+                                    <label><input type="checkbox" class="chkMulti" name="LShImprove" value="Rest"> Rest</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LShImprove" value="Med"> Med</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LShImprove" value="PT"> PT</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LShImprove" value="Ice"> Ice</label>
+                                </p>
+
+                            </div>
+
+                            <div id="rknSection" style="display:none;">
+                                <h6 class="fw-bold">Right Knee (R/Kn)</h6>
+
+                                <p>
+                                    Pain:
+                                    <input id="RKnPain" class="form-control d-inline w-auto" style="width:80px;"  />
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RKnPain')"></i> /10
+
+                                    <label><input type="checkbox" class="chkMulti" name="RKnType" value="Constant"> Constant</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RKnType" value="Intermittent"> Intermittent</label>
+
+                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Stiff"> Stiff</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Weak"> Weak</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Pop"> Pop</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RKnSymptoms" value="Click"> Click</label>
+                                </p>
+
+                                <p>
+                                    Diff Reach overhead:
+                                    <label><input type="radio" name="RKnReachOverhead" value="Yes"> Y</label>
+                                    <label><input type="radio" name="RKnReachOverhead" value="No"> N</label>
+
+                                    Diff Reach back:
+                                    <label><input type="radio" name="RKnReachBack" value="Yes"> Y</label>
+                                    <label><input type="radio" name="RKnReachBack" value="No"> N</label>
+                                </p>
+
+                                <p>
+                                    Unable to sleep at night:
+                                    <label><input type="radio" name="RKnSleepIssue" value="Yes"> Y</label>
+                                    <label><input type="radio" name="RKnSleepIssue" value="No"> N</label>
+
+                                    Improved with:
+                                    <label><input type="checkbox" class="chkMulti" name="RKnImprove" value="Rest"> Rest</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RKnImprove" value="Med"> Med</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RKnImprove" value="PT"> PT</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RKnImprove" value="Ice"> Ice</label>
+                                </p>
+
+                            </div>
+
+                            <div id="lknSection" style="display:none;">
+                                <h6 class="fw-bold">Left Knee (L/Kn)</h6>
+
+                                <p>
+                                    Pain:
+                                    <input id="LKnPain" class="form-control d-inline w-auto" style="width:80px;"  />
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'LKnPain')"></i>  /10
+
+                                    <label><input type="checkbox" class="chkMulti" name="LKnType" value="Constant"> Constant</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LKnType" value="Intermittent"> Intermittent</label>
+
+                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Stiff"> Stiff</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Weak"> Weak</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Pop"> Pop</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LKnSymptoms" value="Click"> Click</label>
+                                </p>
+
+                                <p>
+                                    Diff Reach overhead:
+                                    <label><input type="radio" name="LKnReachOverhead" value="Yes"> Y</label>
+                                    <label><input type="radio" name="LKnReachOverhead" value="No"> N</label>
+
+                                    Diff Reach back:
+                                    <label><input type="radio" name="LKnReachBack" value="Yes"> Y</label>
+                                    <label><input type="radio" name="LKnReachBack" value="No"> N</label>
+                                </p>
+
+                                <p>
+                                    Unable to sleep at night:
+                                    <label><input type="radio" name="LKnSleepIssue" value="Yes"> Y</label>
+                                    <label><input type="radio" name="LKnSleepIssue" value="No"> N</label>
+
+                                    Improved with:
+                                    <label><input type="checkbox" class="chkMulti" name="LKnImprove" value="Rest"> Rest</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LKnImprove" value="Med"> Med</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LKnImprove" value="PT"> PT</label>
+                                    <label><input type="checkbox" class="chkMulti" name="LKnImprove" value="Ice"> Ice</label>
+                                </p>
+
+                            </div>
+
+                            <h6 class="fw-bold">Physical Examination</h6>
+
+                            <div id="rshPE" style="display:none">
+                                <h6 class="fw-bold">Right Shoulder (R/Sh)</h6>
+                                <p>
+                                    <b>Inspection:</b><br />
+
+                                    <label><input type="checkbox" class="chkMulti" name="RShInsp" value="Deformity"> Deformity</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShInsp" value="Erythema"> Erythema</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShInsp" value="Ecchymosis"> Ecchymosis</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShInsp" value="Swelling"> Swelling present</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShInsp" value="Atrophy"> Deltoid/supraspinatus atrophy present</label>
+
+                                </p>
+                                <p>
+                                    <b>Palpation:</b><br />
+                                    Tenderness to palpation over:
+
+                                    <label><input type="checkbox" class="chkMulti" name="RShPalp" value="Supraspinatus"> Supraspinatus</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShPalp" value="AC joint"> AC joint</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShPalp" value="Proximal biceps"> Proximal biceps</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShPalp" value="Deltoid"> Deltoid</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShPalp" value="Trapezius"> Trapezius</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShPalp" value="Coracoid"> Coracoid</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShPalp" value="Scapular region"> Scapular region</label>
+                                </p>
+                                <p><b>Range of Motion (Active):</b></p>
+
+                                <p>
+                                    Forward Flexion:
+                                    <input id="RshFlexion" class="form-control d-inline w-25" style="width:60px;!important"  /> 
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RshFlexion')"></i> /180°
+                                    <label><input type="radio" name="RShFlexPain" value="Yes"> pain yes</label>
+                                    <label><input type="radio" name="RShFlexPain" value="No"> pain no</label>
+                                </p>
+
+                                <p>
+                                    Abduction:
+                                    <input id="RShAbduction" class="form-control d-inline w-25" style="width:60px;!important"  />
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RShAbduction')"></i> /180°
+                                    <label><input type="radio" name="RShAbdPain" value="Yes"> pain yes</label>
+                                    <label><input type="radio" name="RShAbdPain" value="No"> pain no</label>
+                                </p>
+
+                                <p>
+                                    External Rotation:
+                                    <input id="RShExternal" class="form-control d-inline w-25" style="width:60px;!important" />
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'RShExternal')"></i> /90°
+                                    <label><input type="radio" name="RShExtPain" value="Yes"> pain yes</label>
+                                    <label><input type="radio" name="RShExtPain" value="No"> pain no</label>
+                                </p>
+
+                                <p>
+                                    Internal Rotation:
+                                    <label><input type="radio" name="RShInternal" value="Sacrum"> Sacrum</label>
+                                    <label><input type="radio" name="RShInternal" value="L5"> L5</label>
+                                    <label><input type="radio" name="RShInternal" value="Mid-back"> Mid-back</label>
+
+                                    <label><input type="radio" name="RShIntPain" value="Yes"> pain yes</label>
+                                    <label><input type="radio" name="RShIntPain" value="No"> pain no</label>
+                                </p>
+                                <p>
+                                    <b>Passive ROM (PROM):</b><br />
+
+                                    <label><input type="radio" name="RShProm" value="Full and painless"> Full and painless</label>
+                                    <label><input type="radio" name="RShProm" value="Full with pain"> Full with pain</label>
+                                    <label><input type="radio" name="RShProm" value="Limited"> Limited compared</label>
+                                    <label><input type="radio" name="RShProm" value="Interpretation"> PROM interpretation</label>
+
+                                </p>
+                                <p>
+                                    <b>ROM Limitation:</b>
+                                    <label><input type="checkbox" class="chkMulti" name="RShRomLimit" value="Pain-limited"> Pain-limited</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShRomLimit" value="Mechanical"> Mechanical</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShRomLimit" value="Both"> Both</label>
+                                </p>
+
+                                <p>
+                                    <b>Strength:</b>
+                                    <label><input type="checkbox" class="chkMulti" name="RShStrength" value="Decreased"> Decreased</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShStrength" value="Pain-limited"> Pain-limited</label>
+                                </p>
+
+                                <p>
+                                    <b>Special Tests:</b>
+                                    <label><input type="checkbox" class="chkMulti" name="RShTests" value="Hawkins"> Hawkins-Kennedy</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShTests" value="Empty Can"> Empty Can</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShTests" value="Obrien"> O’Brien’s</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShTests" value="Cross Body"> Cross-Body</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShTests" value="Drop Arm"> Drop Arm</label>
+                                </p>
+
+                                <p>
+                                    <b>Neurovascular:</b>
+                                    <label><input type="checkbox" class="chkMulti" name="RShNeuro" value="Sensation intact"> Sensation intact</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShNeuro" value="Motor intact"> Motor intact</label>
+                                    <label><input type="checkbox" class="chkMulti" name="RShNeuro" value="Pulses intact"> Pulses intact</label>
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-3 w-100">Submit</button>
+
+                    </form>
+                </div>
+                <!-- RIGHT: PREVIEW -->
+                <div class="col-md-5 col-12" id="previewSection" name="previewSection">
+                    <div class="container my-4">
+                        <h4 class="text-center mb-4 fw-bold">
+                            Live Report Preview
+                        </h4>
+
+                        <div class="d-flex justify-content-end mb-2">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Export
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="javascript:void(0)" onclick="fnExportDOC()">Export as DOC</a></li>
+                                    <li><a class="dropdown-item" href="#">Export as PDF</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="border p-4 rounded shadow-sm" style="line-height: 2; font-size: 15px;background-color:white" id="previewBox">
+                            <!-- ❌ CLOSE ICON -->
+                            <span id="closePreview"
+                                  style="position:absolute; top:8px; right:12px; cursor:pointer; font-size:18px;">
+                                ❌
+                            </span>
+                            <p id="previewText">
+                                Patient report will appear here...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+<script>
+    var docTemplate = null;
+    var formData = null;
+    // Path to your saved template file (relative to this HTML file).
+    // (The DOCX is stored alongside this page.)
+    var templateUrlDocx = '@ViewBag.TemplateDOCURL';
+    var templateUrl = '@ViewBag.TemplateURL';
+
+    var recognition;
+
+    function startVoice(icon, ctrl) {
+
+        var input = $('#' + ctrl);
+
+        // Check browser support
+        if (!('webkitSpeechRecognition' in window)) {
+            alert("Voice recognition not supported in this browser");
+            return;
+        }
+
+        recognition = new webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = "en-US"; // change if needed
+
+        recognition.start();
+
+        $(icon).css("color", "red"); // recording indicator
+
+        recognition.onresult = function (event) {
+            var transcript = convertPunctuation(event.results[0][0].transcript);
+
+
+            if (transcript == "clear all") {
+                if (confirm("Clear all text?")) {
+                    input.val('');
+                }
+            }
+            else {
+                // Append text (important for doctors dictating long notes)
+                input.val(input.val() + " " + transcript);
+            }
+            updatePreview(); // refresh preview if you have live preview
+        };
+
+        recognition.onend = function () {
+            $(icon).css("color", "#007bff");
+        };
+    }
+
+    function convertPunctuation(text) {
+        return text
+            .replace(/\bfull stop\b/gi, ".")
+            .replace(/\bstop\b/gi, ".")
+            .replace(/\bdot\b/gi, ".")
+            .replace(/\bcomma\b/gi, ",")
+            .replace(/\bquestion mark\b/gi, "?")
+            .replace(/\bexclamation mark\b/gi, "!")
+            .replace(/\bcolon\b/gi, ":")
+            .replace(/\bsemicolon\b/gi, ";")
+            .replace(/\bnew line\b/gi, "\n")
+            .replace(/\bnext line\b/gi, "\n");
+    }
+
+
+    function fnShowPresentComplain(cntrl, divCC, divPE) {
+        if ($(cntrl).is(":checked")) {
+            $("#" + divCC).slideDown();
+            $("#" + divPE).slideDown();
+        } else {
+            $("#" + divCC).slideUp();
+            $("#" + divPE).slideUp();
+
+            // OPTIONAL: clear values when unchecked
+            $("#" + divCC).find("input").prop("checked", false).val("");
+            $("#" + divPE).find("input").prop("checked", false).val("");
+        }
+    }
+
+    // CLOSE (❌)
+    $("#closePreview").click(function () {
+
+        $("#previewSection").hide();
+
+        // Expand form to full width
+        $("#formSection")
+            .removeClass("col-md-6")
+            .addClass("col-md-12");
+
+        // Show open button
+        $("#openPreview").show();
+    });
+
+    // OPEN AGAIN
+    $("#openPreview").click(function () {
+
+        $("#previewSection").show();
+
+        // Back to split layout
+        $("#formSection")
+            .removeClass("col-md-12")
+            .addClass("col-md-6");
+
+        $(this).hide();
+    });
+
+
+    function loadTemplate() {
+        // Try loading a DOCX template first; fall back to plain text.
+        loadDocxTemplate(templateUrlDocx)
+            .catch(function () {
+                return loadTextTemplate(templateUrl);
+            })
+            .then(function () {
+                updatePreview();
+            });
+    }
+
+    function loadDocxTemplate(url) {
+        return fetch(url)
+            .then(function (res) {
+                if (!res.ok) throw new Error("Failed to load DOCX template");
+                return res.arrayBuffer();
+            })
+            .then(function (arrayBuffer) {
+                return mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+            })
+            .then(function (result) {
+                // Convert to HTML so formatting (bold, line breaks, etc.) is preserved.
+                docTemplate = result.value;
+            });
+    }
+
+    function loadTextTemplate(url) {
+        return fetch(url)
+            .then(function (res) {
+                if (!res.ok) throw new Error("Failed to load text template");
+                return res.text();
+            })
+            .then(function (text) {
+                docTemplate = text;
+            });
+    }
+
+    function applyTemplate(template, values) {
+        return template.replace(/{{\s*([^}]+)\s*}}/g, function (_, key) {
+            return values[key] || "";
+        });
+    }
+
+    function updatePreview() {
+
+        var values = {};
+        $('#patientForm').find('input, select, textarea').each(function () {
+            var key = $(this).attr('name') || $(this).attr('id');
+            var cls = $(this).attr('class');
+            if (!key) return;
+
+            var type = $(this).attr('type');
+
+            if (type === 'radio') {
+                if ($(this).is(':checked')) {
+                    values[key] = $(this).val();
+                }
+            }
+            else if (type === 'checkbox') {
+
+                // 🔹 Special handling for Complaints (multi-checkbox)
+                if (cls === "chkMulti") {
+                    if (!values[key]) values[key] = [];
+                    if ($(this).is(':checked')) {
+                        values[key].push($(this).val());
+                    }
+                }
+                else {
+                    // normal checkbox (true/false)
+                    values[key] = $(this).is(':checked');
+                }
+            }
+            else {
+                values[key] = $(this).val() || "";
+            }
+        });
+
+        values["Id"] = $("#hdId").val();
+
+        var today = new Date();
+
+        var options = {
+            month: 'short',
+            day: '2-digit',
+            year: 'numeric'
+        };
+
+        var formattedDate = today.toLocaleDateString('en-US', options);
+
+        values["DOE"] = formattedDate.replace(',', '');
+
+        formData = values;
+        console.log(formData);
+        debugger
+
+        $("#lblDOA").text($("#DOA").val());
+
+        var template = docTemplate ||
+            "Patient {{PatientName}} ({{Gender}}), dominant hand {{DominantHand}},\n" +
+            "reports that on {{DOA}}, while working as {{JobTitle}},\n" +
+            "they sustained an injury when {{Incident}}.\n\n" +
+            "The incident occurred {{IncidentTypes}} and involved {{BodyPart}}.\n" +
+            "Since the incident, symptoms have been persistent and\n" +
+            "interfere with daily activities.";
+
+        var output = applyTemplate(template, values);
+        $("#previewText").html(output);
+    }
+
+    // Trigger on all inputs
+    $(document).on("keyup change", "#patientForm input, #patientForm select, .incident-type-option", function () {
+        updatePreview();
+    });
+
+
+
+    $(document).ready(function () {
+        // Load template and initialize preview
+        loadTemplate();
+        if ('@ViewBag.FormData' != '') {
+            bindForm('@ViewBag.FormData');
+        }
+        $('#patientForm').on('submit', function (e) {
+            e.preventDefault(); // Stop page reload
+
+            debugger
+            // Serialize form data
+            var url = '@Url.Action("SaveForm", "IntakeForm")';
+            var data = JSON.stringify(formData);
+
+            $.ajax({
+                url: url, // Update with your Controller/Action
+                type: 'POST',
+                contentType: "application/json",
+                data: data,
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        // Optionally reset form
+                        $('#patientForm')[0].reset();
+                        updatePreview();
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while saving data.");
+                }
+            });
+        });
+
+        $(document).on('change', 'input[name="Complaints"]', function () {
+
+            var section = $(this).data('section');
+            var pe = $(this).data('pe');
+
+            fnShowPresentComplain(this, section, pe);
+        });
+    });
+
+    function fnExportDOC() {
+        var htmlContent = $('#previewText').html();
+
+        var form = $('<form method="post" action="/IntakeForm/ExportWord"></form>');
+
+        form.append('<input type="hidden" name="htmlContent" value="'
+            + $('<div>').text(htmlContent).html() + '">');
+
+        $('body').append(form);
+        form.submit();
+    }
+
+    function bindForm(val) {
+        var cleaned = val
+            .replace(/&quot;/g, '"')   // decode HTML quotes
+            .trim();
+
+        var data = JSON.parse(cleaned);
+
+        $('#patientForm').find('input, select, textarea').each(function () {
+
+            var key = $(this).attr('name') || $(this).attr('id');
+            if (!key || data[key] === undefined || data[key] === null) return;
+
+            var type = $(this).attr('type');
+            var value = data[key];
+
+            // 🔹 Remove <u> tags for specific field (optional handling)
+            if (key === "PatientName") {
+                value = (value || '').replace(/<\/?u>/g, '');
+            }
+
+            if (type === 'radio') {
+                if ($(this).val() == value) {
+                    $(this).prop("checked", true);
+                }
+            }
+            else if (type === 'checkbox') {
+
+                // 🔹 Handle multi-checkbox (like Complaints array)
+                if (Array.isArray(value)) {
+                    if (value.includes($(this).val())) {
+                        $(this).prop("checked", true);
+                    } else {
+                        $(this).prop("checked", false);
+                    }
+                }
+                else {
+                    // normal checkbox (true/false)
+                    $(this).prop("checked", value === true || value === "true");
+                }
+            }
+            else {
+                $(this).val(value);
+            }
+
+        });
+
+        setTimeout(function () {
+            $('#patientForm').find('input[name="Complaints"]:checked').trigger('change');
+        }, 1000);
+    }
+</script>

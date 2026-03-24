@@ -63,6 +63,7 @@ namespace PainTrax.Web.Controllers
         private IMapper _mapper;
         string SessionDiffDoc = "true";
         private readonly IEmailService _emailService;
+        private readonly CommonService _commons = new CommonService();
 
         private readonly IWebHostEnvironment _env;
         public VisitController(ILogger<VisitController> logger, IMapper mapper,
@@ -1612,7 +1613,7 @@ namespace PainTrax.Web.Controllers
                     {
                         daignoCodeDetails += "<li>" + model.diaglumberbulge_text + "</li>";
                     }
-                    if (!string.IsNullOrEmpty(model.diagthoracicbulge_hnp1))
+                    if (!string.IsNullOrEmpty(model.diaglumberbulge_hnp1))
                     {
                         daignoCodeDetails += "<li>" + model.diaglumberbulge_hnp1 + "</li>";
                     }
@@ -1749,7 +1750,6 @@ namespace PainTrax.Web.Controllers
                    ? signatureData.Split(',')[1].Trim()
                    : signatureData.Trim();
         }
-
         private bool IsBase64String(string base64)
         {
             Span<byte> buffer = new Span<byte>(new byte[base64.Length]);
@@ -5548,22 +5548,32 @@ namespace PainTrax.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendAuthorization(string id, string type, string email)
+        public async Task<IActionResult> SendAuthorization(string id, string email)
         {
             if (email != "null" && email != "")
             {
                 string _id = EncryptionHelper.Encrypt(id);
-                string link = "https://www.paintrax.com/v2/SendForm/AuthoAckno?id=" + _id + "&type=" + type;
+                string link = "https://www.paintrax.com/v2/SendForm/AuthoAckno?id=" + _id;
                 var subject = "Please Review and Sign Your Authorization Form";
 
                 var body = System.IO.File.ReadAllText("wwwroot/Uploads/EmailTemplate/PatientAuthorizationForm.html")
                                .Replace("{RESET_LINK}", link);
 
                 await _emailService.SendEmailAsync(email, subject, body);
+
+                _commons.deleteAuthoSign(id);
+
                 return Json("1");
             }
             else
                 return Json("-1");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CheckAuthorizationForm(string id, string email)
+        {
+            var isExist = _commons.isSignExist(id);
+            return Json(isExist);
         }
 
 

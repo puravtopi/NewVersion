@@ -8,22 +8,33 @@ namespace PainTrax.Web.Controllers
     public class SendFormController : Controller
     {
         private readonly CommonService _commonservices = new CommonService();
+        private readonly PdfHelper _pdfhelper = new PdfHelper();
         private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
+        private readonly IWebHostEnvironment _env;
         private readonly ILogger<HomeController> _logger;
 
-        public SendFormController(Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, ILogger<HomeController> logger)
+        public SendFormController(Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, ILogger<HomeController> logger, IWebHostEnvironment env)
         {
             Environment = environment;
             _logger = logger;
+            _env = env;
         }
 
-        public IActionResult AuthoAckno(string id = "Tmy87eGD4pBwqmBnU1kYZhtyTy9oAonqlCLlpQzjACM=", string type = "IE")
+        public IActionResult Index()
+        {
+
+
+
+            return View();
+        }
+
+        public IActionResult AuthoAckno(string id)
         {
             var _id = EncryptionHelper.Decrypt(id);
 
-            if (_commonservices.isSignExist(_id, type) == false)
+            if (_commonservices.isSignExist(_id) == false)
             {
-                var data = _commonservices.getPatientDetails(_id, type);
+                var data = _commonservices.getPatientDetails(_id);
 
                 if (data == null)
                 {
@@ -34,9 +45,7 @@ namespace PainTrax.Web.Controllers
 
                     };
                 }
-
                 data.id = _id;
-                data.type = type;
                 data.isExist = false;
                 return View(data);
             }
@@ -75,21 +84,28 @@ namespace PainTrax.Web.Controllers
                 {
                     Directory.CreateDirectory(signaturesDir);
                 }
-                var filename = $"{model.type + "_" + model.id}.jpeg";
+                var filename = $"{model.id}.jpeg";
                 var savePath = Path.Combine(signaturesDir, filename);
 
                 System.IO.File.WriteAllBytes(savePath, imageData);
 
+                var id = _commonservices.InsertSign(filename, base64Data, model.id.ToString());
 
-                string ie_id = "", fu_id = "";
+                var source = Path.Combine(Environment.WebRootPath, "Forms", "PATIENT MASTER AUTHORIZATION.pdf");
+                Dictionary<string, string> controls = new Dictionary<string, string>();
 
-                if (model.type == "IE")
-                    ie_id = model.id.ToString();
-                else
-                    fu_id = model.id.ToString();
+                //Get Patient Data with Sign
+                var pData = _commonservices.getPatientDetailsWithSign(model.id.ToString());
 
-                var id = _commonservices.InsertSign(filename, base64Data, ie_id == "" ? "0" : ie_id, fu_id == "" ? "0" : fu_id);
+                if (pData != null)
+                {
+                    controls.Add("dob", pData.dob.ToString("MM-dd-yyyy"));
+                    controls.Add("patientName", pData.lname + ' ' + pData.fname);
 
+                    string path = Path.Combine(_env.ContentRootPath, "PatientDocuments", "Others", model.id.ToString());
+
+                    _pdfhelper.AcknoStamping(source, controls, path, "PATIENT MASTER AUTHORIZATION.pdf", savePath);
+                }
 
                 return Ok(new { id = id });
             }

@@ -39,6 +39,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="OpenXmlPowerTools" Version="4.5.3.2" />
     <PackageReference Include="Optivem.Framework.Infrastructure.FluentValidation" Version="1.0.23" />
     <PackageReference Include="System.Data.OleDb" Version="7.0.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
@@ -48,6 +49,7 @@
     <Folder Include="Logfiles\" />
     <Folder Include="Uploads\HeaderTemplate\" />
     <Folder Include="Uploads\Sign\" />
+    <Folder Include="wwwroot\Forms\" />
   </ItemGroup>
 
   <ItemGroup>

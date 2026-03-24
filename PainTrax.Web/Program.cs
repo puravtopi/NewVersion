@@ -39,7 +39,7 @@ builder.Services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddTransient<ILoggingService, LoggingService>();
 builder.Services.AddTransient<IEmailService, EmailService>();
 builder.Services.AddScoped<DataTransferService>();
-
+builder.Services.AddHttpClient<SmsService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

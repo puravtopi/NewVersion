@@ -91,7 +91,7 @@
 
                                 <form id="authorizationForm">
                                     <input type="hidden" value="@Model.id" id="id" name="id" />
-                                    <input type="hidden" value="@Model.type" id="type" name="type" />
+                                    
                                     <div class="row g-3">
 
                                         <div class="col-md-4">
@@ -302,10 +302,9 @@
             var url = '@Url.Action("SaveSign", "SendForm")';
 
             var id = $("#id").val();
-            var type = $("#type").val();
+           
             var data = {
                 id: id,
-                type: type,
                 signatureData: signatureData,
             };
 

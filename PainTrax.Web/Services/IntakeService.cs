@@ -316,7 +316,33 @@ namespace PainTrax.Web.Services
             var datalist = ConvertDataTable<InitialIntake>(GetData(cm)).FirstOrDefault();
             return datalist;
         }
+        public string SaveInitialIntakeAI(InitialIntakeAI model)
+        {
+            List<MySqlParameter> param = new List<MySqlParameter>();
 
+            param.Add(new MySqlParameter("p_Id", model.Id));
+            param.Add(new MySqlParameter("p_PatientName", model.PatientName));
+            param.Add(new MySqlParameter("p_DOB", model.DOB));
+            param.Add(new MySqlParameter("p_DOA", model.DOA));
+            param.Add(new MySqlParameter("p_DOE", model.DOE));
+            param.Add(new MySqlParameter("p_FormData", model.FormData));
+            param.Add(new MySqlParameter("p_CmpId", model.CmpId));
+            param.Add(new MySqlParameter("p_Visit_Type", model.Visit_Type));
+            
+
+            var data = ExecuteSP("sp_InsertInitialIntake_ai", param);
+
+            return data;
+        }
+
+        public InitialIntakeAI? GetInitialIntakeAIById(int id)
+        {
+            DataTable dt = new DataTable();
+            MySqlCommand cm = new MySqlCommand("select * from tbl_intake_ai where Id=@id ", conn);
+            cm.Parameters.AddWithValue("@Id", id);
+            var datalist = ConvertDataTable<InitialIntakeAI>(GetData(cm)).FirstOrDefault();
+            return datalist;
+        }
 
     }
 }

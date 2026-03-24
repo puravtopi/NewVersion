@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
-using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
+using DocumentFormat.OpenXml;
+using HtmlToOpenXml;
+
 using GroupDocs.Viewer.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MS.Models;
 using MS.Services;
+
 using Org.BouncyCastle.Asn1.Sec;
 using PainTrax.Web.Filter;
 using PainTrax.Web.Helper;
@@ -17,17 +20,32 @@ using System.Data;
 using System.Diagnostics.Metrics;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+using PainTrax.Web.ViewModel;
+
 
 namespace PainTrax.Web.Controllers
 {
     //[SessionCheckFilter]
     public class IntakeFormController : Controller
     {
+        #region Vriables
         private readonly Common _commonservices = new Common();
         private readonly IntakeService service = new IntakeService();
         private readonly PatientIEService _ieService = new PatientIEService();
         private readonly PatientService _patientservices = new PatientService();
+        private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
+        private readonly IWebHostEnvironment _env;
+        #endregion
+
+        public IntakeFormController(
+         Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, IWebHostEnvironment env
+        )
+        {
+            Environment = environment;
+            _env = env;
+
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -696,6 +714,501 @@ namespace PainTrax.Web.Controllers
             return RedirectToAction("Index", "Visit");
         }
 
+        public IActionResult AIInitialIntake(int? id)
+        {
+            ViewBag.TemplateURL = "/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/report-template.txt";
+            ViewBag.TemplateDOCURL = "/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/report-template-ie.docx";
+            ViewBag.FormData = "";
+            ViewBag.Id = "";
+
+            if (id != null)
+            {
+                var data = service.GetInitialIntakeAIById(id.Value);
+
+                if (data != null)
+                {
+                    ViewBag.FormData = data.FormData;
+                    ViewBag.Id = data.Id;
+                }
+            }
+
+            return View();
+        }
+
+        private List<IntakeDropDown> GetDropDownList(string path, string node)
+        {
+            var intakeDropDowns = new List<IntakeDropDown>();
+
+            XDocument doc = XDocument.Load(path);
+
+            foreach (var item in doc.Descendants(node))
+            {
+                intakeDropDowns.Add(new IntakeDropDown
+                {
+                    Name = item.Element("Name")?.Value
+                });
+            }
+
+            return intakeDropDowns;
+        }
+
+        [HttpPost]
+        public IActionResult SaveForm([FromBody] object formData)
+        {
+            var json = System.Text.Json.JsonSerializer.Serialize(formData);
+            var model = System.Text.Json.JsonSerializer.Deserialize<AIIntakeFormModel>(json);
+
+            if (model != null)
+            {
+                InitialIntakeAI initialIntakeAI = new InitialIntakeAI()
+                {
+                    Id = model.Id == "" ? 0 : Convert.ToInt32(model.Id),
+                    CmpId = 10,
+                    Visit_Type = "IE",
+                    DOA = DateTime.TryParse(model.DOA, out var parsedDOA) ? parsedDOA : (DateTime?)null,
+                    DOB = DateTime.TryParse(model.DOB, out var parsedDOB) ? parsedDOB : (DateTime?)null,
+                    DOE = System.DateTime.Now,
+                    FormData = json,
+                    PatientName = model.PatientName
+                };
+                service.SaveInitialIntakeAI(initialIntakeAI);
+            }
+            return Json(new { success = true, message = "Intake form summited successfully." });
+        }
+
+        [HttpPost]
+        public IActionResult ExportWord(string htmlContent)
+        {
+
+            string filePath = "", docName = "", patientName = "", injDocName = "", dos = "", dob = "";
+            string[] splitContent;
+
+
+            // Create a new DOCX package
+            using (MemoryStream memStream = new MemoryStream())
+            {
+                using (WordprocessingDocument doc = WordprocessingDocument.Create(memStream, WordprocessingDocumentType.Document))
+                {
+
+                    MainDocumentPart mainPart = doc.AddMainDocumentPart();
+                    var headerPart = mainPart.AddNewPart<HeaderPart>();
+                    var footerPart = mainPart.AddNewPart<FooterPart>();
+
+                    // Create the main document part content
+                    mainPart.Document = new Document();
+                    Body body = mainPart.Document.AppendChild(new Body());
+
+
+                    // Define the font and size
+                    RunProperties runProperties = new RunProperties();
+                    RunFonts runFonts = new RunFonts() { Ascii = "Times New Roman" };
+                    FontSize fontSize = new FontSize() { Val = "24" }; // Font size 12 (in half-point format)
+
+                    // Apply the font settings to the RunProperties
+                    runProperties.Append(runFonts);
+                    runProperties.Append(fontSize);
+
+                    // Parse the HTML content and append it to the document
+                    HtmlConverter converter = new HtmlConverter(mainPart);
+                    // Clean invalid or empty <img> tags
+                    htmlContent = Regex.Replace(htmlContent, @"<img[^>]*base64,\s*""[^>]*>", "", RegexOptions.IgnoreCase);
+
+                    IList<OpenXmlCompositeElement> generatedBody = converter.Parse(htmlContent);
+
+                    // Iterate over the parsed elements and apply RunProperties
+                    foreach (var element in generatedBody)
+                    {
+                        foreach (var run in element.Descendants<Run>()) // Find all Run elements in the element
+                        {
+                            run.PrependChild(runProperties.CloneNode(true)); // Apply the font properties to each Run
+                        }
+
+                        // Append each element to the body
+                        body.Append(element.CloneNode(true));
+                    }
+
+
+                    var header = new Header(new Paragraph(new Run(new Text("Header Test"))));
+                    HeaderReference headerReference = new HeaderReference() { Type = HeaderFooterValues.Default, Id = mainPart.GetIdOfPart(headerPart) };
+
+                    headerPart.Header = header;
+
+                    mainPart.Document.Body.Append(new SectionProperties(headerReference));
+
+                }
+                string cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId).ToString();
+
+                string subPath = "Report/" + cmpid; // Your code goes here
+
+                bool exists = System.IO.Directory.Exists(subPath);
+
+                if (!exists)
+                    System.IO.Directory.CreateDirectory(subPath);
+
+                filePath = subPath + "/IE.docx";
+
+                // Save the memory stream to a file
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    memStream.WriteTo(fileStream);
+                }
+
+                try
+                {
+                    string filepathFrom = Path.Combine(Environment.WebRootPath, "Uploads/HeaderTemplate") + "//" + HttpContext.Session.GetString(SessionKeys.SessionHeaderTemplate); ;
+
+
+                    string filepathTo = filePath;
+                    AddHeaderFromTo(filepathFrom, filepathTo, patientName, dos, "");
+                    //if (DoesFooterExist(filepathFrom))
+                    //    AddFooterFromTo(filepathFrom, filepathTo, patientName, dos, dob);
+                }
+                catch (Exception ex)
+                {
+                }
+
+                //filePath = _env.ContentRootPath + filePath;
+                memStream.Position = 0; // VERY IMPORTANT
+                byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+                return File(
+                    //memStream.ToArray(),
+                    fileBytes,
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    docName
+                );
+            }
+
+
+        }
+
+
+        #region private method
+        public void AddHeaderFromTo(string filepathFrom, string filepathTo, string patientName = "", string dos = "", string provName = "")
+        {
+            // Replace header in target document with header of source document.
+            using (WordprocessingDocument
+                wdDoc = WordprocessingDocument.Open(filepathTo, true))
+            {
+                MainDocumentPart mainPart = wdDoc.MainDocumentPart;
+
+                // Delete the existing header part.
+                mainPart.DeleteParts(mainPart.HeaderParts);
+
+                // Create a new header part.
+                DocumentFormat.OpenXml.Packaging.HeaderPart headerPart =
+            mainPart.AddNewPart<HeaderPart>();
+
+                // Get Id of the headerPart.
+                string rId = mainPart.GetIdOfPart(headerPart);
+
+                // Feed target headerPart with source headerPart.
+                using (WordprocessingDocument wdDocSource =
+                    WordprocessingDocument.Open(filepathFrom, true))
+                {
+                    DocumentFormat.OpenXml.Packaging.HeaderPart firstHeader =
+            wdDocSource.MainDocumentPart.HeaderParts.FirstOrDefault();
+
+                    wdDocSource.MainDocumentPart.HeaderParts.FirstOrDefault();
+
+                    if (firstHeader != null)
+                    {
+
+                        headerPart.FeedData(firstHeader.GetStream());
+                    }
+
+                    // Copy Image Parts
+                    //foreach (var imagePart in firstHeader.ImageParts)
+                    //{
+                    //    // Add image part to the target header
+                    //    ImagePart newImagePart = headerPart.AddImagePart(imagePart.ContentType);
+
+                    //    // Copy image stream
+                    //    using (Stream imageStream = imagePart.GetStream())
+                    //    {
+                    //        newImagePart.FeedData(imageStream);
+                    //    }
+                    //}
+
+                    // Copy Image Parts
+                    Dictionary<string, string> imageRelMapping = new Dictionary<string, string>();
+
+                    foreach (var imagePart in firstHeader.ImageParts)
+                    {
+                        // Add a new image part to the target header
+                        ImagePart newImagePart = headerPart.AddImagePart(imagePart.ContentType);
+
+                        // Copy the image data
+                        using (Stream imageStream = imagePart.GetStream(FileMode.Open, FileAccess.Read))
+                        {
+                            newImagePart.FeedData(imageStream);
+                        }
+
+                        // Map the old relationship ID to the new image part ID
+                        string oldRelId = firstHeader.GetIdOfPart(imagePart);
+                        string newRelId = headerPart.GetIdOfPart(newImagePart);
+                        imageRelMapping[oldRelId] = newRelId;
+                    }
+
+                    // Update relationships in header XML
+                    UpdateHeaderXml(headerPart, imageRelMapping, provName);
+
+
+
+                    foreach (var para in headerPart.Header.Descendants<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
+                    {
+                        // Normalize spacing
+                        var pPr = para.Elements<DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties>().FirstOrDefault();
+                        if (pPr == null)
+                        {
+                            pPr = new DocumentFormat.OpenXml.Wordprocessing.ParagraphProperties();
+                            para.PrependChild(pPr);
+                        }
+
+                        var spacing = pPr.Elements<DocumentFormat.OpenXml.Wordprocessing.SpacingBetweenLines>().FirstOrDefault();
+                        if (spacing == null)
+                        {
+                            spacing = new DocumentFormat.OpenXml.Wordprocessing.SpacingBetweenLines();
+                            pPr.Append(spacing);
+                        }
+
+                        spacing.Before = "0";         // Remove space before
+                        spacing.After = "0";          // Remove space after
+                        spacing.Line = "240";         // 240 = single line spacing
+                        spacing.LineRule = DocumentFormat.OpenXml.Wordprocessing.LineSpacingRuleValues.Auto;
+                    }
+
+                    //Dictionary<string, string> textReplacements = new Dictionary<string, string>
+                    //    {
+                    //            { "@drname@", "Dr. Patel" }  // Replace with your dynamic name
+                    //    };
+                    //ReplacePlaceholdersInHeader(headerPart, textReplacements);
+                }
+
+                int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+
+                var restheaderPart = mainPart.AddNewPart<HeaderPart>("Rest");
+                restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
+                if (cmpid == 7 || cmpid == 13 || cmpid == 18)
+                {
+                    if (!string.IsNullOrEmpty(dos))
+                    {
+                        string _dos = Common.commonDate(Convert.ToDateTime(dos), HttpContext.Session.GetString(SessionKeys.SessionDateFormat));
+                        if (cmpid == 18)
+                        {
+                            restheaderPart.Header = CreateHeaderWithPageNumber("Re: " + patientName, "");
+                        }
+                        else
+                            restheaderPart.Header = CreateHeaderWithPageNumber(patientName, _dos);
+                    }
+                }
+                else
+                {
+
+                    restheaderPart.Header = CreateHeaderWithPageNumber(patientName, "");
+                }
+
+
+                //  restheaderPart.Header = new Header(new Paragraph("Purav\nSandip"));
+                string restId = mainPart.GetIdOfPart(restheaderPart);
+                // Get SectionProperties and Replace HeaderReference with new Id.
+                IEnumerable<DocumentFormat.OpenXml.Wordprocessing.SectionProperties> sectPrs =
+            mainPart.Document.Body.Elements<SectionProperties>();
+                foreach (var sectPr in sectPrs)
+                {
+                    // Delete existing references to headers.
+                    sectPr.RemoveAllChildren<HeaderReference>();
+                    sectPr.Append(new TitlePage());
+                    // Create the new header reference node.
+                    sectPr.PrependChild<HeaderReference>(new HeaderReference() { Type = HeaderFooterValues.First, Id = rId });
+                    if (cmpid == 7 || cmpid == 13 || cmpid == 18)
+                        sectPr.PrependChild<HeaderReference>(new HeaderReference() { Type = HeaderFooterValues.Default, Id = restId });
+                }
+            }
+        }
+        // Method to update header XML to reference new image relationships
+        private static void UpdateHeaderXml(HeaderPart headerPart, Dictionary<string, string> imageRelMapping, string provName)
+        {
+            string headerXml;
+
+            // Read the existing header XML
+            using (StreamReader reader = new StreamReader(headerPart.GetStream(FileMode.Open, FileAccess.Read)))
+            {
+                headerXml = reader.ReadToEnd();
+            }
+
+            // Replace old relationship IDs with new ones
+            foreach (var kvp in imageRelMapping)
+            {
+                headerXml = headerXml.Replace($"r:id=\"{kvp.Key}\"", $"r:id=\"{kvp.Value}\"");
+            }
+            //this 2 lines
+            //headerXml = headerXml
+            //         .Replace("<w:t>@</w:t><w:t>drname</w:t><w:t>@</w:t>", "<w:t>@drname@</w:t>");
+
+            // Step 3: Replace placeholders
+            headerXml = headerXml.Replace("drname", provName == null ? "" : provName);
+
+            // Write the updated XML back to the header part
+            using (MemoryStream memStream = new MemoryStream())
+            {
+                using (StreamWriter writer = new StreamWriter(memStream))
+                {
+                    writer.Write(headerXml);
+                    writer.Flush();
+                    memStream.Position = 0;
+                    headerPart.FeedData(memStream);
+                }
+            }
+        }
+        public Header CreateHeaderWithPageNumber(string text1, string text2)
+        {
+            int? cmpid = HttpContext.Session.GetInt32(SessionKeys.SessionCmpId);
+            string fontSize = HttpContext.Session.GetString(SessionKeys.SessionFontSize);
+            string fontFamily = HttpContext.Session.GetString(SessionKeys.SessionFontFamily);
+
+            fontFamily = !string.IsNullOrEmpty(fontFamily) ? fontFamily : "Times New Roman";
+            fontSize = !string.IsNullOrEmpty(fontSize) ? (Convert.ToInt16(fontSize) * 2).ToString() : "20";
+
+            if (text2 != "")
+            {
+                return new Header(
+                    new Paragraph(
+                        new Run(
+                            new RunProperties(
+                     new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
+                ),
+                            new Text(text1) // First line
+                        ),
+                        new Break(), // Line break
+                        new Run(
+                            new RunProperties(
+                      new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
+                ),
+                            new Text(text2) // Second line
+                        ),
+                        new Break(), // Another line break if needed
+                        new Run(
+                            new RunProperties(
+                     new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
+                ),
+                            new Text("Page ") // Static "Page " text
+                        ),
+        // Explicit space
+        new Run(
+            new Text(" ")
+            {
+                Space = SpaceProcessingModeValues.Preserve
+            },
+             new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
+        ),
+                        new Run(
+                            new SimpleField() // Dynamic page number field
+                            {
+                                Instruction = "PAGE", // Specifies the field type
+                            }
+                        )
+                    )
+                );
+            }
+            else
+            {
+                if (cmpid == 18)
+                {
+
+                    return new Header(
+                          new Paragraph(
+                              new Run(
+                                   new RunProperties(
+                           new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                             new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
+                       ),
+                                  new Text(text1) // First line
+                              ),
+                               new Break(), // Line break
+
+                              new Run(
+                                   new RunProperties(
+                                         new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                           new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
+                                   ),
+                                   new Text("Page ") // Static "Page " text
+                              ),
+        // Explicit space
+        new Run(
+            new Text(" ")
+            {
+                Space = SpaceProcessingModeValues.Preserve
+            }
+        ),
+                              new Run(
+                                   new RunProperties(
+                             new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
+
+                       ),
+                                  new SimpleField() // Dynamic page number field
+                                  {
+                                      Instruction = "PAGE", // Specifies the field type
+                                  }
+                              )
+                          )
+                      );
+                }
+                else
+                {
+                    return new Header(
+                       new Paragraph(
+                           new Run(
+                                new RunProperties(
+                         new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily }
+                    ),
+                               new Text(text1) // First line
+                           ),
+                           new Break(), // Line break
+
+                           new Run(
+                                new RunProperties(
+                          new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
+                    ),
+                               new Text("Page ") // Static "Page " text
+                           ),
+        // Explicit space
+        new Run(
+            new Text(" ")
+            {
+                Space = SpaceProcessingModeValues.Preserve
+            }
+        ),
+                           new Run(
+                                new RunProperties(
+                         new RunFonts { Ascii = fontFamily, HighAnsi = fontFamily },
+                          new FontSize { Val = fontSize },
+                           new FontSizeComplexScript { Val = fontSize }
+
+                    ),
+                               new SimpleField() // Dynamic page number field
+                               {
+                                   Instruction = "PAGE", // Specifies the field type
+                               }
+                           )
+                       )
+                   );
+                }
+            }
+        }
         private string getPMH(InitialIntake model)
         {
             string str = "Noncontributory.";
@@ -727,8 +1240,6 @@ namespace PainTrax.Web.Controllers
 
             return str;
         }
-
-
         private string getPSH(InitialIntake model)
         {
             string str = "Noncontributory.";
@@ -743,7 +1254,6 @@ namespace PainTrax.Web.Controllers
 
             return str;
         }
-
         private string getAllergies(InitialIntake model)
         {
             string str = "NO KNOWN DRUG ALLERGIES.";
@@ -758,32 +1268,6 @@ namespace PainTrax.Web.Controllers
 
             return str;
         }
-
-        private List<IntakeDropDown> GetDropDownList(string path, string node)
-        {
-            var intakeDropDowns = new List<IntakeDropDown>();
-
-            XDocument doc = XDocument.Load(path);
-
-            foreach (var item in doc.Descendants(node))
-            {
-                intakeDropDowns.Add(new IntakeDropDown
-                {
-                    Name = item.Element("Name")?.Value
-                });
-            }
-
-            return intakeDropDowns;
-        }
-
-        [HttpPost]
-        public IActionResult SaveForm([FromBody] object formData)
-        {
-            var json = System.Text.Json.JsonSerializer.Serialize(formData);
-
-            // save json to database
-            return Ok();
-        }
-
+        #endregion
     }
 }

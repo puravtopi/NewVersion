@@ -34,6 +34,7 @@ namespace PainTrax.Web.Controllers
         private readonly DataTransferService _dataTransferService;
 
 
+
         public HomeController(ILogger<HomeController> logger, IEmailService emailService, DataTransferService dataTransferService, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
@@ -47,7 +48,7 @@ namespace PainTrax.Web.Controllers
 
         public IActionResult Index()
         {
-
+           
             // var _data = _dataTransferService.UpdateInsurance();
             // this code is use to delete unwanted mcode from procedure table
 

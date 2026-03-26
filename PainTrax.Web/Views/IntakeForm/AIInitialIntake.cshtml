@@ -8,7 +8,8 @@
 }
 <style>
     input.form-control.d-inline,
-    select.form-select.d-inline {
+    select.form-select.d-inline,
+    textarea.form-control.d-inline {
         border: none;
         border-bottom: 1px solid black;
         border-radius: 0;
@@ -46,7 +47,7 @@
                             <p>
                                 Patient name:
                                 <input id="PatientName" name="PatientName" class="form-control d-inline w-auto" style="min-width:200px;" />
-                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i>
+                                @*  <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PatientName')"></i> *@
                                 Gender
                                 <select id="Gender" name="Gender" class="form-select d-inline w-auto" style="width:50px !important">
                                     <option value="male">M</option>
@@ -63,16 +64,17 @@
                             <p>
                                 DOB:
                                 <input id="DOB" name="DOB" type="date" class="form-control d-inline w-auto" />
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Age:
                                 <input id="Age" name="Age" class="form-control d-inline w-auto" /> years
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Height:
                                 <input id="Height" name="Height" class="form-control d-inline w-auto" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Height')"></i>
                                 Weight:
                                 <input id="Weight" name="Weight" class="form-control d-inline w-auto" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'Weight')"></i>
+                                Pound.
                             </p>
 
                             <p>
@@ -83,11 +85,11 @@
                             <!-- Work -->
                             <p>
                                 Currently working:
-                                <input type="radio" name="IsWorking" value="Yes" /> Yes
-                                <input type="radio" name="IsWorking" value="No" /> No
-
+                                <input type="radio" name="IsWorking" value="The patient is currently working." /> Yes
+                                <input type="radio" name="IsWorking" value="The patient stopped working immediately after accident." /> No
+                                <br />
                                 Job title:
-                                <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:200px;" />
+                                <input id="JobTitle" name="JobTitle" class="form-control d-inline w-auto" style="min-width:90%;" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'JobTitle')"></i>
                             </p>
 
@@ -95,9 +97,9 @@
                                 If not working, stopped immediately after accident:
                                 <input type="radio" name="StoppedAfterAccident" value="Yes" /> Yes
                                 <input type="radio" name="StoppedAfterAccident" value="No" /> No
-
+                                <br />
                                 Reason:
-                                <input id="NotWorkingReason" name="NotWorkingReason" class="form-control d-inline w-50" />
+                                <textarea id="NotWorkingReason" name="NotWorkingReason" class="form-control d-inline w-50" style="min-width:90%;"></textarea>
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'NotWorkingReason')"></i>
                             </p>
 
@@ -119,97 +121,103 @@
                             <!-- Injury Type -->
                             <p>
                                 Type of Injury:
-                                <label><input type="radio" name="InjuryType" value="MVA" /> MVA</label>
-                                <label><input type="radio" name="InjuryType" value="Work-related" /> Work-related</label>
+                                <label><input type="radio" name="InjuryType" value="motor vehicle" /> MVA</label>
+                                <label><input type="radio" name="InjuryType" value="work-related" /> Work-related</label>
+                                <label><input type="radio" name="InjuryType" value="lien" /> Lien</label>
                             </p>
 
-                            <!-- Paragraph Description -->
+                            <div id="divWC">
+                                <!-- Paragraph Description -->
+                                <p>
+                                    The patient reports that on
+                                    <label id="lblDOA" name="lblDOA"></label>
+                                    while
+                                    <select id="Activity" class="form-select d-inline w-auto" name="Activity">
+                                        <option value=""></option>
+                                        <option value="performing regular job duties">performing regular job duties </option>
+                                        <option value="performing assigned work tasks">performing assigned work tasks </option>
+                                        <option value="engaged in usual occupational activities">engaged in usual occupational activities </option>
+                                    </select>,
+                                    they sustained a work-related injury when
+
+                                    <select id="Incident" class="form-select d-inline w-auto" name="Incident">
+                                        <option value=""></option>
+                                        <option value="slipped">slipped</option>
+                                        <option value="tripped">tripped</option>
+                                        <option value="lost balance">lost balance</option>
+                                        <option value="was struck by an object">was struck by an object</option>
+                                        <option value="lifted or carried an object">lifted or carried an object</option>
+                                        <option value="pushed or pulled equipment">pushed or pulled equipment</option>
+                                        <option value="twisted or turned abruptly">twisted or turned abruptly</option>
+                                        <option value="experienced repetitive strain">experienced repetitive strain</option>
+                                        <option value="experienced sudden forceful movement">experienced sudden forceful movement</option>
+                                    </select>.
+                                </p>
+
+                                <p>
+                                    The incident occurred
+                                    <select name="IncidentType" class="form-select d-inline w-auto" id="IncidentType">
+                                        <option value=""></option>
+                                        <option value="suddenly">suddenly</option>
+                                        <option value="unexpectedly">unexpectedly</option>
+                                        <option value="during normal work">during normal work</option>
+                                    </select>
+                                    and involved
+
+                                    <select name="Mechanism" class="form-select d-inline w-auto" id="Mechanism">
+                                        <option value=""></option>
+                                        <option value="direct impact">direct impact </option>
+                                        <option value="overexertion">overexertion</option>
+                                        <option value="awkward positioning">awkward positioning </option>
+                                        <option value="forceful movement">forceful movement  </option>
+                                        <option value="repetitive motion">repetitive motion</option>
+                                        <option value="loss of footing">loss of footing</option>
+                                        <option value="sudden loading of the body">sudden loading of the body</option>
+                                    </select>
+                                </p>
+
+                                <p>
+                                    As a result, the patient experienced
+                                    <select class="form-select d-inline w-auto" name="SymptomOnset" id="SymptomOnset">
+                                        <option value=""></option>
+                                        <option value="immediate">immediate</option>
+                                        <option value="same-day">same-day</option>
+                                        <option value="progressive">progressive</option>
+                                    </select>
+                                    pain affecting
+                                    <input type="text" class="form-control d-inline w-25" name="BodyPart" id="BodyPart" placeholder="body part" />.
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'BodyPart')"></i>
+                                    which was
+                                    <select class="form-select d-inline w-auto" name="PainEffect" id="PainEffect">
+                                        <option value=""></option>
+                                        <option value="not present prior to this incident">not present prior to this incident</option>
+                                        <option value="significantly less severe prior to this incident">significantly less severe prior to this incident</option>
+
+                                    </select>.
+                                </p>
+
+                                <p>
+                                    Since the time of injury, the patient reports
+                                    <select class="form-select d-inline w-auto" name="SymptomPattern" id="SymptomPattern">
+                                        <option value=""></option>
+                                        <option value="persistent">persistent</option>
+                                        <option value="worsening">worsening</option>
+                                        <option value="fluctuating">fluctuating</option>
+                                    </select>
+                                    symptoms that interfere with .
+                                    <select class="form-select d-inline w-auto" name="DailyActivities" id="DailyActivities">
+                                        <option value=""></option>
+                                        <option value="work duties">work duties</option>
+                                        <option value="activities of daily living ">activities of daily living</option>
+                                        <option value="physical tasks required for employment">physical tasks required for employment</option>
+                                    </select>
+                                </p>
+                            </div>
                             <p>
-                                The patient reports that on
-                                <label id="lblDOA" name="lblDOA"></label>
-                                while
-                                <select id="Activity" class="form-select d-inline w-auto" name="Activity">
-                                    <option value=""></option>
-                                    <option value="performing regular job duties">performing regular job duties </option>
-                                    <option value="performing assigned work tasks">performing assigned work tasks </option>
-                                    <option value="engaged in usual occupational activities">engaged in usual occupational activities </option>
-                                </select>,
-                                they sustained a work-related injury when
-
-                                <select id="Incident" class="form-select d-inline w-auto" name="Incident">
-                                    <option value=""></option>
-                                    <option value="slipped">slipped</option>
-                                    <option value="tripped">tripped</option>
-                                    <option value="lost balance">lost balance</option>
-                                    <option value="was struck by an object">was struck by an object</option>
-                                    <option value="lifted or carried an object">lifted or carried an object</option>
-                                    <option value="pushed or pulled equipment">pushed or pulled equipment</option>
-                                    <option value="twisted or turned abruptly">twisted or turned abruptly</option>
-                                    <option value="experienced repetitive strain">experienced repetitive strain</option>
-                                    <option value="experienced sudden forceful movement">experienced sudden forceful movement</option>
-                                </select>.
+                                Accident Description
+                                <textarea id="NotWorkingReason" name="AccidentDescription" class="form-control d-inline w-50" style="min-width:90%;"></textarea>
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AccidentDescription')"></i>
                             </p>
-
-                            <p>
-                                The incident occurred
-                                <select name="IncidentType" class="form-select d-inline w-auto" id="IncidentType">
-                                    <option value=""></option>
-                                    <option value="suddenly">suddenly</option>
-                                    <option value="unexpectedly">unexpectedly</option>
-                                    <option value="during normal work">during normal work</option>
-                                </select>
-                                and involved
-
-                                <select name="Mechanism" class="form-select d-inline w-auto" id="Mechanism">
-                                    <option value=""></option>
-                                    <option value="direct impact">direct impact </option>
-                                    <option value="overexertion">overexertion</option>
-                                    <option value="awkward positioning">awkward positioning </option>
-                                    <option value="forceful movement">forceful movement  </option>
-                                    <option value="repetitive motion">repetitive motion</option>
-                                    <option value="loss of footing">loss of footing</option>
-                                    <option value="sudden loading of the body">sudden loading of the body</option>
-                                </select>
-                            </p>
-
-                            <p>
-                                As a result, the patient experienced
-                                <select class="form-select d-inline w-auto" name="SymptomOnset" id="SymptomOnset">
-                                    <option value=""></option>
-                                    <option value="immediate">immediate</option>
-                                    <option value="same-day">same-day</option>
-                                    <option value="progressive">progressive</option>
-                                </select>
-                                pain affecting
-                                <input type="text" class="form-control d-inline w-25" name="BodyPart" id="BodyPart" placeholder="body part" />.
-                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'BodyPart')"></i>
-                                which was
-                                <select class="form-select d-inline w-auto" name="PainEffect" id="PainEffect">
-                                    <option value=""></option>
-                                    <option value="not present prior to this incident">not present prior to this incident</option>
-                                    <option value="significantly less severe prior to this incident">significantly less severe prior to this incident</option>
-
-                                </select>.
-                            </p>
-
-                            <p>
-                                Since the time of injury, the patient reports
-                                <select class="form-select d-inline w-auto" name="SymptomPattern" id="SymptomPattern">
-                                    <option value=""></option>
-                                    <option value="persistent">persistent</option>
-                                    <option value="worsening">worsening</option>
-                                    <option value="fluctuating">fluctuating</option>
-                                </select>
-                                symptoms that interfere with .
-                                <select class="form-select d-inline w-auto" name="DailyActivities" id="DailyActivities">
-                                    <option value=""></option>
-                                    <option value="work duties">work duties</option>
-                                    <option value="activities of daily living ">activities of daily living</option>
-                                    <option value="physical tasks required for employment">physical tasks required for employment</option>
-                                </select>
-                            </p>
-
-
 
                             <h6 class="fw-bold">Pre-Injury Functional Baseline</h6>
 
@@ -259,11 +267,11 @@
                                 Air bags deployed:
                                 <label><input type="radio" name="Airbag" value="Yes"> Yes</label>
                                 <label><input type="radio" name="Airbag" value="No"> No</label>
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 EMS arrived:
                                 <label><input type="radio" name="EMS" value="Yes"> Yes</label>
                                 <label><input type="radio" name="EMS" value="No"> No</label>
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Police contacted:
                                 <label><input type="radio" name="Police" value="Yes"> Yes</label>
                                 <label><input type="radio" name="Police" value="No"> No</label>
@@ -274,24 +282,23 @@
                                 Went to hospital:
                                 <label><input type="radio" name="Hospital" value="Yes"> Yes</label>
                                 <label><input type="radio" name="Hospital" value="No"> No</label>
-
-                                Hospital name:
-                                <input id="HospitalName" class="form-control d-inline w-25" />
-                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'HospitalName')"></i>
-
-                                Records:
-                                <label><input type="radio" name="Records" value="Yes"> Yes</label>
-                                <label><input type="radio" name="Records" value="No"> No</label>
-                            </p>
-
-                            <!-- Transport -->
-                            <p>
-                                How did you get to hospital:
-                                <label><input type="checkbox" class="chkMulti" name="Transport" value="Ambulance"> Ambulance</label>
-                                <label><input type="checkbox" class="chkMulti" name="Transport" value="Car"> Car</label>
-                                <label><input type="checkbox" class="chkMulti" name="Transport" value="Uber"> Uber</label>
-                                <label><input type="checkbox" class="chkMulti" name="Transport" value="Cab"> Cab</label>
-                                <label><input type="checkbox" class="chkMulti" name="Transport" value="Friend"> Friend</label>
+                                <div id="divHospital">
+                                   
+                                    Hospital name:
+                                    <input id="HospitalName" class="form-control d-inline w-25" />
+                                    <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'HospitalName')"></i>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    Records:
+                                    <label><input type="radio" name="Records" value="Yes"> Yes</label>
+                                    <label><input type="radio" name="Records" value="No"> No</label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    How did you get to hospital:
+                                    <label><input type="checkbox" class="chkMulti" name="Transport" value="Ambulance"> Ambulance</label>
+                                    <label><input type="checkbox" class="chkMulti" name="Transport" value="Car"> Car</label>
+                                    <label><input type="checkbox" class="chkMulti" name="Transport" value="Uber"> Uber</label>
+                                    <label><input type="checkbox" class="chkMulti" name="Transport" value="Cab"> Cab</label>
+                                    <label><input type="checkbox" class="chkMulti" name="Transport" value="Friend"> Friend</label>
+                                </div>
                             </p>
 
                             <!-- Symptoms -->
@@ -324,16 +331,16 @@
                                 <label><input type="checkbox" class="chkMulti" name="PMH" value="HLD"> HLD</label>
                                 <label><input type="checkbox" class="chkMulti" name="PMH" value="Asthma"> Asthma</label>
                                 <label><input type="checkbox" class="chkMulti" name="PMH" value="Cardiac"> Cardiac</label>
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Other:
-                                <input id="PMHOther" class="form-control d-inline w-25" />
+                                <input id="PMHOther" class="form-control d-inline w-25" style="min-width:37%" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PMHOther')"></i>
                             </p>
 
                             <!-- PSH -->
                             <p>
                                 PSH:
-                                <input id="PSH" class="form-control d-inline w-50" placeholder="None or details" />
+                                <input id="PSH" class="form-control d-inline w-50" placeholder="None or details" style="min-width:80%" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PSH')"></i>
                             </p>
 
@@ -350,13 +357,13 @@
                             <!-- Allergies -->
                             <p>
                                 Drug Allergies:
-                                <label><input type="radio" name="Allergy" value="NKDA"> NKDA</label>
-                                <label><input type="radio" name="Allergy" value="Yes"> Yes</label>
-
+                                <label><input type="radio" name="Allergy" value="NO KNOWN DRUG ALLERGIES."> NKDA</label>
+                                <label><input type="radio" name="Allergy" value="The patient is allergic to "> Yes</label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Drug:
                                 <input id="AllergyDrug" class="form-control d-inline w-25" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyDrug')"></i>
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Reaction:
                                 <input id="AllergyReaction" class="form-control d-inline w-25" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'AllergyReaction')"></i>
@@ -365,30 +372,36 @@
                             <!-- Social History -->
                             <p>
                                 Smoke:
-                                <label><input type="radio" name="Smoke" value="Yes"> Y</label>
-                                <label><input type="radio" name="Smoke" value="No"> N</label>
+                                <label><input type="radio" name="Smoke" value="The patient is a smoker."> Y</label>
+                                <label><input type="radio" name="Smoke" value="The patient is a nonsmoker."> N</label>
                                 <input id="PPD" class="form-control d-inline w-25" placeholder="PPD" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PPD')"></i>
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Alcohol:
-                                <label><input type="radio" name="Alcohol" value="Yes"> Y</label>
-                                <label><input type="radio" name="Alcohol" value="No"> N</label>
-
+                                <label><input type="radio" name="Alcohol" value="The patient drinks alcohol occasionally."> Y</label>
+                                <label><input type="radio" name="Alcohol" value="The patient does not drink alcohol."> N</label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Cannabis:
-                                <label><input type="radio" name="Cannabis" value="Yes"> Y</label>
-                                <label><input type="radio" name="Cannabis" value="No"> N</label>
+                                <label><input type="radio" name="Cannabis" value="The patient smokes cannabis."> Y</label>
+                                <label><input type="radio" name="Cannabis" value="The patient does not smoke cannabis."> N</label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Other Drugs:
+                                <label><input type="radio" name="OtherDrugs" value="The patient uses recreational drugs."> Y</label>
+                                <label><input type="radio" name="OtherDrugs" value="The patient does not use recreational drugs."> N</label>
+                                <input id="OtherDrugsTxt" class="form-control d-inline w-25" placeholder="Other Drugs Name" style="width:37%" />
+                                <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'OtherDrugsTxt')"></i>
                             </p>
 
                             <!-- Therapy -->
                             <p>
                                 Physical therapy:
                                 <label><input type="radio" name="PT" value="Yes"> Y</label>
-                                <label><input type="radio" name="PT" value="No"> N</label>
-
+                                <label><input type="radio" name="PT" value="The patient has not had physical therapy."> N</label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Frequency:
                                 <input id="PTFreq" class="form-control d-inline w-25" placeholder="x/week" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PTFreq')"></i>
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Duration:
                                 <input id="PTDuration" class="form-control d-inline w-25" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'PTDuration')"></i>
@@ -400,6 +413,10 @@
                                     <option>Minimal</option>
                                     <option>Good</option>
                                 </select>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Compliance:
+                                <label><input type="radio" name="PTCompliance" value="The patient reports compliance with therapy."> Y</label>
+                                <label><input type="radio" name="PTCompliance" value="The patient reports noncompliance with therapy."> N</label>
                             </p>
 
                             <!-- Chiropractor -->
@@ -407,11 +424,11 @@
                                 Chiropractor:
                                 <label><input type="radio" name="Chiro" value="Yes"> Y</label>
                                 <label><input type="radio" name="Chiro" value="No"> N</label>
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Frequency:
                                 <input id="ChiroFreq" class="form-control d-inline w-25" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ChiroFreq')"></i>
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Duration:
                                 <input id="ChiroDuration" class="form-control d-inline w-25" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'ChiroDuration')"></i>
@@ -430,7 +447,7 @@
                                 Compliance:
                                 <label><input type="radio" name="Compliance" value="Yes"> Y</label>
                                 <label><input type="radio" name="Compliance" value="No"> N</label>
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 If discontinued:
                                 <input id="DiscontinueReason" class="form-control d-inline w-50" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'DiscontinueReason')"></i>
@@ -443,13 +460,13 @@
                                 <label><input type="radio" name="Walk" value="No"> N</label>
                                 <input id="WalkBlocks" class="form-control d-inline w-25" placeholder="blocks" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'WalkBlocks')"></i>
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Standing:
                                 <label><input type="radio" name="Stand" value="Yes"> Y</label>
                                 <label><input type="radio" name="Stand" value="No"> N</label>
                                 <input id="StandMin" class="form-control d-inline w-25" placeholder="min" />
                                 <i class="fa fa-microphone d-inline mic-btn" onclick="startVoice(this,'StandMin')"></i>
-
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 Sitting:
                                 <label><input type="radio" name="Sit" value="Yes"> Y</label>
                                 <label><input type="radio" name="Sit" value="No"> N</label>
@@ -471,13 +488,13 @@
                             </p>
                             <p>
 
-                                <input type="radio" name="TreatmentPlan" value="Initial" />
+                                <input type="checkbox" name="TreatmentPlan" value="Initial" />
                                 Initial conservative management is indicated and will be initiated or continued in accordance with Medical Treatment Guidelines (MTG).
 
                             </p>
                             <p>
 
-                                <input type="radio" name="TreatmentPlan" value="Completed" />
+                                <input type="checkbox" name="TreatmentPlan" value="Completed" />
                                 The patient reports completion of an adequate trial of conservative treatment prior to presentation, consisting of physical therapy, chiropractic care, medications, and/or activity modification for a duration of ≥ <input id="PTDuration" class="form-control d-inline w-25" /> weeks, with persistent functional limitation despite treatment.
                             </p>
                             <p>
@@ -835,7 +852,8 @@
             }
             else {
                 // Append text (important for doctors dictating long notes)
-                input.val(input.val() + " " + transcript);
+                var currentText = input.val() || "";
+                input.val(currentText+ " " + transcript);
             }
             updatePreview(); // refresh preview if you have live preview
         };
@@ -1002,7 +1020,7 @@
         }
 
         formData = values;
-       
+
         var template = docTemplate ||
             "Patient {{PatientName}} ({{Gender}}), dominant hand {{DominantHand}},\n" +
             "reports that on {{DOA}}, while working as {{JobTitle}},\n" +
@@ -1013,6 +1031,8 @@
 
         var output = applyTemplate(template, values);
         $("#previewText").html(output);
+
+        processTemplate(values)
     }
 
     // Trigger on all inputs
@@ -1020,7 +1040,42 @@
         updatePreview();
     });
 
+    function processTemplate(data) {
+        let html = $('#previewText').html();
 
+        // Replace placeholders
+        Object.keys(data).forEach(key => {
+            let regex = new RegExp('{{' + key + '}}', 'g');
+            html = html.replace(regex, data[key]);
+        });
+
+        if(data.Hospital==="Yes")
+            $("#divHospital").show();
+        else
+              $("#divHospital").hide();
+
+        // Handle WC section
+           if (data.InjuryType === "work-related") {
+               $("#divWC").show();
+        // Keep WC, remove MVA
+        html = html.replace('[WC_START]', '').replace('[WC_END]', '');
+        html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
+    }
+    else if (data.InjuryType === "motor vehicle") {
+        // Keep MVA, remove WC
+        html = html.replace('[MVA_START]', '').replace('[MVA_END]', '');
+        html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
+          $("#divWC").hide();
+    }
+    else {
+        // Remove both
+        html = html.replace(/\[WC_START\][\s\S]*?\[WC_END\]/g, '');
+        html = html.replace(/\[MVA_START\][\s\S]*?\[MVA_END\]/g, '');
+          $("#divWC").hide();
+    }
+
+        $('#previewText').html(html);
+    }
 
     $(document).ready(function () {
         // Load template and initialize preview
@@ -1031,7 +1086,7 @@
         $('#patientForm').on('submit', function (e) {
             e.preventDefault(); // Stop page reload
 
-            
+
             // Serialize form data
             var url = '@Url.Action("SaveForm", "IntakeForm")';
             var data = JSON.stringify(formData);
@@ -1074,8 +1129,8 @@
 
     function fnExportDOC() {
         var htmlContent = $('#previewText').html();
-
-        var form = $('<form method="post" action="/IntakeForm/ExportWord"></form>');
+        var url = '@Url.Action("ExportWord", "IntakeForm")';
+        var form = $('<form method="post" action="' + url + '"></form>');
 
         form.append('<input type="hidden" name="htmlContent" value="'
             + $('<div>').text(htmlContent).html() + '">');
@@ -1167,7 +1222,7 @@
         if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
             age--;
         }
-        
+
         return age;
     }
 </script>

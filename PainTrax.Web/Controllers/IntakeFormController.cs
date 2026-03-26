@@ -716,8 +716,10 @@ namespace PainTrax.Web.Controllers
 
         public IActionResult AIInitialIntake(int? id)
         {
-            ViewBag.TemplateURL = "/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/report-template.txt";
-            ViewBag.TemplateDOCURL = "/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId) + "/report-template-ie.docx";
+            //var templatePath = $"{Request.Scheme}://{Request.Host}/v2/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
+            var templatePath = $"{Request.Scheme}://{Request.Host}/ReportTemplate/" + HttpContext.Session.GetString(SessionKeys.SessionCmpClientId);
+            ViewBag.TemplateURL = templatePath + "/report-template.txt";
+            ViewBag.TemplateDOCURL = templatePath + "/report-template-ie.docx";
             ViewBag.FormData = "";
             ViewBag.Id = "";
 

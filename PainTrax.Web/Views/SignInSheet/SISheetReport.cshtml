@@ -43,9 +43,11 @@
                                     <th scope="col">InHouse Proc</th>
                                     <th scope="col">Doe</th>
                                     <th scope="col">Location</th>
+                                    <th scope="col">Insurance</th>
                                     <th scope="col">Procedure Requested</th>
                                     <th scope="col">Procedure Scheduled</th>
                                     <th scope="col">Alert</th>
+                                   
                                     @* <th scope="col">Next Visit</th> *@
                                     @*   <th style="width:5%">Action</th> *@
                                 </tr>
@@ -104,7 +106,7 @@
                 // { "data": "doa", "doa": "doa", "autoWidth": true },
                 { "data": "followupdate", "followupdate": "followupdate", "autoWidth": true },
                 { "data": "inhouse", "inhouse": "inhouse", "autoWidth": true },
-                //{ "data": "doe", "doe": "doe", "autoWidth": true },
+                
                 {
                     "data": "doe", "autoWidth": true,
                     "type": "date ",
@@ -119,9 +121,11 @@
                     }
                 },
                 { "data": "location", "location": "location", "autoWidth": true },
+                 { "data": "insuranceCompany", "insuranceCompany": "insuranceCompany", "autoWidth": true },
                 { "data": "requested", "requested": "requested", "autoWidth": true },
                 { "data": "scheduled", "scheduled": "scheduled", "autoWidth": true },
                 { "data": "alert", "alert": "alert", "autoWidth": true },
+               
             ]
         });
     }

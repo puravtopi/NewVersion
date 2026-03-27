@@ -22,6 +22,7 @@ namespace PainTrax.Web.Models
         public string? scheduled { get; set; }
         public string? alert { get; set; }
         public string? inhouse { get; set; }
+        public string? insuranceCompany { get; set; }
 
 
         /*public string label { get; set; }

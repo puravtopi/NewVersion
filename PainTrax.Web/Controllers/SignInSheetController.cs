@@ -204,8 +204,8 @@ namespace PainTrax.Web.Controllers
                     //new DataColumn("Location", typeof(string)),
                     new DataColumn("Proc Req", typeof(string)),
                     new DataColumn("Proc Sched", typeof(string)),
-                    new DataColumn("Alert", typeof(string))
-                   // new DataColumn("Next Visit", typeof(string))
+                    new DataColumn("Alert", typeof(string)),
+                    new DataColumn("InsuranceCompany", typeof(string))
 
                         });
 
@@ -228,8 +228,8 @@ namespace PainTrax.Web.Controllers
                     new DataColumn("Location", typeof(string)),
                     new DataColumn("Proc Req", typeof(string)),
                     new DataColumn("Proc Sched", typeof(string)),
-                    new DataColumn("Alert", typeof(string))
-                   // new DataColumn("Next Visit", typeof(string))
+                    new DataColumn("Alert", typeof(string)),
+                    new DataColumn("InsuranceCompany", typeof(string))
 
                             });
 
@@ -243,14 +243,14 @@ namespace PainTrax.Web.Controllers
                 {
                     foreach (var cnt in data)
                     {
-                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.inhouse, cnt.requested, cnt.scheduled, cnt.alert);
+                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.inhouse, cnt.requested, cnt.scheduled, cnt.alert,cnt.insuranceCompany);
                     }
                 }
                 else
                 {
                     foreach (var cnt in data)
                     {
-                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.inhouse, cnt.location, cnt.requested, cnt.scheduled, cnt.alert);
+                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.inhouse, cnt.location, cnt.requested, cnt.scheduled, cnt.alert,cnt.insuranceCompany);
                     }
                 }
 
@@ -421,11 +421,12 @@ namespace PainTrax.Web.Controllers
                 new DataColumn("InH Proc"),
                 new DataColumn("Proc Req"),
                 new DataColumn("Proc Sched"),
-                new DataColumn("Alert")
+                new DataColumn("Alert"),
+                new DataColumn("InsuranceCompany")
             });
 
                     foreach (var cnt in data)
-                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.inhouse, cnt.requested, cnt.scheduled, cnt.alert);
+                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.inhouse, cnt.requested, cnt.scheduled, cnt.alert,cnt.insuranceCompany);
                 }
                 else
                 {
@@ -438,11 +439,12 @@ namespace PainTrax.Web.Controllers
                 new DataColumn("Location"),
                 new DataColumn("Proc Req"),
                 new DataColumn("Proc Sched"),
-                new DataColumn("Alert")
+                new DataColumn("Alert"),
+                new DataColumn("InsuranceCompany")
             });
 
                     foreach (var cnt in data)
-                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.inhouse, cnt.location, cnt.requested, cnt.scheduled, cnt.alert);
+                        dt.Rows.Add(cnt.name, cnt.casetype, cnt.visitiefu, cnt.inhouse, cnt.location, cnt.requested, cnt.scheduled, cnt.alert, cnt.insuranceCompany);
                 }
 
                 // =========================
